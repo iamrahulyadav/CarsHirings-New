@@ -64,8 +64,8 @@ public class AboutUsActivity extends AppBaseActivity {
                             String title  =about_us.cms_language_title ;
                             final ImageView ivBannerAboutUs = (ImageView)findViewById(R.id.ivBannerAboutUs);
                             if(banner!=null && !banner.isEmpty()){
-                                String imagePath  = RetrofitApiBuilder.IMG_BASE_URL+banner ;
-                                Log.d("Image URL",RetrofitApiBuilder.IMG_BASE_URL+banner);
+                                String imagePath  = RetrofitApiBuilder.IMG_BASE_URL + banner ;
+                                Log.d("Image URL",RetrofitApiBuilder.IMG_BASE_URL + banner);
                                 Glide.with(getApplicationContext())
                                         .load(imagePath)
                                         .into(ivBannerAboutUs);
@@ -75,6 +75,8 @@ public class AboutUsActivity extends AppBaseActivity {
                             content = content.replaceAll("<(.*?)>","");//Removes all items in brackets
                             content = content.replaceAll("&nbsp;"," ");
                             content = content.replaceAll("&amp;"," ");
+                            content = content.replaceAll("&#39;","'");
+                            content = content.replaceAll("&ndash;","-");
                             tvContentAboutUs.setText(content) ;
                         }
                     }

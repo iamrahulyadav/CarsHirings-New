@@ -256,10 +256,10 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(MainActivity.this, AboutUsActivity.class));
                 break;
 
-            /*case R.id.action_contact_us:
+            case R.id.action_contact_us:
                 startActivity(new Intent(MainActivity.this, ContactUsActivity.class));
-                Toast.makeText(MainActivity.this, "Contact US Action", Toast.LENGTH_SHORT).show();
-                break;*/
+                //Toast.makeText(MainActivity.this, "Contact US Action", Toast.LENGTH_SHORT).show();
+                break;
             case R.id.action_language:
 
 //                startActivity(new Intent(MainActivity.this, Language.class));

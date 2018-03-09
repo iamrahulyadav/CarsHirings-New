@@ -24,6 +24,7 @@ import java.util.Arrays;
 import retrofit2.Retrofit;
 
 public class SelectFilterActivity extends AppBaseActivity implements View.OnClickListener {
+
     RadioGroup CategoriesGroup;
     public static String FILTER_RESPONSE = "filter_response";
     public static int FILTER_RESPONSE_CODE = 220;
@@ -50,6 +51,7 @@ public class SelectFilterActivity extends AppBaseActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_filter);
+
         CategoriesGroup=findViewById(R.id.categorariesgroup);
         setupcategorygroup();
         rec_supplier=findViewById(R.id.rec_supplier);
