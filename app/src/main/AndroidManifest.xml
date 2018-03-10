@@ -55,7 +55,6 @@
         <activity android:name=".activities.home.BookCarActivity" />
         <activity android:name=".activities.mainsetup.MyAccountActivity" />
         <activity android:name=".activities.home.AboutUsActivity" />
-        <activity android:name=".activities.home.ContactUsActivity"></activity>
     </application>
 
 </manifest>
