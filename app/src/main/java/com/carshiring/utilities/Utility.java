@@ -34,6 +34,7 @@ import java.util.regex.Pattern;
  */
 public class Utility {
     static ProgressDialog progressDialog;
+
     public Bitmap getCircularBitmap(Bitmap bitmap)
     {
         final Bitmap circularimage=Bitmap.createBitmap(bitmap.getWidth(),bitmap.getHeight(), Bitmap.Config.ARGB_8888);

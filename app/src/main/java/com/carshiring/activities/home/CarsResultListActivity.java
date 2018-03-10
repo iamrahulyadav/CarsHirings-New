@@ -71,16 +71,18 @@ public class CarsResultListActivity extends AppBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cars_result_list);
+
         filter =  getResources().getString(R.string.recommended);
         actionBar = getSupportActionBar() ;
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.back);
         }
+
         appGlobal.context=getApplicationContext();
         tinyDB = new TinyDB(getApplicationContext());
-
         dialog=new Dialog(this);
+
         listCarResult = SearchCarFragment.searchData;
 //        get supplier
 
@@ -96,13 +98,17 @@ public class CarsResultListActivity extends AppBaseActivity {
         supplierList.addAll(hs);
 
         recycler_search_cars = (RecyclerView) findViewById(R.id.recycler_search_cars);
+
+
     }
+
 
     public void listdispaly(List<SearchData> listCarResult )
     {
         listAdapter = new CarResultsListAdapter(this,listCarResult, new CarResultsListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(SearchData carDetail) {
+
                 if (tinyDB.contains("login_data")){
                     String data = tinyDB.getString("login_data");
                     userDetails = gson.fromJson(data,UserDetails.class);
@@ -122,12 +128,6 @@ public class CarsResultListActivity extends AppBaseActivity {
                     set = "login";
                     setupoverlay(set);
                 }
-                Intent intent = new Intent(CarsResultListActivity.this,CarDetailActivity.class);
-                intent.putExtra("id_context",carDetail.getId_context());
-                intent.putExtra("type",carDetail.getType());
-                intent.putExtra("day",carDetail.getTime());
-                intent.putExtra("refer_type",carDetail.getRefer_type());
-                startActivity(intent);
             }
         });
     }
@@ -156,7 +156,10 @@ public class CarsResultListActivity extends AppBaseActivity {
         recycler_search_cars.addItemDecoration(itemDecoration);
         if(isApplyFiltered)
         {
-            listdispaly(filteredtList);
+            if(filteredtList.size() == 0) {
+                Toast.makeText(getApplicationContext(), "No Filteres Applied", Toast.LENGTH_SHORT).show();
+                listdispaly(listCarResult);
+            }else listdispaly(filteredtList);
         }
         else
         {
@@ -184,6 +187,7 @@ public class CarsResultListActivity extends AppBaseActivity {
             }
         }
         if(requestCode== 201){
+            //Toast.makeText(getApplicationContext(), resultCode + "", Toast.LENGTH_SHORT).show();
             if(resultCode== SelectFilterActivity.FILTER_RESPONSE_CODE)
             {
                 FilterDefaultMultipleListModel multipleListModel= (FilterDefaultMultipleListModel) data.getSerializableExtra(SelectFilterActivity.FILTER_RESPONSE);
@@ -198,15 +202,19 @@ public class CarsResultListActivity extends AppBaseActivity {
             }
         }
     }
+
     private boolean isApplyFiltered = false ;
     private  ArrayList<SearchData>  filteredtList ;
     private void filterlist(String supl, String pack, String feat, String insur) {
+
         String[] suplier=supl.split(",");
         String[] packages=pack.split(",");
         String[] features=feat.split(",");
         String[] insurance=insur.split(",");
+
         filteredtList=new ArrayList<>();
         int listsize=listCarResult.size();
+
         for(int i=0;i<listsize;i++)
         {
             SearchData data = listCarResult.get(i);
@@ -214,6 +222,7 @@ public class CarsResultListActivity extends AppBaseActivity {
             boolean issuplierfound=false;
             String supleir_strg=  data.getSupplier();
             Log.d("Supplier",supleir_strg);
+
             if(!supleir_strg.isEmpty())
             {
                 for (String suply:suplier)
@@ -429,6 +438,56 @@ public class CarsResultListActivity extends AppBaseActivity {
         dialog.show();
     }
 
+    public static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
+    public void getCat(){
+        Utility.showloadingPopup(this);
+        String cat = gson.toJson(cateRequest);
+
+        RequestBody requestBody = RequestBody.create(MEDIA_TYPE,cat);
+
+        final Request request = new Request.Builder()
+                .url(RetrofitApiBuilder.CarHires_BASE_URL+"category_list")
+                .post(requestBody)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("cache-control", "no-cache")
+                .build();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(10000, TimeUnit.SECONDS)
+                .writeTimeout(10000, TimeUnit.SECONDS)
+                .readTimeout(30000, TimeUnit.SECONDS)
+                .build();
+
+        Utility.showloadingPopup(this);
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, final IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String msg = e.getMessage();
+                        Utility.message(getApplicationContext(), "Connection error ");
+                        Utility.hidepopup();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                Utility.hidepopup();
+                if (response!=null&&response.body().toString().length()>0){
+                    if (request.body()!=null){
+                        String msg = response.body().string();
+                        category = gson.fromJson(msg,Category.class);
+                        catBeanList.addAll(category.getResponse().getCat());
+                    }
+                    Log.d("TAG", "onResponse: "+catBeanList.size());
+
+                }
+            }
+
+        });
+    }
+
     private void login(String user, String pass) {
         if(!Utility.isNetworkConnected(getApplicationContext())){
             Toast.makeText(CarsResultListActivity.this, "No Network Connection!", Toast.LENGTH_SHORT).show();
@@ -499,58 +558,4 @@ public class CarsResultListActivity extends AppBaseActivity {
             }
         });
     }
-
-    public static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
-
-
-    public void getCat(){
-        Utility.showloadingPopup(this);
-        String cat = gson.toJson(cateRequest);
-
-        RequestBody requestBody = RequestBody.create(MEDIA_TYPE,cat);
-
-        final Request request = new Request.Builder()
-                .url(RetrofitApiBuilder.CarHires_BASE_URL+"category_list")
-                .post(requestBody)
-                .addHeader("Content-Type", "application/json")
-                .addHeader("cache-control", "no-cache")
-                .build();
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(10000, TimeUnit.SECONDS)
-                .writeTimeout(10000, TimeUnit.SECONDS)
-                .readTimeout(30000, TimeUnit.SECONDS)
-                .build();
-
-        Utility.showloadingPopup(this);
-        client.newCall(request).enqueue(new okhttp3.Callback() {
-            @Override
-            public void onFailure(okhttp3.Call call, final IOException e) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String msg = e.getMessage();
-                        Utility.message(getApplicationContext(), "Connection error ");
-                        Utility.hidepopup();
-                    }
-                });
-            }
-
-            @Override
-            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-                Utility.hidepopup();
-                if (response!=null&&response.body().toString().length()>0){
-                    if (request.body()!=null){
-                        String msg = response.body().string();
-                        category = gson.fromJson(msg,Category.class);
-                        catBeanList.addAll(category.getResponse().getCat());
-                    }
-                    Log.d("TAG", "onResponse: "+catBeanList.size());
-
-                }
-            }
-
-        });
-    }
-
-
 }

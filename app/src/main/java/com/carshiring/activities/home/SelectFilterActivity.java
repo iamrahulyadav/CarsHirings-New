@@ -24,6 +24,7 @@ import java.util.Arrays;
 import retrofit2.Retrofit;
 
 public class SelectFilterActivity extends AppBaseActivity implements View.OnClickListener {
+
     RadioGroup CategoriesGroup;
     public static String FILTER_RESPONSE = "filter_response";
     public static int FILTER_RESPONSE_CODE = 220;
@@ -41,6 +42,7 @@ public class SelectFilterActivity extends AppBaseActivity implements View.OnClic
     private ArrayList<FilterDefaultMultipleListModel> featuresMultipleListModels = new ArrayList<>();
     private ArrayList<FilterDefaultMultipleListModel> packageMultipleListModels = new ArrayList<>();
     private ArrayList<FilterDefaultMultipleListModel> insuranceMultipleListModels = new ArrayList<>();
+
     private ArrayList<String> SelectedSupplier = new ArrayList<String>();
     private ArrayList<String> SelectedFeatures = new ArrayList<String>();
     private ArrayList<String> SelectedPackages = new ArrayList<String>();
@@ -50,12 +52,14 @@ public class SelectFilterActivity extends AppBaseActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_filter);
+
         CategoriesGroup=findViewById(R.id.categorariesgroup);
         setupcategorygroup();
         rec_supplier=findViewById(R.id.rec_supplier);
         recy_package=findViewById(R.id.recy_package);
         recy_carfeatures=findViewById(R.id.recy_carfeatures);
-       ArrayList<String> getlist= (ArrayList<String>) CarsResultListActivity.supplierList;
+
+        ArrayList<String> getlist= (ArrayList<String>) CarsResultListActivity.supplierList;
         recy_insurance=findViewById(R.id.recy_insurance);
         supplier .addAll(getlist);
         features = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.filter_features)));

@@ -4,10 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -42,11 +41,12 @@ public class SplashActivity extends AppBaseActivity {
     ArrayList<String> langlistname,langlistcode,langlistId  ;
     String[] lan;
 
-//
+//    hello test
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
         sharedpref=new TinyDB(getApplicationContext());
          String language_code = sharedpref.getString("language_code") ;
         boolean isSkipLogin = sharedpref.getBoolean("isSkipLogin");
@@ -80,7 +80,6 @@ public class SplashActivity extends AppBaseActivity {
         }
 
     }
-    //
 
     private static boolean updateResources(Context context, String language) {
         Locale locale = new Locale(language);
@@ -96,7 +95,18 @@ public class SplashActivity extends AppBaseActivity {
         return true;
     }
 
+    private void updateRes(String lang){
+        Resources res = getApplicationContext().getResources();
+// Change locale settings in the app.
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.setLocale(new Locale(lang.toLowerCase())); // API 17+ only.
+// Use conf.locale = new Locale(...) if targeting lower versions
+        res.updateConfiguration(conf, dm);
+    }
+
     public static String TAG = SplashActivity.class.getName();
+
     private void getLanguageList() {
         final  SplashActivity _this =  this ;
         RetroFitApis apis=RetrofitApiBuilder.getCargHiresapis();
@@ -187,6 +197,9 @@ public class SplashActivity extends AppBaseActivity {
                     String language_id=langlistId.get(i);
                     sharedpref.putString("language_code",language_code);
                     sharedpref.putString("language_id",language_id);
+                    updateRes(language_code);
+
+                    Toast.makeText(SplashActivity.this, language_code, Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                     finish();
                 }
