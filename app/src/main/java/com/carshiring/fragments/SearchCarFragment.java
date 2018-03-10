@@ -450,6 +450,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         final Gson gson = new Gson();
         responseCall.enqueue(new Callback<ApiResponse>() {
             @Override
+
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 Utility.hidepopup();
 
@@ -457,6 +458,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
 
                     if(response.body().status){
                         searchData=response.body().response.car_list;
+
 
                         String data = gson.toJson(searchData);
                         Log.d(TAG, "onResponse: "+data);
