@@ -1,3 +1,192 @@
 <resources>
     <string name="app_name">CarsHiring</string>
+    <string name="checkInternet">Check Your Internet Connection</string>
+    <string name="retry">Retry</string>
+    <string name="exit">Exit</string>
+    <string name="wantExit">Do you want to Exit?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="title_home">CarsGates</string>
+    <string name="permissionsetting">Please enable all Permissions. </string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="welcome">Welcome To CarsHiring</string>
+    <string name="action_accounts">My Accounts</string>
+    <string name="action_quotes">My Bookings</string>
+    <string name="action_search_car">Book a car</string>
+    <string name="action_about_us">About Us</string>
+    <string name="action_contact_us">Contact Us</string>
+    <string name="action_language">Language</string>
+    <string name="action_currency">Currency</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_about_us">AboutUsActivity</string>
+    <string name="language">Choose your language</string>
+    <string name="thankyou">Thank You</string>
+
+    <string name="Welcome">Welcome! Please sign in...</string>
+    <string name="update_profile_txt">Welcome! Please update your profile...</string>
+    <string name="enter_email">Enter your email</string>
+    <string name="enter_password">Enter your Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="skip">Skip</string>
+    <string name="filter">Filter</string>
+    <string name="sort">Sort</string>
+    <string name="sign_in">Sign In</string>
+    <string name="login_forgetpassord">Forgotten your password?</string>
+    <string name="SignUpAccount">Sign up for an account</string>
+    <string name="title_forgetpassword">Forgotten Password</string>
+    <string name="forgotpassword">Enter your email to recover password</string>
+    <string name="recoverpassword">Recover My Password</string>
+    <string name="title_create_account">Create Account</string>
+
+    <string name="BookingCurrent">You can add a booking manually\n or search for a car now.</string>
+    <string name="Searchnow">Search Now</string>
+    <string name="bookingreferencenumber">Booking Reference Number</string>
+    <string name="bookingstatus">Booking Status</string>
+    <string name="book_today">Book today to aviod disapointment</string>
+    <string name="viewFaq">View our Frequently Asked Questions\n on our website</string>
+    <string name="search">Search</string>
+    <string name="mybooking">My Booking</string>
+    <string name="accountdetails">Account Details</string>
+    <string name="changepass">Change Password</string>
+    <string name="email">Email</string>
+    <string name="phone">Phone</string>
+    <string name="age">Age</string>
+    <string name="login">Login</string>
+    <string name="title">Title</string>
+    <string name="firstname">First Name</string>
+    <string name="lastname">Last Name</string>
+    <string name="phnumb">Phone Number</string>
+    <string name="currentpass">Enter Current Password</string>
+    <string name="newpass">Enter New Password</string>
+    <string name="confirmpass">Confirm New Password</string>
+    <string name="passport">Passport No</string>
+    <string name="switch_save">Save the driver details for next time</string>
+    <string name="nevermiss">Never miss a bargain again-for exclusive deals and offers,sign up to our newsletter.</string>
+    <string name="interphnum">International Phone Number</string>
+    <string name="usanumb">From The USA</string>
+    <string name="faq">FAQs</string>
+    <string name="pick_up_location">Select Location</string>
+    <string name="bookinginvoicenumber">Booking Invoice Number</string>
+    <string name="aboutus">At Car Gates everything we do is about giving you the freedom to discover more. We’ll move mountains to find you the right rental car, and bring you a smooth, hassle-free experience from start to finish. Here you can find out more about how we work.</string>
+    <string name="cardnumb">Card Number</string>
+    <string name="car_results">Car List</string>
+    <string name="car_book">Book this car</string>
+    <string name="car_details">Car Details</string>
+
+    <string name="cardname">Card Holder Name</string>
+    <string name="date">MM/YY</string>
+    <string name="Cv">CVV</string>
+    <string name="country">Country</string>
+    <string name="zipcode">Zip Code</string>
+    <string name="sorted_by">Sorted By</string>
+    <string name="recommended">Recommended</string>
+    <string name="price_l_to_h">Price (Low to High)</string>
+    <string name="price_h_to_l">Price (High to Low)</string>
+    <string name="rating">Rating</string>
+    <string name="car_group">Car Group</string>
+
+    <string name="dummy">This is a Dummy Text.</string>
+    <string-array name="selectlanguage">
+        <item>Select Language</item>
+        <item>English</item>
+        <item>Arabic</item>
+    </string-array>
+    <string-array name="Titles">
+        <item>Mr</item>
+        <item>Mrs</item>
+        <item>Miss</item>
+        <item>Ms</item>
+        <item>Dr</item>
+    </string-array>
+    <string-array name="numbers">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+
+    </string-array>
+    <string-array name="countries">
+        <item>Saudi Arabia</item>
+        <item>Qatar</item>
+        <item>India</item>
+        <item>UAE</item>
+        <item>UK</item>
+    </string-array>
+    <string name="bookProtection1">Go to book with \n Standard Coverage</string>
+    <string name="bookProtection2">Go to book with \n Full Protection</string>
+    <string name="reset">Reset</string>
+    <string name="applyfilters">Apply Filters</string>
+    <string name="usepointvalue">Do you want to use your credit balance"</string>
+
+    <!--fragment search-->
+    <string name="txtSearchACar">Search for a car</string>
+    <string name="txtFindCheapCar">Find cheap car hire at 49,000 locations</string>
+    <string name="txtUseMyLocation">Use My Location</string>
+    <string name="edtPickUp">Pick-up Location</string>
+    <string name="edtDropUp">Return Location</string>
+    <string name="switchRetrunSameLoc">Return to same location</string>
+    <string name="txtDate">Date</string>
+    <string name="txtTime">Time</string>
+    <string name="txtDriveAge">Driver&#39;s Age</string>
+    <string name="switchDriverAgebw">Driver Aged between 25 - 70?</string>
+    <string name="switchSearchMap">Search By map</string>
+    <string name="edtDriverAge">Enter driver age</string>
+    <string name="licenseno">License No</string>
+    <string name="licenseorigion">License Origin</string>
+    <string name="city">City</string>
+    <string name="address">Address</string>
+    <!--activitiy driver details-->
+    <string name="txtLicense">بلد اصدار الرخصة القيادة</string>
+    <string name="txtDriverLicenseNo">رقم رخصة القيادة</string>
+
+    <!--activity access protection-->
+    <string name="txtAccessProtection">FULL PROTECTION FOR YOUR RELAXATION</string>
+    <string name="txtAccessProtectionTerm">What is covered</string>
+
+    <!--activity extra -->
+    <string name="txtExtra">Do You need any extras with\n your cargates</string>
+
+    <!--activity payment-->
+    <string name="edtAmt">Enter Amount</string>
+
+    <!--activity payment details-->
+    <string name="txtPaymentMethod">Payment Methods</string>
+    <string name="txtPayWithCard">Pay with Credit Cards</string>
+
+    <!--activity quotes details-->
+    <string name="txtQuots">Quotes</string>
+    <string name="txtAirCond">Air conditioning</string>
+    <string name="txtPointCollected">Points Collected:</string>
+    <string name="txtPickUp">PickUp</string>
+    <string name="txtDropUp">Drop off</string>
+    <string name="update">Save</string>
+    <string name="surname">Sur Name</string>
+    <string name="dateofbirth">Date of Birth</string>
+
+    <!--activity settings-->
+    <string name="txtSettings">Settings Car Search</string>
+    <string name="txtMiles">miles</string>
+
+    <!--activity thanku-->
+    <string name="txtViewQuotes">View Quotes</string>
+
+    <!--car details tab2-->
+    <string name="txtSupplierDetails">Your Supplier Details</string>
+    <string name="txtOpeningTime">Opening Times</string>
+    <string name="txtSupplierinfo">Supplier Information</string>
+    <string name="txtSave">Save and Quote</string>
+    <string name="title_activity_home">HomeActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

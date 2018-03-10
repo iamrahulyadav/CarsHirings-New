@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_margin="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardElevation="3dp"
+        app:cardCornerRadius="3dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:drawableStart="@drawable/ic_address"
+                android:drawablePadding="10dp"
+
+                android:padding="5dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:id="@+id/txtPlaceName"
+                android:text="New Delhi Downtown"
+                android:textStyle="bold"/>
+            <LinearLayout
+                android:background="@drawable/border_bg"
+                android:weightSum="2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:background="@drawable/border_bg"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="Fri,27 Jan,2017\n10 AM"
+                        android:id="@+id/tvFromDT"
+                        android:padding="5dp"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <LinearLayout
+                    android:background="@drawable/border_bg"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="Fri,27 Jan,2017\n10 AM"
+                        android:id="@+id/tvToDT"
+                        android:padding="5dp"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:padding="5dp"
+                android:background="@drawable/fill_border_bg"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tvCarModelName"
+                    android:text="Toyota Innova Diesel"
+                    android:gravity="center"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:text="or similar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <HorizontalScrollView
+                android:background="@drawable/fill_border_bg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/spec1Container"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    >
+                    <TextView
+                        android:id="@+id/tvBagSp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="10sp"
+                        android:padding="5dp"
+                        android:text="Bag"
+                        android:drawableTop="@drawable/ic_bag"
+                        android:drawablePadding="5dp"/>
+
+                    <TextView
+                        android:padding="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Door"
+                        android:id="@+id/tvDoor"
+                        android:textSize="10sp"
+                        android:drawableTop="@drawable/ic_car_door"
+                        android:drawablePadding="5dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txtac"
+                        android:textSize="10sp"
+                        android:padding="5dp"
+                        android:visibility="gone"
+                        android:drawablePadding="5dp"
+                        android:drawableTop="@drawable/ic_ac"
+                        android:text="Air Condition"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txttrans"
+                        android:textSize="10sp"
+                        android:padding="5dp"
+                        android:drawablePadding="5dp"
+                        android:drawableTop="@drawable/manual"
+                        android:text="Drop"/>
+
+
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="250dp">
+
+                <ImageView
+                    android:layout_above="@+id/priceContainer"
+                    android:id="@+id/imgCarResult"
+                    android:text="Fri,27 Feb,2018\n10 AM"
+                    android:src="@drawable/ic_car_img"
+                    android:scaleType="centerCrop"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <LinearLayout
+                    android:id="@+id/priceContainer"
+                    android:layout_alignParentBottom="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/red_bg">
+                    <TextView
+                        android:id="@+id/tvCarPricing"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:textColor="#fff"
+                        android:text="INR5,540.64" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:id="@+id/txtpoint"
+                        android:textColor="@color/white"
+                        android:text="Points Collected: 356" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:id="@+id/txtFuel"
+                        android:visibility="gone"
+                        android:drawablePadding="5dp"
+                        android:drawableLeft="@drawable/ic_fuel"
+                        android:textColor="@color/white"
+                        android:text="Fuel Policy Full to Full" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true">
+                    <FrameLayout
+                        android:layout_width="100dp"
+                        android:layout_gravity="right"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/imgCarAgencyLogo"
+                            android:layout_gravity="right|bottom"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp" />
+                        <ProgressBar
+                            android:visibility="gone"
+                            android:layout_margin="5dp"
+                            style="?android:attr/progressBarStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:id="@+id/progressbar"/>
+
+
+                    </FrameLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txtSupplierName"
+                        android:padding="5dp"
+                        android:textColor="@color/white"
+                        android:text="suppled by"/>
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/dropCity"
+                    android:padding="5dp"
+                    android:drawablePadding="5dp"
+                    android:background="@color/green"
+                    android:textColor="@color/white"
+                    android:drawableStart="@drawable/ic_drop"
+                    android:text="Drop"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:background="@drawable/border_bg"
+                android:weightSum="2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/border_bg"
+                    android:gravity="center"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="10dp"
+                        android:textColor="#000"
+                        android:drawableStart="@drawable/ic_excellentvalue"
+                        android:gravity="center"
+                        android:text="Excellent Value" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/border_bg"
+                    android:gravity="center"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:id="@+id/txtTermsCond"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="10dp"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:drawableStart="@drawable/ic_tick"
+                        android:gravity="center"
+                        android:text="Terms &amp; Conditions" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="5dp"
+                android:gravity="center"
+                android:visibility="gone"
+                android:background="@drawable/border_bg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:drawablePadding="10dp"
+                    android:drawableStart="@drawable/ic_additional_driver"
+                    android:text="First Additional Driver included"
+                    android:gravity="center"
+                    android:textColor="#000"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>
