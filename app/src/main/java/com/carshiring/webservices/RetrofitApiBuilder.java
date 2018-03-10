@@ -15,13 +15,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Contact Number : +91 9796173066
  */
 public class RetrofitApiBuilder {
+
     public final static String CarHires_BASE_URL = "http://webdevelopmentreviews.net/carhires/webservice/";
     public final static String CarGates_BASE_URL = "https://carsgates.com/";
     private final static String CarGates_BASE_WEBSERVICE_URL = CarGates_BASE_URL  + "webservices/";
     public final static String IMG_BASE_URL ="http://webdevelopmentreviews.net/carhires/upload/";
 
-    public static RetroFitApis getCargHiresapis()
-    {
+    public static RetroFitApis getCargHiresapis() {
+
         OkHttpClient httpClient=new OkHttpClient.Builder()
                 .connectTimeout(10000, TimeUnit.SECONDS)
                 .writeTimeout(10000,TimeUnit.SECONDS)
@@ -30,7 +31,8 @@ public class RetrofitApiBuilder {
                     @Override
                     public Response intercept(Chain chain) throws IOException {
                         Request request;
-                        request=chain.request().newBuilder().addHeader("content-type","application/x-www-form-urlencoded").build();
+                        request=chain.request().newBuilder().addHeader("content-type",
+                                                            "application/x-www-form-urlencoded").build();
                         return chain.proceed(request);
                     }
                 })
@@ -41,8 +43,8 @@ public class RetrofitApiBuilder {
                 .build();
         return retrofit.create(RetroFitApis.class);
     }
-    public static  RetroFitApis getCarGatesapi()
-    {
+
+    public static  RetroFitApis getCarGatesapi() {
         OkHttpClient client =new OkHttpClient.Builder()
                 .writeTimeout(10000,TimeUnit.SECONDS)
                 .readTimeout(10000,TimeUnit.SECONDS)

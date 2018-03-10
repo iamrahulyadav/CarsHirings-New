@@ -1,0 +1,203 @@
+<resources>
+<string name="app_name">CarsHiring</string>
+<string name="checkInternet">تحقق من اتصالك بالإنترنت</string>
+<string name="retry">إعادة المحاولة</string>
+<string name="exit">ىخرج</string>
+<string name="wantExit">هل تريد الخروج؟</string>
+<string name="yes">نعم فعلا</string>
+<string name="no">لا</string>
+<string name="title_home">CarsGates</string>
+<string name="permissionsetting">الرجاء تمكين جميع الأذونات.</string>
+<string name="navigation_drawer_open">Open navigation drawer</string>
+<string name="navigation_drawer_close">Close navigation drawer</string>
+<string name="welcome">مرحبا بكم في كارشيرينغ</string>
+<string name="action_accounts">حساباتي</string>
+<string name="action_quotes">حجزي</string>
+<string name="action_search_car">حجز سيارة</string>
+<string name="action_about_us">معلومات عنا</string>
+<string name="action_contact_us">اتصل بنا</string>
+<string name="action_language">لغة</string>
+<string name="action_currency">دقة</string>
+<string name="action_settings">إعدادات</string>
+<string name="title_activity_about_us">AboutUsActivity</string>
+<string name="language">اختر لغتك</string>
+<string name="thankyou">شكرا</string>
+
+<string name="Welcome">أهلا بك! الرجاء تسجيل الدخول...</string>
+<string name="update_profile_txt">أهلا بك! الرجاء تحديث ملفك الشخصي ...</string>
+<string name="enter_email">أدخل بريدك الإلكتروني</string>
+<string name="enter_password">ادخل رقمك السري</string>
+<string name="confirm_password">تأكيد كلمة المرور</string>
+<string name="sign_up">سجل</string>
+<string name="skip">تخطى</string>
+<string name="filter">منقي</string>
+<string name="sort">فرز</string>
+<string name="sign_in">تسجيل الدخول</string>
+<string name="login_forgetpassord">هل نسيت كلمة المرور؟</string>
+<string name="SignUpAccount">التسجيل للحصول على حساب</string>
+<string name="title_forgetpassword">كلمة سر منسية</string>
+<string name="forgotpassword">أدخل بريدك الإلكتروني لاستعادة كلمة المرور</string>
+<string name="recoverpassword">استعادة كلمة المرور الخاصة بي</string>
+<string name="title_create_account">إصنع حساب</string>
+
+<string name="BookingCurrent">يمكنك إضافة حجز يدويا \ n أو البحث عن سيارة الآن.</string>
+<string name="Searchnow">ابحث الآن</string>
+<string name="bookingreferencenumber">رقم مرجع الحجز</string>
+<string name="bookingstatus">وضع الحجز</string>
+<string name="book_today">كتاب اليوم لتجنب خيبة الأمل</string>
+<string name="viewFaq">عرض لدينا أسئلة وأجوبة \ n على موقعنا</string>
+<string name="search">بحث</string>
+<string name="mybooking">الحجز</string>
+<string name="accountdetails">تفاصيل الحساب</string>
+<string name="changepass">تغيير كلمة السر</string>
+<string name="email">البريد الإلكتروني</string>
+<string name="phone">هاتف</string>
+<string name="age">عمر</string>
+<string name="login">تسجيل الدخول</string>
+<string name="title">عنوان</string>
+<string name="firstname">الاسم الاول</string>
+<string name="lastname">الكنية</string>
+<string name="phnumb">رقم الهاتف</string>
+<string name="currentpass">إدخل كلمة السر الحالية</string>
+<string name="newpass">أدخل كلمة مرور جديدة</string>
+<string name="confirmpass">تأكيد كلمة المرور الجديدة</string>
+<string name="passport">رقم جواز السفر</string>
+<string name="switch_save">احفظ تفاصيل برنامج التشغيل في المرة القادمة</string>
+<string name="nevermiss">لا يفوتون صفقة مرة أخرى - لعروض حصرية والعروض، والاشتراك في النشرة الإخبارية لدينا.</string>
+<string name="interphnum">رقم الهاتف الدولي</string>
+<string name="usanumb">من الولايات المتحدة الامريكية</string>
+<string name="faq">أسئلة وأجوبة</string>
+<string name="pick_up_location">اختر موقعا</string>
+<string name="bookinginvoicenumber">حجز رقم الفاتورة</string>
+<string name="aboutus">في سيارة غيتس كل ما نقوم به هو عن إعطائك الحرية لاكتشاف المزيد. سنقوم بتحريك الجبال لتجد لك الحق في استئجار سيارة، وتجلب لك على نحو سلس، وخالية من المتاعب الخبرة من البداية الى النهاية. هنا يمكنك معرفة المزيد عن كيفية عملنا.</string>
+<string name="cardnumb">رقم البطاقة</string>
+<string name="car_results">قائمة سيارة</string>
+<string name="car_book">حجز هذه السيارة</string>
+<string name="car_details">تفاصيل السيارة</string>
+
+<string name="cardname">إسم صاحب البطاقة</string>
+<string name="date">MM/YY</string>
+<string name="Cv">CVV</string>
+<string name="country">بلد</string>
+<string name="zipcode">الرمز البريدي</string>
+<string name="sorted_by">مرتبة حسب</string>
+<string name="recommended">موصى به</string>
+<string name="price_l_to_h">السعر من الارخص للاعلى)</string>
+<string name="price_h_to_l">السعر الاعلى الى الادنى)</string>
+<string name="rating">تقييم</string>
+<string name="car_group">مجموعة السيارات</string>
+
+<string name="dummy">هذا هو نص الدمية.</string>
+<string-array name="selectlanguage">
+    <item>اختار اللغة</item>
+    <item>الإنجليزية</item>
+    <item>عربى</item>
+</string-array>
+<string-array name="Titles">
+    <item>السيد</item>
+    <item>السيدة</item>
+    <item>يغيب</item>
+    <item>الآنسة</item>
+    <item>الدكتور</item>
+</string-array>
+<string-array name="numbers">
+    <item>0</item>
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+    <item>4</item>
+    <item>5</item>
+    <item>6</item>
+    <item>7</item>
+    <item>8</item>
+    <item>9</item>
+    <item>10</item>
+
+</string-array>
+<string-array name="countries">
+    <item>المملكة العربية السعودية</item>
+    <item>دولة قطر</item>
+    <item>الهند</item>
+    <item>الإمارات العربية المتحدة</item>
+    <item>المملكة المتحدة</item>
+</string-array>
+<string name="bookProtection1">انتقل إلى الكتاب باستخدام \ n التغطية القياسية</string>
+<string name="bookProtection2">الذهاب إلى الكتاب مع \ n الحماية الكاملة</string>
+<string name="reset">إعادة تعيين</string>
+<string name="applyfilters">تطبيق الفلاتر</string>
+<string name="usepointvalue">هل تريد استخدام رصيدك الائتماني؟</string>
+
+<!--fragment search-->
+<string name="txtSearchACar">البحث عن سيارة</string>
+<string name="txtFindCheapCar">العثور على تأجير السيارات الرخيصة في 49،000 المواقع</string>
+<string name="txtUseMyLocation">استخدم موقعي</string>
+<string name="edtPickUp">اختر موقعا</string>
+<string name="edtDropUp">موقع الإرجاع</string>
+<string name="switchRetrunSameLoc">العودة إلى نفس الموقع</string>
+<string name="txtDate">تاريخ</string>
+<string name="txtTime">زمن</string>
+<string name="txtDriveAge">العمر السائق</string>
+<string name="switchDriverAgebw">سائق تتراوح أعمارهم بين 25 - 70؟</string>
+<string name="switchSearchMap">البحث عن طريق الخريطة</string>
+<string name="edtDriverAge">أدخل عمر البرنامج</string>
+<string name="licenseno">رقم الرخصة</string>
+<string name="licenseorigion">ترخيص المنشأ</string>
+<string name="city">مدينة</string>
+<string name="address">عنوان</string>
+<!--activitiy driver details-->
+<string name="txtLicense">بلد اصدار الرخصة القيادة</string>
+<string name="txtDriverLicenseNo">رقم رخصة القيادة</string>
+
+<!--activity access protection-->
+<string name="txtAccessProtection">حماية كاملة لجهودكم الاسترخاء</string>
+<string name="txtAccessProtectionTerm">ما يتم تغطيته</string>
+
+<!--activity extra -->
+<string name="txtExtra">هل تحتاج إلى أي إضافات مع \ n كارشيرينغ الخاص بك</string>
+
+<!--activity payment-->
+<string name="edtAmt">أدخل المبلغ</string>
+
+<!--activity payment details-->
+<string name="txtPaymentMethod">طرق الدفع</string>
+<string name="txtPayWithCard">الدفع باستخدام بطاقات الائتمان</string>
+
+<!--activity quotes details-->
+<string name="txtQuots">يقتبس</string>
+<string name="txtAirCond">تكيف</string>
+<string name="txtPointCollected">النقاط التي تم جمعها:</string>
+<string name="txtPickUp">امسك</string>
+<string name="txtDropUp">إنزال</string>
+<string name="update">حفظ</string>
+<string name="surname">لقب</string>
+<string name="dateofbirth">تاريخ الولادة</string>
+
+<!--activity settings-->
+<string name="txtSettings">إعدادات البحث عن السيارات</string>
+<string name="txtMiles">اميال</string>
+
+<!--activity thanku-->
+<string name="txtViewQuotes">عرض اقتباسات</string>
+
+<!--car details tab2-->
+<string name="txtSupplierDetails">تفاصيل المورد الخاص بك</string>
+<string name="txtOpeningTime">مواعيد العمل</string>
+<string name="txtSupplierinfo">معلومات المورد</string>
+<string name="txtSave">حفظ واقتباس</string>
+<string name="title_activity_home">HomeActivity</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+<string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="are_u_a">هل أنت ؟</string>
+    <string name="supplier">المورد</string>
+    <string name="pvt_co_hire_car">الجندي. تأجير السيارات</string>
+    <string name="general_query">استفسار عام</string>
+    <string name="state">حالة</string>
+    <string name="branch">فرع شجرة</string>
+    <string name="no_of_admin">عدد المشرفين</string>
+    <string name="no_of_cars">عدد السيارات</string>
+    <string name="code">الشفرة</string>
+    <string name="enter_your_query_here">أدخل استفسارك هنا</string>
+
+</resources>

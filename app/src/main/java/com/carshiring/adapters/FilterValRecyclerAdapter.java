@@ -22,10 +22,12 @@ public class FilterValRecyclerAdapter extends RecyclerView.Adapter<FilterValRecy
     int resource;
     ArrayList<FilterDefaultMultipleListModel> filterModels;
     OnClickItem clickItem;
+
     public interface OnClickItem
     {
          void itemclick(View v, int i);
     }
+
     public FilterValRecyclerAdapter(Context context, int resource, ArrayList<FilterDefaultMultipleListModel> filterModels) {
         this.context = context;
         this.resource = resource;
@@ -48,6 +50,7 @@ public class FilterValRecyclerAdapter extends RecyclerView.Adapter<FilterValRecy
     public int getItemCount() {
         return filterModels.size();
     }
+
     public void setonclick(OnClickItem clickItem)
     {
         this.clickItem=clickItem;

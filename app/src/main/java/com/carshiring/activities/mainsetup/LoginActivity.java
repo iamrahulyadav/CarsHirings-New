@@ -104,7 +104,7 @@ public class LoginActivity extends AppBaseActivity implements View.OnClickListen
                 return;
             }
             Utility.showloadingPopup(this);
-            RetroFitApis retroFitApis= RetrofitApiBuilder.getCargHiresapis();
+            RetroFitApis retroFitApis = RetrofitApiBuilder.getCargHiresapis();
             Call<ApiResponse> responseCall=retroFitApis.login(user,pass);
             responseCall.enqueue(new Callback<ApiResponse>() {
                 @Override
@@ -116,8 +116,8 @@ public class LoginActivity extends AppBaseActivity implements View.OnClickListen
                         userDetails = response.body().response.userdetail;
                         String logindata=gson.toJson(userDetails);
                         appGlobal.setLoginData(logindata);
-                        String st=  appGlobal.getUser_id();
-                        Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+                        String st =  appGlobal.getUser_id();
+                        Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                         startActivity(intent);
                         finish();
                     }

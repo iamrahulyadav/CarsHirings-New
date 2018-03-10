@@ -53,9 +53,8 @@
         <activity android:name=".activities.home.FullProtectionActivity" />
         <activity android:name=".activities.home.Extras" />
         <activity android:name=".activities.home.BookCarActivity" />
-        <activity android:name=".activities.mainsetup.MyAccountActivity"></activity>
-        <activity android:name=".activities.home.AboutUsActivity"></activity>
-        <activity android:name=".activities.home.PayActivity"/>
+        <activity android:name=".activities.mainsetup.MyAccountActivity" />
+        <activity android:name=".activities.home.AboutUsActivity" />
     </application>
 
 </manifest>

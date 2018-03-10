@@ -417,6 +417,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
 
         }
     }
+
     public static List<SearchData>searchData = new ArrayList<>();
 
 
