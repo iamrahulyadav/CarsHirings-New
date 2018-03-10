@@ -77,7 +77,6 @@ public class SplashActivity extends AppBaseActivity {
         }
 
     }
-    //
 
     private static boolean updateResources(Context context, String language) {
         Locale locale = new Locale(language);
