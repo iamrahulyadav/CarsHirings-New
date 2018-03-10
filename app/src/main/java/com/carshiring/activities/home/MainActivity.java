@@ -265,7 +265,7 @@ public class MainActivity extends AppCompatActivity
 //                startActivity(new Intent(MainActivity.this, Language.class));
                 tinyDB.remove("login_data");
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                Toast.makeText(MainActivity.this, "Language", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, "Language", Toast.LENGTH_SHORT).show();
                 break;
           /*  case R.id.action_currency:
                 startActivity(new Intent(MainActivity.this, CurrencyActivity.class));

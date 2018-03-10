@@ -21,8 +21,8 @@ public class RetrofitApiBuilder {
     private final static String CarGates_BASE_WEBSERVICE_URL = CarGates_BASE_URL  + "webservices/";
     public final static String IMG_BASE_URL ="http://webdevelopmentreviews.net/carhires/upload/";
 
-    public static RetroFitApis getCargHiresapis()
-    {
+    public static RetroFitApis getCargHiresapis() {
+
         OkHttpClient httpClient=new OkHttpClient.Builder()
                 .connectTimeout(10000, TimeUnit.SECONDS)
                 .writeTimeout(10000,TimeUnit.SECONDS)
@@ -43,8 +43,8 @@ public class RetrofitApiBuilder {
                 .build();
         return retrofit.create(RetroFitApis.class);
     }
-    public static  RetroFitApis getCarGatesapi()
-    {
+
+    public static  RetroFitApis getCarGatesapi() {
         OkHttpClient client =new OkHttpClient.Builder()
                 .writeTimeout(10000,TimeUnit.SECONDS)
                 .readTimeout(10000,TimeUnit.SECONDS)
