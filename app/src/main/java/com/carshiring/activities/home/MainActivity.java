@@ -220,7 +220,7 @@ public class MainActivity extends AppCompatActivity
         switch (id) {
             case R.id.action_accounts:
                 if (checkLogin()) {
-                    startActivity(new Intent(MainActivity.this, MyAccountActivity.class));
+//                    startActivity(new Intent(MainActivity.this, MyAccountActivity.class));
                     /*MyAccountsFragment myaccountFragment = new MyAccountsFragment();
                     getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, myaccountFragment)
                             .addToBackStack("null").commit();
@@ -263,9 +263,9 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_language:
 
 //                startActivity(new Intent(MainActivity.this, Language.class));
-                tinyDB.remove("login_data");
+               /* tinyDB.remove("login_data");
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                Toast.makeText(MainActivity.this, "Language", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Language", Toast.LENGTH_SHORT).show();*/
                 break;
           /*  case R.id.action_currency:
                 startActivity(new Intent(MainActivity.this, CurrencyActivity.class));

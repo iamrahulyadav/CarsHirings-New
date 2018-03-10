@@ -79,6 +79,8 @@ public class CarsResultListActivity extends AppBaseActivity {
         }
         appGlobal.context=getApplicationContext();
         tinyDB = new TinyDB(getApplicationContext());
+
+
         dialog=new Dialog(this);
         listCarResult = SearchCarFragment.searchData;
 //        get supplier
@@ -124,6 +126,12 @@ public class CarsResultListActivity extends AppBaseActivity {
                     set = "login";
                     setupoverlay(set);
                 }
+                Intent intent = new Intent(CarsResultListActivity.this,CarDetailActivity.class);
+                intent.putExtra("id_context",carDetail.getId_context());
+                intent.putExtra("type",carDetail.getType());
+                intent.putExtra("day",carDetail.getTime());
+                intent.putExtra("refer_type",carDetail.getRefer_type());
+                startActivity(intent);
             }
         });
     }
