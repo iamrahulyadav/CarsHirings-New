@@ -80,7 +80,6 @@ public class CarsResultListActivity extends AppBaseActivity {
         appGlobal.context=getApplicationContext();
         tinyDB = new TinyDB(getApplicationContext());
 
-
         dialog=new Dialog(this);
         listCarResult = SearchCarFragment.searchData;
 //        get supplier
@@ -97,10 +96,7 @@ public class CarsResultListActivity extends AppBaseActivity {
         supplierList.addAll(hs);
 
         recycler_search_cars = (RecyclerView) findViewById(R.id.recycler_search_cars);
-
-
     }
-
 
     public void listdispaly(List<SearchData> listCarResult )
     {
@@ -505,6 +501,8 @@ public class CarsResultListActivity extends AppBaseActivity {
     }
 
     public static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
+
+
     public void getCat(){
         Utility.showloadingPopup(this);
         String cat = gson.toJson(cateRequest);
