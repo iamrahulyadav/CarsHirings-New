@@ -203,24 +203,13 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         qu = "";
         int id = item.getItemId();
-        setupSubView(id);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-//        updateResources(this,language_code);
-
-        return true;
-    }
-
-    AppGlobal appGlobal = AppGlobal.getInstancess();
-
-
-    @Override
-    public void setupSubView(int id) {
-//        updateResources(this,language_code);
-        switch (id) {
+        setupSubView(id);
+        switch (item.getItemId()){
             case R.id.action_accounts:
                 if (checkLogin()) {
-                    startActivity(new Intent(MainActivity.this, MyAccountActivity.class));
+//                    startActivity(new Intent(MainActivity.this, MyAccountActivity.class));
                     /*MyAccountsFragment myaccountFragment = new MyAccountsFragment();
                     getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, myaccountFragment)
                             .addToBackStack("null").commit();
@@ -258,7 +247,7 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.action_contact_us:
                 startActivity(new Intent(MainActivity.this, ContactUsActivity.class));
-                //Toast.makeText(MainActivity.this, "Contact US Action", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Contact US Action", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_language:
 
@@ -276,7 +265,21 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(MainActivity.this, ChangePasswordActivity.class));
                 Toast.makeText(MainActivity.this, "Settings Action", Toast.LENGTH_SHORT).show();
                 break;*/
+
         }
+//        updateResources(this,language_code);
+
+        return true;
+    }
+
+    AppGlobal appGlobal = AppGlobal.getInstancess();
+
+
+    @Override
+    public void setupSubView(int id) {
+//        updateResources(this,language_code);
+//        switch (id) {
+
     }
 
     private boolean checkLogin() {
@@ -396,7 +399,7 @@ public class MainActivity extends AppCompatActivity
                     Log.d("TAG", "onResponse: "+response.body().msg);
                     Utility.message(getApplicationContext(), response.body().msg);
 //                    String logindata=gson.toJson(response.body().response.userdetail);
-                    userDetails = response.body().response.userdetail;
+                    userDetails = response.body().response.user_detail;
                     String logindata=gson.toJson(userDetails);
                     appGlobal.setLoginData(logindata);
                     String st=  appGlobal.getUser_id();

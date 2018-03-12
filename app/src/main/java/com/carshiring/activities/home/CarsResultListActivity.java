@@ -111,12 +111,9 @@ public class CarsResultListActivity extends AppBaseActivity {
         hs.addAll(supplierList);
         supplierList.clear();
         supplierList.addAll(hs);
-
         recycler_search_cars = (RecyclerView) findViewById(R.id.recycler_search_cars);
 
-
     }
-
 
     public void listdispaly(List<SearchData> listCarResult )
     {
@@ -346,7 +343,7 @@ public class CarsResultListActivity extends AppBaseActivity {
     private void setupoverlay(String set) {
 
         final EditText edtFname, edtLname, edtemail,edtPhone,edtZip, edtLicense,edtLicenseOrign,edtCity, edtAddress,etdob;
-        Button btupdate;
+        Button btupdate, btnCancel;
 //        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         if (set.equals("login")){
             dialog.setContentView(R.layout.popup_login);
@@ -385,9 +382,18 @@ public class CarsResultListActivity extends AppBaseActivity {
             edtCity = dialog.findViewById(R.id.etcity);
             edtAddress = dialog.findViewById(R.id.etAddress);
             btupdate = dialog.findViewById(R.id.bt_update);
+            btnCancel = dialog.findViewById(R.id.bt_cancel);
             edtemail.setText(userDetails.getUser_email());
             edtemail.setEnabled(false);
 //            set onclick on update
+
+            btnCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+
             btupdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -443,8 +449,6 @@ public class CarsResultListActivity extends AppBaseActivity {
                     } else {
                         Utility.message(getApplication(),"Please enter First name");
                     }
-
-                    dialog.dismiss();
                 }
             });
         }
@@ -518,7 +522,7 @@ public class CarsResultListActivity extends AppBaseActivity {
                 if(response.body().status==true)
                 {
                     UserDetails userDetails = new UserDetails();
-                    userDetails = response.body().response.userdetail;
+                    userDetails = response.body().response.user_detail;
                     String logindata=gson.toJson(userDetails);
                     appGlobal.setLoginData(logindata);
                     String st=  appGlobal.getUser_id();
@@ -554,8 +558,8 @@ public class CarsResultListActivity extends AppBaseActivity {
                 if(response.body().status==true)
                 {
                     UserDetails userDetails = new UserDetails();
-                    userDetails = response.body().response.userdetail;
-                    String logindata=gson.toJson(userDetails);
+                    userDetails = response.body().response.user_detail;
+                    String logindata=gson.toJson(response.body().response.user_detail);
                     appGlobal.setLoginData(logindata);
                     String st=  appGlobal.getUser_id();
                     dialog.dismiss();

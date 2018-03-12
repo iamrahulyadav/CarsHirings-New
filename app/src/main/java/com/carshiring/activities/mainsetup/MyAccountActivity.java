@@ -2,14 +2,17 @@ package com.carshiring.activities.mainsetup;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carshiring.R;
 import com.carshiring.activities.home.CarsResultListActivity;
 import com.carshiring.models.UserDetails;
+import com.carshiring.utilities.AppBaseActivity;
 import com.carshiring.utilities.AppGlobal;
 import com.carshiring.utilities.Utility;
 import com.carshiring.webservices.ApiResponse;
@@ -22,7 +25,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MyAccountActivity extends AppCompatActivity {
+public class MyAccountActivity extends AppBaseActivity {
     EditText edtFname, edtLname, edtemail,edtPhone,edtZip, edtLicense,edtLicenseOrign,edtCity, edtAddress,etdob;
     Button btupdate;
     String fname,lname,email,phone,zip,license,licenseorigin,city,address,dob,pass,set ="",userid="";
@@ -30,19 +33,26 @@ public class MyAccountActivity extends AppCompatActivity {
     TinyDB tinyDB;
     AppGlobal appGlobal=AppGlobal.getInstancess();
     UserDetails userDetails = new UserDetails();
-
+    Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_account);
         handleeditboxes();
+        actionBar=getSupportActionBar();
+        if(actionBar!=null)
+        {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.back);
+
+        }
         tinyDB = new TinyDB(getApplicationContext());
         if(tinyDB.contains("login_data"))
         {
             String data = tinyDB.getString("login_data");
            userDetails = gson.fromJson(data,UserDetails.class);
             edtFname.setText(userDetails.getUser_name());
-            edtLname.setText(userDetails.getUser_lname().toString());
+            edtLname.setText((String) userDetails.getUser_lname());
             edtemail.setText(userDetails.getUser_email());
             etdob.setText("");
             edtPhone.setText(userDetails.getUser_phone());
@@ -142,10 +152,10 @@ public class MyAccountActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 Utility.hidepopup();
-                if(response.body().status==true)
+                if(response.body().status)
                 {
                     UserDetails userDetails = new UserDetails();
-                    userDetails = response.body().response.userdetail;
+                    userDetails = response.body().response.user_detail;
                     String logindata=gson.toJson(userDetails);
                     appGlobal.setLoginData(logindata);
                     String st=  appGlobal.getUser_id();

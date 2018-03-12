@@ -33,6 +33,7 @@
             android:title="Logout" />
         <item
             android:id="@+id/action_settings"
+            android:visible="false"
             android:icon="@drawable/ic_sb_settings"
             android:title="@string/changepass" />
 

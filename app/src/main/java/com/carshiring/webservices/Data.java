@@ -17,7 +17,7 @@ import java.util.List;
 public class Data {
 
     public ArrayList<LanguageModel> language_list;
-    public UserDetails userdetail;
+    public UserDetails user_detail;
     public List<SearchData> car_list ;
     public List<Location> location;
     public CarDetailBean car_detail;
