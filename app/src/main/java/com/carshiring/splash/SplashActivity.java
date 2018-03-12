@@ -40,7 +40,6 @@ public class SplashActivity extends AppBaseActivity {
     View v;
     ArrayList<String> langlistname,langlistcode,langlistId  ;
     String[] lan;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
