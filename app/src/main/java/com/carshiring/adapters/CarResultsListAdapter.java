@@ -1,5 +1,6 @@
 package com.carshiring.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -66,10 +67,11 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
         return new MyViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         final SearchData model=list.get(position);
-        holder.tvPickDate.setText(SearchCarFragment.pickName);
+
         holder.tvCarModelName.setText(model.getModel());
         holder.txtSupplierNmae.setText("Supplied By : "+model.getSupplier());
         holder.txtDropCity.setText(model.getDrop_city());
@@ -79,8 +81,6 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
         holder.tvBagNo.setText(model.getFeature().getBag() +" Large Bag");
         holder.tvCarPricing.setText(model.getCurrency() +" "+model.getPrice()+" /"+ model.getTime()
                 +" "+model.getTime_unit());
-        holder.tvTodate.setText(SearchCarFragment.drop_date+"\n"+SearchCarFragment.dropTime);
-        holder.tvFromDate.setText(SearchCarFragment.pick_date+"\n"+ SearchCarFragment.pickTime);
         holder.txtDoor.setText(model.getFeature().getDoor()+ " Doors");
         if (model.getFeature().getAircondition().equals("true")){
             holder.txtClass.setVisibility(View.VISIBLE);
@@ -119,7 +119,7 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView tvCarModelName,tvCarPricing,tvPickDate,txtClass,txtSupplierNmae, tvBagNo,tvFromDate, tvTodate,
+        TextView tvCarModelName,tvCarPricing,txtClass,txtSupplierNmae, tvBagNo,
                 txtDropCity,txtDoor,txtTrans, txtTerms,txtFuel,txtPoint;
         LinearLayout spec1Container ;
         private View itemView  ;
@@ -130,9 +130,8 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
             bar1= (ProgressBar) itemView.findViewById(R.id.progressbar);
             tvCarModelName= (TextView) itemView.findViewById(R.id.tvCarModelName);
             tvCarPricing= (TextView) itemView.findViewById(R.id.tvCarPricing);
-            tvPickDate= (TextView) itemView.findViewById(R.id.txtPlaceName);
-            tvFromDate= (TextView) itemView.findViewById(R.id.tvFromDT);
-            tvTodate= (TextView) itemView.findViewById(R.id.tvToDT);
+
+
             tvBagNo = itemView.findViewById(R.id.tvBagSp);
             txtSupplierNmae = itemView.findViewById(R.id.txtSupplierName);
             txtDoor = itemView.findViewById(R.id.tvDoor);

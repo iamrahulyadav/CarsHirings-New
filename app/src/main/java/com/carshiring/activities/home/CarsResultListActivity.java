@@ -1,5 +1,6 @@
 package com.carshiring.activities.home;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carshiring.R;
@@ -63,10 +65,12 @@ public class CarsResultListActivity extends AppBaseActivity {
     TinyDB tinyDB;
     AppGlobal appGlobal=AppGlobal.getInstancess();
     Dialog dialog;
+    TextView tvFromDate,tvPickDate,tvTodate,txtPlaceDrop;
     String fname,lname,email,phone,zip,license,licenseorigin,city,address,emaillogin,pass,set ="",userid="",dob;
     RecyclerView recycler_search_cars;
     CatRequest cateRequest = new CatRequest();
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +88,17 @@ public class CarsResultListActivity extends AppBaseActivity {
         dialog=new Dialog(this);
 
         listCarResult = SearchCarFragment.searchData;
+        tvFromDate= (TextView) findViewById(R.id.tvFromDT);
+        tvPickDate= (TextView) findViewById(R.id.txtPlaceName);
+        tvTodate= (TextView) findViewById(R.id.tvToDT);
+        txtPlaceDrop = findViewById(R.id.txtPlaceName_drop);
+
+
+        tvFromDate.setText(SearchCarFragment.pick_date+"\n"+ SearchCarFragment.pickTime);
+        tvPickDate.setText(SearchCarFragment.pickName);
+        tvTodate.setText(SearchCarFragment.drop_date+"\n"+SearchCarFragment.dropTime);
+        txtPlaceDrop.setText(SearchCarFragment.dropName);
+
 //        get supplier
 
         for (SearchData searchData : listCarResult){

@@ -70,7 +70,6 @@ public class SplashActivity extends AppBaseActivity {
         langlistId=new ArrayList<>();
         lan=new String[langlistname.size()];
         spinner_language = (Spinner) findViewById(R.id.spinner_language);
-
         if(actionBar!=null) actionBar.hide();
         accessToken = sharedpref.getString("access_token");
         if(accessToken!=null && !accessToken.isEmpty()) {
