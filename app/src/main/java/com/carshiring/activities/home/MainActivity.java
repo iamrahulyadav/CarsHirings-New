@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity
     TextView txtemail, txtusername;
     UserDetails userDetails = new UserDetails();
     Gson gson = new Gson();
+//    ////
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
