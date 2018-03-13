@@ -283,7 +283,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 tvReturningDatePicker.setText(String.valueOf(i2));
                 tvReturningDateDayNameWithMonthName.setText(dayMon);
                 drop_date = dateValueString ;
-
                 calendar_drop.set(i,i1,i2);
                 break;
         }
@@ -355,14 +354,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         checkGPSStatus();
     }
 
-    public void setLanguages(String language_code){
-        Locale locale = new Locale(language_code);
-        Locale.setDefault(locale);
-        Configuration config = new Configuration();
-        config.locale = locale;
-        getActivity().getResources().updateConfiguration(config,
-                getActivity().getResources().getDisplayMetrics());
-    }
+
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
@@ -414,7 +406,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             startActivity(intent);*/
         } else {
             getPoint();
-
         }
     }
 
@@ -507,6 +498,9 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                     if(response.body().status){
                         point = response.body().response.point;
                         pointper = point.getPoint_percentage();
+                        if (switchSameDestLocation.isChecked()){
+                            dropName = pickName;
+                        }
                         Intent intent = new Intent(getActivity(), CarsResultListActivity.class);
                         startActivity(intent);
                     }

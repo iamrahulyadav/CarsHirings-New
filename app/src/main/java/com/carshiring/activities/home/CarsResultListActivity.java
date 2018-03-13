@@ -1,5 +1,6 @@
 package com.carshiring.activities.home;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carshiring.R;
@@ -63,10 +65,12 @@ public class CarsResultListActivity extends AppBaseActivity {
     TinyDB tinyDB;
     AppGlobal appGlobal=AppGlobal.getInstancess();
     Dialog dialog;
+    TextView tvFromDate,tvPickDate,tvTodate,txtPlaceDrop;
     String fname,lname,email,phone,zip,license,licenseorigin,city,address,emaillogin,pass,set ="",userid="",dob;
     RecyclerView recycler_search_cars;
     CatRequest cateRequest = new CatRequest();
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +88,17 @@ public class CarsResultListActivity extends AppBaseActivity {
         dialog=new Dialog(this);
 
         listCarResult = SearchCarFragment.searchData;
+        tvFromDate= (TextView) findViewById(R.id.tvFromDT);
+        tvPickDate= (TextView) findViewById(R.id.txtPlaceName);
+        tvTodate= (TextView) findViewById(R.id.tvToDT);
+        txtPlaceDrop = findViewById(R.id.txtPlaceName_drop);
+
+
+        tvFromDate.setText(SearchCarFragment.pick_date+"\n"+ SearchCarFragment.pickTime);
+        tvPickDate.setText(SearchCarFragment.pickName);
+        tvTodate.setText(SearchCarFragment.drop_date+"\n"+SearchCarFragment.dropTime);
+        txtPlaceDrop.setText(SearchCarFragment.dropName);
+
 //        get supplier
 
         for (SearchData searchData : listCarResult){
@@ -96,12 +111,9 @@ public class CarsResultListActivity extends AppBaseActivity {
         hs.addAll(supplierList);
         supplierList.clear();
         supplierList.addAll(hs);
-
         recycler_search_cars = (RecyclerView) findViewById(R.id.recycler_search_cars);
 
-
     }
-
 
     public void listdispaly(List<SearchData> listCarResult )
     {
@@ -331,7 +343,7 @@ public class CarsResultListActivity extends AppBaseActivity {
     private void setupoverlay(String set) {
 
         final EditText edtFname, edtLname, edtemail,edtPhone,edtZip, edtLicense,edtLicenseOrign,edtCity, edtAddress,etdob;
-        Button btupdate;
+        Button btupdate, btnCancel;
 //        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         if (set.equals("login")){
             dialog.setContentView(R.layout.popup_login);
@@ -370,9 +382,18 @@ public class CarsResultListActivity extends AppBaseActivity {
             edtCity = dialog.findViewById(R.id.etcity);
             edtAddress = dialog.findViewById(R.id.etAddress);
             btupdate = dialog.findViewById(R.id.bt_update);
+            btnCancel = dialog.findViewById(R.id.bt_cancel);
             edtemail.setText(userDetails.getUser_email());
             edtemail.setEnabled(false);
 //            set onclick on update
+
+            btnCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+
             btupdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -428,8 +449,6 @@ public class CarsResultListActivity extends AppBaseActivity {
                     } else {
                         Utility.message(getApplication(),"Please enter First name");
                     }
-
-                    dialog.dismiss();
                 }
             });
         }
@@ -503,7 +522,7 @@ public class CarsResultListActivity extends AppBaseActivity {
                 if(response.body().status==true)
                 {
                     UserDetails userDetails = new UserDetails();
-                    userDetails = response.body().response.userdetail;
+                    userDetails = response.body().response.user_detail;
                     String logindata=gson.toJson(userDetails);
                     appGlobal.setLoginData(logindata);
                     String st=  appGlobal.getUser_id();
@@ -539,8 +558,8 @@ public class CarsResultListActivity extends AppBaseActivity {
                 if(response.body().status==true)
                 {
                     UserDetails userDetails = new UserDetails();
-                    userDetails = response.body().response.userdetail;
-                    String logindata=gson.toJson(userDetails);
+                    userDetails = response.body().response.user_detail;
+                    String logindata=gson.toJson(response.body().response.user_detail);
                     appGlobal.setLoginData(logindata);
                     String st=  appGlobal.getUser_id();
                     dialog.dismiss();

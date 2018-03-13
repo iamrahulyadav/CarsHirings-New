@@ -48,7 +48,8 @@
 <string name="viewFaq">عرض لدينا أسئلة وأجوبة \ n على موقعنا</string>
 <string name="search">بحث</string>
 <string name="mybooking">الحجز</string>
-<string name="accountdetails">تفاصيل الحساب</string>
+<string name="accountdetails">إعدادات</string>
+    <string name="bookingHistory">سجل الحجز</string>
 <string name="changepass">تغيير كلمة السر</string>
 <string name="email">البريد الإلكتروني</string>
 <string name="phone">هاتف</string>
@@ -62,6 +63,7 @@
 <string name="newpass">أدخل كلمة مرور جديدة</string>
 <string name="confirmpass">تأكيد كلمة المرور الجديدة</string>
 <string name="passport">رقم جواز السفر</string>
+    <string name="logout">الخروج</string>
 <string name="switch_save">احفظ تفاصيل برنامج التشغيل في المرة القادمة</string>
 <string name="nevermiss">لا يفوتون صفقة مرة أخرى - لعروض حصرية والعروض، والاشتراك في النشرة الإخبارية لدينا.</string>
 <string name="interphnum">رقم الهاتف الدولي</string>
@@ -199,5 +201,11 @@
     <string name="no_of_cars">عدد السيارات</string>
     <string name="code">الشفرة</string>
     <string name="enter_your_query_here">أدخل استفسارك هنا</string>
+
+    <!--my booking -->
+    <string name="txtmybooking">الحجز</string>
+    <string name="txtCurrent">تيار</string>
+    <string name="txtPrevious">سابق</string>
+    <string name="txtQuotes">يقتبس</string>
 
 </resources>

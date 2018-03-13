@@ -40,8 +40,6 @@ public class SplashActivity extends AppBaseActivity {
     View v;
     ArrayList<String> langlistname,langlistcode,langlistId  ;
     String[] lan;
-
-// hiiii
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +68,6 @@ public class SplashActivity extends AppBaseActivity {
         langlistId=new ArrayList<>();
         lan=new String[langlistname.size()];
         spinner_language = (Spinner) findViewById(R.id.spinner_language);
-
         if(actionBar!=null) actionBar.hide();
         accessToken = sharedpref.getString("access_token");
         if(accessToken!=null && !accessToken.isEmpty()) {
