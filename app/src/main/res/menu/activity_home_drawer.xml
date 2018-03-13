@@ -23,16 +23,17 @@
             android:id="@+id/action_contact_us"
             android:icon="@drawable/ic_sb_contact_us"
             android:title="@string/action_contact_us" />
-        <!--<item
+        <item
             android:id="@+id/action_language"
             android:icon="@drawable/ic_language"
             android:title="@string/action_language" />
-        --><item
-            android:id="@+id/action_language"
+        <item
+            android:id="@+id/action_logout"
             android:icon="@drawable/ic_language"
-            android:title="Logout" />
+            android:title="@string/logout" />
         <item
             android:id="@+id/action_settings"
+            android:visible="false"
             android:icon="@drawable/ic_sb_settings"
             android:title="@string/changepass" />
 

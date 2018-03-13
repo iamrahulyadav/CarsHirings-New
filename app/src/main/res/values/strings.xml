@@ -48,8 +48,10 @@
     <string name="viewFaq">View our Frequently Asked Questions\n on our website</string>
     <string name="search">Search</string>
     <string name="mybooking">My Booking</string>
-    <string name="accountdetails">Account Details</string>
+    <string name="accountdetails">Settings</string>
     <string name="changepass">Change Password</string>
+    <string name="bookingHistory">Booking History</string>
+    <string name="logout">Logout</string>
     <string name="email">Email</string>
     <string name="phone">Phone</string>
     <string name="age">Age</string>
@@ -200,5 +202,11 @@
     <string name="no_of_cars">No. of cars</string>
     <string name="code">Code</string>
     <string name="enter_your_query_here">Enter your query here</string>
+
+    <!--my booking -->
+    <string name="txtmybooking">My Booking</string>
+    <string name="txtCurrent">Current</string>
+    <string name="txtPrevious">Previous</string>
+    <string name="txtQuotes">Quotes</string>
 
 </resources>

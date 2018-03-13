@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -110,11 +111,12 @@ public class LoginActivity extends AppBaseActivity implements View.OnClickListen
                 @Override
                 public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                     Utility.hidepopup();
-                    if(response.body().status==true)
+                    if(response.body().status)
                     {
                         UserDetails userDetails = new UserDetails();
-                        userDetails = response.body().response.userdetail;
+                        userDetails = response.body().response.user_detail;
                         String logindata=gson.toJson(userDetails);
+                        Log.d("TAG", "onResponse: "+logindata);
                         appGlobal.setLoginData(logindata);
                         String st =  appGlobal.getUser_id();
                         Intent intent = new Intent(LoginActivity.this,MainActivity.class);
