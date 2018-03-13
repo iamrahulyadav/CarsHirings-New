@@ -354,14 +354,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         checkGPSStatus();
     }
 
-    public void setLanguages(String language_code){
-        Locale locale = new Locale(language_code);
-        Locale.setDefault(locale);
-        Configuration config = new Configuration();
-        config.locale = locale;
-        getActivity().getResources().updateConfiguration(config,
-                getActivity().getResources().getDisplayMetrics());
-    }
+
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);

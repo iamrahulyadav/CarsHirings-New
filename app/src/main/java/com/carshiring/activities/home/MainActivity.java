@@ -1,8 +1,11 @@
 package com.carshiring.activities.home;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -12,6 +15,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,9 +26,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carshiring.R;
-import com.carshiring.activities.mainsetup.ChangePasswordActivity;
 import com.carshiring.activities.mainsetup.LoginActivity;
-import com.carshiring.activities.mainsetup.MyAccountActivity;
+import com.carshiring.fragments.AccountFragment;
+import com.carshiring.fragments.MyAccountsFragment;
 import com.carshiring.fragments.SearchCarFragment;
 import com.carshiring.interfaces.ISubViewSetupHandler;
 import com.carshiring.models.UserDetails;
@@ -34,15 +38,16 @@ import com.google.gson.Gson;
 import com.carshiring.webservices.ApiResponse;
 import com.carshiring.webservices.RetroFitApis;
 import com.carshiring.webservices.RetrofitApiBuilder;
-import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
+
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created byRakhi on 9/2/2018.
+ * Created by Rakhi on 9/2/2018.
  * Contact Number : +91 9958187463
  */
 
@@ -52,9 +57,8 @@ public class MainActivity extends AppCompatActivity
     public Toolbar toolbar;
     public SearchQuery searchQuery = new SearchQuery();
     View v;
-    TinyDB tinyDB;
     String qu,set,fname,lname,email,phone,zip,license,licenseorigin,city,address;
-    TinyDB sherprf;
+    TinyDB tinyDB;
     DrawerLayout drawer;
     String userId,language_code;
     Dialog dialog;
@@ -66,13 +70,11 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-     //   sherprf = new TinyDB(getApplicationContext());
-     //   language_code = sherprf.getString("language_id");
-//        updateResources(this,language_code);
+        tinyDB = new TinyDB(getApplicationContext());
+        language_code = tinyDB.getString("language_code");
+        updateRes(language_code);
         setContentView(R.layout.activity_home);
         appGlobal.context = getApplicationContext();
-        tinyDB = new TinyDB(getApplicationContext());
-        sherprf = new TinyDB(getApplicationContext());
         if(tinyDB.contains("login_data"))
         {
             String data = tinyDB.getString("login_data");
@@ -81,7 +83,7 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-      //  userId = sherprf.getString("userid");
+      //  userId = tinyDB.getString("userid");
         v = MainActivity.this.findViewById(android.R.id.content);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         dialog=new Dialog(this);
@@ -89,7 +91,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.title_home);
 
-       // language_code = sherprf.getString("language_code") ;
+       // language_code = tinyDB.getString("language_code") ;
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -118,8 +120,8 @@ public class MainActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, searchCarFragment)
                .commit();
 
-        if (sherprf.contains("login_data")){
-            String data = sherprf.getString("login_data");
+        if (tinyDB.contains("login_data")){
+            String data = tinyDB.getString("login_data");
             userDetails = gson.fromJson(data,UserDetails.class);
             userId = userDetails.getUser_id();
             if (userDetails.getUser_name()==null || userDetails.getUser_name().length()==0){
@@ -174,17 +176,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-  /*  private boolean updateResources(Context context, String language) {
-        Locale locale = new Locale(language);
-        Locale.setDefault(locale);
-        Resources resources = context.getResources();
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
-        return true;
-    }
-*/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 //        updateResources(this,language_code);
@@ -209,26 +200,17 @@ public class MainActivity extends AppCompatActivity
         switch (item.getItemId()){
             case R.id.action_accounts:
                 if (checkLogin()) {
-//                    startActivity(new Intent(MainActivity.this, MyAccountActivity.class));
-                    /*MyAccountsFragment myaccountFragment = new MyAccountsFragment();
+                    AccountFragment myaccountFragment = new AccountFragment();
                     getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, myaccountFragment)
                             .addToBackStack("null").commit();
-                    toolbar.setTitle(getResources().getString(R.string.action_accounts));*/
+                    toolbar.setTitle(getResources().getString(R.string.action_accounts));
                 }
                 break;
 
             case R.id.action_quotes:
-/*
                 if (checkLogin()) {
-                    MyBookingsFragment fragment = new MyBookingsFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("Check", qu);
-                    fragment.setArguments(bundle);
-                    getSupportFragmentManager().beginTransaction().replace(R.id.subview_container,
-                            fragment).addToBackStack("mybooking").commit();
-                    toolbar.setTitle(getResources().getString(R.string.action_quotes));
+                    startActivity(new Intent(MainActivity.this,MyBookingActivity.class));
                 }
-*/
                 break;
 
             case R.id.action_search_car:
@@ -247,19 +229,15 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.action_contact_us:
                 startActivity(new Intent(MainActivity.this, ContactUsActivity.class));
-                Toast.makeText(MainActivity.this, "Contact US Action", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.action_language:
-
-//                startActivity(new Intent(MainActivity.this, Language.class));
+            case R.id.action_logout:
                 tinyDB.remove("login_data");
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                //Toast.makeText(MainActivity.this, "Language", Toast.LENGTH_SHORT).show();
                 break;
-          /*  case R.id.action_currency:
-                startActivity(new Intent(MainActivity.this, CurrencyActivity.class));
+            case R.id.action_language:
+                startActivity(new Intent(MainActivity.this, Language.class));
                 Toast.makeText(MainActivity.this, "Currency Change", Toast.LENGTH_SHORT).show();
-                break;*/
+                break;
 
            /* case R.id.action_settings:
                 startActivity(new Intent(MainActivity.this, ChangePasswordActivity.class));
@@ -267,7 +245,6 @@ public class MainActivity extends AppCompatActivity
                 break;*/
 
         }
-//        updateResources(this,language_code);
 
         return true;
     }
@@ -275,6 +252,15 @@ public class MainActivity extends AppCompatActivity
     AppGlobal appGlobal = AppGlobal.getInstancess();
 
 
+    private void updateRes(String lang){
+        Resources res = getApplicationContext().getResources();
+// Change locale settings in the app.
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.setLocale(new Locale(lang.toLowerCase())); // API 17+ only.
+// Use conf.locale = new Locale(...) if targeting lower versions
+        res.updateConfiguration(conf, dm);
+    }
     @Override
     public void setupSubView(int id) {
 //        updateResources(this,language_code);
@@ -343,7 +329,7 @@ public class MainActivity extends AppCompatActivity
                                                 } else {
                                                     Utility.message(getApplication(),"Please enter city");
                                                 }
-                                            } else {
+                                             } else {
                                                 Utility.message(getApplication(),"Please enter licenseorigin");
                                             }
                                         } else {
@@ -428,7 +414,7 @@ public class MainActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.title_home);
-        language_code = sherprf.getString("language_code") ;
+        language_code = tinyDB.getString("language_code") ;
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -473,8 +459,8 @@ public class MainActivity extends AppCompatActivity
         View view = navigationView.getHeaderView(0);
         txtemail = (TextView) view.findViewById(R.id.tvEmail);
         txtusername = (TextView) view.findViewById(R.id.tvUserName);
-        String username = sherprf.getString("user_name");
-        String email = sherprf.getString("user_email");
+        String username = tinyDB.getString("user_name");
+        String email = tinyDB.getString("user_email");
         if (username != null && email != null) {
             if (!username.isEmpty() || !email.isEmpty()) {
                 txtemail.setText(email);
