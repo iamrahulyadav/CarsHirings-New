@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/CarsHiring.iml" filepath="$PROJECT_DIR$/CarsHiring.iml" />
-      <module fileurl="file://D:\Vaibhav\Projects\Example\CarsHirings-New\CarsHiring.iml" filepath="D:\Vaibhav\Projects\Example\CarsHirings-New\CarsHiring.iml" />
-      <module fileurl="file://D:\Rakhi\CarsHiring\.idea\CarsHirings-New.iml" filepath="D:\Rakhi\CarsHiring\.idea\CarsHirings-New.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CarsHirings-New.iml" filepath="$PROJECT_DIR$/CarsHirings-New.iml" />
       <module fileurl="file://$PROJECT_DIR$/FORTSDKv1.4/FORTSDKv1.4.iml" filepath="$PROJECT_DIR$/FORTSDKv1.4/FORTSDKv1.4.iml" />
-      <module fileurl="file://D:\Vaibhav\Projects\Example\CarsHirings-New\FORTSDKv1.4\FORTSDKv1.4.iml" filepath="D:\Vaibhav\Projects\Example\CarsHirings-New\FORTSDKv1.4\FORTSDKv1.4.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://D:\Vaibhav\Projects\Example\CarsHirings-New\app\app.iml" filepath="D:\Vaibhav\Projects\Example\CarsHirings-New\app\app.iml" />
     </modules>
   </component>
 </project>
