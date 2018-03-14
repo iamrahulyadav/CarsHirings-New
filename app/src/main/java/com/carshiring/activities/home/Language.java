@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.carshiring.R;
 import com.carshiring.models.LanguageModel;
+import com.carshiring.utilities.AppBaseActivity;
 import com.carshiring.utilities.Utility;
 import com.carshiring.webservices.ApiResponse;
 import com.carshiring.webservices.RetroFitApis;
@@ -30,7 +31,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Language extends AppCompatActivity
+public class Language extends AppBaseActivity
 {
     RadioGroup langgroup;
     String language,token,langId,language_code ;

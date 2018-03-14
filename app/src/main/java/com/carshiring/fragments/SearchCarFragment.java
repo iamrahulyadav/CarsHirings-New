@@ -351,7 +351,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         Toolbar toolbar = ((MainActivity) getActivity()).toolbar;
         toolbar.setTitle(getResources().getString(R.string.action_search_car));
 
-        checkGPSStatus();
+//        checkGPSStatus();
     }
 
 

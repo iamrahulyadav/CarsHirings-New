@@ -77,7 +77,7 @@ public class BaseFragment extends Fragment implements IFragment,IRefreshToken {
         alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
-                checkGPSStatus();
+//                checkGPSStatus();
             }
         });
         // Showing Alert Message

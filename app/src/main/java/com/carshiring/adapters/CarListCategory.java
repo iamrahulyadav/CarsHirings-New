@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class CarListCategory extends RecyclerView.Adapter<CarListCategory.MyViewHolder> {
 
-    final OnItemClickListenerCategory listener;
+    OnItemClickListenerCategory listener;
 
     //private List<String> horizontalList;
     private Context context;
@@ -56,11 +56,12 @@ public class CarListCategory extends RecyclerView.Adapter<CarListCategory.MyView
     }
 
 
-    public CarListCategory(Context context, List<Category.ResponseBean.CatBean> catBeanList, OnItemClickListenerCategory lisner) {
+    public CarListCategory(Context context, List<Category.ResponseBean.CatBean> catBeanList
+                         ) {
         //this.horizontalList = horizontalList;
         this.context = context;
         this.catBeanList = catBeanList;
-        this.listener = lisner;
+
     }
 
     @Override
