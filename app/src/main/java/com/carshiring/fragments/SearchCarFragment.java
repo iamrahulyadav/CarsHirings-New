@@ -452,7 +452,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
 
 
                         String data = gson.toJson(searchData);
-                        Log.d(TAG, "onResponse: "+data);
+                        Log.d(TAG, "Complete Search List: " + data);
                         ArrayList<SearchData>searchData1 = new ArrayList<>();
                         searchData1.addAll(searchData);
 
@@ -467,6 +467,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                             ((AppBaseActivity)getActivity()).getToken(_this);
                     }
                 }
+
                 Toast.makeText(getActivity(), response.body().msg, Toast.LENGTH_SHORT).show();
 
             }

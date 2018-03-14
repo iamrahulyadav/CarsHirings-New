@@ -45,7 +45,7 @@ public class SearchData{
             private FeatureBean feature;
             private String covprice;
             private String covcurrency;
-            private String category;
+            private String category;                              //
             private String model;
             private String model_code;
             private String image;

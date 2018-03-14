@@ -173,14 +173,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-//        updateResources(this,language_code);
         getMenuInflater().inflate(R.menu.home, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        updateResources(this,language_code);
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -238,7 +236,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.action_language:
                 startActivity(new Intent(MainActivity.this, Language.class));
-                Toast.makeText(MainActivity.this, "Currency Change", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Currency Change", Toast.LENGTH_SHORT).show();
                 break;
 
            /* case R.id.action_settings:

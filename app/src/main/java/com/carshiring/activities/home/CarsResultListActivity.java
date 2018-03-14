@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carshiring.R;
+import com.carshiring.adapters.CarListCategory;
 import com.carshiring.adapters.CarResultsListAdapter;
 import com.carshiring.fragments.SearchCarFragment;
 import com.carshiring.models.FilterDefaultMultipleListModel;
@@ -37,8 +38,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
@@ -70,11 +73,17 @@ public class CarsResultListActivity extends AppBaseActivity {
     RecyclerView recycler_search_cars;
     CatRequest cateRequest = new CatRequest();
 
+
+    CarListCategory adapter;
+    private RecyclerView recyclerView_carlist_category;
+
+
+
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cars_result_list);
+        setContentView(R.layout.activity_cars_result_list2);
 
         filter =  getResources().getString(R.string.recommended);
         actionBar = getSupportActionBar() ;
@@ -113,10 +122,21 @@ public class CarsResultListActivity extends AppBaseActivity {
         supplierList.addAll(hs);
         recycler_search_cars = (RecyclerView) findViewById(R.id.recycler_search_cars);
 
+
+
+        recyclerView_carlist_category = (RecyclerView) findViewById(R.id.recycler_carlist_by_category);
+        LinearLayoutManager horizontalLayoutManagaer
+                = new LinearLayoutManager(CarsResultListActivity.this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerView_carlist_category.setLayoutManager(horizontalLayoutManagaer);
+
+        adapter = new CarListCategory(getApplicationContext(), catBeanList);
+        recyclerView_carlist_category.setAdapter(adapter);
+
     }
 
     public void listdispaly(List<SearchData> listCarResult )
     {
+        Log.d("Search Data List", listCarResult.size()+"");
         listAdapter = new CarResultsListAdapter(this,listCarResult, new CarResultsListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(SearchData carDetail) {
@@ -497,10 +517,64 @@ public class CarsResultListActivity extends AppBaseActivity {
                     if (request.body()!=null){
                         String msg = response.body().string();
                         category = gson.fromJson(msg,Category.class);
-                        catBeanList.addAll(category.getResponse().getCat());
-                    }
-                    Log.d("TAG", "onResponse: "+catBeanList.size());
 
+                        List<Category.ResponseBean.CatBean>catBeans = new ArrayList<>();
+                        catBeans = category.getResponse().getCat();
+                        final List<Category.ResponseBean.CatBean> finalCatBeans = catBeans;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                catBeanList.addAll(finalCatBeans);
+
+                                /*//List<String> al = new ArrayList<>();
+// add elements to al, including duplicates
+                                Set<Category.ResponseBean.CatBean> hs = new LinkedHashSet<>();
+                                hs.addAll(catBeanList);
+                                catBeanList.clear();
+                                catBeanList.addAll(hs);*/
+                                TreeSet<Category.ResponseBean.CatBean> set = new TreeSet<>(new Comparator<Category.ResponseBean.CatBean>() {
+                                    @Override
+                                    public int compare(Category.ResponseBean.CatBean o1, Category.ResponseBean.CatBean o2) {
+                                        if(o1.getCategory_name().equalsIgnoreCase(o2.getCategory_name())){
+                                            return 0;
+                                        }
+                                        return 1;
+                                    }
+                                });
+                                Log.d("TAG", "onResponse: " + catBeanList.size());   // 116
+                                set.addAll(catBeanList);
+                                catBeanList.clear();
+                                catBeanList.addAll(set);
+                                Log.d("TAG", "onResponse: " + catBeanList.size());   // 16
+
+
+                                //2nd
+/*
+                                TreeSet<Category.ResponseBean.CatBean> set1 = new TreeSet<>(new Comparator<Category.ResponseBean.CatBean>() {
+                                    @Override
+                                    public int compare(Category.ResponseBean.CatBean o1, Category.ResponseBean.CatBean o2) {
+                                        if(o1.getCategory_name().equalsIgnoreCase(o2.getCategory_name())){
+                                            return 0;
+                                        }
+                                        return 1;
+                                    }
+                                });
+                                Log.d("TAG", "onResponse: " + catBeanList.size());    // 16
+                                set1.addAll(catBeanList);
+                                catBeanList.clear();
+                                catBeanList.addAll(set1);
+                                Log.d("TAG", "onResponse: " + catBeanList.size());   // 16
+*/
+
+
+
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
+
+                        Log.d("TAG", "onResponse: "+ msg);
+                    }
+  //                  Log.d("TAG", "onResponse: " + catBeanList.size());
                 }
             }
 
