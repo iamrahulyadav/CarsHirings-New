@@ -24,4 +24,5 @@ public class Data {
     public Point point;
     public List<Category> cat;
     public AboutUs about_us;
+    public String booking_id;
 }

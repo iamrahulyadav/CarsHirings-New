@@ -54,7 +54,6 @@ public interface RetroFitApis {
                                     @Field("dob") String dob,
                                     @Field("city") String city,
                                     @Field("address") String address);
-
     @FormUrlEncoded
     @POST("about_us")
     Call<ApiResponse> about_us(@Field("language") String language);
@@ -100,5 +99,35 @@ public interface RetroFitApis {
     @POST("webservice/car_detail")
     Call<ApiResponse> car_detail(@Field("access_token") String access_token,@Field("id_context") String id_context, @Field("type") String type,@Field("day") String day,
     @Field("refer_type") String refer_type);
+
+    @FormUrlEncoded
+    @POST("make_booking")
+    Call<ApiResponse> bookCar(@Field("language_code") String language_code,
+                              @Field("name") String name,
+                              @Field("sarname") String sarname,
+                              @Field("number") String number,
+                              @Field("email") String email,
+                              @Field("address") String address,
+                              @Field("city") String city,
+                              @Field("zipcode") String zipcode,
+                              @Field("countrycode") String countrycode,
+                              @Field("car_id") String car_id,
+                              @Field("type") String type,
+                              @Field("rtype") String rtype,
+                              @Field("fullprotection") String fullprotection,
+                              @Field("flight_no") String flight_no,
+                              @Field("extradata") String extradata,
+                              @Field("dob") String dob,
+                              @Field("user_id") String user_id,
+                              @Field("pick_date") String pick_date,
+                              @Field("drop_date") String drop_date,
+                              @Field("pick_city") String pick_city,
+                              @Field("drop_city") String drop_city,
+                              @Field("protection_val") String protection_val,
+                              @Field("booking_point") String booking_point,
+                              @Field("booking_wallet") String booking_wallet,
+                              @Field("booking_payfort") String booking_payfort,
+                              @Field("transaction_id") String transaction_id);
+
 
 }

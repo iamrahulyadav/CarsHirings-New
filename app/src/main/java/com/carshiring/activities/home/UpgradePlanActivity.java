@@ -1,22 +1,21 @@
 package com.carshiring.activities.home;
+
+import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.CheckedTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carshiring.R;
 import com.carshiring.models.TokenResponse;
-import com.carshiring.utilities.AppBaseActivity;
+import com.carshiring.utilities.AppGlobal;
 import com.carshiring.utilities.Utility;
-import com.carshiring.webservices.ApiResponse;
-import com.carshiring.webservices.RetroFitApis;
-import com.carshiring.webservices.RetrofitApiBuilder;
 import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
 import com.payfort.fort.android.sdk.base.FortSdk;
@@ -40,74 +39,49 @@ import java.util.Map;
 
 import static android.content.ContentValues.TAG;
 
-public class PayActivity extends AppBaseActivity {
+public class UpgradePlanActivity extends AppCompatActivity {
     ActionBar actionBar;
-    TextView txtPay, txtTotalAmyVal;
-    CheckedTextView txtcheckPoint,txtCheckPay, txtCheckWallet;
-    public static String price="", email="",sdk_token="";
-    public FortCallBackManager fortCallback;
-    String name="",sarname="",number="",address="",city="",zipcode="",countrycode="",car_id="",
-            type="",rtype="",fullprotection="",flight_no="",extradata="",dob="",user_id="",pick_date="",
-            drop_date="", pick_city="",drop_city="",protection_val="",booking_point="",booking_wallet="",
-            booking_payfort="",transaction_id="",language="";
+    public static String user_type, price,sdk_token, package_id, email ;
     TinyDB tinyDB;
-    CheckBox checkPayOnline, checkWallet, checkPoint;
+    String language, transaction_id, userId;
+    AppGlobal appGlobal = AppGlobal.getInstancess();
+
+    Gson gson  = new Gson();
+    Context mContext;
+    public FortCallBackManager fortCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pay);
-        tinyDB = new TinyDB(getApplicationContext());
-        txtCheckPay = findViewById(R.id.check_pay_online);
-        txtcheckPoint = findViewById(R.id.check_points);
-        txtCheckWallet = findViewById(R.id.check_wallet);
-        txtPay = findViewById(R.id.txtPay);
-        txtTotalAmyVal = findViewById(R.id.txtTotalPayValue);
-        txtPay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                requestPurchase();
-            }
-        });
-        txtTotalAmyVal.setText(getIntent().getStringExtra("price"));
 
-        txtCheckWallet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (txtCheckWallet.isChecked()){
-                    txtCheckWallet.setChecked(false);
-                } else {
-                    txtCheckWallet.setChecked(true);
-                }
-            }
-        });
-        txtCheckPay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (txtCheckPay.isChecked()){
-                    txtCheckPay.setChecked(false);
-                } else {
-                    txtCheckPay.setChecked(true);
-                }
-            }
-        });
-        txtcheckPoint.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (txtcheckPoint.isChecked()){
-                    txtcheckPoint.setChecked(false);
-                } else {
-                    txtcheckPoint.setChecked(true);
-                }
-            }
-        });
+        mContext = this;
+        appGlobal.context=getApplicationContext();
+        tinyDB = new TinyDB(getApplicationContext());
+
+        language=tinyDB.getString("language_code");
+
+        /*if(loginData.getUser_detail().getUser_type().equals("2"))     // Checking is it Jobseeker
+        {
+            JobPlanFragment istFragment=new JobPlanFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.upgrade_frame,istFragment).commit();
+        }
+        else if(loginData.getUser_detail().getUser_type().equals("1"))    //Checking is it Employer
+        {
+            EmpPlanFragment ndfragment=new EmpPlanFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.upgrade_frame,ndfragment).commit();
+        }*/
+     /*   JobPlanFragment istFragment=new JobPlanFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.upgrade_frame,istFragment).commit();*/
+
     }
+
 
     @Override
     protected void onResume() {
         super.onResume();
-        language=tinyDB.getString("language_code");
-        getSDKToken(language);
+        getSDKToken();
+
     }
 
     @Override
@@ -120,22 +94,20 @@ public class PayActivity extends AppBaseActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-
     }
 
-    private void requestSDKToken(String language) {
-        createFORTMobileSDKToken(language);
+    private void requestSDKToken() {
+        createFORTMobileSDKToken();
     }
 
     private void requestOperation(String command, String sdk_token) {
         final String ECI = "ECOMMERCE";
-        email = "a@g.in";
-        final String CUSTOMER_EMAIL = email;
+        final String CUSTOMER_EMAIL = "a@g.in";
         final String LANGUAGE = language;
         final String CURRENCY = "SAR";
-        double amt = Double.parseDouble(CarDetailActivity.carPrice)*100;
-        int i = (int)amt;
-        final String AMOUNT = String.valueOf(i);
+        int f = 100;
+        String price = String.valueOf(f);
+        final String AMOUNT = String.valueOf(f);
         final String MERCHANT_REFERENCE = Utility.getRandomString(40) ;
         FortRequest fortRequest = new FortRequest();
         fortRequest.setShowResponsePage(true);
@@ -144,45 +116,35 @@ public class PayActivity extends AppBaseActivity {
         requestMap.put("command",command);
         requestMap.put("merchant_reference",MERCHANT_REFERENCE);
         requestMap.put("amount",AMOUNT);
+
         requestMap.put("currency",CURRENCY);
         requestMap.put("language",LANGUAGE);
         requestMap.put("customer_email",CUSTOMER_EMAIL);
         requestMap.put("sdk_token",sdk_token);
+        Log.d(TAG, "requestOperation: "+requestMap);
 
-//        requestMap.put("payment_option","AMEX");
-//        requestMap.put("eci",ECI);
-//        requestMap.put("order_description",command);
-//        requestMap.put("customer_ip",command);
-//        requestMap.put("customer_name",sdk_token);
-//        if (mobile!=null){
-//            requestMap.put("phone_number",mobile);
-//        }
-//        requestMap.put("settlement_reference",command);
-//        requestMap.put("return_url",command);
 
         fortRequest.setRequestMap(requestMap);
         fortCallback = FortCallback.Factory.create();
         boolean showLoading= true;
         try {
-            FortSdk.getInstance().registerCallback(this, fortRequest,FortSdk.ENVIRONMENT.TEST,
+            FortSdk.getInstance().registerCallback(this, fortRequest, FortSdk.ENVIRONMENT.TEST,
                     5, fortCallback,showLoading, new FortInterfaces.OnTnxProcessed() {
                         @Override
                         public void onCancel(Map<String, String> requestParamsMap, Map<String, String> responseMap) {
-
-                            Toast.makeText(getApplicationContext(), responseMap.get("response_message"),
-                                    Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "onCancel: "+ responseMap.get("response_message"));
+                            Utility.message(getApplicationContext(), responseMap.get("response_message"));
                         }
                         @Override
                         public void onSuccess(Map<String, String> requestParamsMap, Map<String, String> fortResponseMap) {
                             Log.d(TAG, "onSuccess: "+fortResponseMap.toString());
-                            Toast.makeText(getApplicationContext(), fortResponseMap.get("response_message"),
-                                    Toast.LENGTH_SHORT).show();
                             transaction_id = fortResponseMap.get("fort_id");
-
+                            Utility.message(getApplicationContext(), "Payment successful ");
+//                            upgradePackage(transaction_id);
                         }
                         @Override
                         public void onFailure(Map<String, String> requestParamsMap, Map<String, String> fortResponseMap) {
-                            Log.d(TAG, "onFailure: "+fortResponseMap.get("response_message"));
+                            Log.d(TAG, "onFailure: "+fortResponseMap.toString());
                             Toast.makeText(getApplicationContext(), fortResponseMap.get("response_message"),
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -190,13 +152,15 @@ public class PayActivity extends AppBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     final String ACCESS_TOKEN =  "qa2s6awTpBNc04Q65T8v";
-    final String MERCHANT_IDENTIFIER = "GjitDYjm";
+    final String MERCHANT_IDENTIFIER =  "GjitDYjm";
     final String REQUEST_PHRASE = "PASS" ;
 
-    private void createFORTMobileSDKToken(String language) {
+
+    private void createFORTMobileSDKToken() {
         OkHttpClient client = new OkHttpClient();
         String device_id = FortSdk.getDeviceId(getApplicationContext());
         StringBuilder base = new StringBuilder();
@@ -259,71 +223,23 @@ public class PayActivity extends AppBaseActivity {
         });
     }
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         fortCallback.onActivityResult(requestCode,resultCode,data);
     }
 
-    public void getSDKToken(String language) {
-        requestSDKToken(language) ;
+    public void getSDKToken() {
+        requestSDKToken() ;
     }
 
     public void requestAuthorization() {
         requestOperation("AUTHORIZATION" ,sdk_token) ;
     }
 
-    public void requestPurchase() {
+    public void planrequestPurchase(View view) {
         requestOperation("PURCHASE" ,sdk_token) ;
-    }
-/*
-    Call<ApiResponse> bookCar(@Field("language_code") String language_code,
-                              @Field("name") String name,
-                              @Field("sarname") String sarname,
-                              @Field("number") String number,
-                              @Field("email") String email,
-                              @Field("address") String address,
-                              @Field("city") String city,
-                              @Field("zipcode") String zipcode,
-                              @Field("countrycode") String countrycode,
-                              @Field("car_id") String car_id,
-                              @Field("type") String type,
-                              @Field("rtype") String rtype,
-                              @Field("fullprotection") String fullprotection,
-                              @Field("flight_no") String flight_no,
-                              @Field("extradata") String extradata,
-                              @Field("dob") String dob,
-                              @Field("user_id") String user_id,
-                              @Field("pick_date") String pick_date,
-                              @Field("drop_date") String drop_date,
-                              @Field("pick_city") String pick_city,
-                              @Field("drop_city") String drop_city,
-                              @Field("protection_val") String protection_val,
-                              @Field("booking_point") String booking_point,
-                              @Field("booking_wallet") String booking_wallet,
-                              @Field("booking_payfort") String booking_payfort);*/
-
-    public void bookCar(){
-        Utility.showLoading(this,"Searching cars...");
-        RetroFitApis retroFitApis = RetrofitApiBuilder.getCargHiresapis();
-        retrofit2.Call<ApiResponse> responseCall = retroFitApis.bookCar(language,name,sarname,number,email,address,
-                city,zipcode,countrycode,car_id,type,rtype,fullprotection,flight_no,extradata,dob,user_id,
-                pick_date,drop_date,pick_city,drop_city,protection_val,booking_point,booking_wallet,booking_payfort,
-                transaction_id);
-        responseCall.enqueue(new retrofit2.Callback<ApiResponse>() {
-            @Override
-            public void onResponse(retrofit2.Call<ApiResponse> call, retrofit2.Response<ApiResponse> response) {
-                if (response!=null){
-                    Log.d(TAG, "onResponse: "+response.body().response.booking_id);
-                }
-            }
-
-            @Override
-            public void onFailure(retrofit2.Call<ApiResponse> call, Throwable t) {
-                Log.d(TAG, "onFailure: "+t.getMessage());
-            }
-        });
-
     }
 
 }

@@ -449,8 +449,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
 
                     if(response.body().status){
                         searchData=response.body().response.car_list;
-
-
                         String data = gson.toJson(searchData);
                         Log.d(TAG, "Complete Search List: " + data);
                         ArrayList<SearchData>searchData1 = new ArrayList<>();

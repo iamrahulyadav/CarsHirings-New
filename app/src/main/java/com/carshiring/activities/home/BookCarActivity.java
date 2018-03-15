@@ -24,7 +24,10 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.carshiring.R;
 import com.carshiring.adapters.CarResultsListAdapter;
+import com.carshiring.fragments.SearchCarFragment;
+import com.carshiring.models.BookingRequest;
 import com.carshiring.models.ExtraAdded;
+import com.carshiring.models.UserDetails;
 import com.carshiring.utilities.AppBaseActivity;
 import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
@@ -44,7 +47,10 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
     //  List<CarSpecification> carSpecificationList;
     ProgressBar bar,bar1;
     TinyDB tinyDB;
-    String price, name, number,currency;
+    UserDetails userDetails = new UserDetails();
+    String price, name, number,currency,sarname,email,address,city,zipcode,countrycode,car_id,type,rtype,
+            fullprotection,flight_no,extradata,dob,user_id,pick_date,drop_date,pick_city,drop_city,protection_val,
+            booking_point,booking_wallet,booking_payfort;
     Gson gson =new Gson();
     List<ExtraAdded> extraData = new ArrayList<>();
 
@@ -59,12 +65,34 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
         }
         setupToolbar();
         tinyDB = new TinyDB(getApplicationContext());
+        String logindata= tinyDB.getString("login_data");
+            /*(String name, String sarname, String number, String email,
+                          String address, String city, String zipcode, String countrycode,
+                          String car_id, String type, String rtype, String fullprotection,
+                          String flight_no, String extradata, String dob, String user_id,
+                          String pick_date, String drop_date, String pick_city, String drop_city,
+                          String protection_val, String booking_point, String booking_wallet,
+                          String booking_payfort)*/
+
+        userDetails = gson.fromJson(logindata,UserDetails.class);
+        name = userDetails.getUser_name();
+        sarname = (String) userDetails.getUser_lname();
+        number = userDetails.getUser_phone();
+        email = userDetails.getUser_email();
+        address = userDetails.getUser_address();
+        city = (String) userDetails.getUser_city();
+        zipcode = userDetails.getUser_zipcode();
+        countrycode = userDetails.getUser_countrycode();
+        pick_city = SearchCarFragment.pickName;
+        drop_city = SearchCarFragment.dropName;
+        pick_date = SearchCarFragment.pick_date;
+        drop_date = SearchCarFragment.drop_date;
+
         if (tinyDB.contains("extra_added")){
             String extra = tinyDB.getString("extra_added");
             extraData= Arrays.asList(gson.fromJson(extra,ExtraAdded[].class));
             Log.d("TAG", "onCreate: "+extraData.size());
         }
-
 
         terms= (TextView)findViewById(R.id.txt_terms);
         txtPoint = findViewById(R.id.txtpoint_cal);
@@ -154,7 +182,7 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
         tinyDB.remove("full_prot");
 
     }
-/*name,price,number*/
+
     private void addLayout(String name, String price, String number,String currency) {
         LayoutInflater layoutInflater =
                 (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -188,9 +216,9 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
         toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               /* Intent it=new Intent(BookCarActivity.this, BookCarActivity.class);
-                it.putExtra("get","FromActi");
-                startActivity(it);*/
+                Intent it=new Intent(BookCarActivity.this, PayActivity.class);
+                it.putExtra("price",carprice.getText().toString().trim());
+                startActivity(it);
             }
         });
     }
@@ -203,7 +231,6 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
             case R.id.txt_terms:
                 Intent intent=new Intent(Intent.ACTION_VIEW,url);
                 startActivity(intent);
-                //    startActivity(new Intent(getActivity(), TermsandCondition.class));
                 break;
         }
     }

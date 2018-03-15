@@ -209,4 +209,7 @@
     <string name="txtPrevious">Previous</string>
     <string name="txtQuotes">Quotes</string>
 
+    <!--pay activity-->
+    <string name="txtPayTotal">Total amount to be paid </string>
+
 </resources>
