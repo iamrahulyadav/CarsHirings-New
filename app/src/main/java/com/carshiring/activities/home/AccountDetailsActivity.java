@@ -120,7 +120,19 @@ public class AccountDetailsActivity extends AppBaseActivity {
 
     private void setUserData(){
 
+        edt_fname.setText(sharedpref.getString("user_name"));
+        edt_lname.setText(sharedpref.getString("user_lname"));
+        if(!userId.isEmpty() || !userId.equals(null))
+        {
+            if(!sharedpref.getString("user_email").equals(null) || !sharedpref.getString("user_email").isEmpty()) {
+                etUserEmail.setEnabled(false);
+                etUserEmail.setText(sharedpref.getString("user_email"));
+            }
+        }
+        edt_phone.setText(sharedpref.getString("user_phone"));
+//        etUserAge.setText(Integer.toString(sharedpref.getInt("userage")));
     }
+
     private void updatespinner() {
         ArrayAdapter<CharSequence> charSequenceArrayAdapter=ArrayAdapter.createFromResource(this,R.array.Titles,android.R.layout.simple_spinner_item);
         spTitle.setAdapter(charSequenceArrayAdapter);
