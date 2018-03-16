@@ -48,6 +48,8 @@
     <string name="viewFaq">View our Frequently Asked Questions\n on our website</string>
     <string name="search">Search</string>
     <string name="mybooking">My Booking</string>
+    <string name="myProfile">Profile</string>
+
     <string name="accountdetails">Settings</string>
     <string name="changepass">Change Password</string>
     <string name="bookingHistory">Booking History</string>
@@ -209,9 +211,6 @@
     <string name="txtPrevious">Previous</string>
     <string name="txtQuotes">Quotes</string>
 
-    <!--pay activity-->
-    <string name="txtPayTotal">Total amount to be paid </string>
-
     <!--ToolBar Titles-->
     <string name="title_account_details">Account Details</string>
     <string name="excess_prot">Excess Protection</string>
@@ -257,7 +256,6 @@
     <string name="finding_location_list">Finding Location List...</string>
     <string name="location_not_found">Location not found</string>
     <string name="check_internet">Check Your Internet Connection</string>
-    <string name="retry">Retry</string>
 
     <!--ExcessProtectionActivity-->
     <string name="add_full_protection">Add Full Protection</string>

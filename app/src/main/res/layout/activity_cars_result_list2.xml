@@ -110,79 +110,49 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-<!--
-                        <android.support.design.widget.CoordinatorLayout
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/buttoncurve_caategory"
+                            android:onClick="cat_All">
+                            <ImageView
+                                android:layout_width="80dp"
+                                android:layout_height="60dp"
+                                android:id="@+id/car_cat_image_all"
+                                android:src="@mipmap/ic_launcher"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_marginLeft="10dp"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="All"
+                                android:gravity="center"
+                                android:paddingTop="3dp"
+                                android:paddingBottom="3dp" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/colorPrimary"
+                                android:textColor="@color/white"
+                                android:text=""
+                                android:textStyle="bold"
+                                android:paddingTop="3dp"
+                                android:paddingBottom="3dp"
+                                android:gravity="center"/>
+                        </LinearLayout>
+
+                        <android.support.v7.widget.RecyclerView
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <android.support.design.widget.AppBarLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@color/white">
-
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal"
-                                    app:layout_scrollFlags="scroll|enterAlways">
--->
-
-                                    <LinearLayout
-                                        android:orientation="vertical"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:gravity="center"
-                                        android:layout_marginLeft="10dp"
-                                        android:layout_marginTop="10dp"
-                                        android:background="@drawable/buttoncurve_caategory"
-                                        android:onClick="cat_All">
-
-                                        <ImageView
-                                            android:layout_width="80dp"
-                                            android:layout_height="60dp"
-                                            android:id="@+id/car_cat_image_all"
-                                            android:src="@mipmap/ic_launcher"
-                                            android:layout_marginTop="5dp"
-                                            android:layout_marginRight="10dp"
-                                            android:layout_marginLeft="10dp"/>
-                                        <TextView
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:text="All"
-                                            android:gravity="center"
-                                            android:paddingTop="3dp"
-                                            android:paddingBottom="3dp" />
-                                        <TextView
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:background="@color/colorPrimary"
-                                            android:textColor="@color/white"
-                                            android:text=""
-                                            android:textStyle="bold"
-                                            android:paddingTop="3dp"
-                                            android:paddingBottom="3dp"
-                                            android:gravity="center"/>
-
-                                    </LinearLayout>
-
-<!--
-                                </LinearLayout>
-
-                            </android.support.design.widget.AppBarLayout>
--->
-
-
-                            <android.support.v7.widget.RecyclerView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:layout_marginLeft="10dp"
-                                android:id="@+id/recycler_carlist_by_category"
-                                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-
-<!--
-                        </android.support.design.widget.CoordinatorLayout>
--->
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:id="@+id/recycler_carlist_by_category"
+                            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
                     </LinearLayout>
 
@@ -200,12 +170,6 @@
         </android.support.design.widget.CoordinatorLayout>
 
     </LinearLayout>
-
-
-
-
-
-
     <include
         layout="@layout/bottom_toolbar_2"
         android:layout_height="wrap_content"

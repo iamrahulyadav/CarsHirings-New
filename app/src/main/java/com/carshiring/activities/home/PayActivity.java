@@ -57,6 +57,11 @@ public class PayActivity extends AppBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pay);
+        actionBar = getSupportActionBar() ;
+        if(actionBar!=null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.back);
+        }
         tinyDB = new TinyDB(getApplicationContext());
         txtCheckPay = findViewById(R.id.check_pay_online);
         txtcheckPoint = findViewById(R.id.check_points);
@@ -69,7 +74,7 @@ public class PayActivity extends AppBaseActivity {
                 requestPurchase();
             }
         });
-        txtTotalAmyVal.setText(getIntent().getStringExtra("price"));
+        txtTotalAmyVal.setText(CarDetailActivity.currency+ " "+CarDetailActivity.carPrice);
 
         txtCheckWallet.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,6 +111,7 @@ public class PayActivity extends AppBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        actionBar.setTitle(getResources().getString(R.string.txtPayNow));
         language=tinyDB.getString("language_code");
         getSDKToken(language);
     }

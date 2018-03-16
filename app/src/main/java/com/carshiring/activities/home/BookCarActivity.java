@@ -159,7 +159,6 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
                name = extraData.get(i).getName();
                currency = extraData.get(i).getCurrency();
                addLayout(name,price,number,currency);
-
            }
         }
     }
@@ -219,7 +218,6 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 Intent it=new Intent(BookCarActivity.this, PayActivity.class);
-                it.putExtra("price",carprice.getText().toString().trim());
                 startActivity(it);
             }
         });
@@ -233,6 +231,7 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
             case R.id.txt_terms:
                 Intent intent=new Intent(Intent.ACTION_VIEW,url);
                 startActivity(intent);
+                //    startActivity(new Intent(getActivity(), TermsandCondition.class));
                 break;
         }
     }

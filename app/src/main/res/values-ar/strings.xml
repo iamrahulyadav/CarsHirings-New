@@ -76,6 +76,7 @@
 <string name="car_results">قائمة سيارة</string>
 <string name="car_book">حجز هذه السيارة</string>
 <string name="car_details">تفاصيل السيارة</string>
+    <string name="myProfile">الملف الشخصي</string>
 
 <string name="cardname">إسم صاحب البطاقة</string>
 <string name="date">MM/YY</string>
@@ -207,5 +208,10 @@
     <string name="txtCurrent">تيار</string>
     <string name="txtPrevious">سابق</string>
     <string name="txtQuotes">يقتبس</string>
+
+
+    <!--pay activity-->
+    <string name="txtPayTotal">المبلغ الإجمالي الواجب دفعه</string>
+    <string name="txtPayNow">أكمل دفعتك</string>
 
 </resources>

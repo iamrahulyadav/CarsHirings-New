@@ -1,7 +1,9 @@
 package com.carshiring.webservices;
 
 import com.carshiring.models.AboutUs;
+import com.carshiring.models.BookingHistory;
 import com.carshiring.models.Category;
+import com.carshiring.models.ContactUs;
 import com.carshiring.models.LanguageModel;
 import com.carshiring.models.Point;
 import com.carshiring.models.SearchData;
@@ -26,4 +28,5 @@ public class Data {
     public AboutUs about_us;
     public ContactUs contact_us;
     public List<BookingHistory> booking;
+    public String booking_id;
 }

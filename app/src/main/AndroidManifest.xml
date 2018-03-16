@@ -32,7 +32,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".activities.mainsetup.LoginActivity"
@@ -60,11 +59,9 @@
         <activity android:name=".activities.home.Language" />
         <activity android:name=".activities.home.AccountDetailsActivity" />
         <activity android:name=".activities.home.QuotedDetailsActivity" />
-        <activity android:name=".activities.home.MyBookingActivity"/>
-        <activity android:name=".activities.home.PayActivity"/>
-        <activity android:name=".activities.home.UpgradePlanActivity">
-
-        </activity>
+        <activity android:name=".activities.home.MyBookingActivity" />
+        <activity android:name=".activities.home.PayActivity" />
+        <activity android:name=".fragments.UserDashActivity"></activity>
     </application>
 
 </manifest>
