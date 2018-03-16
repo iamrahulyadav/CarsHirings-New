@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import com.carshiring.R;
 import com.carshiring.activities.home.AccountDetailsActivity;
 import com.carshiring.activities.home.MyBookingActivity;
-import com.carshiring.activities.mainsetup.ChangePasswordActivity;
+import com.carshiring.activities.home.UserDashActivity;
 import com.carshiring.activities.mainsetup.LoginActivity;
 import com.carshiring.utilities.AppGlobal;
 
@@ -25,7 +25,7 @@ import com.carshiring.utilities.AppGlobal;
 
 public class AccountFragment extends Fragment implements View.OnClickListener {
     AppGlobal global=AppGlobal.getInstancess();
-    LinearLayout ll_mybooking,ll_accountdetails,ll_changepassword;
+    LinearLayout ll_mybooking,ll_accountdetails,ll_changepassword,li_profile;
     Toolbar toolbar;
     View view;
 
@@ -36,10 +36,12 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         global.context=getContext();
         ll_mybooking= (LinearLayout) view.findViewById(R.id.ll_booking);
         ll_accountdetails= (LinearLayout) view.findViewById(R.id.ll_acccountdetails);
-        ll_changepassword= (LinearLayout) view.findViewById(R.id.ll_change);
+        ll_changepassword= (LinearLayout) view.findViewById(R.id.ll_booking_history);
+        li_profile= (LinearLayout) view.findViewById(R.id.ll_profile);
         ll_mybooking.setOnClickListener(this);
         ll_accountdetails.setOnClickListener(this);
         ll_changepassword.setOnClickListener(this);
+        li_profile.setOnClickListener(this);
         setuptoolbar();
         return view;
     }
@@ -70,9 +72,12 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
             case R.id.ll_acccountdetails:
                startActivity(new Intent(getActivity(),AccountDetailsActivity.class));
                 break;
-            case R.id.ll_change:
+            case R.id.ll_booking_history:
                 //startActivity(new Intent(getActivity(),ChangePasswordActivity.class));
              break;
+            case R.id.ll_profile:
+                startActivity(new Intent(getContext(), UserDashActivity.class));
+                break;
         }
 
     }

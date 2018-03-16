@@ -107,7 +107,7 @@ public interface RetroFitApis {
 
     @FormUrlEncoded
     @POST("booking_historylist")
-    Call<ApiResponse> booking_history(  @Field("user_id") String user_id    );
+    Call<ApiResponse> booking_history(  @Field("user_id") String user_id);
     @FormUrlEncoded
     @POST("make_booking")
     Call<ApiResponse> bookCar(@Field("language_code") String language_code,
@@ -137,5 +137,10 @@ public interface RetroFitApis {
                               @Field("booking_payfort") String booking_payfort,
                               @Field("transaction_id") String transaction_id);
 
-
+    @FormUrlEncoded
+    @POST("wallet_historylist")
+    Call<ApiResponse> walletHistory(  @Field("user_id") String user_id);
+    @FormUrlEncoded
+    @POST("point_historylist")
+    Call<ApiResponse> pointHistory(  @Field("user_id") String user_id);
 }

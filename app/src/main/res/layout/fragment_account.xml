@@ -64,7 +64,7 @@
 
     </LinearLayout>
     <LinearLayout
-        android:id="@+id/ll_change"
+        android:id="@+id/ll_booking_history"
         android:layout_marginTop="9dp"
         android:orientation="horizontal"
         style="@style/GreyBorderButtonTheme"

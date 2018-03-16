@@ -6,9 +6,12 @@ import com.carshiring.models.Category;
 import com.carshiring.models.ContactUs;
 import com.carshiring.models.LanguageModel;
 import com.carshiring.models.Point;
+import com.carshiring.models.PointHistoryData;
 import com.carshiring.models.SearchData;
 import com.carshiring.models.UserDetails;
 import com.carshiring.models.CarDetailBean;
+import com.carshiring.models.WalletHistoryData;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,4 +32,6 @@ public class Data {
     public ContactUs contact_us;
     public List<BookingHistory> booking;
     public String booking_id;
+    public List<WalletHistoryData>wallet;
+    public List<PointHistoryData>points;
 }

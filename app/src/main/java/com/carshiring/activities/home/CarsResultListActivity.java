@@ -231,7 +231,7 @@ public class CarsResultListActivity extends AppBaseActivity {
             listdispaly(listCarResult);
         }
         isApplyFiltered = false ;
-        recycler_search_cars.setAdapter(listAdapter);
+//        recycler_search_cars.setAdapter(listAdapter);
         getCat();
     }
 
