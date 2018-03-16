@@ -170,7 +170,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        actionBar.setTitle("Account Details");
+        actionBar.setTitle(getResources().getString(R.string.title_account_details));
 
     }
 

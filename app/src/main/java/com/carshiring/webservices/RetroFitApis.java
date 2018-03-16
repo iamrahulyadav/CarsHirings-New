@@ -101,4 +101,12 @@ public interface RetroFitApis {
     Call<ApiResponse> car_detail(@Field("access_token") String access_token,@Field("id_context") String id_context, @Field("type") String type,@Field("day") String day,
     @Field("refer_type") String refer_type);
 
+
+    @FormUrlEncoded
+    @POST("contact_us")
+    Call<ApiResponse> contact_us(@Field("language_code") String language_code);
+
+    @FormUrlEncoded
+    @POST("booking_historylist")
+    Call<ApiResponse> booking_history(  @Field("user_id") String user_id    );
 }

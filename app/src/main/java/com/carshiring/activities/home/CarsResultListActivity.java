@@ -12,9 +12,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.carshiring.R;
 import com.carshiring.adapters.CarListCategory;
 import com.carshiring.adapters.CarResultsListAdapter;
@@ -63,7 +65,6 @@ public class CarsResultListActivity extends AppBaseActivity {
     public static List<String>supplierList=new ArrayList<>();
     List<String>featuresList=new ArrayList<>();
     List<Integer>cateList=new ArrayList<>();
-    CarResultsListAdapter listAdapter;
     UserDetails userDetails = new UserDetails();
     TinyDB tinyDB;
     AppGlobal appGlobal=AppGlobal.getInstancess();
@@ -74,8 +75,10 @@ public class CarsResultListActivity extends AppBaseActivity {
     CatRequest cateRequest = new CatRequest();
 
 
+
     CarListCategory adapter;
     private RecyclerView recyclerView_carlist_category;
+    private ImageView cat_image_all;
 
 
 
@@ -108,6 +111,12 @@ public class CarsResultListActivity extends AppBaseActivity {
         tvTodate.setText(SearchCarFragment.drop_date+"\n"+SearchCarFragment.dropTime);
         txtPlaceDrop.setText(SearchCarFragment.dropName);
 
+        cat_image_all = (ImageView) findViewById(R.id.car_cat_image_all);
+        Glide.with(getApplicationContext())
+                .load("https://carshiring.com/site/images/car.png")
+                .into(cat_image_all);
+
+
 //        get supplier
 
         for (SearchData searchData : listCarResult){
@@ -129,14 +138,44 @@ public class CarsResultListActivity extends AppBaseActivity {
                 = new LinearLayoutManager(CarsResultListActivity.this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView_carlist_category.setLayoutManager(horizontalLayoutManagaer);
 
-        adapter = new CarListCategory(getApplicationContext(), catBeanList);
+        adapter = new CarListCategory(getApplicationContext(), listCarResult, catBeanList, new CarListCategory.OnItemClickListenerCategory() {
+            @Override
+            public void onItemClickCategory(int position) {
+
+                catgory_clicked(position);
+            }
+        });
         recyclerView_carlist_category.setAdapter(adapter);
 
     }
 
-    public void listdispaly(List<SearchData> listCarResult )
-    {
+    private void catgory_clicked(int position){
+        List<SearchData> listCarResult1 =  new ArrayList<>();
+        listCarResult1.clear();
+
+
+        Toast.makeText(getApplicationContext(), catBeanList.get(position).getCode() + "", Toast.LENGTH_SHORT).show();
+
+        for(int i=0; i<listCarResult.size(); i++) {
+            if((catBeanList.get(position).getCode()+"").equals(listCarResult.get(i).getCategory())){
+
+                listCarResult1.add(listCarResult.get(i));
+            }
+        }
+        Log.d("Size", listCarResult.size()+"");
+        Log.d("size", listCarResult1.size()+"");
+        listdispaly(listCarResult1);
+//        listAdapter.notifyDataSetChanged();
+
+    }
+
+    public void cat_All(View v){
+        listdispaly(listCarResult);
+    }
+
+    public void listdispaly(List<SearchData> listCarResult ) {
         Log.d("Search Data List", listCarResult.size()+"");
+        CarResultsListAdapter listAdapter;
         listAdapter = new CarResultsListAdapter(this,listCarResult, new CarResultsListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(SearchData carDetail) {
@@ -162,6 +201,8 @@ public class CarsResultListActivity extends AppBaseActivity {
                 }
             }
         });
+        recycler_search_cars.setAdapter(listAdapter);
+
     }
 
     @Override
@@ -189,7 +230,7 @@ public class CarsResultListActivity extends AppBaseActivity {
         if(isApplyFiltered)
         {
             if(filteredtList.size() == 0) {
-                Toast.makeText(getApplicationContext(), "No Filteres Applied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_filters_applied), Toast.LENGTH_SHORT).show();
                 listdispaly(listCarResult);
             }else listdispaly(filteredtList);
         }
@@ -198,7 +239,7 @@ public class CarsResultListActivity extends AppBaseActivity {
             listdispaly(listCarResult);
         }
         isApplyFiltered = false ;
-        recycler_search_cars.setAdapter(listAdapter);
+//        recycler_search_cars.setAdapter(listAdapter);
         getCat();
     }
 
@@ -352,7 +393,7 @@ public class CarsResultListActivity extends AppBaseActivity {
                 return result;
             }
         });
-        listAdapter.notifyDataSetChanged();
+       // listAdapter.notifyDataSetChanged();
     }
 
     public void openSelectionFilter(View view) {
@@ -381,10 +422,10 @@ public class CarsResultListActivity extends AppBaseActivity {
                         if (!pass.isEmpty()){
                             login(emaillogin,pass);
                         } else {
-                            Utility.message(getApplicationContext(),"Please enter your password");
+                            Utility.message(getApplicationContext(),getResources().getString(R.string.please_enter_your_password));
                         }
                     } else {
-                        Utility.message(getApplicationContext(),"Please enter valid email");
+                        Utility.message(getApplicationContext(),getResources().getString(R.string.please_enter_valid_email));
                     }
                 }
             });
@@ -439,35 +480,35 @@ public class CarsResultListActivity extends AppBaseActivity {
                                                         if (!address.isEmpty()) {
                                                             updateProfile(userid, fname);
                                                         } else {
-                                                            Utility.message(getApplication(), "Please enter address");
+                                                            Utility.message(getApplication(), getResources().getString(R.string.please_enter_address));
                                                         }
                                                     } else {
-                                                        Utility.message(getApplication(), "Please enter city");
+                                                        Utility.message(getApplication(), getResources().getString(R.string.please_enter_city));
                                                     }
                                                 } else {
-                                                    Utility.message(getApplication(), "Please enter licenseorigin");
+                                                    Utility.message(getApplication(), getResources().getString(R.string.please_enter_license_origin));
                                                 }
                                             } else {
-                                                Utility.message(getApplication(), "Please enter license");
+                                                Utility.message(getApplication(), getResources().getString(R.string.please_enter_license));
                                             }
                                         } else {
-                                            Utility.message(getApplication(), "Please enter zipcode");
+                                            Utility.message(getApplication(), getResources().getString(R.string.please_enter_zipcode));
                                         }
                                     } else {
-                                        Utility.message(getApplication(), "Please enter valid phone number");
+                                        Utility.message(getApplication(), getResources().getString(R.string.please_enter_valid_phone_number));
                                     }
                                 } else {
-                                    Utility.message(getApplication(), "Please enter valid email");
+                                    Utility.message(getApplication(), getResources().getString(R.string.please_enter_valid_email));
                                 }
                             }
                             else {
-                                Utility.message(getApplication(),"Please enter Date of Birth");
+                                Utility.message(getApplication(),getResources().getString(R.string.please_enter_dob));
                             }
                         } else {
-                            Utility.message(getApplication(),"Please enter last name");
+                            Utility.message(getApplication(),getResources().getString(R.string.please_enter_last_name));
                         }
                     } else {
-                        Utility.message(getApplication(),"Please enter First name");
+                        Utility.message(getApplication(),getResources().getString(R.string.please_enter_first_name));
                     }
                 }
             });
@@ -479,6 +520,7 @@ public class CarsResultListActivity extends AppBaseActivity {
 
     public static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
     public void getCat(){
+        catBeanList.clear();
         Utility.showloadingPopup(this);
         String cat = gson.toJson(cateRequest);
 
@@ -504,7 +546,7 @@ public class CarsResultListActivity extends AppBaseActivity {
                     @Override
                     public void run() {
                         String msg = e.getMessage();
-                        Utility.message(getApplicationContext(), "Connection error ");
+                        Utility.message(getApplicationContext(), getResources().getString(R.string.no_internet_connection));
                         Utility.hidepopup();
                     }
                 });
@@ -521,6 +563,7 @@ public class CarsResultListActivity extends AppBaseActivity {
                         List<Category.ResponseBean.CatBean>catBeans = new ArrayList<>();
                         catBeans = category.getResponse().getCat();
                         final List<Category.ResponseBean.CatBean> finalCatBeans = catBeans;
+
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -583,7 +626,7 @@ public class CarsResultListActivity extends AppBaseActivity {
 
     private void login(String user, String pass) {
         if(!Utility.isNetworkConnected(getApplicationContext())){
-            Toast.makeText(CarsResultListActivity.this, "No Network Connection!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CarsResultListActivity.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             return;
         }
         Utility.showloadingPopup(this);
@@ -611,14 +654,14 @@ public class CarsResultListActivity extends AppBaseActivity {
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
                 Utility.hidepopup();
-                Utility.message(getApplicationContext(),"Connection Error");
+                Utility.message(getApplicationContext(),getResources().getString(R.string.no_internet_connection));
             }
         });
     }
 
     private void updateProfile(String userid, String fname) {
         if(!Utility.isNetworkConnected(getApplicationContext())){
-            Toast.makeText(CarsResultListActivity.this, "No Network Connection!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CarsResultListActivity.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             return;
         }
         Utility.showloadingPopup(this);
@@ -647,7 +690,7 @@ public class CarsResultListActivity extends AppBaseActivity {
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
                 Utility.hidepopup();
-                Utility.message(getApplicationContext(),"Connection Error");
+                Utility.message(getApplicationContext(),getResources().getString(R.string.no_internet_connection));
             }
         });
     }

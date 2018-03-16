@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">CarsHiring</string>
     <string name="checkInternet">Check Your Internet Connection</string>
-    <string name="retry">Retry</string>
     <string name="exit">Exit</string>
     <string name="wantExit">Do you want to Exit?</string>
     <string name="yes">Yes</string>
@@ -209,4 +208,65 @@
     <string name="txtPrevious">Previous</string>
     <string name="txtQuotes">Quotes</string>
 
+    <!--ToolBar Titles-->
+    <string name="title_account_details">Account Details</string>
+    <string name="excess_prot">Excess Protection</string>
+    <string name="select_extras">Select Your Extras</string>
+    <string name="full_protection">Full Protection</string>
+    <string name="select_loc">Select Location</string>
+
+    <!--Alert Dialog-->
+    <string name="gps_sett">GPS is settings</string>
+    <string name="gps_not_enabled">GPS is not enabled. Do you want to go to settings menu?</string>
+    <string name="settings">Settings</string>
+    <string name="cancle">Cancel</string>
+
+    <!--Extra-->
+    <string name="add_extra">"Add These Extras"</string>
+    <string name="extra_added">Extras added</string>
+
+    <!--BookCarActivity-->
+    <string name="full_protection_only">Full Protection Only </string>
+    <string name="full_day"> For Day</string>
+    <string name="colletcted_point">Collected point: </string>
+    <string name="or_similar"> or Similar</string>
+    <string name="price">Price : </string>
+    <string name="sub_total">Subtotal: </string>
+    <string name="book_this_car">Book this Car</string>
+
+    <!--Toast-->
+    <string name="error">Error</string>
+    <string name="no_filters_applied">No Filters Applied</string>
+    <string name="please_enter_your_password">Please enter your password</string>
+    <string name="please_enter_valid_email">Please enter valid email</string>
+    <string name="please_enter_address">Please enter your address</string>
+    <string name="please_enter_license_origin">Please enter licenseorigin</string>
+    <string name="please_enter_city">Please enter city</string>
+    <string name="please_enter_license">Please enter licence</string>
+    <string name="please_enter_zipcode">Please enter zipcode</string>
+    <string name="please_enter_valid_phone_number">Please enter your valid phone number</string>
+    <string name="please_enter_dob">Please enter your date of birth</string>
+    <string name="please_enter_first_name">Please enter your first name</string>
+    <string name="please_enter_last_name">Please enter your last name</string>
+    <string name="no_internet_connection">No Internet Connection</string>
+    <string name="loading">Loading...</string>
+    <string name="finding_location_list">Finding Location List...</string>
+    <string name="location_not_found">Location not found</string>
+    <string name="check_internet">Check Your Internet Connection</string>
+    <string name="retry">Retry</string>
+
+    <!--ExcessProtectionActivity-->
+    <string name="add_full_protection">Add Full Protection</string>
+    <string name="for_day"> For Day</string>
+    <string name="full_prot">full_prot</string>
+    <string name="full_protection_addedd">Full protection added</string>
+    <string name="get_a_quote_1">Get a quote with Standard Coverage</string>
+    <string name="get_a_quote_2">Get a quote with Full Protection</string>
+
+    <string name="lang_select">Language Selection</string>
+
+    <!--MyBookingActivity-->
+    <string name="current">Current</string>
+    <string name="previous">Previous</string>
+    <string name="quotes">Quotes</string>
 </resources>

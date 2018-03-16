@@ -354,7 +354,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
 //        checkGPSStatus();
     }
 
-
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
@@ -419,7 +418,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
 
         Utility.showLoading(getActivity(),"Searching cars...");
         final SearchCarFragment _this = SearchCarFragment.this ;
-        RetroFitApis retroFitApis = RetrofitApiBuilder.getCarGatesapi() ;
+            RetroFitApis retroFitApis = RetrofitApiBuilder.getCarGatesapi() ;
 
         pick_hour=String.valueOf(pick_hours>9?pick_hours:"0"+pick_hours);
         pick_minute=String.valueOf(pick_minutes>9?pick_minutes:"0"+pick_minutes);

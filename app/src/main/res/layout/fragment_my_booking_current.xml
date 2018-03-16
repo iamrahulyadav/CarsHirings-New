@@ -13,13 +13,13 @@
             android:id="@+id/fragment_my_booking_current_recycler"
             android:visibility="gone"/>
         <LinearLayout
-
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center"
             android:id="@+id/fragment_my_booking_current_no_data_view"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="visible">
 
             <TextView
                 style="@style/simpleRectangle"
@@ -45,11 +45,10 @@
 
     </LinearLayout>
 
-    <include layout="@layout/bottom_toolbar"
+    <!--<include layout="@layout/bottom_toolbar"
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        />
+        android:layout_alignParentEnd="true" />-->
 </RelativeLayout>

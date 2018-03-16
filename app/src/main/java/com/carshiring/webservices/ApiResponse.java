@@ -1,5 +1,7 @@
 package com.carshiring.webservices;
 
+import com.carshiring.models.ContactUs;
+
 /**
  * Created by Muhib.
  * Contact Number : +91 9796173066
@@ -15,4 +17,5 @@ public class ApiResponse {
     public String error ;
     public String error_description ;
     public Data response ;
+   // public ContactUs contactUs;
 }

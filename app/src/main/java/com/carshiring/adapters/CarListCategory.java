@@ -29,14 +29,17 @@ public class CarListCategory extends RecyclerView.Adapter<CarListCategory.MyView
     //private List<String> horizontalList;
     private Context context;
     private List<Category.ResponseBean.CatBean>catBeanList = new ArrayList<>();
+    private List<SearchData>listCarResult = new ArrayList<>();
 
     public interface  OnItemClickListenerCategory {
-        void onItemClick();
+        void onItemClickCategory(int position);
     }
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView txtName;public TextView txtCode; ImageView image;
+        public TextView txtName;
+        public TextView txtCode;
+        ImageView image;
 
         public MyViewHolder(View view) {
             super(view);
@@ -46,22 +49,26 @@ public class CarListCategory extends RecyclerView.Adapter<CarListCategory.MyView
 
         }
 
-      /*  void bindListener(final OnItemClickListenerCategory listener){
+        void bindListener(final int position, final OnItemClickListenerCategory listener) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onItemClickCategory();
+                    listener.onItemClickCategory(position);
                 }
-            });*/
+            });
+
+        }
     }
 
 
-    public CarListCategory(Context context, List<Category.ResponseBean.CatBean> catBeanList
+    public CarListCategory(Context context, List<SearchData> listCarResult, List<Category.ResponseBean.CatBean> catBeanList, OnItemClickListenerCategory listener
                          ) {
+
+        this.listener = listener;
         //this.horizontalList = horizontalList;
         this.context = context;
         this.catBeanList = catBeanList;
-
+        this.listCarResult = listCarResult;
     }
 
     @Override
@@ -89,13 +96,16 @@ public class CarListCategory extends RecyclerView.Adapter<CarListCategory.MyView
         Glide.with(context)
                 .load(RetrofitApiBuilder.IMG_BASE_URL + catBeanList.get(position).getCategory_image())
                 .into(holder.image);
-        holder.txtCode.setText(/*"code"*/catBeanList.get(position).getCode() +"");
+        //holder.txtCode.setText(/*"code"*/catBeanList.get(position).getCode() +"");
+        holder.txtCode.setText(/*"code"*/listCarResult.get(position).getCurrency() + " " +
+                listCarResult.get(position).getPrice());
 
         Log.d("TAG", catBeanList.get(position).getCategory_name() + " - "
                 + catBeanList.get(position).getCategory_image() + " - "
                 + catBeanList.get(position).getCode() + " - ");
         //   holder.txtView.setText(horizontalList.get(position));
 
+        holder.bindListener(position, listener);
 /*        holder.txtView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

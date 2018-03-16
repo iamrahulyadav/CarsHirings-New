@@ -31,7 +31,7 @@ public class FullProtectionActivity extends AppCompatActivity {
         ActionBar actionBar=getSupportActionBar();
         if(actionBar!=null)
         {
-            actionBar.setTitle("Full Protection");
+            actionBar.setTitle(getResources().getString(R.string.full_protection));
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.back);
         }

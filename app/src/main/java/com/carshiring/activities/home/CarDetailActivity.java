@@ -49,6 +49,7 @@ public class CarDetailActivity extends AppCompatActivity {
     Page_Adapter adapter;
     ActionBar actionBar;
     TinyDB tinyDB ;
+
     public static String logo,carPrice,carImage,modelname,currency,suppliername,suppliercity,termsurl
             ,fullprotectioncurrency,fullprotectionammount,driver_minage,driver_maxage,CDW,THP;
     Gson gson = new Gson();
@@ -56,10 +57,12 @@ public class CarDetailActivity extends AppCompatActivity {
     public static List<CarDetailBean.FeatureBean> carSpecificationList=new ArrayList<>();
     public static List<CoveragesBean> coveragelist=new ArrayList<>();
     public static List<String> theft_protection=new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_car_detail);
+
         actionBar = getSupportActionBar() ;
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -80,9 +83,11 @@ public class CarDetailActivity extends AppCompatActivity {
     }
 
     private void setupApi() {
+
         Utility.showloadingPopup(this);
         RetroFitApis retroFitApis= RetrofitApiBuilder.getCarGatesapi();
         Call<ApiResponse> apiResponseCall=retroFitApis.car_detail(token,id_context,type,day,refer_type);
+
         apiResponseCall.enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
@@ -119,7 +124,7 @@ public class CarDetailActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),"Error",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.error) ,Toast.LENGTH_SHORT).show();
                 Utility.hidepopup();
             }
         });
@@ -187,7 +192,7 @@ public class CarDetailActivity extends AppCompatActivity {
     private void setupToolbar() {
         Toolbar toolbar= (Toolbar) findViewById(R.id.bottomToolBar);
         TextView textView= (TextView) toolbar.findViewById(R.id.txt_bot);
-        textView.setText("Book this Car");
+        textView.setText(getResources().getString(R.string.book_this_car));
         toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
