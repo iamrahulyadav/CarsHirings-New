@@ -73,15 +73,15 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
         final SearchData model=list.get(position);
 
         holder.tvCarModelName.setText(model.getModel());
-        holder.txtSupplierNmae.setText("Supplied By : "+model.getSupplier());
+        holder.txtSupplierNmae.setText(context.getResources().getString(R.string.supplied_by) + model.getSupplier());
         holder.txtDropCity.setText(model.getDrop_city());
         if (model.getFeature().getBag().equals("0")){
             holder.tvBagNo.setVisibility(View.GONE);
         }
-        holder.tvBagNo.setText(model.getFeature().getBag() +" Large Bag");
+        holder.tvBagNo.setText(model.getFeature().getBag() + context.getResources().getString(R.string.large_bag));
         holder.tvCarPricing.setText(model.getCurrency() +" "+model.getPrice()+" /"+ model.getTime()
                 +" "+model.getTime_unit());
-        holder.txtDoor.setText(model.getFeature().getDoor()+ " Doors");
+        holder.txtDoor.setText(model.getFeature().getDoor()+ context.getResources().getString(R.string.doors));
         if (model.getFeature().getAircondition().equals("true")){
             holder.txtClass.setVisibility(View.VISIBLE);
         }
@@ -109,7 +109,7 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
         calPrice = (price*pointpercent)/100;
         calPoint = (int) (calPrice/0.05);
 
-        holder.txtPoint.setText("Points Collected: "+String.valueOf(calPoint));
+        holder.txtPoint.setText(context.getResources().getString(R.string.points_collected) + String.valueOf(calPoint));
         holder.bindListener(model,listener);
     }
 

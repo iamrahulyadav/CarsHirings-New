@@ -126,7 +126,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-           android:text="200 Points"
+            android:text="@string/points"
             android:layout_marginLeft="10dp"
             android:textSize="18sp"
             android:layout_gravity="center"

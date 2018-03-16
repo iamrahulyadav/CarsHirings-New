@@ -38,7 +38,7 @@ public class CarDetailTab2Fragment extends Fragment implements View.OnClickListe
         quotes=(TextView) view.findViewById(R.id.txt_savequote);
         txt_supdetail=(TextView) view.findViewById(R.id.txt_supdetail);
         txt_suploc=view.findViewById(R.id.txt_suploc);
-        txt_supdetail.setText("Your Supplier is "+suppliername);
+        txt_supdetail.setText(getResources().getString(R.string.your_supplier_is) + suppliername);
         txt_suploc.setText(suppliercity);
         terms.setOnClickListener(this);
         quotes.setOnClickListener(this);

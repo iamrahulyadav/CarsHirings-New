@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.carshiring.R;
 import com.carshiring.interfaces.IBaseActivity;
 import com.carshiring.interfaces.IRefreshToken;
 import com.carshiring.webservices.RetroFitApis;
@@ -57,7 +58,7 @@ public class AppBaseActivity extends AppCompatActivity implements IBaseActivity,
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
-                Toast.makeText(AppBaseActivity.this, "Connection Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AppBaseActivity.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             }
         });
 

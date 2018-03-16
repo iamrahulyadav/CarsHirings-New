@@ -87,7 +87,8 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
             @Override
             public void onClick(View v) {
                 SearchCarFragment searchCarFragment=new SearchCarFragment();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.subview_container,searchCarFragment).addToBackStack(null).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().
+                        replace(R.id.subview_container,searchCarFragment).addToBackStack(null).commit();
             }
         });
 

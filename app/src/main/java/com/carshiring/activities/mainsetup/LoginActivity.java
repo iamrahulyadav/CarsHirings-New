@@ -33,6 +33,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppBaseActivity implements View.OnClickListener,TextView.OnEditorActionListener {
+
     AppGlobal appGlobal=AppGlobal.getInstancess();
     TextView txtWelcome, txtEmail, txtPass, txtLoginForgot;
     EditText username,password;
@@ -47,6 +48,7 @@ public class LoginActivity extends AppBaseActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         sharedpref=new TinyDB(getApplicationContext());
         language_code = sharedpref.getString("language_code") ;
         token=sharedpref.getString("access_token");
@@ -101,7 +103,7 @@ public class LoginActivity extends AppBaseActivity implements View.OnClickListen
         if (!user.isEmpty() && !pass.isEmpty())
         {
             if(!Utility.isNetworkConnected(getApplicationContext())){
-                Toast.makeText(LoginActivity.this, "No Network Connection!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
                 return;
             }
             Utility.showloadingPopup(this);
@@ -131,19 +133,19 @@ public class LoginActivity extends AppBaseActivity implements View.OnClickListen
                 @Override
                 public void onFailure(Call<ApiResponse> call, Throwable t) {
                     Utility.hidepopup();
-                    Utility.message(getApplicationContext(),"Connection Error");
+                    Utility.message(getApplicationContext(),getResources().getString(R.string.no_internet_connection));
                 }
             });
         }
         else {
             if (user.isEmpty() && pass.isEmpty()) {
-                Toast.makeText(LoginActivity.this, "Please Enter username and Password.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, getResources().getString(R.string.enter_email_pass), Toast.LENGTH_SHORT).show();
             } else {
                 if (Utility.checkemail(user)) {
-                    Toast.makeText(LoginActivity.this, "Please Enter Username", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.enter_uname), Toast.LENGTH_SHORT).show();
                 }
                 if (pass.isEmpty()) {
-                    Toast.makeText(LoginActivity.this, "Please Enter Password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.enter_pass), Toast.LENGTH_SHORT).show();
                 }
             }
         }

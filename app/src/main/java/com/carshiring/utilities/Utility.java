@@ -21,6 +21,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 */
 
+import com.carshiring.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
@@ -124,7 +125,7 @@ public class Utility {
             progressDialog.dismiss();
         }
         progressDialog=new ProgressDialog(activity);
-        progressDialog.setMessage("Please Wait...");
+        progressDialog.setMessage(activity.getResources().getString(R.string.please_wait));
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setCanceledOnTouchOutside(true);
         progressDialog.show();
@@ -162,7 +163,7 @@ public class Utility {
         if(checkGooglePlayService!= ConnectionResult.SUCCESS)
         {
             GooglePlayServicesUtil.getErrorDialog(checkGooglePlayService,activity,Requestcode);
-            Toast.makeText(activity," not working",Toast.LENGTH_LONG).show();
+            Toast.makeText(activity,activity.getResources().getString(R.string.no_working),Toast.LENGTH_LONG).show();
             return false;
         }
         return true;

@@ -416,7 +416,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             return ;
         }
 
-        Utility.showLoading(getActivity(),"Searching cars...");
+        Utility.showLoading(getActivity(),getResources().getString(R.string.searching_cars));
         final SearchCarFragment _this = SearchCarFragment.this ;
             RetroFitApis retroFitApis = RetrofitApiBuilder.getCarGatesapi() ;
 
@@ -474,7 +474,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 Utility.hidepopup();
                 Log.d(TAG, "onFailure: "+t.getMessage());
 
-                Toast.makeText(getActivity(), "Connection Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -509,7 +509,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
                 Utility.hidepopup();
-                Toast.makeText(getContext(), "Connection Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -628,7 +628,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             currentLat = 0.0 ;
             // pickup_loc_id
             if(pickup_loc_id==null || pickup_loc_id.trim().isEmpty()){
-                Toast.makeText(activity, "Please select Pickup location.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, getResources().getString(R.string.pick_up_location), Toast.LENGTH_SHORT).show();
                 return false;
             }
             if(switchSameDestLocation.isChecked()){
@@ -637,7 +637,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             }else {
                 if(drop_loc_id==null || drop_loc_id.trim().isEmpty()){
                     useSameDestLocation = 1;
-                    Toast.makeText(activity, "Please select drop location.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, getResources().getString(R.string.pleae_select_drop_loc), Toast.LENGTH_SHORT).show();
                     return false ;
                 }
             }
@@ -650,7 +650,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             if(!switchSameDestLocation.isChecked()) {
                 // drop_loc_id
                 if(drop_loc_id==null || drop_loc_id.trim().isEmpty()){
-                    Toast.makeText(activity, "Please select drop location.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, getResources().getString(R.string.pleae_select_drop_loc), Toast.LENGTH_SHORT).show();
                     return false ;
                 }
             }else{
@@ -664,7 +664,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         Log.d("Calender ",calendar_drop.compareTo(calendar_pick)+"");
 
         if(calendar_drop.compareTo(calendar_pick) <= 0){
-            Toast.makeText(activity, "Please select valid drop date.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, getResources().getString(R.string.selsect_valid_drop_date), Toast.LENGTH_SHORT).show();
             return false ;
         }
 
@@ -676,7 +676,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             isBetweenDriverAge= 0 ;
             driver_age = et_driver_age.getText().toString().trim();
             if(driver_age.isEmpty()){
-                Toast.makeText(activity, "Please enter driver age.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, getResources().getString(R.string.enter_driver_age), Toast.LENGTH_SHORT).show();
                 return false ;
             }
         }

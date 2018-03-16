@@ -1,16 +1,24 @@
 <resources>
+
     <string name="app_name">CarsHiring</string>
+
     <string name="checkInternet">Check Your Internet Connection</string>
     <string name="retry">Retry</string>
     <string name="exit">Exit</string>
     <string name="wantExit">Do you want to Exit?</string>
+
     <string name="yes">Yes</string>
     <string name="no">No</string>
+
     <string name="title_home">CarsGates</string>
+
     <string name="permissionsetting">Please enable all Permissions. </string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
     <string name="welcome">Welcome To CarsHiring</string>
+
     <string name="action_accounts">My Accounts</string>
     <string name="action_quotes">My Bookings</string>
     <string name="action_search_car">Book a car</string>
@@ -19,25 +27,32 @@
     <string name="action_language">Language</string>
     <string name="action_currency">Currency</string>
     <string name="action_settings">Settings</string>
+
     <string name="title_activity_about_us">AboutUsActivity</string>
+
     <string name="language">Choose your language</string>
     <string name="thankyou">Thank You</string>
-
     <string name="Welcome">Welcome! Please sign in...</string>
+
     <string name="update_profile_txt">Welcome! Please update your profile...</string>
+
     <string name="enter_email">Enter your email</string>
     <string name="enter_password">Enter your Password</string>
     <string name="confirm_password">Confirm Password</string>
+
     <string name="sign_up">Sign Up</string>
     <string name="skip">Skip</string>
+
     <string name="filter">Filter</string>
     <string name="sort">Sort</string>
+
     <string name="sign_in">Sign In</string>
     <string name="login_forgetpassord">Forgotten your password?</string>
     <string name="SignUpAccount">Sign up for an account</string>
     <string name="title_forgetpassword">Forgotten Password</string>
     <string name="forgotpassword">Enter your email to recover password</string>
     <string name="recoverpassword">Recover My Password</string>
+
     <string name="title_create_account">Create Account</string>
 
     <string name="BookingCurrent">You can add a booking manually\n or search for a car now.</string>
@@ -47,18 +62,24 @@
     <string name="book_today">Book today to aviod disapointment</string>
     <string name="viewFaq">View our Frequently Asked Questions\n on our website</string>
     <string name="search">Search</string>
+
     <string name="mybooking">My Booking</string>
     <string name="myProfile">Profile</string>
 
     <string name="accountdetails">Settings</string>
     <string name="changepass">Change Password</string>
     <string name="bookingHistory">Booking History</string>
+
     <string name="logout">Logout</string>
+
     <string name="email">Email</string>
     <string name="phone">Phone</string>
     <string name="age">Age</string>
+
     <string name="login">Login</string>
+
     <string name="title">Title</string>
+
     <string name="firstname">First Name</string>
     <string name="lastname">Last Name</string>
     <string name="phnumb">Phone Number</string>
@@ -66,10 +87,12 @@
     <string name="newpass">Enter New Password</string>
     <string name="confirmpass">Confirm New Password</string>
     <string name="passport">Passport No</string>
+
     <string name="switch_save">Save the driver details for next time</string>
     <string name="nevermiss">Never miss a bargain again-for exclusive deals and offers,sign up to our newsletter.</string>
     <string name="interphnum">International Phone Number</string>
     <string name="usanumb">From The USA</string>
+
     <string name="faq">FAQs</string>
     <string name="pick_up_location">Select Location</string>
     <string name="bookinginvoicenumber">Booking Invoice Number</string>
@@ -92,11 +115,13 @@
     <string name="car_group">Car Group</string>
 
     <string name="dummy">This is a Dummy Text.</string>
+
     <string-array name="selectlanguage">
         <item>Select Language</item>
         <item>English</item>
         <item>Arabic</item>
     </string-array>
+
     <string-array name="Titles">
         <item>Mr</item>
         <item>Mrs</item>
@@ -104,6 +129,7 @@
         <item>Ms</item>
         <item>Dr</item>
     </string-array>
+
     <string-array name="numbers">
         <item>0</item>
         <item>1</item>
@@ -116,8 +142,8 @@
         <item>8</item>
         <item>9</item>
         <item>10</item>
-
     </string-array>
+
     <string-array name="countries">
         <item>Saudi Arabia</item>
         <item>Qatar</item>
@@ -125,6 +151,7 @@
         <item>UAE</item>
         <item>UK</item>
     </string-array>
+
     <string name="bookProtection1">Go to book with \n Standard Coverage</string>
     <string name="bookProtection2">Go to book with \n Full Protection</string>
     <string name="reset">Reset</string>
@@ -148,6 +175,7 @@
     <string name="licenseorigion">License Origin</string>
     <string name="city">City</string>
     <string name="address">Address</string>
+
     <!--activitiy driver details-->
     <string name="txtLicense">بلد اصدار الرخصة القيادة</string>
     <string name="txtDriverLicenseNo">رقم رخصة القيادة</string>
@@ -190,9 +218,7 @@
     <string name="txtSave">Save and Quote</string>
     <string name="title_activity_home">HomeActivity</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
 
     <string name="are_u_a">Are you a ?</string>
     <string name="supplier">Supplier</string>
@@ -217,6 +243,9 @@
     <string name="select_extras">Select Your Extras</string>
     <string name="full_protection">Full Protection</string>
     <string name="select_loc">Select Location</string>
+    <string name="quote">Quote</string>
+    <string name="change_your_password">Change your password</string>
+    <string name="sign_out">Sign Out</string>
 
     <!--Alert Dialog-->
     <string name="gps_sett">GPS is settings</string>
@@ -224,8 +253,23 @@
     <string name="settings">Settings</string>
     <string name="cancle">Cancel</string>
 
+    <!--LoginActivity-->
+    <string name="enter_email_pass">Please Enter username and Password.</string>
+    <string name="enter_uname">Please Enter Username</string>
+    <string name="enter_pass">Please Enter Password</string>
+
+    <!--MyAccountActivity-->
+    <string name="updated_successfully">Updated Successfully</string>
+
+    <!--SignUpActivity-->
+    <string name="pass_doesnotmatch">Password and Confirm Password does not match.</string>
+    <string name="fill_all_field">Please Fill all fields</string>
+    <string name="please_enter_email">Please enter Email</string>
+    <string name="please_enter_pass">Please enter Password</string>
+    <string name="please_enter_confirm_pass">Please enter Confirm Password</string>
+
     <!--Extra-->
-    <string name="add_extra">"Add These Extras"</string>
+    <string name="add_extra">Add These Extras</string>
     <string name="extra_added">Extras added</string>
 
     <!--BookCarActivity-->
@@ -239,7 +283,9 @@
 
     <!--Toast-->
     <string name="error">Error</string>
+
     <string name="no_filters_applied">No Filters Applied</string>
+
     <string name="please_enter_your_password">Please enter your password</string>
     <string name="please_enter_valid_email">Please enter valid email</string>
     <string name="please_enter_address">Please enter your address</string>
@@ -251,16 +297,27 @@
     <string name="please_enter_dob">Please enter your date of birth</string>
     <string name="please_enter_first_name">Please enter your first name</string>
     <string name="please_enter_last_name">Please enter your last name</string>
+
     <string name="no_internet_connection">No Internet Connection</string>
     <string name="loading">Loading...</string>
+    <string name="please_wait">Please Wait...</string>
+
     <string name="finding_location_list">Finding Location List...</string>
     <string name="location_not_found">Location not found</string>
     <string name="check_internet">Check Your Internet Connection</string>
 
+    <string name="searching_cars">Searching Cars...</string>
+
+    <string name="please_select_pickup_loc">Please select Pickup location.</string>
+    <string name="pleae_select_drop_loc">Please select drop location.</string>
+    <string name="selsect_valid_drop_date">Please select valid drop date.</string>
+    <string name="enter_driver_age">Please enter driver age.</string>
+
+    <string name="no_working"> not working</string>
+
     <!--ExcessProtectionActivity-->
     <string name="add_full_protection">Add Full Protection</string>
     <string name="for_day"> For Day</string>
-    <string name="full_prot">full_prot</string>
     <string name="full_protection_addedd">Full protection added</string>
     <string name="get_a_quote_1">Get a quote with Standard Coverage</string>
     <string name="get_a_quote_2">Get a quote with Full Protection</string>
@@ -271,4 +328,58 @@
     <string name="current">Current</string>
     <string name="previous">Previous</string>
     <string name="quotes">Quotes</string>
+
+    <!--MyAccount-->
+    <string name="points">200 Points</string>
+
+    <!--SearchFilterActivity-->
+    <string name="selected_packages_are">Selected Packages are</string>
+    <string name="selected_suppliers_are">Selected Suppliers are</string>
+    <string name="selected_features_are">Selected Features are</string>
+    <string name="selected_insurances_are">Selected Insurances are</string>
+
+    <!--ChangePasswordActivity-->
+    <string name="save_change">Save Changes</string>
+    <string name="saved_successfully">Saved Successfully</string>
+    <string name="check_current_pass">Check your Current password </string>
+    <string name="check_confirm_pass">Check your Confirm password </string>
+    <string name="check_new_pass">Check your New password </string>
+
+    <!--CarResultListAdapter-->
+    <string name="supplied_by">Supplied By : </string>
+    <string name="large_bag"> Large Bag</string>
+    <string name="doors"> Doors</string>
+    <string name="points_collected">Points Collected: </string>
+    <string name="all">All</string>
+
+    <!--MyBookingAdapter-->
+    <string name="processing">Processing</string>
+    <string name="completed">Completed</string>
+    <string name="canceled">Canceled</string>
+    <string name="failed">Failed</string>
+
+    <!--CarDetailTab1Fragment-->
+    <string name="air_condition">Air Condition</string>
+    <string name="bags">Bags</string>
+    <string name="passanger">Passenger</string>
+
+    <!--CarDetailTab2Fragment-->
+    <string name="your_supplier_is">Your Supplier is </string>
+
+    <!--CarDetailTab3Fragment-->
+    <string name="min_age">Min Age: </string>
+    <string name="max_age">Max Age: </string>
+
+    <!--MyAccountFragment-->
+    <string name="account">Account</string>
+    <string name="drivers">Drivers</string>
+    <string name="payment">Payment</string>
+
+    <!--PaymentFragment-->
+    <string name="add">Add</string>
+
+    <!--PayActivity-->
+    <string name="txtPayTotal">Total Amount to be pay</string>
+    <string name="txtPayNow">Pay</string>
+
 </resources>

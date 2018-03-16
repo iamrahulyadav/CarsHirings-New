@@ -34,6 +34,7 @@ public class ChangePasswordActivity extends AppBaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
+
         sherprf = new TinyDB(getApplicationContext());
         userId = sherprf.getString("userid");
         //Handling Layout EditText
@@ -59,7 +60,8 @@ public class ChangePasswordActivity extends AppBaseActivity {
     private void setuptoolbar() {
         final Toolbar toolbar= (Toolbar) findViewById(R.id.bottomToolBar);
         TextView textView= (TextView) toolbar.findViewById(R.id.txt_bot);
-        textView.setText("Save Changes");
+        textView.setText(getResources().getString(R.string.save_change));
+
         toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,7 +71,8 @@ public class ChangePasswordActivity extends AppBaseActivity {
                 if(!currentPass.isEmpty() && !newPass.isEmpty() && !newConfirmPass.isEmpty() && newPass.equals(newConfirmPass))
                 {
                     changePassword(currentPass,newPass);
-                    Snackbar.make(v, "Saved Successfully", Snackbar.LENGTH_LONG).setAction("Finish",
+                    Snackbar.make(v, getResources().getString(R.string.saved_successfully),
+                            Snackbar.LENGTH_LONG).setAction("Finish",
                             new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -79,9 +82,9 @@ public class ChangePasswordActivity extends AppBaseActivity {
                 }
                 else {
                     //layoutCurrentpass.setError("Please Check");
-                    tiEt_currentpass.setError("Check your Current password ");
-                    tiEt_confirmpass.setError("Check your Confirm password ");
-                    tiEt_newpass.setError("Check your New password ");
+                    tiEt_currentpass.setError(getResources().getString(R.string.check_current_pass));
+                    tiEt_confirmpass.setError(getResources().getString(R.string.check_confirm_pass));
+                    tiEt_newpass.setError(getResources().getString(R.string.check_new_pass));
                     //tiEt_currentpass.setBackgroundColor(getResources().getColor(R.color.white));
 
                 }
@@ -102,7 +105,8 @@ public class ChangePasswordActivity extends AppBaseActivity {
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
-                Toast.makeText(ChangePasswordActivity.this, "Connection Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChangePasswordActivity.this, getResources().getString(R.string.no_internet_connection),
+                        Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -111,8 +115,9 @@ public class ChangePasswordActivity extends AppBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        actionBar.setTitle("Change your password");
+        actionBar.setTitle(getResources().getString(R.string.change_your_password));
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId())

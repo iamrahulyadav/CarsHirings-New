@@ -38,6 +38,7 @@ public class Language extends AppBaseActivity
     TinyDB sharedpref;
     HashMap<String, String>langMap;
     ArrayList<String> langlistname,langlistcode,langlistId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,12 +58,19 @@ public class Language extends AppBaseActivity
         langlistcode=new ArrayList<>();
         langlistId=new ArrayList<>();
         langMap = new HashMap<>();
-        getLanguageList();
+//        getLanguageList();
 
         //  langgroup= (RadioGroup) findViewById(R.id.LanguageGroup);
         setSelectedFilter(language);
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        getLanguageList();
     }
 
     private void setSelectedFilter(String language)

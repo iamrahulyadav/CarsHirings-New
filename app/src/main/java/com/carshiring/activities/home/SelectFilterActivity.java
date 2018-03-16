@@ -289,7 +289,12 @@ public class SelectFilterActivity extends AppBaseActivity implements View.OnClic
                         SelectedInsurances.add(model.getName());
                     }
                 }
-               Utility.message(this,"Selected Packages are"+SelectedPackages.toString()+"\n"+"Selected Suppliers are"+SelectedSupplier.toString()+"\n"+"Selected Features are"+SelectedFeatures.toString()+"\n"+"Selected Insurances are"+SelectedInsurances.toString());
+               Utility.message(this,getResources().getString(R.string.selected_packages_are) +
+                       SelectedPackages.toString() + "\n" + getResources().getString(R.string.selected_suppliers_are) +
+                       SelectedSupplier.toString() + "\n" + getResources().getString(R.string.selected_features_are) +
+                       SelectedFeatures.toString() + "\n" + getResources().getString(R.string.selected_insurances_are) +
+                       SelectedInsurances.toString());
+
                FilterDefaultMultipleListModel listModel=new FilterDefaultMultipleListModel();
 
                if (SelectedSupplier.size()>0) {

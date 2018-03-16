@@ -59,7 +59,7 @@ public class ExcessProtectionActivity extends AppCompatActivity implements View.
         toolbartext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tinyDB.putString(getResources().getString(R.string.full_prot),fullprotectioncurrency+" "+fullprotectionammount);
+                tinyDB.putString("full_prot", fullprotectioncurrency+" "+fullprotectionammount);
                 finish();
                 Utility.message(getApplication(), getResources().getString(R.string.full_protection_addedd));
             }

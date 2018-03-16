@@ -34,12 +34,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SplashActivity extends AppBaseActivity {
+
     public String accessToken,languageselected;
     TinyDB sharedpref;
     Spinner spinner_language;
     View v;
     ArrayList<String> langlistname,langlistcode,langlistId  ;
     String[] lan;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,13 +142,13 @@ public class SplashActivity extends AppBaseActivity {
                         Toast.makeText(_this, response.body().msg, Toast.LENGTH_SHORT).show();
                     }
                 }else{
-                    Toast.makeText(SplashActivity.this, "Connection Error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SplashActivity.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
-                Toast.makeText(SplashActivity.this, "Connection Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SplashActivity.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -173,7 +175,7 @@ public class SplashActivity extends AppBaseActivity {
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
                 Log.d(TAG, "onFailure: "+t.getMessage());
-                Toast.makeText(SplashActivity.this, "Connection Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SplashActivity.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
                 spinner_language.setClickable(false);
                 spinner_language.setEnabled(false);
             }
@@ -213,12 +215,14 @@ public class SplashActivity extends AppBaseActivity {
         super.onResume();
         checknetwork();
     }
+
     public void checknetwork() {
         if(!Utility.isNetworkConnected(this))
         {
             spinner_language.setClickable(false);
             spinner_language.setEnabled(false);
-            Snackbar.make(v,"Check Your Internet Connection",Snackbar.LENGTH_INDEFINITE).setAction("Retry", new View.OnClickListener() {
+            Snackbar.make(v,getResources().getString(R.string.check_internet),Snackbar.LENGTH_INDEFINITE)
+                    .setAction(getResources().getString(R.string.retry), new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     checknetwork();

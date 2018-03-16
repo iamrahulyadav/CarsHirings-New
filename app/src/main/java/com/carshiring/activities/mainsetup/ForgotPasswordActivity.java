@@ -34,6 +34,7 @@ public class ForgotPasswordActivity extends AppBaseActivity implements TextView.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
+
         v=findViewById(android.R.id.content);
         sharedpref=new TinyDB(getApplicationContext());
 
@@ -84,21 +85,20 @@ public class ForgotPasswordActivity extends AppBaseActivity implements TextView.
                     }
                     @Override
                     public void onFailure(Call<ApiResponse> call, Throwable t) {
-                        Utility.message(ForgotPasswordActivity.this,"Connection Error");
+                        Utility.message(ForgotPasswordActivity.this,getResources().getString(R.string.no_internet_connection));
                         Utility.hidepopup();
                     }
                 });
             }
             else
             {
-                Utility.message(this,"Please enter valid Email");
+                Utility.message(this,getResources().getString(R.string.please_enter_valid_email));
             }
         }
         else
         {
-            Utility.message(this,"Please enter email");
+            Utility.message(this,getResources().getString(R.string.please_enter_valid_email));
         }
-
     }
 
     @Override

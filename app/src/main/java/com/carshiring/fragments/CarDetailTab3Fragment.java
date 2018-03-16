@@ -24,18 +24,22 @@ import static com.carshiring.activities.home.CarDetailActivity.termsurl;
  * Contact Number : +91 9796173066
  */
 public class CarDetailTab3Fragment extends Fragment implements View.OnClickListener {
+
     View view;
     TextView terms,quotes,txt_driverage,txt_cdw,txt_theftpro;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.cardetail_tab3,container,false);
+
         terms= (TextView) view.findViewById(R.id.txt_terms);
         quotes=(TextView) view.findViewById(R.id.txt_savequote);
         txt_driverage=view.findViewById(R.id.txt_driverage);
         txt_cdw=view.findViewById(R.id.txt_cdw);
         txt_theftpro=view.findViewById(R.id.txt_theftpro);
-        txt_driverage.setText("Min Age: "+driver_minage+"\n"+"Max Age: "+driver_maxage);
+        txt_driverage.setText(getResources().getString(R.string.min_age) +
+                driver_minage + "\n" + getResources().getString(R.string.max_age) + driver_maxage);
         txt_cdw.setText(CDW);
         txt_theftpro.setText(THP);
         terms.setOnClickListener(this);

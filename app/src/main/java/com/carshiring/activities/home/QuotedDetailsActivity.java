@@ -55,7 +55,7 @@ public class QuotedDetailsActivity extends AppBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        actionBar.setTitle("Quote");
+        actionBar.setTitle(getResources().getString(R.string.quote));
     }
 
     @Override

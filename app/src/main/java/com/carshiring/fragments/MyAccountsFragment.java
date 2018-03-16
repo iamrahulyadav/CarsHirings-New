@@ -28,15 +28,16 @@ View view;
         view=inflater.inflate(R.layout.fragment_my_account,container,false);
 
         tabLayout= (TabLayout) view.findViewById(R.id.account_tab);
-        tabLayout.addTab(tabLayout.newTab().setText("Account"));
-        tabLayout.addTab(tabLayout.newTab().setText("Drivers"));
-        tabLayout.addTab(tabLayout.newTab().setText("Payment"));
+        tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.account)));
+        tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.drivers)));
+        tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.payment)));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         final ViewPager viewPager= (ViewPager) view.findViewById(R.id.account_pager);
         AccountFragment accountFragment=new AccountFragment();
         DriversFragment driversFragment=new DriversFragment();
         PaymentFragment paymentFragment=new PaymentFragment();
-        Page_Adapter adapter=new Page_Adapter(getChildFragmentManager(),tabLayout.getTabCount(),accountFragment,driversFragment,paymentFragment);
+        Page_Adapter adapter=new Page_Adapter(getChildFragmentManager(),tabLayout.getTabCount(),
+                accountFragment,driversFragment,paymentFragment);
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(2);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));

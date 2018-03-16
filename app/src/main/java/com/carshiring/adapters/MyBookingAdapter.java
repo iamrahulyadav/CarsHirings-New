@@ -53,13 +53,13 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
 /*rate, txtStatus, txtPickUp, txtDropUp, txtPoint*/
 
         if (bookinglist.get(position).getBooking_status().equals("0")){
-            holder.txtStatus.setText("Processing");
+            holder.txtStatus.setText(context.getResources().getString(R.string.processing));
         } else if (bookinglist.get(position).getBooking_status().equals("1")){
-            holder.txtStatus.setText("Completed");
+            holder.txtStatus.setText(context.getResources().getString(R.string.completed));
         } else if (bookinglist.get(position).getBooking_status().equals("2")){
-            holder.txtStatus.setText("Canceled");
+            holder.txtStatus.setText(context.getResources().getString(R.string.canceled));
         } else {
-            holder.txtStatus.setText("Failed");
+            holder.txtStatus.setText(context.getResources().getString(R.string.failed));
         }
         holder.txtPoint.setText(" " /*+ bookinglist.get(position).getBooking_point_used()*/);
         holder.txtDropUp.setText(bookinglist.get(position).getBooking_to_location());

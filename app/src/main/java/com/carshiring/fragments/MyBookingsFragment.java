@@ -32,9 +32,9 @@ public class MyBookingsFragment extends Fragment {
         AnimatioonUtils.animateToolbarDroppingDown(toolbar);*/
 
         TabLayout tabLayout= (TabLayout) view.findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Current"));
-        tabLayout.addTab(tabLayout.newTab().setText("Previous"));
-        tabLayout.addTab(tabLayout.newTab().setText("Quotes"));
+        tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.current)));
+        tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.previous)));
+        tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.quotes)));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
          pager= (ViewPager) view.findViewById(R.id.viewpager_view);
         CurrentBookingFragment tab1=new CurrentBookingFragment();
