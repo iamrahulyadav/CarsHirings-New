@@ -72,8 +72,12 @@ public class CarsResultListActivity extends AppBaseActivity {
     String fname,lname,email,phone,zip,license,licenseorigin,city,address,emaillogin,pass,set ="",userid="",dob;
     RecyclerView recycler_search_cars;
     CatRequest cateRequest = new CatRequest();
+
+
     CarListCategory adapter;
     private RecyclerView recyclerView_carlist_category;
+
+
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -98,6 +102,7 @@ public class CarsResultListActivity extends AppBaseActivity {
         tvTodate= (TextView) findViewById(R.id.tvToDT);
         txtPlaceDrop = findViewById(R.id.txtPlaceName_drop);
 
+
         tvFromDate.setText(SearchCarFragment.pick_date+"\n"+ SearchCarFragment.pickTime);
         tvPickDate.setText(SearchCarFragment.pickName);
         tvTodate.setText(SearchCarFragment.drop_date+"\n"+SearchCarFragment.dropTime);
@@ -116,6 +121,9 @@ public class CarsResultListActivity extends AppBaseActivity {
         supplierList.clear();
         supplierList.addAll(hs);
         recycler_search_cars = (RecyclerView) findViewById(R.id.recycler_search_cars);
+
+
+
         recyclerView_carlist_category = (RecyclerView) findViewById(R.id.recycler_carlist_by_category);
         LinearLayoutManager horizontalLayoutManagaer
                 = new LinearLayoutManager(CarsResultListActivity.this, LinearLayoutManager.HORIZONTAL, false);

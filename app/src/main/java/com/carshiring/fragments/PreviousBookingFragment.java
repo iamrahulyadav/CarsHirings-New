@@ -19,8 +19,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carshiring.R;
+import com.carshiring.activities.home.MyBookingActivity;
 import com.carshiring.adapters.BookingAdapter;
+import com.carshiring.adapters.MyBookingAdapter;
 import com.carshiring.models.BookingData;
+import com.carshiring.models.BookingHistory;
 import com.carshiring.utilities.Utility;
 import com.carshiring.webservices.ApiResponse;
 import com.carshiring.webservices.RetroFitApis;
@@ -45,6 +48,7 @@ import retrofit2.Response;
  */
 
 public class PreviousBookingFragment extends Fragment implements BookingAdapter.ClickItem, SwipeRefreshLayout.OnRefreshListener{
+
     View view;
     Button bt_search;
     RecyclerView recyclerView;
@@ -54,6 +58,16 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
     SwipeRefreshLayout swipeRefreshLayout;
     String token, userId;
     LinearLayout linearLayout;
+
+    private List<BookingHistory> list = new ArrayList<>();
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+//        list = getArguments().getParcelableArrayList("bookingHistoryList");
+    }
 
     @Nullable
     @Override
@@ -78,17 +92,24 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
         });
 
         recyclerView= (RecyclerView) view.findViewById(R.id.rec_prev_booki_list);
-        bookingAdapter=new BookingAdapter(getContext(),bookingData);
-//        bookingAdapter.submit(this);
+//        bookingAdapter=new BookingAdapter(getContext(),list);
+////        bookingAdapter.submit(this);
         RecyclerView.LayoutManager mlayoutManager=new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mlayoutManager);
-        recyclerView.setAdapter(bookingAdapter);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
-        recyclerView.setVisibility(View.VISIBLE);
+//        recyclerView.setAdapter(bookingAdapter);
+//        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+//        recyclerView.setVisibility(View.VISIBLE);
+
+        setMyAdapter(MyBookingActivity.bookingHistoryList2);
         setuptoolbar();
         return view;
     }
 
+    private void setMyAdapter(List<BookingHistory> bookingHistory){
+        MyBookingAdapter adapter = new MyBookingAdapter(getContext(), bookingHistory);
+        recyclerView.setVisibility(View.VISIBLE);
+        recyclerView.setAdapter(adapter);
+    }
 /*
     private void getBooking(){
         if(bookingData!=null)
@@ -184,6 +205,7 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
 
     @Override
     public void onRefresh() {
+        swipeRefreshLayout.setRefreshing(false);
        /* getBooking();
         bookingAdapter=new BookingAdapter(getContext(),bookingData);
         recyclerView.setAdapter(bookingAdapter);

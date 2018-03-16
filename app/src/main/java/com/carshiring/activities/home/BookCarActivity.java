@@ -41,6 +41,7 @@ import static com.carshiring.activities.home.CarDetailActivity.fullprotectioncur
 import static com.carshiring.activities.home.CarDetailActivity.termsurl;
 
 public class BookCarActivity extends AppBaseActivity implements View.OnClickListener{
+
     TextView terms,quotes,carname,carprice,txtAddExtra, txtFull,txtPoint, txtFullValue;
     ImageView carImg,imglogo;
     LinearLayout extraView,addExtra;
@@ -112,10 +113,11 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
             String full = tinyDB.getString("full_prot");
             txtFull.setVisibility(View.VISIBLE);
             txtFullValue.setVisibility(View.VISIBLE);
-            txtFullValue.setText("Full Protection Only "+full+" For Day");
-
+            txtFullValue.setText(getResources().getString(R.string.full_protection_only) + full + getResources()
+                    .getString(R.string.full_day));
         }
-        txtPoint.setText("Collected point: "+ CarResultsListAdapter.calPoint);
+
+        txtPoint.setText(getResources().getString(R.string.colletcted_point) + CarResultsListAdapter.calPoint);
         terms.setOnClickListener(this);
         quotes.setOnClickListener(this);
 
@@ -146,8 +148,8 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
                 return false;
             }
         }).into(imglogo);
-        carname.setText(CarDetailActivity.modelname+" "+"or Similar");
-        carprice.setText(CarDetailActivity.currency+"  "+CarDetailActivity.carPrice);
+        carname.setText(CarDetailActivity.modelname + getResources().getString(R.string.or_similar));
+        carprice.setText(CarDetailActivity.currency + "  " + CarDetailActivity.carPrice);
 
         if (extraData.size()>0){
             txtAddExtra.setVisibility(View.VISIBLE);
@@ -192,10 +194,10 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
         TextView txtTotal = layout.findViewById(R.id.txtSubtotal);
         if (name.length()>0 && price.length()>0){
             txtGlobal.setText(name +": "+ number);
-            txtPrice.setText("Price : "+currency +" "+ price);
+            txtPrice.setText(getResources().getString(R.string.price) + currency + " " + price);
             double d = Double.parseDouble(price);
             double total = d*Integer.parseInt(number);
-            txtTotal.setText("Subtotal: "+currency+" "+ String.valueOf(total));
+            txtTotal.setText(getResources().getString(R.string.sub_total) + currency + " " + String.valueOf(total));
         }
 
         ImageView buttonRemove = (ImageView) layout.findViewById(R.id.imgCross);
@@ -212,7 +214,7 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
     private void setupToolbar() {
         Toolbar toolbar= (Toolbar) findViewById(R.id.bottomToolBar);
         TextView textView= (TextView) toolbar.findViewById(R.id.txt_bot);
-        textView.setText("Book this Car");
+        textView.setText(getResources().getString(R.string.book_this_car));
         toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -3,10 +3,14 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
     <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:id="@+id/previous_booking_refresh_layout"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
         <android.support.v7.widget.RecyclerView
             android:layout_above="@+id/qoutesbottom"
             android:layout_width="match_parent"
@@ -19,7 +23,6 @@
 
 
         <LinearLayout
-            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
@@ -49,6 +52,7 @@
 
         </LinearLayout>
 
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -59,4 +63,5 @@
         <include layout="@layout/bottom_toolbar"
 
             ></include></LinearLayout>
+
 </RelativeLayout>

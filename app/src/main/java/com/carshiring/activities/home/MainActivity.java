@@ -55,6 +55,7 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ISubViewSetupHandler {
+    //public static int bookingHistory;
     NavigationView navigationView;
     public Toolbar toolbar;
     public SearchQuery searchQuery = new SearchQuery();
@@ -157,23 +158,23 @@ public class MainActivity extends AppCompatActivity
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
         // Setting Dialog Title
-        alertDialog.setTitle("GPS is settings");
+        alertDialog.setTitle(getResources().getString(R.string.gps_sett));
 
         // Setting Dialog Message
-        alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
+        alertDialog.setMessage(getResources().getString(R.string.gps_not_enabled));
 
         // Setting Icon to Dialog
         //alertDialog.setIcon(R.drawable.delete);
 
         // On pressing Settings button
-        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton(getResources().getString(R.string.settings), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int which) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(intent);
             }
         });
         // on pressing cancel button
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton(getResources().getString(R.string.cancle), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
 //                checkGPSStatus();
@@ -272,11 +273,11 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_contact_us:
                 startActivity(new Intent(MainActivity.this, ContactUsActivity.class));
                 break;
-            case R.id.action_logout:
+         /*   case R.id.action_logout:
                 tinyDB.remove("login_data");
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 break;
-            case R.id.action_language:
+         */   case R.id.action_language:
                 startActivity(new Intent(MainActivity.this, Language.class));
 //                Toast.makeText(MainActivity.this, "Currency Change", Toast.LENGTH_SHORT).show();
                 break;
@@ -366,36 +367,36 @@ public class MainActivity extends AppCompatActivity
                                                     if (!address.isEmpty()){
                                                         updateProfile(userId,fname);
                                                     } else {
-                                                        Utility.message(getApplication(),"Please enter address");
+                                                        Utility.message(getApplication(), getResources().getString(R.string.please_enter_address));
                                                     }
                                                 } else {
-                                                    Utility.message(getApplication(),"Please enter city");
+                                                    Utility.message(getApplication(), getResources().getString(R.string.please_enter_city));
                                                 }
-                                             } else {
-                                                Utility.message(getApplication(),"Please enter licenseorigin");
+                                            } else {
+                                                Utility.message(getApplication(), getResources().getString(R.string.please_enter_license_origin));
                                             }
                                         } else {
-                                            Utility.message(getApplication(),"Please enter license");
+                                            Utility.message(getApplication(), getResources().getString(R.string.please_enter_license));
                                         }
                                     } else {
-                                        Utility.message(getApplication(),"Please enter zipcode");
+                                        Utility.message(getApplication(), getResources().getString(R.string.please_enter_zipcode));
                                     }
                                 } else {
-                                    Utility.message(getApplication(),"Please enter valid phone number");
+                                    Utility.message(getApplication(), getResources().getString(R.string.please_enter_valid_phone_number));
                                 }
                             } else {
-                                Utility.message(getApplication(),"Please enter valid email");
+                                Utility.message(getApplication(), getResources().getString(R.string.please_enter_valid_email));
                             }
-                        } else {
-                            Utility.message(getApplication(),"Please enter last name");
-                        }
                     } else {
-                        Utility.message(getApplication(),"Please enter First name");
+                        Utility.message(getApplication(),getResources().getString(R.string.please_enter_last_name));
                     }
-
+                } else {
+                    Utility.message(getApplication(),getResources().getString(R.string.please_enter_first_name));
                 }
-            });
+            }
+        });
         }
+
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -411,7 +412,7 @@ public class MainActivity extends AppCompatActivity
 
     private void updateProfile(String userid, String fname) {
         if(!Utility.isNetworkConnected(getApplicationContext())){
-            Toast.makeText(MainActivity.this, "No Network Connection!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             return;
         }
         Utility.showloadingPopup(this);
@@ -443,7 +444,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
                 Utility.hidepopup();
-                Utility.message(getApplicationContext(),"Connection Error");
+                Utility.message(getApplicationContext(),getResources().getString(R.string.no_internet_connection));
             }
         });
     }
@@ -514,7 +515,7 @@ public class MainActivity extends AppCompatActivity
 
     public void checknetwork() {
         if (!Utility.isNetworkConnected(MainActivity.this)) {
-            Snackbar.make(v, "Check Your Internet Connection", Snackbar.LENGTH_INDEFINITE).setAction("Retry", new View.OnClickListener() {
+            Snackbar.make(v, getResources().getString(R.string.check_internet), Snackbar.LENGTH_INDEFINITE).setAction(getResources().getString(R.string.retry), new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     checknetwork();

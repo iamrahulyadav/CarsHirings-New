@@ -46,7 +46,7 @@ public class Language extends AppBaseActivity
         ActionBar actionBar=getSupportActionBar();
         if(actionBar!=null)
         {
-            actionBar.setTitle("Language Selection");
+            actionBar.setTitle(getResources().getString(R.string.lang_select));
             actionBar.setHomeAsUpIndicator(R.drawable.back);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -152,13 +152,13 @@ public class Language extends AppBaseActivity
                         Utility.message(Language.this, response.body().msg);
                     }
                 }else{
-                    Toast.makeText(Language.this, "Connection Error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Language.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
-                Toast.makeText(Language.this, "Connection Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Language.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             }
         });
 
