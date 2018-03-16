@@ -1,24 +1,17 @@
 <resources>
 
     <string name="app_name">CarsHiring</string>
-
     <string name="checkInternet">تحقق من اتصالك بالإنترنت</string>
     <string name="retry">إعادة المحاولة</string>
     <string name="exit">ىخرج</string>
     <string name="wantExit">هل تريد الخروج؟</string>
-
     <string name="yes">نعم فعلا</string>
     <string name="no">لا</string>
-
     <string name="title_home">CarsGates</string>
-
     <string name="permissionsetting">الرجاء تمكين جميع الأذونات.</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="welcome">مرحبا بكم في كارشيرينغ</string>
-
     <string name="action_accounts">حساباتي</string>
     <string name="action_quotes">حجزي</string>
     <string name="action_search_car">حجز سيارة</string>
@@ -27,34 +20,25 @@
     <string name="action_language">لغة</string>
     <string name="action_currency">دقة</string>
     <string name="action_settings">إعدادات</string>
-
     <string name="title_activity_about_us">AboutUsActivity</string>
-
     <string name="language">اختر لغتك</string>
     <string name="thankyou">شكرا</string>
     <string name="Welcome">أهلا بك! الرجاء تسجيل الدخول...</string>
-
     <string name="update_profile_txt">أهلا بك! الرجاء تحديث ملفك الشخصي ...</string>
-
     <string name="enter_email">أدخل بريدك الإلكتروني</string>
     <string name="enter_password">ادخل رقمك السري</string>
     <string name="confirm_password">تأكيد كلمة المرور</string>
-
     <string name="sign_up">سجل</string>
     <string name="skip">تخطى</string>
-
     <string name="filter">منقي</string>
     <string name="sort">فرز</string>
-
     <string name="sign_in">تسجيل الدخول</string>
     <string name="login_forgetpassord">هل نسيت كلمة المرور؟</string>
     <string name="SignUpAccount">التسجيل للحصول على حساب</string>
     <string name="title_forgetpassword">كلمة سر منسية</string>
     <string name="forgotpassword">أدخل بريدك الإلكتروني لاستعادة كلمة المرور</string>
     <string name="recoverpassword">استعادة كلمة المرور الخاصة بي</string>
-
     <string name="title_create_account">إصنع حساب</string>
-
     <string name="BookingCurrent">يمكنك إضافة حجز يدويا \ n أو البحث عن سيارة الآن.</string>
     <string name="Searchnow">ابحث الآن</string>
     <string name="bookingreferencenumber">رقم مرجع الحجز</string>
@@ -62,24 +46,17 @@
     <string name="book_today">كتاب اليوم لتجنب خيبة الأمل</string>
     <string name="viewFaq">عرض لدينا أسئلة وأجوبة \ n على موقعنا</string>
     <string name="search">بحث</string>
-
     <string name="mybooking">الحجز</string>
     <string name="myProfile">الملف الشخصي</string>
-
     <string name="accountdetails">إعدادات</string>
     <string name="changepass">تغيير كلمة السر</string>
     <string name="bookingHistory">سجل الحجز</string>
-
     <string name="logout">Logout</string>
-
     <string name="email">البريد الإلكتروني</string>
     <string name="phone">هاتف</string>
     <string name="age">عمر</string>
-
     <string name="login">تسجيل الدخول</string>
-
     <string name="title">عنوان</string>
-
     <string name="firstname">الاسم الاول</string>
     <string name="lastname">الكنية</string>
     <string name="phnumb">رقم الهاتف</string>
@@ -87,12 +64,10 @@
     <string name="newpass">أدخل كلمة مرور جديدة</string>
     <string name="confirmpass">تأكيد كلمة المرور الجديدة</string>
     <string name="passport">رقم جواز السفر</string>
-
     <string name="switch_save">احفظ تفاصيل برنامج التشغيل في المرة القادمة</string>
     <string name="nevermiss">لا يفوتون صفقة مرة أخرى - لعروض حصرية والعروض، والاشتراك في النشرة الإخبارية لدينا.</string>
     <string name="interphnum">رقم الهاتف الدولي</string>
     <string name="usanumb">من الولايات المتحدة الامريكية</string>
-
     <string name="faq">أسئلة وأجوبة</string>
     <string name="pick_up_location">اختر موقعا</string>
     <string name="bookinginvoicenumber">حجز رقم الفاتورة</string>
@@ -101,7 +76,6 @@
     <string name="car_results">قائمة سيارة</string>
     <string name="car_book">حجز هذه السيارة</string>
     <string name="car_details">تفاصيل السيارة</string>
-
     <string name="cardname">إسم صاحب البطاقة</string>
     <string name="date">MM/YY</string>
     <string name="Cv">CVV</string>
@@ -113,7 +87,6 @@
     <string name="price_h_to_l">السعر الاعلى الى الادنى)</string>
     <string name="rating">تقييم</string>
     <string name="car_group">مجموعة السيارات</string>
-
     <string name="dummy">هذا هو نص الدمية.</string>
 
     <string-array name="selectlanguage">
@@ -381,5 +354,26 @@
     <!--PayActivity-->
     <string name="txtPayTotal">مجموع المبلغ الواجب دفعه</string>
     <string name="txtPayNow">دفع</string>
+
+    <!--activity user dash-->
+    <string name="drvlncno">القيادة LIC معرف</string>
+    <string name="txtwallet">مبلغ المحفظة</string>
+    <string name="txtMyPoint">نقاطي</string>
+    <string name="txtCredit">ائتمان</string>
+    <string name="txtDebit">مدين</string>
+    <string name="txtDashTitle">ملفي</string>
+    <!--WalletView-->
+    <string name="wallet_hist_details">تفاصيل محفوظات المحفظة</string>
+    <string name="booking_id">رقم الحجز</string>
+    <string name="booking_date">تاريخ الحجز</string>
+    <string name="points_hist_details">تفاصيل تاريخ النقطة</string>
+    <string name="wallet_amnt">مبلغ المحفظة</string>
+    <string name="wallet_affected_amnt">المبلغ المتأثر بالمحفظة</string>
+    <string name="wallet_type">نوع المحفظة</string>
+    <string name="my_wallwt_hist">سجل المحفظة الخاص بي</string>
+    <string name="booking_point">نقطة الحجز</string>
+    <string name="booking_affect_point">حجز نقطة المتضررين</string>
+    <string name="booking_point_type">نوع نقطة الحجز</string>
+    <string name="point_hist">وجهة نظري التاريخ</string>
 
 </resources>

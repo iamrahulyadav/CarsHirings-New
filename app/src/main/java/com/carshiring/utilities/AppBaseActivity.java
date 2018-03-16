@@ -25,8 +25,10 @@ import retrofit2.Response;
  */
 
 public class AppBaseActivity extends AppCompatActivity implements IBaseActivity,IRefreshToken {
+
     int CALLBACK ;
    public ActionBar actionBar ;
+
     @Override
     public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);

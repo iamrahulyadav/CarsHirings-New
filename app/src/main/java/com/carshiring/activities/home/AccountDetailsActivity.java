@@ -28,43 +28,65 @@ import retrofit2.Response;
  */
 
 public class AccountDetailsActivity extends AppBaseActivity {
+
     private TinyDB sharedpref;
     String userId,token,title,fname,lname,phone,ages,Rtitle;
     Spinner spTitle;
     int age;
     EditText etUserFirstName,etUserLastName, etUserEmail,etUserPhoneNo,etUserAge;
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_account_details);
-        sharedpref = new TinyDB(getApplicationContext());
-        userId=sharedpref.getString("userid");
-        token=sharedpref.getString("access_token");
-        Rtitle= sharedpref.getString("usertitle");
+    protected void onResume() {
+        super.onResume();
+
+        setMyToolBar();
+        getUserData();
+    }
+
+    private void setMyToolBar(){
         actionBar=getSupportActionBar();
         if(actionBar!=null)
         {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.back);
+            actionBar.setTitle("Update Your Profile");
         }
+    }
+
+    private void getUserData(){
+        sharedpref = new TinyDB(getApplicationContext());
+        userId=sharedpref.getString("userid");
+        token=sharedpref.getString("access_token");
+        Rtitle= sharedpref.getString("usertitle");
+    }
+
+    private EditText edt_fname, edt_lname, edt_dob, edt_email, edt_phone, edt_zipcode, edt_licence_no, edt_licence_origin,
+                        edt_city, edt_address;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_account_details);
+
 //        setUptoolbar();
 
-        spTitle= (Spinner) findViewById(R.id.sp_title);
-        if(!Rtitle.isEmpty() || !Rtitle.equals(null))
+        //spTitle= (Spinner) findViewById(R.id.sp_title);
+        /*if(!Rtitle.isEmpty() || !Rtitle.equals(null))
         {
-            updatespinner();
+//            updatespinner();
         }
         else
         {
-            setupspinner();
-        }
+  //          setupspinner();
+        }*/
 
-        etUserFirstName =  (EditText) findViewById(R.id.etUserFirstName);
+    /*    etUserFirstName =  (EditText) findViewById(R.id.etUserFirstName);
         etUserLastName =  (EditText) findViewById(R.id.etUserLastName);
         etUserEmail =  (EditText) findViewById(R.id.etUserEmail);
         etUserPhoneNo =  (EditText) findViewById(R.id.etUserPhoneNo);
         etUserPhoneNo.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         etUserAge =  (EditText) findViewById(R.id.etUserAge);
+
         etUserFirstName.setText(sharedpref.getString("user_name"));
         etUserLastName.setText(sharedpref.getString("user_lname"));
         if(!userId.isEmpty() || !userId.equals(null))
@@ -76,8 +98,29 @@ public class AccountDetailsActivity extends AppBaseActivity {
         }
         etUserPhoneNo.setText(sharedpref.getString("user_phone"));
         etUserAge.setText(Integer.toString(sharedpref.getInt("userage")));
+    */
+
+    init();
+    setUserData();
     }
 
+    private void init(){
+        edt_fname = (EditText) findViewById(R.id.update_user_fname);
+        edt_fname = (EditText) findViewById(R.id.update_user_lname);
+        edt_fname = (EditText) findViewById(R.id.update_user_dob);
+        edt_fname = (EditText) findViewById(R.id.update_user_email);
+        edt_fname = (EditText) findViewById(R.id.update_user_phone);
+        edt_fname = (EditText) findViewById(R.id.update_user_zip);
+        edt_fname = (EditText) findViewById(R.id.update_user_licence);
+        edt_fname = (EditText) findViewById(R.id.update_user_licnce_origin);
+        edt_fname = (EditText) findViewById(R.id.update_user_city);
+        edt_fname = (EditText) findViewById(R.id.update_user_address);
+    }
+
+
+    private void setUserData(){
+
+    }
     private void updatespinner() {
         ArrayAdapter<CharSequence> charSequenceArrayAdapter=ArrayAdapter.createFromResource(this,R.array.Titles,android.R.layout.simple_spinner_item);
         spTitle.setAdapter(charSequenceArrayAdapter);
@@ -167,12 +210,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
     private boolean isValidMobile(String phone) {
         return android.util.Patterns.PHONE.matcher(phone).matches();
     }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        actionBar.setTitle(getResources().getString(R.string.title_account_details));
 
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -348,10 +348,8 @@
     <string name="account">Account</string>
     <string name="drivers">Drivers</string>
     <string name="payment">Payment</string>
-
     <!--PaymentFragment-->
     <string name="add">Add</string>
-
     <!--pay activity-->
     <string name="txtPayTotal">Total Amount to be pay</string>
     <string name="txtPayNow">Pay</string>
@@ -362,5 +360,18 @@
     <string name="txtCredit">Credit</string>
     <string name="txtDebit">Debit</string>
     <string name="txtDashTitle">My Profile</string>
+    <!--WalletView-->
+    <string name="wallet_hist_details">Wallet History Details</string>
+    <string name="booking_id">Booking Id</string>
+    <string name="booking_date">Booking Date</string>
+    <string name="points_hist_details">Point History Details</string>
+    <string name="wallet_amnt">Wallet Amount</string>
+    <string name="wallet_affected_amnt">Wallet Affected Amount</string>
+    <string name="wallet_type">Wallet Type</string>
+    <string name="my_wallwt_hist">My Wallet History</string>
+    <string name="booking_point">Booking Point</string>
+    <string name="booking_affect_point">Booking Affected Point</string>
+    <string name="booking_point_type">Booking Point Type</string>
+    <string name="point_hist">My Point History</string>
 
 </resources>

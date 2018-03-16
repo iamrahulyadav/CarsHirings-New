@@ -1,6 +1,7 @@
 package com.carshiring.activities.home;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +32,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class UserDashActivity extends AppBaseActivity {
+
     FrameLayout wallFrame;
     ImageView imgEdit,imgUser;
     TextView txtEmail, txtPhone, txtDrvLnc, txtCreditPt, txtdebitPt,txtWalletAmt,txtPointValue, txtName;
@@ -47,6 +49,7 @@ public class UserDashActivity extends AppBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_dash);
+
         actionBar = getSupportActionBar() ;
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -70,27 +73,25 @@ public class UserDashActivity extends AppBaseActivity {
         txtWalletAmt = findViewById(R.id.dash_profile_txtWalletValue);
         txtName = findViewById(R.id.dash_profile_txtName);
         txtPointValue = findViewById(R.id.dash_profile_txtpointValue);
-        pointView = findViewById(R.id.point_lay);
-        walletView = findViewById(R.id.wallet_lay);
 
         txtEmail.setText(getResources().getString(R.string.email)+": "+userDetails.getUser_email());
         txtPhone.setText(getResources().getString(R.string.phone)+ ": "+userDetails.getUser_phone());
         txtDrvLnc.setText(getResources().getString(R.string.drvlncno)+": "+userDetails.getUser_license_no());
         txtName.setText(userDetails.getUser_name()+ " "+userDetails.getUser_lname());
+    }
 
-        walletView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    public void walletView(View view){
+        Intent i = new Intent(UserDashActivity.this, WalletView.class);
+        if(view.getId() == R.id.wallet_lay){
+            i.putExtra("wallet_title", "Wallet History Details");
+        } else if(view.getId() == R.id.point_lay){
+            i.putExtra("wallet_title", "Point History Details");
+        }else{}
+        startActivity(i);
+    }
 
-            }
-        });
-
-        pointView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
+    public void icon_update(View view){
+        startActivity(new Intent(UserDashActivity.this, AccountDetailsActivity.class));
     }
 
     @Override
@@ -130,7 +131,7 @@ public class UserDashActivity extends AppBaseActivity {
                         if (walletHistoryData1.get_$WalletType204().equals("debit")){
                             String debit = walletHistoryData1.get_$WalletAmount169();
                             debitAmt = Double.parseDouble(debit);
-                            totalDebit+= debitAmt;
+                            totalDebit += debitAmt;
 //                            Log.d("TAG", "onResponse: "+debit);
                         }
                         if (walletHistoryData1.get_$WalletType204().equals("credit")){
@@ -157,6 +158,8 @@ public class UserDashActivity extends AppBaseActivity {
     }
 
     public void getPoint(){
+        debitPoint = 0;
+
         RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();
         final Call<ApiResponse> walList = fitApis.pointHistory(user_id);
         walList.enqueue(new Callback<ApiResponse>() {
@@ -167,10 +170,11 @@ public class UserDashActivity extends AppBaseActivity {
                     pointHistoryData = response.body().response.points;
                     Log.d("TAG", "onResponse: "+gson.toJson(pointHistoryData));
                     for (PointHistoryData walletHistoryData1 : pointHistoryData){
+
                         if (walletHistoryData1.get_$BookingPointType184().equals("debit")){
                             String debit = walletHistoryData1.get_$BookingPoint18();
                             debitPoint = Double.parseDouble(debit);
-                            totalDebitPoint+= debitPoint;
+                            totalDebitPoint += debitPoint;
 //                            Log.d("TAG", "onResponse: "+debit);
                         }
                         if (walletHistoryData1.get_$BookingPointType184().equals("credit")){
@@ -179,6 +183,7 @@ public class UserDashActivity extends AppBaseActivity {
                             totalCreditPoint+= creditPoint;
                         }
                     }
+
                     Log.d("TAG", "onResponse: totalDebit"+debitPoint);
                     totalPoint = totalCreditPoint-totalDebitPoint;
                     Log.d("TAG", "onResponse: totalDebit"+totalCreditPoint+"\n"+totalPoint);
