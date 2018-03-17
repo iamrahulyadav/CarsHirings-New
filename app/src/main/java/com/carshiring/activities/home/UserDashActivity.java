@@ -127,6 +127,7 @@ public class UserDashActivity extends AppBaseActivity {
                 if (response!=null){
                     walletHistoryData = response.body().response.wallet;
                     Log.d("TAG", "onResponse: "+gson.toJson(walletHistoryData));
+
                     for (WalletHistoryData walletHistoryData1 : walletHistoryData){
                         if (walletHistoryData1.get_$WalletType204().equals("debit")){
                             String debit = walletHistoryData1.get_$WalletAmount169();
@@ -140,6 +141,7 @@ public class UserDashActivity extends AppBaseActivity {
                             totalCredit+= creditAmt;
                         }
                     }
+
                     Log.d("TAG", "onResponse: totalDebit"+debitAmt);
                     walletAmt = totalCredit-totalDebit;
                     Log.d("TAG", "onResponse: totalDebit"+totalCredit+"\n"+walletAmt);

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,12 +12,17 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carshiring.R;
+import com.carshiring.models.UserDetails;
 import com.carshiring.utilities.AppBaseActivity;
+import com.carshiring.utilities.AppGlobal;
+import com.carshiring.utilities.Utility;
 import com.carshiring.webservices.ApiResponse;
 import com.carshiring.webservices.RetroFitApis;
 import com.carshiring.webservices.RetrofitApiBuilder;
+import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
 
 import retrofit2.Call;
@@ -30,7 +36,7 @@ import retrofit2.Response;
 public class AccountDetailsActivity extends AppBaseActivity {
 
     private TinyDB sharedpref;
-    String userId,token,title,fname,lname,phone,ages,Rtitle;
+    String userId,token,title,ages,Rtitle;
     Spinner spTitle;
     int age;
     EditText etUserFirstName,etUserLastName, etUserEmail,etUserPhoneNo,etUserAge;
@@ -62,11 +68,18 @@ public class AccountDetailsActivity extends AppBaseActivity {
 
     private EditText edt_fname, edt_lname, edt_dob, edt_email, edt_phone, edt_zipcode, edt_licence_no, edt_licence_origin,
                         edt_city, edt_address;
+    private String str_fname, str_lname, str_dob, str_email, str_phone, str_zipcode, str_licence_no, str_licence_origin ,
+                        str_city,str_address;
+    UserDetails userDetails = new UserDetails();
+    Gson gson = new Gson();
+    AppGlobal appGlobal = AppGlobal.getInstancess();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_details);
+
+        appGlobal.context = getApplicationContext();
 
 //        setUptoolbar();
 
@@ -101,7 +114,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
     */
 
     init();
-    setUserData();
+//    setUserData();
     }
 
     private void init(){
@@ -115,6 +128,110 @@ public class AccountDetailsActivity extends AppBaseActivity {
         edt_fname = (EditText) findViewById(R.id.update_user_licnce_origin);
         edt_fname = (EditText) findViewById(R.id.update_user_city);
         edt_fname = (EditText) findViewById(R.id.update_user_address);
+    }
+
+    public void update_profile(View view){
+        str_fname = edt_fname.getText().toString().trim();
+        str_lname = edt_lname.getText().toString().trim();
+        str_email = edt_email.getText().toString().trim();
+        str_phone = edt_phone.getText().toString().trim();
+        str_zipcode = edt_zipcode.getText().toString().trim();
+        str_licence_no = edt_licence_no.getText().toString().trim();
+        str_licence_origin = edt_licence_origin.getText().toString().trim();
+        str_city = edt_city.getText().toString().trim();
+        str_address = edt_address.getText().toString().trim();
+        if (!str_fname.isEmpty()){
+            if (!str_lname.isEmpty()){
+                if (Utility.checkemail(str_email)){
+                    if (Utility.checkphone(str_phone)){
+                        if (!str_zipcode.isEmpty()){
+                            if (!str_licence_no.isEmpty()){
+                                if (!str_licence_origin.isEmpty()){
+                                    if (!str_city.isEmpty()){
+                                        if (!str_address.isEmpty()){
+                                            update_profile_1(userId,str_fname);
+                                        } else {
+                                            Utility.message(getApplication(), getResources().getString(R.string.please_enter_address));
+                                        }
+                                    } else {
+                                        Utility.message(getApplication(), getResources().getString(R.string.please_enter_city));
+                                    }
+                                } else {
+                                    Utility.message(getApplication(), getResources().getString(R.string.please_enter_license_origin));
+                                }
+                            } else {
+                                Utility.message(getApplication(), getResources().getString(R.string.please_enter_license));
+                            }
+                        } else {
+                            Utility.message(getApplication(), getResources().getString(R.string.please_enter_zipcode));
+                        }
+                    } else {
+                        Utility.message(getApplication(), getResources().getString(R.string.please_enter_valid_phone_number));
+                    }
+                } else {
+                    Utility.message(getApplication(), getResources().getString(R.string.please_enter_valid_email));
+                }
+            } else {
+                Utility.message(getApplication(),getResources().getString(R.string.please_enter_last_name));
+            }
+        } else {
+            Utility.message(getApplication(),getResources().getString(R.string.please_enter_first_name));
+        }
+    }
+
+
+    private void update_profile_1(String userid, String str_fname) {
+        if(!Utility.isNetworkConnected(getApplicationContext())){
+            Toast.makeText(AccountDetailsActivity.this, getResources().getString(R.string.no_internet_connection),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Utility.showloadingPopup(this);
+        RetroFitApis retroFitApis= RetrofitApiBuilder.getCargHiresapis();
+        Call<ApiResponse> responseCall=retroFitApis.updateprofile(userid, str_fname, str_lname, str_email, str_phone,
+                                str_zipcode, str_licence_no, str_licence_origin,"dob", str_city, str_address);
+        responseCall.enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                Utility.hidepopup();
+                if(response.body().status==true)
+                {
+                    Log.d("TAG", "onResponse: "+response.body().msg);
+                    Utility.message(getApplicationContext(), response.body().msg);
+//                    String logindata=gson.toJson(response.body().response.userdetail);
+                    userDetails = response.body().response.user_detail;
+                    String logindata=gson.toJson(userDetails);
+                    appGlobal.setLoginData(logindata);
+                    String st=  appGlobal.getUser_id();
+                    //dialog.dismiss();
+                    //dialog.dismiss();
+
+                }
+                else{
+                    Utility.message(getApplicationContext(), response.body().msg);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                Utility.hidepopup();
+                Utility.message(getApplicationContext(),getResources().getString(R.string.no_internet_connection));
+            }
+        });
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId())
+        {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
     }
 
 
@@ -157,7 +274,6 @@ public class AccountDetailsActivity extends AppBaseActivity {
         });
     }
 
-    private Toolbar toolbar ;
 /*
     private void setUptoolbar() {
 
@@ -223,17 +339,4 @@ public class AccountDetailsActivity extends AppBaseActivity {
         return android.util.Patterns.PHONE.matcher(phone).matches();
     }
 
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId())
-        {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
-    }
 }
