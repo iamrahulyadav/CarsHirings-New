@@ -61,6 +61,16 @@ public class UserDetails {
     private String user_createdate;
     private String user_license_no;
 
+    private String user_dob;
+
+    public String getUser_dob() {
+        return user_dob;
+    }
+
+    public void setUser_dob(String user_dob) {
+        this.user_dob = user_dob;
+    }
+
     public String getUser_id() {
         return user_id;
     }

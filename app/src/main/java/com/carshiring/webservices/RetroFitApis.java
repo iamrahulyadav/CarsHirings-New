@@ -140,7 +140,13 @@ public interface RetroFitApis {
     @FormUrlEncoded
     @POST("wallet_historylist")
     Call<ApiResponse> walletHistory(  @Field("user_id") String user_id);
+
     @FormUrlEncoded
     @POST("point_historylist")
     Call<ApiResponse> pointHistory(  @Field("user_id") String user_id);
+
+    @FormUrlEncoded
+    @POST("update_profile_pic")
+    Call<ApiResponse> update_user_DP(  @Field("userid") String user_id,
+                                          @Field("profile_image") String user_profile_image);
 }

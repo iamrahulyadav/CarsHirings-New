@@ -57,13 +57,15 @@ public class UserDashActivity extends AppBaseActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.back);
         }
-//        initialize
+
+        //        initialize
         tinyDB = new TinyDB(getApplicationContext());
         String login = tinyDB.getString("login_data");
         userDetails = gson.fromJson(login, UserDetails.class);
-        language=tinyDB.getString("language_code");
+        language = tinyDB.getString("language_code");
         user_id = userDetails.getUser_id();
-//        find id
+
+        //        find id
         wallFrame = findViewById(R.id.dash_profile_wal);
         imgEdit = findViewById(R.id.dash_profile_edit);
         imgUser = findViewById(R.id.dash_profile_img);
@@ -154,7 +156,7 @@ public class UserDashActivity extends AppBaseActivity {
     }
 
     public void getPoint(){
-        debitPoint = 0;
+//        debitPoint = 0;
 
         RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();
         final Call<ApiResponse> walList = fitApis.pointHistory(user_id);
