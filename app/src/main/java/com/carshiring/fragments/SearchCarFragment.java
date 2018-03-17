@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -463,9 +462,9 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                         if(response.body().error_code==102)
                             ((AppBaseActivity)getActivity()).getToken(_this);
                     }
+                } else {
+                    Toast.makeText(getActivity(), response.body().message, Toast.LENGTH_SHORT).show();
                 }
-
-                Toast.makeText(getActivity(), response.body().msg, Toast.LENGTH_SHORT).show();
 
             }
 

@@ -51,7 +51,7 @@ public class CarDetailActivity extends AppCompatActivity {
     TinyDB tinyDB ;
 
     public static String logo,carPrice,carImage,modelname,currency,suppliername,suppliercity,termsurl
-            ,fullprotectioncurrency,fullprotectionammount,driver_minage,driver_maxage,CDW,THP;
+            ,fullprotectioncurrency,fullprotectionammount,fullProcted,driver_minage,driver_maxage,CDW,THP,carid;
     Gson gson = new Gson();
     public static ArrayList<ExtraBean> extralist=new ArrayList<>();
     public static List<CarDetailBean.FeatureBean> carSpecificationList=new ArrayList<>();
@@ -111,6 +111,7 @@ public class CarDetailActivity extends AppCompatActivity {
                    driver_minage=response.body().response.car_detail.driver_min_age;
                    driver_maxage=response.body().response.car_detail.driver_max_age;
                    theft_protection=response.body().response.car_detail.collision_damage_waiver;
+//                   carid = response.body().response.car_detail.ca
                    for (int i=0;i<1;i++) {
                        CDW = response.body().response.car_detail.collision_damage_waiver.get(i);
                    }

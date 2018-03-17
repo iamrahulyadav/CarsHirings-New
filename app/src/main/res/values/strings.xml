@@ -304,7 +304,7 @@
     <string name="quotes">Quotes</string>
 
     <!--MyAccount-->
-    <string name="points">200 Points</string>
+    <string name="points"> Points</string>
 
     <!--SearchFilterActivity-->
     <string name="selected_packages_are">Selected Packages are</string>
@@ -353,6 +353,10 @@
     <!--pay activity-->
     <string name="txtPayTotal">Total Amount to be pay</string>
     <string name="txtPayNow">Pay</string>
+    <string name="txtAvailable">Available balance is</string>
+    <string name="txtPayOnline">Pay online</string>
+    <string name="txtUsepoint">Use Points</string>
+    <string name="txtUseWallet">Use wallet</string>
     <!--activity user dash-->
     <string name="drvlncno">Driving LIC-id</string>
     <string name="txtwallet">Wallet Amount</string>

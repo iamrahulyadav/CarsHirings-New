@@ -196,8 +196,8 @@ public class AccountDetailsActivity extends AppBaseActivity {
                 Utility.hidepopup();
                 if(response.body().status==true)
                 {
-                    Log.d("TAG", "onResponse: "+response.body().msg);
-                    Utility.message(getApplicationContext(), response.body().msg);
+                    Log.d("TAG", "onResponse: "+response.body().message);
+                    Utility.message(getApplicationContext(), response.body().message);
 //                    String logindata=gson.toJson(response.body().response.userdetail);
                     userDetails = response.body().response.user_detail;
                     String logindata=gson.toJson(userDetails);
@@ -208,7 +208,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
 
                 }
                 else{
-                    Utility.message(getApplicationContext(), response.body().msg);
+                    Utility.message(getApplicationContext(), response.body().message);
                 }
             }
 
@@ -274,6 +274,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
         });
     }
 
+    private Toolbar toolbar ;
 /*
     private void setUptoolbar() {
 
@@ -338,5 +339,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
     private boolean isValidMobile(String phone) {
         return android.util.Patterns.PHONE.matcher(phone).matches();
     }
+
+
 
 }

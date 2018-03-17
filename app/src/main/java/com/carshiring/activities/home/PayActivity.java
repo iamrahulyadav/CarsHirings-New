@@ -1,4 +1,5 @@
 package com.carshiring.activities.home;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
@@ -11,7 +12,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carshiring.R;
+import com.carshiring.fragments.SearchCarFragment;
+import com.carshiring.models.PointHistoryData;
 import com.carshiring.models.TokenResponse;
+import com.carshiring.models.UserDetails;
+import com.carshiring.models.WalletHistoryData;
 import com.carshiring.utilities.AppBaseActivity;
 import com.carshiring.utilities.Utility;
 import com.carshiring.webservices.ApiResponse;
@@ -35,14 +40,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import retrofit2.Call;
 
 import static android.content.ContentValues.TAG;
 
 public class PayActivity extends AppBaseActivity {
     ActionBar actionBar;
-    TextView txtPay, txtTotalAmyVal;
+    TextView txtPay, txtTotalAmyVal,txtWalletBal,txtPointVal;
     CheckedTextView txtcheckPoint,txtCheckPay, txtCheckWallet;
     public static String price="", email="",sdk_token="";
     public FortCallBackManager fortCallback;
@@ -52,6 +61,11 @@ public class PayActivity extends AppBaseActivity {
             booking_payfort="",transaction_id="",language="";
     TinyDB tinyDB;
     CheckBox checkPayOnline, checkWallet, checkPoint;
+    public List<WalletHistoryData> walletHistoryData = new ArrayList<>();
+    public List<PointHistoryData>pointHistoryData = new ArrayList<>();
+    double creditAmt, debitAmt,walletAmt, totalDebit, totalCredit,totalPoint,totalDebitPoint, totalCreditPoint, creditPoint, debitPoint;
+    Gson gson = new Gson();
+    UserDetails userDetails = new UserDetails();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +77,38 @@ public class PayActivity extends AppBaseActivity {
             actionBar.setHomeAsUpIndicator(R.drawable.back);
         }
         tinyDB = new TinyDB(getApplicationContext());
+        String login = tinyDB.getString("login_data");
+        language=tinyDB.getString("language_code");
+        userDetails = gson.fromJson(login, UserDetails.class);
+        /* (language,name,sarname,number,email,address,
+                city,zipcode,countrycode,car_id,type,rtype,fullprotection,flight_no,extradata,dob,user_id,
+                pick_date,drop_date,pick_city,drop_city,protection_val,booking_point,booking_wallet,booking_payfort,
+                transaction_id);*/
+        user_id = userDetails.getUser_id();
+        name = userDetails.getUser_name();
+        sarname = (String) userDetails.getUser_lname();
+        number = userDetails.getUser_phone();
+        email   = userDetails.getUser_email();
+        address = userDetails.getUser_address();
+        city = (String) userDetails.getUser_city();
+        zipcode = userDetails.getUser_zipcode();
+        countrycode = userDetails.getUser_countrycode();
+        dob = userDetails.getUser_age();
+        flight_no = " ";
+        car_id = CarsResultListActivity.id_context;
+        type = CarsResultListActivity.type;
+        rtype = CarsResultListActivity.refertype;
+        pick_city = SearchCarFragment.pickName;
+        pick_date = SearchCarFragment.pick_date;
+        drop_city = SearchCarFragment.dropName;
+        drop_date = SearchCarFragment.drop_date;
+
+
         txtCheckPay = findViewById(R.id.check_pay_online);
         txtcheckPoint = findViewById(R.id.check_points);
         txtCheckWallet = findViewById(R.id.check_wallet);
+        txtWalletBal = findViewById(R.id.txtWaletValue);
+        txtPointVal = findViewById(R.id.txtPointValue);
         txtPay = findViewById(R.id.txtPay);
         txtTotalAmyVal = findViewById(R.id.txtTotalPayValue);
         txtPay.setOnClickListener(new View.OnClickListener() {
@@ -112,8 +155,9 @@ public class PayActivity extends AppBaseActivity {
     protected void onResume() {
         super.onResume();
         actionBar.setTitle(getResources().getString(R.string.txtPayNow));
-        language=tinyDB.getString("language_code");
         getSDKToken(language);
+        getPoint();
+        getWal();
     }
 
     @Override
@@ -282,32 +326,6 @@ public class PayActivity extends AppBaseActivity {
     public void requestPurchase() {
         requestOperation("PURCHASE" ,sdk_token) ;
     }
-/*
-    Call<ApiResponse> bookCar(@Field("language_code") String language_code,
-                              @Field("name") String name,
-                              @Field("sarname") String sarname,
-                              @Field("number") String number,
-                              @Field("email") String email,
-                              @Field("address") String address,
-                              @Field("city") String city,
-                              @Field("zipcode") String zipcode,
-                              @Field("countrycode") String countrycode,
-                              @Field("car_id") String car_id,
-                              @Field("type") String type,
-                              @Field("rtype") String rtype,
-                              @Field("fullprotection") String fullprotection,
-                              @Field("flight_no") String flight_no,
-                              @Field("extradata") String extradata,
-                              @Field("dob") String dob,
-                              @Field("user_id") String user_id,
-                              @Field("pick_date") String pick_date,
-                              @Field("drop_date") String drop_date,
-                              @Field("pick_city") String pick_city,
-                              @Field("drop_city") String drop_city,
-                              @Field("protection_val") String protection_val,
-                              @Field("booking_point") String booking_point,
-                              @Field("booking_wallet") String booking_wallet,
-                              @Field("booking_payfort") String booking_payfort);*/
 
     public void bookCar(){
         Utility.showLoading(this,"Searching cars...");
@@ -330,6 +348,112 @@ public class PayActivity extends AppBaseActivity {
             }
         });
 
+    }
+
+    public void getWal(){
+        RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();
+        final Call<ApiResponse> walList = fitApis.walletHistory(user_id);
+        walList.enqueue(new retrofit2.Callback<ApiResponse>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(Call<ApiResponse> call, retrofit2.Response<ApiResponse> response) {
+                if (response!=null){
+                   if (response.body().status){
+                       walletHistoryData = response.body().response.wallet;
+                       Log.d("TAG", "onResponse: "+gson.toJson(walletHistoryData));
+                       for (WalletHistoryData walletHistoryData1 : walletHistoryData){
+                           if (walletHistoryData1.get_$WalletType204().equals("debit")){
+                               String debit = walletHistoryData1.get_$WalletAmount169();
+                               debitAmt = Double.parseDouble(debit);
+                               totalDebit+= debitAmt;
+//                            Log.d("TAG", "onResponse: "+debit);
+                           }
+                           if (walletHistoryData1.get_$WalletType204().equals("credit")){
+                               String debit = walletHistoryData1.get_$WalletAmount169();
+                               creditAmt = Double.parseDouble(debit);
+                               totalCredit+= creditAmt;
+                           }
+                       }
+                       Log.d("TAG", "onResponse: totalDebit"+debitAmt);
+                       walletAmt = totalCredit-totalDebit;
+                       Log.d("TAG", "onResponse: totalDebit"+totalCredit+"\n"+walletAmt);
+                       if (walletAmt>0){
+                           txtWalletBal.setText("("+walletAmt+" Wallet value is : "+walletAmt+")");
+
+                           txtWalletBal.setText("("+getResources().getString(R.string.txtAvailable)+" "
+                                   +String.valueOf(walletAmt)+")");
+                           txtWalletBal.setVisibility(View.VISIBLE);
+                           txtCheckWallet.setVisibility(View.VISIBLE);
+
+                       } else {
+                           txtWalletBal.setVisibility(View.GONE);
+                           txtCheckWallet.setVisibility(View.GONE);
+
+                       }
+                   } else {
+                       Utility.message(getApplicationContext(),response.body().message);
+                   }
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                Utility.message(getApplicationContext(), getResources().getString(R.string.check_internet));
+                Log.d("TAG", "onFailure: "+t.getMessage());
+            }
+        });
+    }
+
+    public void getPoint(){
+        RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();
+        final Call<ApiResponse> walList = fitApis.pointHistory(user_id);
+        walList.enqueue(new retrofit2.Callback<ApiResponse>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(Call<ApiResponse> call, retrofit2.Response<ApiResponse> response) {
+                if (response!=null){
+                    if (response.body().status){
+                        pointHistoryData = response.body().response.points;
+                        Log.d("TAG", "onResponse: "+gson.toJson(pointHistoryData));
+                        for (PointHistoryData walletHistoryData1 : pointHistoryData){
+                            if (walletHistoryData1.get_$BookingPointType184().equals("debit")){
+                                String debit = walletHistoryData1.get_$BookingPoint18();
+                                debitPoint = Double.parseDouble(debit);
+                                totalDebitPoint+= debitPoint;
+//                            Log.d("TAG", "onResponse: "+debit);
+                            }
+                            if (walletHistoryData1.get_$BookingPointType184().equals("credit")){
+                                String debit = walletHistoryData1.get_$BookingPoint18();
+                                creditPoint = Double.parseDouble(debit);
+                                totalCreditPoint+= creditPoint;
+                            }
+                        }
+                        Log.d("TAG", "onResponse: totalDebit"+debitPoint);
+                        totalPoint = totalCreditPoint-totalDebitPoint;
+                        double d = totalPoint*0.05;
+                        Log.d("TAG", "onResponse: totalDebit"+totalCreditPoint+"\n"+d);
+//                    txtPointVal.setText(String.valueOf(totalPoint));
+                        if (totalPoint>0.0){
+                            txtPointVal.setText("("+totalPoint+" Point value is : "+String.valueOf(d)+")");
+                            txtPointVal.setVisibility(View.VISIBLE);
+                            txtcheckPoint.setVisibility(View.VISIBLE);
+                        } else {
+                            txtPointVal.setVisibility(View.GONE);
+                            txtcheckPoint.setVisibility(View.GONE);
+                        }
+                    } else {
+                        Utility.message(getApplicationContext(),response.body().message);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                Utility.message(getApplicationContext(), getResources().getString(R.string.check_internet));
+                Log.d("TAG", "onFailure: "+t.getMessage());
+            }
+        });
     }
 
 }

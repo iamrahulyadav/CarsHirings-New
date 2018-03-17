@@ -134,12 +134,12 @@ public class SplashActivity extends AppBaseActivity {
                             lan = langlistname.toArray(lan);
                             handlespinner();
                         } else {
-                            Utility.message(SplashActivity.this, response.body().msg);
+                            Utility.message(SplashActivity.this, response.body().message);
                         }
                     }else{
                         if(response.body().error_code==102){
                         }
-                        Toast.makeText(_this, response.body().msg, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(_this, response.body().message, Toast.LENGTH_SHORT).show();
                     }
                 }else{
                     Toast.makeText(SplashActivity.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();

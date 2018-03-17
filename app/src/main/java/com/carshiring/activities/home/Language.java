@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -157,7 +156,7 @@ public class Language extends AppBaseActivity
                         }
                         addradio();
                     } else {
-                        Utility.message(Language.this, response.body().msg);
+                        Utility.message(Language.this, response.body().message);
                     }
                 }else{
                     Toast.makeText(Language.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();

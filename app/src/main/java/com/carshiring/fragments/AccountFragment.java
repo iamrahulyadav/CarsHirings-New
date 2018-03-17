@@ -16,6 +16,7 @@ import com.carshiring.activities.home.MyBookingActivity;
 import com.carshiring.activities.home.UserDashActivity;
 import com.carshiring.activities.mainsetup.LoginActivity;
 import com.carshiring.utilities.AppGlobal;
+import com.mukesh.tinydb.TinyDB;
 
 
 /**
@@ -27,6 +28,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
     AppGlobal global=AppGlobal.getInstancess();
     LinearLayout ll_mybooking,ll_accountdetails,ll_changepassword,li_profile;
     Toolbar toolbar;
+    TinyDB tinyDB ;
     View view;
 
     @Nullable
@@ -43,6 +45,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         ll_changepassword.setOnClickListener(this);
         li_profile.setOnClickListener(this);
         setuptoolbar();
+        tinyDB = new TinyDB(getContext());
         return view;
     }
 
@@ -51,9 +54,9 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                tinyDB.remove("login_data");
                 Intent intent=new Intent(getContext(), LoginActivity.class);
                 startActivity(intent);
-                global.resetAllData();
                 getActivity().finish();
             }
         });
@@ -70,10 +73,10 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 //                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.subview_container,myBookingsFragment).addToBackStack(null).commit();
                 break;
             case R.id.ll_acccountdetails:
-               startActivity(new Intent(getActivity(),AccountDetailsActivity.class));
+              // startActivity(new Intent(getActivity(),AccountDetailsActivity.class));
                 break;
             case R.id.ll_booking_history:
-                //startActivity(new Intent(getActivity(),ChangePasswordActivity.class));
+                startActivity(new Intent(getActivity(),MyBookingActivity.class));
              break;
             case R.id.ll_profile:
                 startActivity(new Intent(getContext(), UserDashActivity.class));

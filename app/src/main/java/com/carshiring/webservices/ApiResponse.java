@@ -9,7 +9,7 @@ import com.carshiring.models.ContactUs;
 public class ApiResponse {
     public int error_code ;
     public boolean status ;
-    public String msg ;
+    public String message;
     public String access_token ;
     public long expires_in ;
     public String token_type ;

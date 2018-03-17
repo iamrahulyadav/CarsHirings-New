@@ -40,7 +40,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -68,6 +67,7 @@ public class CarsResultListActivity extends AppBaseActivity {
     CarResultsListAdapter listAdapter;
     UserDetails userDetails = new UserDetails();
     TinyDB tinyDB;
+    public static String id_context, refertype, type;
     AppGlobal appGlobal=AppGlobal.getInstancess();
     Dialog dialog;
     TextView tvFromDate,tvPickDate,tvTodate,txtPlaceDrop;
@@ -180,11 +180,14 @@ public class CarsResultListActivity extends AppBaseActivity {
                         set = "update_profile";
                         setupoverlay(set);
                     } else {
+                        id_context = carDetail.getId_context();
+                        type = carDetail.getType();
+                        refertype = carDetail.getRefer_type();
                         Intent intent = new Intent(CarsResultListActivity.this,CarDetailActivity.class);
-                        intent.putExtra("id_context",carDetail.getId_context());
-                        intent.putExtra("type",carDetail.getType());
+                        intent.putExtra("id_context",id_context);
+                        intent.putExtra("type",type);
                         intent.putExtra("day",carDetail.getTime());
-                        intent.putExtra("refer_type",carDetail.getRefer_type());
+                        intent.putExtra("refer_type",refertype);
                         startActivity(intent);
                     }
                 } else {
@@ -638,7 +641,7 @@ public class CarsResultListActivity extends AppBaseActivity {
 
                 }
                 else{
-                    Utility.message(getApplicationContext(), response.body().msg);
+                    Utility.message(getApplicationContext(), response.body().message);
                 }
             }
 
@@ -674,7 +677,7 @@ public class CarsResultListActivity extends AppBaseActivity {
 
                 }
                 else{
-                    Utility.message(getApplicationContext(), response.body().msg);
+                    Utility.message(getApplicationContext(), response.body().message);
                 }
             }
 

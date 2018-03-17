@@ -6,23 +6,15 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carshiring.R;
-import com.carshiring.activities.home.MainActivity;
 import com.carshiring.activities.home.MyBookingActivity;
-import com.carshiring.adapters.BookingAdapter;
 import com.carshiring.adapters.MyBookingAdapter;
-import com.carshiring.models.BookingData;
 import com.carshiring.models.BookingHistory;
 import com.carshiring.utilities.Utility;
 import com.carshiring.webservices.ApiResponse;
@@ -141,8 +133,8 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
                         bookingHistory1.addAll(bookingHistory1);
 */
 
-//                        String msg = response.body().toString();
-  //                      bookingHistory = gson.fromJson(msg, BookingHistory.class);
+//                        String message = response.body().toString();
+  //                      bookingHistory = gson.fromJson(message, BookingHistory.class);
 
 //                        bookingHistory = response.body().response.bookingHistory;
 //                        Toast.makeText(getContext(), bookingHistory.getMessage(), Toast.LENGTH_SHORT).show();;
@@ -209,10 +201,10 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
                     */
                     }
                     else {
-                        Utility.message(getContext(), response.body().msg);
+                        Utility.message(getContext(), response.body().message);
                     }
                 } else {
-                    Utility.message(getContext(), response.body().msg);
+                    Utility.message(getContext(), response.body().message);
                 }
             }
 

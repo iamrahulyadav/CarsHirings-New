@@ -167,10 +167,10 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
                         bookingAdapter.notifyDataSetChanged();
                     }
                     else {
-                        Utility.message(getContext(), response.body().msg);
+                        Utility.message(getContext(), response.body().message);
                     }
                 } else {
-                    Utility.message(getContext(), response.body().msg);
+                    Utility.message(getContext(), response.body().message);
                 }
             }
 

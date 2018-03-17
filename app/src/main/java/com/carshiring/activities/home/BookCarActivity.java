@@ -49,11 +49,11 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
     ProgressBar bar,bar1;
     TinyDB tinyDB;
     UserDetails userDetails = new UserDetails();
-    String price, name, number,currency,sarname,email,address,city,zipcode,countrycode,car_id,type,rtype,
+    public static String price, name, number,currency,sarname,email,address,city,zipcode,countrycode,car_id,type,rtype,
             fullprotection,flight_no,extradata,dob,user_id,pick_date,drop_date,pick_city,drop_city,protection_val,
-            booking_point,booking_wallet,booking_payfort;
+            booking_point,booking_wallet,booking_payfort,fullProtection;
     Gson gson =new Gson();
-    List<ExtraAdded> extraData = new ArrayList<>();
+    public static List<ExtraAdded> extraData = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,13 +67,6 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
         setupToolbar();
         tinyDB = new TinyDB(getApplicationContext());
         String logindata= tinyDB.getString("login_data");
-            /*(String name, String sarname, String number, String email,
-                          String address, String city, String zipcode, String countrycode,
-                          String car_id, String type, String rtype, String fullprotection,
-                          String flight_no, String extradata, String dob, String user_id,
-                          String pick_date, String drop_date, String pick_city, String drop_city,
-                          String protection_val, String booking_point, String booking_wallet,
-                          String booking_payfort)*/
 
         userDetails = gson.fromJson(logindata,UserDetails.class);
         name = userDetails.getUser_name();
@@ -113,8 +106,12 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
             String full = tinyDB.getString("full_prot");
             txtFull.setVisibility(View.VISIBLE);
             txtFullValue.setVisibility(View.VISIBLE);
+            fullProtection = "yes";
+            protection_val = full;
             txtFullValue.setText(getResources().getString(R.string.full_protection_only) + full + getResources()
                     .getString(R.string.full_day));
+        } else {
+            fullProtection = "no";
         }
 
         txtPoint.setText(getResources().getString(R.string.colletcted_point) + CarResultsListAdapter.calPoint);

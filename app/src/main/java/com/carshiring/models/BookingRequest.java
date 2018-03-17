@@ -1,46 +1,26 @@
 package com.carshiring.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by lenovo on 3/15/2018.
  */
 
 public class BookingRequest {
-    String name="",sarname="",number="",email="",address="",city="",zipcode="",countrycode="",car_id="",
+    private String name="",sarname="",number="",email="",address="",city="",zipcode="",countrycode="",car_id="",
             type="",rtype="",fullprotection="",flight_no="",extradata="",dob="",user_id="",pick_date="",
             drop_date="", pick_city="",drop_city="",protection_val="",booking_point="",booking_wallet="",
             booking_payfort="";
+    List<ExtraAdded> extraData = new ArrayList<>();
 
-    public BookingRequest(String name, String sarname, String number, String email,
-                          String address, String city, String zipcode, String countrycode,
-                          String car_id, String type, String rtype, String fullprotection,
-                          String flight_no, String extradata, String dob, String user_id,
-                          String pick_date, String drop_date, String pick_city, String drop_city,
-                          String protection_val, String booking_point, String booking_wallet,
-                          String booking_payfort) {
-        this.name = name;
-        this.sarname = sarname;
-        this.number = number;
-        this.email = email;
-        this.address = address;
-        this.city = city;
-        this.zipcode = zipcode;
-        this.countrycode = countrycode;
-        this.car_id = car_id;
-        this.type = type;
-        this.rtype = rtype;
-        this.fullprotection = fullprotection;
-        this.flight_no = flight_no;
-        this.extradata = extradata;
-        this.dob = dob;
-        this.user_id = user_id;
-        this.pick_date = pick_date;
-        this.drop_date = drop_date;
-        this.pick_city = pick_city;
-        this.drop_city = drop_city;
-        this.protection_val = protection_val;
-        this.booking_point = booking_point;
-        this.booking_wallet = booking_wallet;
-        this.booking_payfort = booking_payfort;
+
+    public List<ExtraAdded> getExtraData() {
+        return extraData;
+    }
+
+    public void setExtraData(List<ExtraAdded> extraData) {
+        this.extraData = extraData;
     }
 
     public String getName() {

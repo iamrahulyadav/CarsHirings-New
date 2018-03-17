@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -30,7 +29,6 @@ import android.widget.Toast;
 import com.carshiring.R;
 import com.carshiring.activities.mainsetup.LoginActivity;
 import com.carshiring.fragments.AccountFragment;
-import com.carshiring.fragments.MyAccountsFragment;
 import com.carshiring.fragments.SearchCarFragment;
 import com.carshiring.interfaces.ISubViewSetupHandler;
 import com.carshiring.models.UserDetails;
@@ -250,7 +248,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 break;
 
-            case R.id.action_quotes:
+            case R.id.action_booking:
                 if (checkLogin()) {
                     startActivity(new Intent(MainActivity.this,MyBookingActivity.class));
                 }
@@ -425,8 +423,8 @@ public class MainActivity extends AppCompatActivity
                 Utility.hidepopup();
                 if(response.body().status==true)
                 {
-                    Log.d("TAG", "onResponse: "+response.body().msg);
-                    Utility.message(getApplicationContext(), response.body().msg);
+                    Log.d("TAG", "onResponse: "+response.body().message);
+                    Utility.message(getApplicationContext(), response.body().message);
 //                    String logindata=gson.toJson(response.body().response.userdetail);
                     userDetails = response.body().response.user_detail;
                     String logindata=gson.toJson(userDetails);
@@ -437,7 +435,7 @@ public class MainActivity extends AppCompatActivity
 
                 }
                 else{
-                    Utility.message(getApplicationContext(), response.body().msg);
+                    Utility.message(getApplicationContext(), response.body().message);
                 }
             }
 

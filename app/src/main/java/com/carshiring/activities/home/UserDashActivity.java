@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carshiring.R;
 import com.carshiring.models.PointHistoryData;
@@ -45,6 +46,7 @@ public class UserDashActivity extends AppBaseActivity {
     public static List<PointHistoryData>pointHistoryData = new ArrayList<>();
     double creditAmt, debitAmt,walletAmt, totalDebit, totalCredit,totalPoint,totalDebitPoint, totalCreditPoint, creditPoint, debitPoint;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +79,11 @@ public class UserDashActivity extends AppBaseActivity {
         txtEmail.setText(getResources().getString(R.string.email)+": "+userDetails.getUser_email());
         txtPhone.setText(getResources().getString(R.string.phone)+ ": "+userDetails.getUser_phone());
         txtDrvLnc.setText(getResources().getString(R.string.drvlncno)+": "+userDetails.getUser_license_no());
-        txtName.setText(userDetails.getUser_name()+ " "+userDetails.getUser_lname());
+        if (userDetails.getUser_lname()!=null){
+            txtName.setText(userDetails.getUser_name()+ " "+userDetails.getUser_lname());
+        }
+        getWal();
+        getPoint();
     }
 
     public void walletView(View view){
@@ -98,22 +104,6 @@ public class UserDashActivity extends AppBaseActivity {
     protected void onResume() {
         super.onResume();
         actionBar.setTitle(getResources().getString(R.string.txtDashTitle));
-        getWal();
-        getPoint();
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId())
-        {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
     }
 
 
@@ -125,35 +115,39 @@ public class UserDashActivity extends AppBaseActivity {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 if (response!=null){
-                    walletHistoryData = response.body().response.wallet;
-                    Log.d("TAG", "onResponse: "+gson.toJson(walletHistoryData));
-
-                    for (WalletHistoryData walletHistoryData1 : walletHistoryData){
-                        if (walletHistoryData1.get_$WalletType204().equals("debit")){
-                            String debit = walletHistoryData1.get_$WalletAmount169();
-                            debitAmt = Double.parseDouble(debit);
-                            totalDebit += debitAmt;
+                    if (response.body().status){
+                        walletHistoryData = response.body().response.wallet;
+                        Log.d("TAG", "onResponse: "+gson.toJson(walletHistoryData));
+                        for (WalletHistoryData walletHistoryData1 : walletHistoryData){
+                            if (walletHistoryData1.get_$WalletType204().equals("debit")){
+                                String debit = walletHistoryData1.get_$WalletAmount169();
+                                debitAmt = Double.parseDouble(debit);
+                                totalDebit += debitAmt;
 //                            Log.d("TAG", "onResponse: "+debit);
+                            }
+                            if (walletHistoryData1.get_$WalletType204().equals("credit")){
+                                String debit = walletHistoryData1.get_$WalletAmount169();
+                                creditAmt = Double.parseDouble(debit);
+                                totalCredit+= creditAmt;
+                            }
                         }
-                        if (walletHistoryData1.get_$WalletType204().equals("credit")){
-                            String debit = walletHistoryData1.get_$WalletAmount169();
-                            creditAmt = Double.parseDouble(debit);
-                            totalCredit+= creditAmt;
-                        }
-                    }
-
-                    Log.d("TAG", "onResponse: totalDebit"+debitAmt);
-                    walletAmt = totalCredit-totalDebit;
-                    Log.d("TAG", "onResponse: totalDebit"+totalCredit+"\n"+walletAmt);
+                        Log.d("TAG", "onResponse: totalDebit"+debitAmt);
+                        walletAmt = totalCredit-totalDebit;
+                        Log.d("TAG", "onResponse: totalDebit"+totalCredit+"\n"+walletAmt);
 //                    txtCreditPt.setText(getResources().getString(R.string.txtCredit)+" : "+ String.valueOf(totalCredit));
 //                    txtdebitPt.setText(getResources().getString(R.string.txtDebit)+" : "+ String.valueOf(totalDebit));
-                    txtWalletAmt.setText(String.valueOf(walletAmt));
+                        txtWalletAmt.setText(String.valueOf(walletAmt));
+                    } else {
+                      //  Toast.makeText(UserDashActivity.this, ""+response.body().message, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
-                Utility.message(getApplicationContext(), getResources().getString(R.string.check_internet));
+                Toast.makeText(UserDashActivity.this, ""+ getResources().getString(R.string.check_internet), Toast.LENGTH_SHORT).show();
+
+             //   Utility.message(getApplicationContext(), getResources().getString(R.string.check_internet));
                 Log.d("TAG", "onFailure: "+t.getMessage());
             }
         });
@@ -169,29 +163,33 @@ public class UserDashActivity extends AppBaseActivity {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 if (response!=null){
-                    pointHistoryData = response.body().response.points;
-                    Log.d("TAG", "onResponse: "+gson.toJson(pointHistoryData));
-                    for (PointHistoryData walletHistoryData1 : pointHistoryData){
+                   if (response.body().status){
+                       pointHistoryData = response.body().response.points;
+                       Log.d("TAG", "onResponse: "+gson.toJson(pointHistoryData));
+                       for (PointHistoryData walletHistoryData1 : pointHistoryData){
 
-                        if (walletHistoryData1.get_$BookingPointType184().equals("debit")){
-                            String debit = walletHistoryData1.get_$BookingPoint18();
-                            debitPoint = Double.parseDouble(debit);
-                            totalDebitPoint += debitPoint;
+                           if (walletHistoryData1.get_$BookingPointType184().equals("debit")){
+                               String debit = walletHistoryData1.get_$BookingPoint18();
+                               debitPoint = Double.parseDouble(debit);
+                               totalDebitPoint += debitPoint;
 //                            Log.d("TAG", "onResponse: "+debit);
-                        }
-                        if (walletHistoryData1.get_$BookingPointType184().equals("credit")){
-                            String debit = walletHistoryData1.get_$BookingPoint18();
-                            creditPoint = Double.parseDouble(debit);
-                            totalCreditPoint+= creditPoint;
-                        }
-                    }
+                           }
+                           if (walletHistoryData1.get_$BookingPointType184().equals("credit")){
+                               String debit = walletHistoryData1.get_$BookingPoint18();
+                               creditPoint = Double.parseDouble(debit);
+                               totalCreditPoint+= creditPoint;
+                           }
+                       }
 
-                    Log.d("TAG", "onResponse: totalDebit"+debitPoint);
-                    totalPoint = totalCreditPoint-totalDebitPoint;
-                    Log.d("TAG", "onResponse: totalDebit"+totalCreditPoint+"\n"+totalPoint);
-                    txtCreditPt.setText(getResources().getString(R.string.txtCredit)+" : "+ String.valueOf(creditPoint));
-                    txtdebitPt.setText(getResources().getString(R.string.txtDebit)+" : "+ String.valueOf(debitPoint));
-                    txtPointValue.setText(String.valueOf(totalPoint));
+                       Log.d("TAG", "onResponse: totalDebit"+debitPoint);
+                       totalPoint = totalCreditPoint-totalDebitPoint;
+                       Log.d("TAG", "onResponse: totalDebit"+totalCreditPoint+"\n"+totalPoint);
+                       txtCreditPt.setText(getResources().getString(R.string.txtCredit)+" : "+ String.valueOf(totalCreditPoint));
+                       txtdebitPt.setText(getResources().getString(R.string.txtDebit)+" : "+ String.valueOf(debitPoint));
+                       txtPointValue.setText(String.valueOf(totalPoint));
+                   } else {
+                     //  Toast.makeText(UserDashActivity.this, ""+response.body().message, Toast.LENGTH_SHORT).show();
+                   }
                 }
             }
 

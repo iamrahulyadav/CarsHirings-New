@@ -1,16 +1,13 @@
 package com.carshiring.activities.mainsetup;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carshiring.R;
-import com.carshiring.activities.home.CarsResultListActivity;
 import com.carshiring.models.UserDetails;
 import com.carshiring.utilities.AppBaseActivity;
 import com.carshiring.utilities.AppGlobal;
@@ -163,7 +160,7 @@ public class MyAccountActivity extends AppBaseActivity {
                     Utility.message(MyAccountActivity.this,getResources().getString(R.string.updated_successfully));
                 }
                 else{
-                    Utility.message(getApplicationContext(), response.body().msg);
+                    Utility.message(getApplicationContext(), response.body().message);
                 }
             }
 

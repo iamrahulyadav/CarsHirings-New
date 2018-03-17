@@ -5,16 +5,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.carshiring.R;
-import com.carshiring.adapters.Page_Adapter;
 import com.carshiring.fragments.CurrentBookingFragment;
-import com.carshiring.fragments.DriversFragment;
 import com.carshiring.fragments.PreviousBookingFragment;
 import com.carshiring.fragments.QuotesFragment;
 import com.carshiring.models.BookingHistory;
@@ -73,99 +69,27 @@ public class MyBookingActivity extends AppBaseActivity {
 
         Utility.showloadingPopup(MyBookingActivity.this);
         RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();
-        final Call<ApiResponse> bookingDataCall = fitApis.booking_history("19");
+        final Call<ApiResponse> bookingDataCall = fitApis.booking_history(userId);
 
         bookingDataCall.enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 Utility.hidepopup();
                 if (response.body()!=null){
-                    if (response.body().status==true){
+                    if (response.body().status==true) {
 
                         bookingHistory = response.body().response.booking;
 
                         setMyTabs(bookingHistory);
-                        //
-// setMyAdapter(bookingHistory);
-/*
-                        String str = gson.toJson(bookingHistory);
-                        Log.d("TAG", str);
-                        List<BookingHistory> bookingHistory1 = new ArrayList<>();
-                        bookingHistory1.addAll(bookingHistory1);
-*/
-
-//                        String msg = response.body().toString();
-                        //                      bookingHistory = gson.fromJson(msg, BookingHistory.class);
-
-//                        bookingHistory = response.body().response.bookingHistory;
-//                        Toast.makeText(getContext(), bookingHistory.getMessage(), Toast.LENGTH_SHORT).show();;
-//                        List<BookingHistory.ResponseBean.BookingBean> obj = new ArrayList<>();
-//                        obj = response.body().response.bookingData;
-//                       Toast.makeText(getContext(), obj.size()+" ", Toast.LENGTH_SHORT).show();
-
-
-
-                        /*
-                        BookingHistory history = gson.fromJson(response.body().toString(), BookingHistory.class);
-
-                        List<BookingHistory.ResponseBean.BookingBean> bookingBeans = new ArrayList<>();
-
-                        bookingBeans = history.getResponse().getBooking();
-
-                        currentBookingData.addAll(bookingBeans);
-
-                        Log.d("Data Size", bookingBeans.size()+"");
-*/
-                        /*String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-                                .format(Calendar.getInstance().getTime());
-
-                        List<BookingData>booking_detail = response.body().response.booking_detail;
-                        for (BookingData bookingData1 : booking_detail){
-
-                            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-                            Date date1 = null;
-                            try {
-                                date1 = format.parse(timeStamp);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            Date date2 = null;
-                            try {
-                                date2 = format.parse(bookingData1.getBookingdetail_from_date());
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            if (date1.compareTo(date2) <0 ) {
-                                    currentBookingData.add(bookingData1);
-                                    Collections.sort(currentBookingData, new Comparator<BookingData>() {
-                                        @Override
-                                        public int compare(BookingData o1, BookingData o2) {
-                                            if (o1.getBookingdetail_from_date() == null || o2.getBookingdetail_from_date() == null)
-                                                return 0;
-                                            return o2.getBookingdetail_from_date().compareTo(o1.getBookingdetail_from_date());
-                                        }
-                                    });
-
-
-                            }
-                        }
-                        if (currentBookingData.size()>0){
-                            linearLayout.setVisibility(View.GONE);
-                        } else {
-                            linearLayout.setVisibility(View.VISIBLE);
-                            recyclerView.setVisibility(View.GONE);
-                        }
-
-                        bookingAdapter.notifyDataSetChanged();
-
-                    */
                     }
                     else {
-                        Utility.message(getApplicationContext(), response.body().msg);
+                        Toast.makeText(MyBookingActivity.this, "No data found", Toast.LENGTH_SHORT).show();
+//                        Utility.message(getApplicationContext(), response.body().message);
                     }
                 } else {
-                    Utility.message(getApplicationContext(), response.body().msg);
+                    Toast.makeText(MyBookingActivity.this, ""+response.body().message, Toast.LENGTH_SHORT).show();
+
+//                    Utility.message(getApplicationContext(), response.body().message);
                 }
             }
 

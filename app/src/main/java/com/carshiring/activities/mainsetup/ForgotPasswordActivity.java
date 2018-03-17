@@ -1,7 +1,6 @@
 package com.carshiring.activities.mainsetup;
 
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -77,7 +76,7 @@ public class ForgotPasswordActivity extends AppBaseActivity implements TextView.
                     @Override
                     public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                         if(response.body().status) {
-                            Message = response.body().msg;
+                            Message = response.body().message;
                             Utility.message(ForgotPasswordActivity.this, Message);
                             Utility.hidepopup();
                             finish();

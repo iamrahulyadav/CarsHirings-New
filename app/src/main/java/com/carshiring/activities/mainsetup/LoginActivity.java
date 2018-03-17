@@ -2,7 +2,6 @@ package com.carshiring.activities.mainsetup;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -126,7 +125,7 @@ public class LoginActivity extends AppBaseActivity implements View.OnClickListen
                         finish();
                     }
                     else{
-                        Utility.message(getApplicationContext(), response.body().msg);
+                        Utility.message(getApplicationContext(), response.body().message);
                     }
                 }
 
