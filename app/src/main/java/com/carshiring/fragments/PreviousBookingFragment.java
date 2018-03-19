@@ -93,13 +93,16 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
         });
 
         recyclerView= (RecyclerView) view.findViewById(R.id.rec_prev_booki_list);
-//        bookingAdapter=new BookingAdapter(getContext(),list);
-////        bookingAdapter.submit(this);
+
         RecyclerView.LayoutManager mlayoutManager=new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mlayoutManager);
-//        recyclerView.setAdapter(bookingAdapter);
-//        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
-//        recyclerView.setVisibility(View.VISIBLE);
+
+        if (MyBookingActivity.bookingHistoryList2.size()>0){
+            linearLayout.setVisibility(View.GONE);
+        } else {
+            linearLayout.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        }
 
         setMyAdapter(MyBookingActivity.bookingHistoryList2);
         setuptoolbar();

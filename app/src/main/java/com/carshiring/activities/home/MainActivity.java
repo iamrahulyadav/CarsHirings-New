@@ -423,19 +423,16 @@ public class MainActivity extends AppCompatActivity
                 Utility.hidepopup();
                 if(response.body().status==true)
                 {
-                    Log.d("TAG", "onResponse: "+response.body().message);
-                    Utility.message(getApplicationContext(), response.body().message);
-//                    String logindata=gson.toJson(response.body().response.userdetail);
+                    Log.d("TAG", "onResponse: "+response.body().msg);
+                    Toast.makeText(MainActivity.this, ""+ response.body().msg, Toast.LENGTH_SHORT).show();
                     userDetails = response.body().response.user_detail;
                     String logindata=gson.toJson(userDetails);
                     appGlobal.setLoginData(logindata);
-                    String st=  appGlobal.getUser_id();
-                    dialog.dismiss();
                     dialog.dismiss();
 
                 }
                 else{
-                    Utility.message(getApplicationContext(), response.body().message);
+                    Utility.message(getApplicationContext(), response.body().msg);
                 }
             }
 

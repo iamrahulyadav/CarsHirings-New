@@ -16,6 +16,7 @@ import com.carshiring.R;
 import com.carshiring.activities.home.MyBookingActivity;
 import com.carshiring.adapters.MyBookingAdapter;
 import com.carshiring.models.BookingHistory;
+import com.carshiring.models.UserDetails;
 import com.carshiring.utilities.Utility;
 import com.carshiring.webservices.ApiResponse;
 import com.carshiring.webservices.RetroFitApis;
@@ -50,6 +51,8 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
     private Button btn_search;
     private List<BookingHistory> list = new ArrayList<>();
 
+    UserDetails userDetails = new UserDetails();
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,8 +74,10 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
 
         tinyDB = new TinyDB(getContext());
         currentBookingData = new ArrayList<>();
+        String  login = tinyDB.getString("login_data");
+        userDetails = gson.fromJson(login, UserDetails.class);
+        userId =userDetails.getUser_id();
 
-        userId = tinyDB.getString("userid");
         token = tinyDB.getString("access_token");
 
 //        bookingAdapter=new BookingAdapter(getContext(), currentBookingData);
@@ -103,117 +108,6 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
     }
 
     private Gson gson = new Gson();
-    private List<BookingHistory> bookingHistory = new ArrayList<>();
-
-    private void getBooking(){
-        if(currentBookingData !=null)
-        {
-            currentBookingData.clear();
-        }
-
-   //     Toast.makeText(getContext(), userId+"", Toast.LENGTH_SHORT).show();
-
-        Utility.showloadingPopup(getActivity());
-        RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();
-        final Call<ApiResponse> bookingDataCall = fitApis.booking_history("19");
-
-        bookingDataCall.enqueue(new Callback<ApiResponse>() {
-            @Override
-            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                Utility.hidepopup();
-                if (response.body()!=null){
-                    if (response.body().status==true){
-
-                        bookingHistory= response.body().response.booking;
-                        setMyAdapter(bookingHistory);
-/*
-                        String str = gson.toJson(bookingHistory);
-                        Log.d("TAG", str);
-                        List<BookingHistory> bookingHistory1 = new ArrayList<>();
-                        bookingHistory1.addAll(bookingHistory1);
-*/
-
-//                        String message = response.body().toString();
-  //                      bookingHistory = gson.fromJson(message, BookingHistory.class);
-
-//                        bookingHistory = response.body().response.bookingHistory;
-//                        Toast.makeText(getContext(), bookingHistory.getMessage(), Toast.LENGTH_SHORT).show();;
-//                        List<BookingHistory.ResponseBean.BookingBean> obj = new ArrayList<>();
-//                        obj = response.body().response.bookingData;
-//                       Toast.makeText(getContext(), obj.size()+" ", Toast.LENGTH_SHORT).show();
-
-
-
-                        /*
-                        BookingHistory history = gson.fromJson(response.body().toString(), BookingHistory.class);
-
-                        List<BookingHistory.ResponseBean.BookingBean> bookingBeans = new ArrayList<>();
-
-                        bookingBeans = history.getResponse().getBooking();
-
-                        currentBookingData.addAll(bookingBeans);
-
-                        Log.d("Data Size", bookingBeans.size()+"");
-*/
-                        /*String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-                                .format(Calendar.getInstance().getTime());
-
-                        List<BookingData>booking_detail = response.body().response.booking_detail;
-                        for (BookingData bookingData1 : booking_detail){
-
-                            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-                            Date date1 = null;
-                            try {
-                                date1 = format.parse(timeStamp);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            Date date2 = null;
-                            try {
-                                date2 = format.parse(bookingData1.getBookingdetail_from_date());
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            if (date1.compareTo(date2) <0 ) {
-                                    currentBookingData.add(bookingData1);
-                                    Collections.sort(currentBookingData, new Comparator<BookingData>() {
-                                        @Override
-                                        public int compare(BookingData o1, BookingData o2) {
-                                            if (o1.getBookingdetail_from_date() == null || o2.getBookingdetail_from_date() == null)
-                                                return 0;
-                                            return o2.getBookingdetail_from_date().compareTo(o1.getBookingdetail_from_date());
-                                        }
-                                    });
-
-
-                            }
-                        }
-                        if (currentBookingData.size()>0){
-                            linearLayout.setVisibility(View.GONE);
-                        } else {
-                            linearLayout.setVisibility(View.VISIBLE);
-                            recyclerView.setVisibility(View.GONE);
-                        }
-
-                        bookingAdapter.notifyDataSetChanged();
-
-                    */
-                    }
-                    else {
-                        Utility.message(getContext(), response.body().message);
-                    }
-                } else {
-                    Utility.message(getContext(), response.body().message);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ApiResponse> call, Throwable t) {
-                Utility.message(getContext(), t.getMessage());
-            }
-        });
-    }
 
     private void setMyAdapter(List<BookingHistory> bookingHistory){
         MyBookingAdapter adapter = new MyBookingAdapter(getContext(), bookingHistory);
