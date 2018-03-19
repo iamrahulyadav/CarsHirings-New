@@ -38,7 +38,7 @@ public class UserDetails {
     private String user_id;
     private String user_title;
     private String user_name;
-    private Object user_lname;
+    private String user_lname;
     private String user_username;
     private String user_email;
     private String user_countrycode;
@@ -95,11 +95,11 @@ public class UserDetails {
         this.user_name = user_name;
     }
 
-    public Object getUser_lname() {
+    public String getUser_lname() {
         return user_lname;
     }
 
-    public void setUser_lname(Object user_lname) {
+    public void setUser_lname(String user_lname) {
         this.user_lname = user_lname;
     }
 

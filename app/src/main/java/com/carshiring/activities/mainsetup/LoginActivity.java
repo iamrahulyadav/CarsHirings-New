@@ -125,7 +125,7 @@ public class LoginActivity extends AppBaseActivity implements View.OnClickListen
                         finish();
                     }
                     else{
-                        Utility.message(getApplicationContext(), response.body().message);
+                        Utility.message(getApplicationContext(), "Username or password invalid");
                     }
                 }
 

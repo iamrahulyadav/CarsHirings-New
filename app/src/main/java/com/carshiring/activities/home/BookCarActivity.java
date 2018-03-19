@@ -9,13 +9,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -49,11 +52,11 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
     ProgressBar bar,bar1;
     TinyDB tinyDB;
     UserDetails userDetails = new UserDetails();
-    public static String price, name, number,currency,sarname,email,address,city,zipcode,countrycode,car_id,type,rtype,
-            fullprotection,flight_no,extradata,dob,user_id,pick_date,drop_date,pick_city,drop_city,protection_val,
-            booking_point,booking_wallet,booking_payfort,fullProtection;
+    public String price, name, number,currency;
     Gson gson =new Gson();
     public static List<ExtraAdded> extraData = new ArrayList<>();
+    EditText edtflight;
+    public static String flight_no,fullProtection ,protection_val;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,17 +73,6 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
 
         userDetails = gson.fromJson(logindata,UserDetails.class);
         name = userDetails.getUser_name();
-        sarname = (String) userDetails.getUser_lname();
-        number = userDetails.getUser_phone();
-        email = userDetails.getUser_email();
-        address = userDetails.getUser_address();
-        city = (String) userDetails.getUser_city();
-        zipcode = userDetails.getUser_zipcode();
-        countrycode = userDetails.getUser_countrycode();
-        pick_city = SearchCarFragment.pickName;
-        drop_city = SearchCarFragment.dropName;
-        pick_date = SearchCarFragment.pick_date;
-        drop_date = SearchCarFragment.drop_date;
 
         if (tinyDB.contains("extra_added")){
             String extra = tinyDB.getString("extra_added");
@@ -90,7 +82,7 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
 
         terms= (TextView)findViewById(R.id.txt_terms);
         txtPoint = findViewById(R.id.txtpoint_cal);
-
+        edtflight = findViewById(R.id.edtFlight);
         quotes=(TextView) findViewById(R.id.txt_savequote);
         carname= (TextView)findViewById(R.id.txt_modelname);
         carprice= (TextView) findViewById(R.id.txt_carPrice);
@@ -152,10 +144,10 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
             txtAddExtra.setVisibility(View.VISIBLE);
            for (int i=0;i<extraData.size();i++){
                price = extraData.get(i).getPrice();
-               number = extraData.get(i).getNumber();
+               number = extraData.get(i).getQty();
                name = extraData.get(i).getName();
                currency = extraData.get(i).getCurrency();
-               addLayout(name,price,number,currency);
+               addLayout(name,price,number,currency,extraData.get(i).getId());
            }
         }
     }
@@ -176,12 +168,36 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
     protected void onResume() {
         super.onResume();
         actionBar.setTitle(getResources().getString(R.string.car_book));
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
         tinyDB.remove("extra_added");
         tinyDB.remove("full_prot");
 
     }
 
-    private void addLayout(String name, String price, String number,String currency) {
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            /*Intent intent = new Intent(getApplicationContext(), TeacherSide.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);*/
+            // you don't need to call finish(); because
+            // return super.onKeyDown(keyCode, event); does that for you
+
+            // clear your SharedPreferences
+            tinyDB.remove("extra_added");
+            tinyDB.remove("full_prot");
+
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void addLayout(String name, String price, String number, String currency, final String i) {
         LayoutInflater layoutInflater =
                 (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View layout=layoutInflater.inflate(R.layout.book_global_extra_view, null);
@@ -189,7 +205,7 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
         TextView txtPrice = layout.findViewById(R.id.txtPrice);
         TextView txtTotal = layout.findViewById(R.id.txtSubtotal);
         if (name.length()>0 && price.length()>0){
-            txtGlobal.setText(name +": "+ number);
+            txtGlobal.setText(name +" : "+ number);
             txtPrice.setText(getResources().getString(R.string.price) + currency + " " + price);
             double d = Double.parseDouble(price);
             double total = d*Integer.parseInt(number);
@@ -214,8 +230,10 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
         toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                flight_no = edtflight.getText().toString().trim();
                 Intent it=new Intent(BookCarActivity.this, PayActivity.class);
                 startActivity(it);
+
             }
         });
     }

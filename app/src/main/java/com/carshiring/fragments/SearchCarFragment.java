@@ -452,6 +452,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                         ArrayList<SearchData>searchData1 = new ArrayList<>();
                         searchData1.addAll(searchData);
 
+
                         chooseSearchAction(searchData);
 
 //                        for testing

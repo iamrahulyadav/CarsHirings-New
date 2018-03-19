@@ -51,10 +51,10 @@ public class ExtrasAdapter extends RecyclerView.Adapter<ExtrasAdapter.ViewHolder
                   extraAdded.setName(holder.txt_extrasname.getText().toString().trim());
                   extraAdded.setPrice(beanArrayList.get(position).getPrice());
                   extraAdded.setCurrency(beanArrayList.get(position).getCurrency());
-                  extraAdded.setNumber((String) holder.spinner.getItemAtPosition(i));
+                  extraAdded.setQty((String) holder.spinner.getItemAtPosition(i));
+                  extraAdded.setId(beanArrayList.get(position).getType());
                   extraData.add(extraAdded);
-                  Log.d("TAG", "onItemSelected: "+holder.spinner.getItemAtPosition(i)+"\n"+ holder.txt_extrasname.getText().toString()+
-                          "\n"+holder.txt_price.getText().toString()+"\n"+extraData.size());
+
               }
 
           }

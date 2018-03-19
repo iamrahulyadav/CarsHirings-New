@@ -13,6 +13,9 @@ import android.widget.Toast;
 
 import com.carshiring.R;
 import com.carshiring.fragments.SearchCarFragment;
+import com.carshiring.models.BookingRequest;
+import com.carshiring.models.Category;
+import com.carshiring.models.ExtraAdded;
 import com.carshiring.models.PointHistoryData;
 import com.carshiring.models.TokenResponse;
 import com.carshiring.models.UserDetails;
@@ -41,9 +44,12 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 
@@ -51,22 +57,30 @@ import static android.content.ContentValues.TAG;
 
 public class PayActivity extends AppBaseActivity {
     ActionBar actionBar;
+    public List<ExtraAdded> extraData = new ArrayList<>();
     TextView txtPay, txtTotalAmyVal,txtWalletBal,txtPointVal;
-    CheckedTextView txtcheckPoint,txtCheckPay, txtCheckWallet;
-    public static String price="", email="",sdk_token="";
+    CheckBox txtcheckPoint,txtCheckPay, txtCheckWallet;
+    public String price="", email="",sdk_token="";
     public FortCallBackManager fortCallback;
+    final String ACCESS_TOKEN =  "qa2s6awTpBNc04Q65T8v";
+    final String MERCHANT_IDENTIFIER = "GjitDYjm";
+    final String REQUEST_PHRASE = "PASS" ;
     String name="",sarname="",number="",address="",city="",zipcode="",countrycode="",car_id="",
-            type="",rtype="",fullprotection="",flight_no="",extradata="",dob="",user_id="",pick_date="",
+            type="",rtype="",
+            fullprotection="",flight_no="",extradata="",dob="",user_id="",pick_date="",
             drop_date="", pick_city="",drop_city="",protection_val="",booking_point="",booking_wallet="",
             booking_payfort="",transaction_id="",language="";
     TinyDB tinyDB;
-    CheckBox checkPayOnline, checkWallet, checkPoint;
     public List<WalletHistoryData> walletHistoryData = new ArrayList<>();
     public List<PointHistoryData>pointHistoryData = new ArrayList<>();
-    double creditAmt, debitAmt,walletAmt, totalDebit, totalCredit,totalPoint,totalDebitPoint, totalCreditPoint, creditPoint, debitPoint;
+    double creditAmt, debitAmt,walletAmt, totalDebit, totalPrice,totalCredit,totalPoint,pointValue,totalDebitPoint,
+            totalCreditPoint, creditPoint, debitPoint, walBal,payfortAmt;
+    ;
     Gson gson = new Gson();
     UserDetails userDetails = new UserDetails();
+    BookingRequest bookingRequest = new BookingRequest();
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,10 +94,6 @@ public class PayActivity extends AppBaseActivity {
         String login = tinyDB.getString("login_data");
         language=tinyDB.getString("language_code");
         userDetails = gson.fromJson(login, UserDetails.class);
-        /* (language,name,sarname,number,email,address,
-                city,zipcode,countrycode,car_id,type,rtype,fullprotection,flight_no,extradata,dob,user_id,
-                pick_date,drop_date,pick_city,drop_city,protection_val,booking_point,booking_wallet,booking_payfort,
-                transaction_id);*/
         user_id = userDetails.getUser_id();
         name = userDetails.getUser_name();
         sarname = (String) userDetails.getUser_lname();
@@ -94,7 +104,7 @@ public class PayActivity extends AppBaseActivity {
         zipcode = userDetails.getUser_zipcode();
         countrycode = userDetails.getUser_countrycode();
         dob = userDetails.getUser_age();
-        flight_no = " ";
+        flight_no = BookCarActivity.flight_no;
         car_id = CarsResultListActivity.id_context;
         type = CarsResultListActivity.type;
         rtype = CarsResultListActivity.refertype;
@@ -102,8 +112,12 @@ public class PayActivity extends AppBaseActivity {
         pick_date = SearchCarFragment.pick_date;
         drop_city = SearchCarFragment.dropName;
         drop_date = SearchCarFragment.drop_date;
+        fullprotection = BookCarActivity.fullProtection;
+        protection_val = BookCarActivity.protection_val;
+        extraData = BookCarActivity.extraData;
 
-
+        price = CarDetailActivity.carPrice;
+        totalPrice = Double.parseDouble(price);
         txtCheckPay = findViewById(R.id.check_pay_online);
         txtcheckPoint = findViewById(R.id.check_points);
         txtCheckWallet = findViewById(R.id.check_wallet);
@@ -114,41 +128,94 @@ public class PayActivity extends AppBaseActivity {
         txtPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                requestPurchase();
+                if (txtCheckWallet.isChecked()){
+                    if (walletAmt>totalPrice){
+                        booking_wallet=String.valueOf(walletAmt);
+                        walBal = walletAmt-totalPrice;   // remaining wallet balance
+                        transaction_id = "";
+                        String s = gson.toJson(bookingRequest);
+                        Log.d(TAG, "onSuccess: "+s);
+                        txtCheckPay.setChecked(false);
+                        makeBooking(s);
+                    } else {
+                        payfortAmt = totalPrice-walletAmt;
+                        txtCheckPay.setChecked(true);
+                        requestPurchase(String.valueOf(payfortAmt));
+                    }
+                } else {
+                    booking_payfort = price;
+                    payfortAmt = Double.parseDouble(booking_payfort);
+                    requestPurchase(String.valueOf(payfortAmt));
+                }
+
+                if (txtcheckPoint.isChecked()){
+                    booking_point = "0.0";
+                    if (totalPoint>totalPrice){
+                        booking_wallet="0.0";
+                        walBal = walletAmt-totalPrice;   // remaining wallet balance
+                        transaction_id = "";
+                        String s = gson.toJson(bookingRequest);
+                        Log.d(TAG, "onSuccess: "+s);
+                        booking_wallet=price;
+                        booking_payfort="0.0";
+                        makeBooking(s);
+                    } else {
+                        payfortAmt = totalPrice-walletAmt;
+                        booking_wallet = String.valueOf(walletAmt);
+                        booking_payfort = String.valueOf(payfortAmt);
+                        txtCheckPay.setChecked(true);
+                        requestPurchase(String.valueOf(payfortAmt));
+                    }
+                } else {
+                    booking_payfort = price;
+                    booking_point = "0.0";
+                    booking_wallet = "0.0";
+                    payfortAmt = Double.parseDouble(booking_payfort);
+                    requestPurchase(String.valueOf(payfortAmt));
+                }
+
+
+
+
+               /* if (txtcheckPoint.isChecked()){
+                    booking_point = String.valueOf(pointValue);
+                } else {
+                    booking_point = String.valueOf(pointValue);
+                }
+                if (txtCheckPay.isChecked()){
+                    booking_payfort = price;
+                }*/
+                bookingRequest.setName(name);
+                bookingRequest.setSarname(sarname);
+                bookingRequest.setNumber(number);
+                bookingRequest.setEmail(email);
+                bookingRequest.setAddress(address);
+                bookingRequest.setCity(city);
+                bookingRequest.setZipcode(zipcode);
+                bookingRequest.setCountrycode(countrycode);
+                bookingRequest.setCar_id(car_id);
+                bookingRequest.setType(type);
+                bookingRequest.setRtype(rtype);
+                bookingRequest.setFullprotection(fullprotection);
+                bookingRequest.setFlight_no(flight_no);
+                bookingRequest.setDob(dob);
+                bookingRequest.setUser_id(user_id);
+                bookingRequest.setPick_date(pick_date);
+                bookingRequest.setDrop_date(drop_date);
+                bookingRequest.setPick_city(pick_city);
+                bookingRequest.setDrop_city(drop_city);
+                bookingRequest.setProtection_val(protection_val);
+                bookingRequest.setBooking_point(booking_point);
+                bookingRequest.setBooking_wallet(booking_wallet);
+                bookingRequest.setBooking_payfort(String.valueOf(payfortAmt));
+                bookingRequest.setExtraData(extraData);
+                String s = gson.toJson(bookingRequest);
+                Log.d(TAG, "onClick: "+s);
             }
         });
         txtTotalAmyVal.setText(CarDetailActivity.currency+ " "+CarDetailActivity.carPrice);
-
-        txtCheckWallet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (txtCheckWallet.isChecked()){
-                    txtCheckWallet.setChecked(false);
-                } else {
-                    txtCheckWallet.setChecked(true);
-                }
-            }
-        });
-        txtCheckPay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (txtCheckPay.isChecked()){
-                    txtCheckPay.setChecked(false);
-                } else {
-                    txtCheckPay.setChecked(true);
-                }
-            }
-        });
-        txtcheckPoint.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (txtcheckPoint.isChecked()){
-                    txtcheckPoint.setChecked(false);
-                } else {
-                    txtcheckPoint.setChecked(true);
-                }
-            }
-        });
+        getPoint();
+        getWal();
     }
 
     @Override
@@ -156,9 +223,8 @@ public class PayActivity extends AppBaseActivity {
         super.onResume();
         actionBar.setTitle(getResources().getString(R.string.txtPayNow));
         getSDKToken(language);
-        getPoint();
-        getWal();
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -177,9 +243,8 @@ public class PayActivity extends AppBaseActivity {
         createFORTMobileSDKToken(language);
     }
 
-    private void requestOperation(String command, String sdk_token) {
+    private void requestOperation(String command, String sdk_token, String price) {
         final String ECI = "ECOMMERCE";
-        email = "a@g.in";
         final String CUSTOMER_EMAIL = email;
         final String LANGUAGE = language;
         final String CURRENCY = "SAR";
@@ -228,7 +293,10 @@ public class PayActivity extends AppBaseActivity {
                             Toast.makeText(getApplicationContext(), fortResponseMap.get("response_message"),
                                     Toast.LENGTH_SHORT).show();
                             transaction_id = fortResponseMap.get("fort_id");
-
+                            bookingRequest.setTransaction_id(transaction_id);
+                            String s = gson.toJson(bookingRequest);
+                            Log.d(TAG, "onSuccess: "+s);
+                            makeBooking(s);
                         }
                         @Override
                         public void onFailure(Map<String, String> requestParamsMap, Map<String, String> fortResponseMap) {
@@ -241,10 +309,6 @@ public class PayActivity extends AppBaseActivity {
             e.printStackTrace();
         }
     }
-
-    final String ACCESS_TOKEN =  "qa2s6awTpBNc04Q65T8v";
-    final String MERCHANT_IDENTIFIER = "GjitDYjm";
-    final String REQUEST_PHRASE = "PASS" ;
 
     private void createFORTMobileSDKToken(String language) {
         OkHttpClient client = new OkHttpClient();
@@ -320,20 +384,17 @@ public class PayActivity extends AppBaseActivity {
     }
 
     public void requestAuthorization() {
-        requestOperation("AUTHORIZATION" ,sdk_token) ;
+        requestOperation("AUTHORIZATION" ,sdk_token,"") ;
     }
 
-    public void requestPurchase() {
-        requestOperation("PURCHASE" ,sdk_token) ;
+    public void requestPurchase(String payfortAmt) {
+        requestOperation("PURCHASE" ,sdk_token,payfortAmt) ;
     }
 
-    public void bookCar(){
+    public void bookCar(String s){
         Utility.showLoading(this,"Searching cars...");
         RetroFitApis retroFitApis = RetrofitApiBuilder.getCargHiresapis();
-        retrofit2.Call<ApiResponse> responseCall = retroFitApis.bookCar(language,name,sarname,number,email,address,
-                city,zipcode,countrycode,car_id,type,rtype,fullprotection,flight_no,extradata,dob,user_id,
-                pick_date,drop_date,pick_city,drop_city,protection_val,booking_point,booking_wallet,booking_payfort,
-                transaction_id);
+        retrofit2.Call<ApiResponse> responseCall = retroFitApis.bookCar("");
         responseCall.enqueue(new retrofit2.Callback<ApiResponse>() {
             @Override
             public void onResponse(retrofit2.Call<ApiResponse> call, retrofit2.Response<ApiResponse> response) {
@@ -349,6 +410,54 @@ public class PayActivity extends AppBaseActivity {
         });
 
     }
+    public final okhttp3.MediaType MEDIA_TYPE = okhttp3.MediaType.parse("application/json");
+    public void makeBooking(String cateRequest){
+        Utility.showloadingPopup(this);
+        String cat = gson.toJson(cateRequest);
+
+        okhttp3.RequestBody requestBody = okhttp3.RequestBody.create(MEDIA_TYPE,cateRequest);
+
+        final okhttp3.Request request = new okhttp3.Request.Builder()
+                .url("https://carshiring.com/webservice/make_booking")
+                .post(requestBody)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("cache-control", "no-cache")
+                .build();
+        okhttp3.OkHttpClient client = new okhttp3.OkHttpClient.Builder()
+                .connectTimeout(10000, TimeUnit.SECONDS)
+                .writeTimeout(10000, TimeUnit.SECONDS)
+                .readTimeout(30000, TimeUnit.SECONDS)
+                .build();
+
+        Utility.showloadingPopup(this);
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, final IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String msg = e.getMessage();
+                        Utility.message(getApplicationContext(), getResources().getString(R.string.no_internet_connection));
+                        Utility.hidepopup();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                Utility.hidepopup();
+                if (response!=null&&response.body().toString().length()>0){
+                    if (request.body()!=null){
+                        String msg = response.body().string();
+
+                        Log.d("TAG", "onResponse: "+ msg);
+                    }
+                }
+            }
+
+        });
+    }
+
 
     public void getWal(){
         RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();
@@ -382,16 +491,19 @@ public class PayActivity extends AppBaseActivity {
 
                            txtWalletBal.setText("("+getResources().getString(R.string.txtAvailable)+" "
                                    +String.valueOf(walletAmt)+")");
+                           booking_wallet=String.valueOf(walletAmt);
                            txtWalletBal.setVisibility(View.VISIBLE);
                            txtCheckWallet.setVisibility(View.VISIBLE);
 
                        } else {
+                           booking_wallet=String.valueOf(walletAmt);
                            txtWalletBal.setVisibility(View.GONE);
                            txtCheckWallet.setVisibility(View.GONE);
 
                        }
                    } else {
-                       Utility.message(getApplicationContext(),response.body().message);
+                       Log.d(TAG, "onResponse: "+response.body().message);
+                      // Utility.message(getApplicationContext(),response.body().message);
                    }
                 }
             }
@@ -429,21 +541,23 @@ public class PayActivity extends AppBaseActivity {
                                 totalCreditPoint+= creditPoint;
                             }
                         }
-                        Log.d("TAG", "onResponse: totalDebit"+debitPoint);
                         totalPoint = totalCreditPoint-totalDebitPoint;
-                        double d = totalPoint*0.05;
-                        Log.d("TAG", "onResponse: totalDebit"+totalCreditPoint+"\n"+d);
+                        pointValue = totalPoint*0.05;
+                        Log.d("TAG", "onResponse: totalDebit"+totalCreditPoint+"\n"+pointValue);
 //                    txtPointVal.setText(String.valueOf(totalPoint));
                         if (totalPoint>0.0){
-                            txtPointVal.setText("("+totalPoint+" Point value is : "+String.valueOf(d)+")");
+                            txtPointVal.setText("("+totalPoint+" Point value is : "+String.valueOf(pointValue)+")");
+                            booking_point = String.valueOf(pointValue);
                             txtPointVal.setVisibility(View.VISIBLE);
                             txtcheckPoint.setVisibility(View.VISIBLE);
                         } else {
+                            booking_point = String.valueOf(pointValue);
                             txtPointVal.setVisibility(View.GONE);
                             txtcheckPoint.setVisibility(View.GONE);
                         }
                     } else {
-                        Utility.message(getApplicationContext(),response.body().message);
+                        Log.d(TAG, "onResponse: "+response.body().message);
+                      //  Utility.message(getApplicationContext(),response.body().message);
                     }
                 }
             }

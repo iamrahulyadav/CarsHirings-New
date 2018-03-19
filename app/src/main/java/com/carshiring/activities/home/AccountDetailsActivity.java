@@ -27,7 +27,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.carshiring.R;
-import com.carshiring.models.ImageInputHelper;
 import com.carshiring.models.UserDetails;
 import com.carshiring.utilities.AppBaseActivity;
 import com.carshiring.utilities.AppGlobal;
@@ -53,7 +52,7 @@ import retrofit2.Response;
  * Created by rakhi on 13-03-2018.
  */
 
-public class AccountDetailsActivity extends AppBaseActivity implements ImageInputHelper.ImageActionListener{
+public class AccountDetailsActivity extends AppBaseActivity {
 
     private TinyDB sharedpref;
     String userId,token,title,ages,Rtitle;
@@ -73,7 +72,6 @@ public class AccountDetailsActivity extends AppBaseActivity implements ImageInpu
     Gson gson = new Gson();
     AppGlobal appGlobal = AppGlobal.getInstancess();
 
-    private ImageInputHelper imageInputHelper;
 
     private static final int SELECT_PICTURE = 100;
 
@@ -125,7 +123,6 @@ public class AccountDetailsActivity extends AppBaseActivity implements ImageInpu
         edt_city = (EditText) findViewById(R.id.update_user_city);
         edt_address = (EditText) findViewById(R.id.update_user_address);
 
-        imageInputHelper = new ImageInputHelper(this);
     }
 
     @Override
@@ -513,22 +510,6 @@ public class AccountDetailsActivity extends AppBaseActivity implements ImageInpu
     }
 
 */
-    @Override
-    public void onImageCropped(Uri uri, File imageFile) {
-        try {
-            // getting bitmap from uri
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), uri);
-
-            // showing bitmap in image view
-//            imgUser.setImageBitmap(bitmap);
-            Toast.makeText(getApplicationContext(), "ok", Toast.LENGTH_SHORT).show();
-
-            Glide.with(this).load(bitmap).apply(RequestOptions.circleCropTransform()).into(iv);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
 
 

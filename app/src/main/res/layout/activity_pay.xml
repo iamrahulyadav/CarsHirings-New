@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:textColor="@color/black"/>
-        <CheckedTextView
+        <CheckBox
             android:layout_below="@+id/txtTotalPayValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="(Available balance is 50)" />
-        <CheckedTextView
+        <CheckBox
             android:visibility="gone"
             android:textSize="@dimen/extra_small_size"
             android:layout_below="@+id/txtWaletValue"
@@ -67,13 +67,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="(Available balance is 50)" />
-        <CheckedTextView
+        <CheckBox
             android:layout_below="@+id/txtPointValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkMark="?android:attr/listChoiceIndicatorMultiple"
             android:text="@string/txtPayOnline"
-            android:checked="true"
             android:textSize="@dimen/extra_small_size"
             android:layout_marginTop="10dp"
             android:id="@+id/check_pay_online"
@@ -83,31 +82,6 @@
 
 
     </RelativeLayout>
-
-    <CheckBox
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Wallet"
-        tools:layout_editor_absoluteX="145dp"
-        tools:layout_editor_absoluteY="16dp"
-        tools:ignore="MissingConstraints,OnClick" />
-    <CheckBox
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Points"
-        tools:layout_editor_absoluteX="145dp"
-        tools:layout_editor_absoluteY="16dp"
-        tools:ignore="MissingConstraints,OnClick" />
-    <CheckBox
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Pay online"
-        android:checked="true"
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center"/>
 
     <TextView
         android:layout_width="match_parent"

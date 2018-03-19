@@ -9,11 +9,18 @@ import java.util.List;
 
 public class BookingRequest {
     private String name="",sarname="",number="",email="",address="",city="",zipcode="",countrycode="",car_id="",
-            type="",rtype="",fullprotection="",flight_no="",extradata="",dob="",user_id="",pick_date="",
+            type="",rtype="",fullprotection="",flight_no="",dob="",user_id="",pick_date="",
             drop_date="", pick_city="",drop_city="",protection_val="",booking_point="",booking_wallet="",
-            booking_payfort="";
+            booking_payfort="", transaction_id="";
     List<ExtraAdded> extraData = new ArrayList<>();
 
+    public String getTransaction_id() {
+        return transaction_id;
+    }
+
+    public void setTransaction_id(String transaction_id) {
+        this.transaction_id = transaction_id;
+    }
 
     public List<ExtraAdded> getExtraData() {
         return extraData;
@@ -125,14 +132,6 @@ public class BookingRequest {
 
     public void setFlight_no(String flight_no) {
         this.flight_no = flight_no;
-    }
-
-    public String getExtradata() {
-        return extradata;
-    }
-
-    public void setExtradata(String extradata) {
-        this.extradata = extradata;
     }
 
     public String getDob() {

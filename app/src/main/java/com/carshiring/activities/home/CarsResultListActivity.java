@@ -53,6 +53,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.ContentValues.TAG;
+
 public class CarsResultListActivity extends AppBaseActivity {
     Gson gson = new Gson();
 
@@ -118,7 +120,9 @@ public class CarsResultListActivity extends AppBaseActivity {
             supplierList.add(searchData.getSupplier());
             cateList.add(Integer.parseInt(searchData.getCategory()));
         }
-
+        for (SearchData searchData: listCarResult){
+            Log.d(TAG, "onResponse: price"+searchData.getPrice()+"\n"+searchData.getModel());
+        }
         cateRequest.setCode(cateList);
         Set<String> hs = new HashSet<>();
         hs.addAll(supplierList);
@@ -176,7 +180,7 @@ public class CarsResultListActivity extends AppBaseActivity {
                     String data = tinyDB.getString("login_data");
                     userDetails = gson.fromJson(data,UserDetails.class);
                     userid = userDetails.getUser_id();
-                    if (userDetails.getUser_name()==null || userDetails.getUser_name().length()==0){
+                    if (userDetails.getUser_lname()==null || userDetails.getUser_lname().length()==0){
                         set = "update_profile";
                         setupoverlay(set);
                     } else {

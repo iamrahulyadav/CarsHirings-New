@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -93,6 +94,9 @@ public class CarDetailActivity extends AppCompatActivity {
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
 
                if (response.body()!=null){
+                   CarDetailBean carDetailBean = new CarDetailBean();
+                   carDetailBean = response.body().response.car_detail;
+                   Log.d("TAG", "onResponse: "+gson.toJson(carDetailBean));
                    carImage=response.body().response.car_detail.image;
                    Log.d("respsonse",carImage);
                    logo=response.body().response.car_detail.supplier_logo;
@@ -129,6 +133,30 @@ public class CarDetailActivity extends AppCompatActivity {
                 Utility.hidepopup();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        tinyDB.remove("extra_added");
+        tinyDB.remove("full_prot");
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            /*Intent intent = new Intent(getApplicationContext(), TeacherSide.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);*/
+            // you don't need to call finish(); because
+            // return super.onKeyDown(keyCode, event); does that for\ you
+
+            // clear your SharedPreferences
+            tinyDB.remove("extra_added");
+            tinyDB.remove("full_prot");
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity
             String data = tinyDB.getString("login_data");
             userDetails = gson.fromJson(data,UserDetails.class);
             userId = userDetails.getUser_id();
-            if (userDetails.getUser_name()==null || userDetails.getUser_name().length()==0){
+            if (userDetails.getUser_lname()==null || userDetails.getUser_lname().length()==0){
                 set = "update_profile";
                 setupoverlay(set);
             }
