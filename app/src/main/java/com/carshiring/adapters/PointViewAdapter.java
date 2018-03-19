@@ -2,21 +2,15 @@ package com.carshiring.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.carshiring.R;
-import com.carshiring.models.Category;
 import com.carshiring.models.PointHistoryData;
-import com.carshiring.models.SearchData;
 import com.carshiring.models.WalletHistoryData;
-import com.carshiring.webservices.RetrofitApiBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +19,9 @@ import java.util.List;
  * Created by Muhib.
  * Contact Number : +91 9796173066
  */
-public class WalletViewAdapter extends RecyclerView.Adapter<WalletViewAdapter.MyViewHolder> {
+public class PointViewAdapter extends RecyclerView.Adapter<PointViewAdapter.MyViewHolder> {
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-
         TextView tv_booking_date, tv_booking_type, tv_booking_amount, tv_booking_id, tv_booking_point;
 
         public MyViewHolder(View view) {
@@ -39,15 +32,17 @@ public class WalletViewAdapter extends RecyclerView.Adapter<WalletViewAdapter.My
             tv_booking_date = (TextView) view.findViewById(R.id.layout_wallet_view_booking_date);
             tv_booking_point = (TextView) view.findViewById(R.id.layout_wallet_view_booking_point);
             tv_booking_type = (TextView) view.findViewById(R.id.layout_wallet_view_booking_type);
+
         }
     }
 
-    private Context context;
-    private List<WalletHistoryData> walletHistoryData = new ArrayList<>();
 
-    public WalletViewAdapter(Context context, List<WalletHistoryData> walletHistoryData) {
+    Context context;
+    List<PointHistoryData> pointHistoryData = new ArrayList<>();
+
+    public PointViewAdapter(Context context, List<PointHistoryData> pointHistoryData) {
         this.context = context;
-        this.walletHistoryData = walletHistoryData;
+        this.pointHistoryData = pointHistoryData;
     }
 
     @Override
@@ -55,24 +50,21 @@ public class WalletViewAdapter extends RecyclerView.Adapter<WalletViewAdapter.My
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.layout_wallet_view, parent, false);
 
-        //Toast.makeText(context, walletHistoryData.size() + "", Toast.LENGTH_SHORT).show();
-
         return new MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-      //  Toast.makeText(context, walletHistoryData.size() + "", Toast.LENGTH_SHORT).show();
 
-        holder.tv_booking_id.setText(walletHistoryData.get(position).getBooking_id());
-        holder.tv_booking_amount.setText(walletHistoryData.get(position).get_$WalletAmount169());
-        holder.tv_booking_date.setText(walletHistoryData.get(position).getBooking_date());
-        holder.tv_booking_type.setText(walletHistoryData.get(position).get_$WalletType204());
-        holder.tv_booking_point.setText(walletHistoryData.get(position).get_$WalletAffetctedAmount6());
+        holder.tv_booking_id.setText(pointHistoryData.get(position).getBooking_id());
+        holder.tv_booking_amount.setText(pointHistoryData.get(position).get_$BookingPoint18());
+        holder.tv_booking_date.setText(pointHistoryData.get(position).getBokking_date());
+        holder.tv_booking_type.setText(pointHistoryData.get(position).get_$BookingPointType184());
+        holder.tv_booking_point.setText(pointHistoryData.get(position).get_$BookingAffetctedPoint183());
     }
 
     @Override
     public int getItemCount() {
-        return walletHistoryData.size();
+        return pointHistoryData.size();
     }
 }

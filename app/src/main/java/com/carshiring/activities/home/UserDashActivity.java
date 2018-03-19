@@ -92,6 +92,7 @@ public class UserDashActivity extends AppBaseActivity {
         Intent i = new Intent(UserDashActivity.this, WalletView.class);
         if(view.getId() == R.id.wallet_lay){
             i.putExtra("wallet_title", "Wallet History Details");
+//            i.putExtra("history_details", walletHistoryData);
         } else if(view.getId() == R.id.point_lay){
             i.putExtra("wallet_title", "Point History Details");
         }else{}

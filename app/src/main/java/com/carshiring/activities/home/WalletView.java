@@ -6,10 +6,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carshiring.R;
+import com.carshiring.adapters.PointViewAdapter;
 import com.carshiring.adapters.WalletViewAdapter;
+import com.carshiring.models.WalletHistoryData;
 import com.carshiring.utilities.AppBaseActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class WalletView extends AppBaseActivity {
 
@@ -52,7 +58,7 @@ public class WalletView extends AppBaseActivity {
 
         wallet_title = getIntent().getExtras().getString("wallet_title");
         setValues(wallet_title);
-        setMyAdapter();
+        setMyAdapter(wallet_title);
     }
 
     private void setValues(String wallet_title){
@@ -71,9 +77,17 @@ public class WalletView extends AppBaseActivity {
         } else{}
     }
 
-    private void setMyAdapter(){
-        WalletViewAdapter adapter = new WalletViewAdapter(getApplicationContext());
-        recyclerView.setAdapter(adapter);
+    private void setMyAdapter(String wallet_title){
+//        Toast.makeText(getApplicationContext(), UserDashActivity.walletHistoryData.size()+" " + UserDashActivity.pointHistoryData.size(), Toast.LENGTH_SHORT).show();
+        if(wallet_title.equals("Wallet History Details")){
+            List<WalletHistoryData> walletHistoryData = new ArrayList<>();
+            walletHistoryData.addAll(UserDashActivity.walletHistoryData);
+            WalletViewAdapter adapter = new WalletViewAdapter(getApplicationContext(), walletHistoryData);
+            recyclerView.setAdapter(adapter);
+        } else if(wallet_title.equals("Point History Details")){
+            PointViewAdapter adapter = new PointViewAdapter(getApplicationContext(), UserDashActivity.pointHistoryData);
+            recyclerView.setAdapter(adapter);
+        }
     }
 
     @Override
