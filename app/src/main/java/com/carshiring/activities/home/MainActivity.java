@@ -1,5 +1,6 @@
 package com.carshiring.activities.home;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +42,9 @@ import com.carshiring.webservices.RetroFitApis;
 import com.carshiring.webservices.RetrofitApiBuilder;
 import com.mukesh.tinydb.TinyDB;
 
+import org.w3c.dom.Text;
+
+import java.util.Calendar;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -321,10 +326,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
     Button btupdate,btnCancel;
-
+    TextView tvdob;
     private void setupoverlay(String set) {
 
         final EditText edtFname, edtLname, edtemail,edtPhone,edtZip, edtLicense,edtLicenseOrign,edtCity, edtAddress;
+
 //        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         if (set.equals("update_profile")){
             dialog.setContentView(R.layout.popup_updateprofile);
@@ -339,6 +345,10 @@ public class MainActivity extends AppCompatActivity
             edtLicenseOrign = dialog.findViewById(R.id.etlicenseorigion);
             edtCity = dialog.findViewById(R.id.etcity);
             edtAddress = dialog.findViewById(R.id.etAddress);
+
+            tvdob = dialog.findViewById(R.id.etUserDob);
+            tvdob.setText(str_dob);
+
             btupdate = dialog.findViewById(R.id.bt_update);
             btnCancel = dialog.findViewById(R.id.bt_cancel);
 //            set onclick on update
@@ -407,16 +417,18 @@ public class MainActivity extends AppCompatActivity
         dialog.show();
     }
 
+    private String str_dob = "";
 
     private void updateProfile(String userid, String fname) {
         if(!Utility.isNetworkConnected(getApplicationContext())){
             Toast.makeText(MainActivity.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             return;
         }
+      //  Toast.makeText(getApplicationContext(), str_dob, Toast.LENGTH_SHORT).show();
         Utility.showloadingPopup(this);
         RetroFitApis retroFitApis= RetrofitApiBuilder.getCargHiresapis();
         Call<ApiResponse> responseCall=retroFitApis.updateprofile(userid,fname,lname,email,phone,zip,license,
-                licenseorigin,"dob",city,address);
+                licenseorigin,str_dob,city,address);
         responseCall.enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
@@ -443,6 +455,32 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
+
+    public void select_dob(View v){
+        showDialog(999);
+    }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        // TODO Auto-generated method stub
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        if (id == 999) {
+            return new DatePickerDialog(this, myDateListener, year, month, day);
+        }
+        return null;
+    }
+
+    private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
+            str_dob = arg1 + "/" + arg2 + "/" + arg3;
+            tvdob.setText(str_dob);
+        }
+    };
 
 
     @Override

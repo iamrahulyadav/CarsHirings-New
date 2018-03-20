@@ -38,9 +38,7 @@ import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 
@@ -147,7 +145,8 @@ public class AccountDetailsActivity extends AppBaseActivity {
     private void getUserData(){
 
 /*
-        tinyDB = new TinyDB(getApplicationContext());
+        tinyDB
+        = new TinyDB(getApplicationContext());
         String login = tinyDB.getString("login_data");
         userDetails = gson.fromJson(login, UserDetails.class);
         language = tinyDB.getString("language_code");
@@ -158,18 +157,20 @@ public class AccountDetailsActivity extends AppBaseActivity {
         String login = sharedpref.getString("login_data");
         userDetails = gson.fromJson(login, UserDetails.class);
 
+        str_image = sharedpref.getString("user_image");
+
         userId = userDetails.getUser_id();//sharedpref.getString("userid");
         str_fname = userDetails.getUser_name();//sharedpref.getString("user_name");
-        str_lname = userDetails.getUser_lname().toString();////sharedpref.getString("user_lname");
+        str_lname = userDetails.getUser_lname();////sharedpref.getString("user_lname");
         str_email = userDetails.getUser_email();//sharedpref.getString("user_email");
         str_phone = userDetails.getUser_phone();//sharedpref.getString("user_phone");
         str_dob = userDetails.getUser_dob();
         str_zipcode = userDetails.getUser_zipcode();
         str_licence_no = userDetails.getUser_license_no();
-        str_image = userDetails.getUser_image();
-        Toast.makeText(getApplicationContext(), str_image, Toast.LENGTH_SHORT).show();
+//        str_image = userDetails.getUser_image();
+    //    Toast.makeText(getApplicationContext(), str_image, Toast.LENGTH_SHORT).show();
         //str_licence_origin = userDetails.getUser_license();
-        str_city = userDetails.getUser_city().toString();
+        str_city = userDetails.getUser_city();
         str_address = userDetails.getUser_address();
 
         token = sharedpref.getString("access_token");
@@ -192,9 +193,15 @@ public class AccountDetailsActivity extends AppBaseActivity {
         edt_city.setText(str_city);
         edt_address.setText(str_address);
 
-        Glide.with(getApplicationContext())
+/*        Glide.with(getApplicationContext())
                 .load(RetrofitApiBuilder.IMG_BASE_URL + str_image)
+                .into(iv);*/
+
+        iv.setImageResource(0);
+        Glide.with(getApplicationContext())
+                .load(str_image)
                 .into(iv);
+
 
         if(!userId.isEmpty() || !userId.equals(null))
         {
@@ -278,7 +285,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
                 if(response.body().status==true)
                 {
                     Log.d("TAG", "onResponse: "+response.body().message);
-                    Utility.message(getApplicationContext(), response.body().message);
+                    //Utility.message(getApplicationContext(), response.body().message);
 //                    String logindata=gson.toJson(response.body().response.userdetail);
                     userDetails = response.body().response.user_detail;
                     String logindata = gson.toJson(userDetails);
@@ -286,6 +293,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
                     String st=  appGlobal.getUser_id();
                     //dialog.dismiss();
                     //dialog.dismiss();
+                    Utility.message(getApplicationContext(), "Profile Updated Successfully");
 
                 }
                 else{
@@ -336,7 +344,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
     private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
-            str_dob = arg3 + "/" + arg2 + "/" + arg1;
+            str_dob = arg1 + "-" + arg2 + "-" + arg3;
             edt_dob.setText(str_dob);
         }
     };
@@ -362,12 +370,6 @@ public class AccountDetailsActivity extends AppBaseActivity {
                 Uri selectedImageUri = data.getData();
                 if (null != selectedImageUri) {
                     Log.d("TAG", selectedImageUri.toString());
-                    // Get the path from the Uri
-//                    String path = getPathFromURI(selectedImageUri);
-//                    Log.i("aa", "Image Path : " + path);
-
-//                    imageInputHelper.requestCropImage(selectedImageUri, 800, 450, 16, 9);
-                    // Set the image in ImageView
 
 
                     InputStream imageStream = null;
@@ -384,9 +386,10 @@ public class AccountDetailsActivity extends AppBaseActivity {
 
                     update_user_pic(encodedImage);
 
+                    //iv.setImageURI(selectedImageUri);
 
 
-                    iv.setImageURI(selectedImageUri);
+
                 }
             }
         }
@@ -415,7 +418,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 Utility.hidepopup();
-                if(response.body().status==true)
+                if(response.body().status == true)
                 {
                     Log.d("TAG", "onResponse: " + response.body().message);
 
@@ -429,26 +432,19 @@ public class AccountDetailsActivity extends AppBaseActivity {
                     String image = response.body().image;
                     Toast.makeText(AccountDetailsActivity.this, image, Toast.LENGTH_SHORT).show();
 
+                    //  iv.setImageResource(0);
+                    //iv.setImageResource(R.drawable.a);
+                    //  Log.d("imageaa", "onResponse: "+ RetrofitApiBuilder.IMG_BASE_URL + image);
+
+                    iv.setImageResource(0);
                     Glide.with(getApplicationContext())
                             .load(RetrofitApiBuilder.IMG_BASE_URL + image)
-                            .into(iv);
+                           /* .apply(RequestOptions.circleCropTransform())
+                           */ .into(iv);
 
-/*
-                    Glide.with(getApplicationContext())
-                            .load(RetrofitApiBuilder.IMG_BASE_URL + image)
-                            .into(iv);
-*/
-
-
-                    Toast.makeText(getApplicationContext(), response.body().msg, Toast.LENGTH_SHORT).show();
-                    /*Utility.message(getApplicationContext(), response.body().message);
-//                    String logindata=gson.toJson(response.body().response.userdetail);
-                    userDetails = response.body().response.user_detail;
-                    String logindata=gson.toJson(userDetails);
-                    appGlobal.setLoginData(logindata);
-                    String st=  appGlobal.getUser_id()*/;
-                    //dialog.dismiss();
-                    //dialog.dismiss();
+                    appGlobal.setUser_image("");
+                    appGlobal.setUser_image(RetrofitApiBuilder.IMG_BASE_URL + image);
+//                    Toast.makeText(getApplicationContext(), response.body().msg, Toast.LENGTH_SHORT).show();
 
                 }
                 else{

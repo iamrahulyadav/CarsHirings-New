@@ -47,7 +47,7 @@ public class UserDetails {
     private String user_password;
     private String user_zipcode;
     private String user_address;
-    private Object user_city;
+    private String user_city;
     private Object user_country;
     private String user_empcode;
     private String user_image;
@@ -167,11 +167,11 @@ public class UserDetails {
         this.user_address = user_address;
     }
 
-    public Object getUser_city() {
+    public String getUser_city() {
         return user_city;
     }
 
-    public void setUser_city(Object user_city) {
+    public void setUser_city(String user_city) {
         this.user_city = user_city;
     }
 

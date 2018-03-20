@@ -50,6 +50,7 @@ public class SplashActivity extends AppBaseActivity {
         sharedpref=new TinyDB(getApplicationContext());
          String language_code = sharedpref.getString("language_code") ;
         boolean isSkipLogin = sharedpref.getBoolean("isSkipLogin");
+
         if(language_code!=null && !language_code.isEmpty()) {
 //            updateResources(this, language_code);
             if (isSkipLogin) {
@@ -65,12 +66,16 @@ public class SplashActivity extends AppBaseActivity {
         }
 
         v=findViewById(android.R.id.content);
+
         langlistname=new ArrayList<>();
         langlistcode=new ArrayList<>();
         langlistId=new ArrayList<>();
         lan=new String[langlistname.size()];
+
         spinner_language = (Spinner) findViewById(R.id.spinner_language);
+
         if(actionBar!=null) actionBar.hide();
+
         accessToken = sharedpref.getString("access_token");
         if(accessToken!=null && !accessToken.isEmpty()) {
             getLanguageList();
@@ -231,7 +236,12 @@ public class SplashActivity extends AppBaseActivity {
         }
         else
         {
-
-        }
+ /*           accessToken = sharedpref.getString("access_token");
+            if(accessToken!=null && !accessToken.isEmpty()) {
+ */         //      getLanguageList();
+   /*         }else{
+                getAccessToken();
+            }
+   */     }
     }
 }
