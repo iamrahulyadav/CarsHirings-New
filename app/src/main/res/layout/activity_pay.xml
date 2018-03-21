@@ -7,6 +7,32 @@
     android:layout_height="match_parent"
     tools:context=".activities.home.PayActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/paymentMethod"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/extra_large_size"
+        android:textStyle="bold"
+        android:gravity="center_horizontal"
+        android:padding="10dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/paymentMethod"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/extra_small_size"
+        android:textStyle="bold"
+        android:gravity="center_vertical"
+        android:drawablePadding="10dp"
+        android:drawableLeft="@drawable/ic_credit_card"
+        android:background="@color/Light_grey"
+        android:padding="5dp"
+        android:id="@+id/txtPayMethod"
+        android:drawableRight="@drawable/ic_down_arrow"
+        android:layout_margin="10dp"/>
+
+
     <RelativeLayout
         android:layout_margin="10dp"
         android:layout_width="wrap_content"
@@ -30,6 +56,7 @@
             android:checkMark="?android:attr/listChoiceIndicatorMultiple"
             android:text="@string/txtUseWallet"
             android:textSize="@dimen/extra_small_size"
+            android:onClick="onCheckboxClicked"
             android:layout_marginTop="10dp"
             android:visibility="gone"
             android:id="@+id/check_wallet"
@@ -54,6 +81,7 @@
             android:checkMark="?android:attr/listChoiceIndicatorMultiple"
             android:text="@string/txtUsepoint"
             android:layout_marginTop="10dp"
+            android:onClick="onCheckboxClicked"
             android:id="@+id/check_points"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
@@ -73,6 +101,7 @@
             android:layout_height="wrap_content"
             android:checkMark="?android:attr/listChoiceIndicatorMultiple"
             android:text="@string/txtPayOnline"
+            android:onClick="onCheckboxClicked"
             android:textSize="@dimen/extra_small_size"
             android:layout_marginTop="10dp"
             android:id="@+id/check_pay_online"

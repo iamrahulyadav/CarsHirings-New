@@ -45,7 +45,37 @@ public class BookingHistory implements Parcelable {
             private String booking_to_location;
             private String booking_status;
 
-            public String getBooking_id() {
+    protected BookingHistory(Parcel in) {
+        Booking_id = in.readString();
+        bokking_date = in.readString();
+        booking_company_name = in.readString();
+        booking_actual_price = in.readString();
+        booking_supplier_price = in.readString();
+        booking_currency = in.readString();
+        booking_bysupplier = in.readString();
+        booking_supllier_log = in.readString();
+        booking_car_model = in.readString();
+        booking_car_category = in.readString();
+        booking_car_image = in.readString();
+        booking_from_location = in.readString();
+        booking_from_date = in.readString();
+        booking_to_location = in.readString();
+        booking_status = in.readString();
+    }
+
+    public static final Creator<BookingHistory> CREATOR = new Creator<BookingHistory>() {
+        @Override
+        public BookingHistory createFromParcel(Parcel in) {
+            return new BookingHistory(in);
+        }
+
+        @Override
+        public BookingHistory[] newArray(int size) {
+            return new BookingHistory[size];
+        }
+    };
+
+    public String getBooking_id() {
                 return Booking_id;
             }
 
@@ -172,6 +202,20 @@ public class BookingHistory implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
+        dest.writeString(Booking_id);
+        dest.writeString(bokking_date);
+        dest.writeString(booking_company_name);
+        dest.writeString(booking_actual_price);
+        dest.writeString(booking_supplier_price);
+        dest.writeString(booking_currency);
+        dest.writeString(booking_bysupplier);
+        dest.writeString(booking_supllier_log);
+        dest.writeString(booking_car_model);
+        dest.writeString(booking_car_category);
+        dest.writeString(booking_car_image);
+        dest.writeString(booking_from_location);
+        dest.writeString(booking_from_date);
+        dest.writeString(booking_to_location);
+        dest.writeString(booking_status);
     }
 }

@@ -122,6 +122,7 @@ public class LoginActivity extends AppBaseActivity implements View.OnClickListen
                         String st =  appGlobal.getUser_id();
                         Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                         startActivity(intent);
+                        Utility.message(getApplicationContext(), "Login success");
                         finish();
                     }
                     else{

@@ -62,8 +62,9 @@ public interface RetroFitApis {
     Call<ApiResponse> point(@Field(" ") String point);
 
     @FormUrlEncoded
-    @POST("category_list")
-    Call<ApiResponse> category_list(@Body List<String> cat);
+    @POST("markup")
+    Call<ApiResponse> markup(@Field(" ") String markup );
+
 
     @FormUrlEncoded
     @POST("webservice/search")
@@ -107,21 +108,47 @@ public interface RetroFitApis {
 
     @FormUrlEncoded
     @POST("booking_historylist")
-    Call<ApiResponse> booking_history(  @Field("user_id") String user_id);
+    Call<ApiResponse> booking_history(@Field("user_id") String user_id);
     @FormUrlEncoded
     @POST("make_booking")
     Call<ApiResponse> bookCar(@Field(" ") String language_code);
 
     @FormUrlEncoded
     @POST("wallet_historylist")
-    Call<ApiResponse> walletHistory(  @Field("user_id") String user_id);
+    Call<ApiResponse> walletHistory(@Field("user_id") String user_id);
 
     @FormUrlEncoded
     @POST("point_historylist")
-    Call<ApiResponse> pointHistory(  @Field("user_id") String user_id);
+    Call<ApiResponse> pointHistory(@Field("user_id") String user_id);
 
     @FormUrlEncoded
     @POST("update_profile_pic")
-    Call<ApiResponse> update_user_DP(  @Field("userid") String user_id,
+    Call<ApiResponse> update_user_DP(@Field("userid") String user_id,
                                           @Field("profile_image") String user_profile_image);
+    @FormUrlEncoded
+    @POST("cancelation")
+    Call<ApiResponse> cancelBooking(@Field("language") String language,
+                                      @Field("ctype") String ctype,
+                                       @Field("booking_id") String booking_id);
+
+    @FormUrlEncoded
+    @POST("user_profile_details")
+    Call<ApiResponse> profile(@Field("user_id") String user_id);
+
+    @FormUrlEncoded
+    @POST("credit_point")
+    Call<ApiResponse> creditPoint(@Field("bookingpoint_user_id") String user_id,
+                                  @Field("bookingpoint_point") String bookingpoint_point,
+                                  @Field("bookingpoint_booking_id") String bookingpoint_booking_id);
+
+    @FormUrlEncoded
+    @POST("debit_point")
+    Call<ApiResponse> debitPoint(@Field("bookingpoint_user_id") String user_id,
+                                  @Field("bookingpoint_point") String bookingpoint_point,
+                                  @Field("bookingpoint_booking_id") String bookingpoint_booking_id);
+    @FormUrlEncoded
+    @POST("debit_wallet")
+    Call<ApiResponse> debitWallet(@Field("wallet_user_id") String user_id,
+                                 @Field("wallet_amount") String bookingpoint_point,
+                                 @Field("wallet_booking_id") String bookingpoint_booking_id);
 }

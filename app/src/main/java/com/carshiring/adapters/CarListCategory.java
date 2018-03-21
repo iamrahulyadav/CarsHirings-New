@@ -1,5 +1,6 @@
 package com.carshiring.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,10 +12,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.carshiring.R;
+import com.carshiring.fragments.SearchCarFragment;
 import com.carshiring.models.Category;
 import com.carshiring.models.SearchData;
 import com.carshiring.webservices.RetrofitApiBuilder;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +28,7 @@ import java.util.List;
 public class CarListCategory extends RecyclerView.Adapter<CarListCategory.MyViewHolder> {
 
     OnItemClickListenerCategory listener;
-
+    double markUp;
     //private List<String> horizontalList;
     private Context context;
     private List<Category.ResponseBean.CatBean>catBeanList = new ArrayList<>();
@@ -78,7 +81,8 @@ public class CarListCategory extends RecyclerView.Adapter<CarListCategory.MyView
 
         return new MyViewHolder(itemView);
     }
-
+    private static DecimalFormat df2 = new DecimalFormat(".##");
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
@@ -97,8 +101,13 @@ public class CarListCategory extends RecyclerView.Adapter<CarListCategory.MyView
                 .load(RetrofitApiBuilder.IMG_BASE_URL + catBeanList.get(position).getCategory_image())
                 .into(holder.image);
         //holder.txtCode.setText(/*"code"*/catBeanList.get(position).getCode() +"");
+        markUp = Double.parseDouble(SearchCarFragment.markup);
+        String price = listCarResult.get(position).getPrice();
+        double d = Double.parseDouble(price);
+        double priceNew  = d+(d*markUp)/100;
+
         holder.txtCode.setText(/*"code"*/listCarResult.get(position).getCurrency() + " " +
-                listCarResult.get(position).getPrice());
+                " "+String.valueOf(df2.format(priceNew)));
 
         Log.d("TAG", catBeanList.get(position).getCategory_name() + " - "
                 + catBeanList.get(position).getCategory_image() + " - "

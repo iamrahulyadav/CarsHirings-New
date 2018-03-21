@@ -65,6 +65,7 @@
         <activity android:name=".activities.home.PayActivity" />
         <activity android:name=".activities.home.UserDashActivity" />
         <activity android:name=".activities.home.WalletView"></activity>
+        <activity android:name=".activities.home.ThankYou"/>
     </application>
 
 </manifest>

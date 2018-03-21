@@ -1,5 +1,7 @@
 package com.carshiring.activities.home;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.carshiring.R;
+import com.carshiring.adapters.MyBookingAdapter;
 import com.carshiring.fragments.CurrentBookingFragment;
 import com.carshiring.fragments.PreviousBookingFragment;
 import com.carshiring.fragments.QuotesFragment;
@@ -43,11 +46,14 @@ public class MyBookingActivity extends AppBaseActivity {
 
     ViewPager pager;
     String s;
+    public static MyBookingAdapter adapter;
+
     UserDetails userDetails = new UserDetails();
     Gson gson = new Gson();
     public List<BookingHistory> currentBookingData;
     private TinyDB tinyDB;
     private String token, userId;
+    String qu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +72,17 @@ public class MyBookingActivity extends AppBaseActivity {
 
         userId = userDetails.getUser_id();
         token = tinyDB.getString("access_token");
+        Intent it = getIntent();
+      /* if (it != null) {
+            qu = it.getStringExtra("From Quotes");
+            if (qu != null) {
+                if (qu.equalsIgnoreCase("Quotes")) {
+                    setupSubView(R.id.action_quotes);
+                }
+            } else {
+                setupSubView(R.id.action_search_car);
+            }
+        }*/
 
     }
 
@@ -92,10 +109,11 @@ public class MyBookingActivity extends AppBaseActivity {
                 Log.d("TAG", "onResponse:book "+gson.toJson(response.body().response));
 
                 if (response.body()!=null){
-                    if (response.body().status==true){
+                    if (response.body().status){
+                        @SuppressLint("SimpleDateFormat")
                         String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
-                        List<BookingHistory>booking_detail = response.body().response.booking;
-                        setMyTabs();
+                        List<BookingHistory>booking_detail =new ArrayList<>();
+                        booking_detail = response.body().response.booking;
                         for (BookingHistory bookingData1 : booking_detail){
                             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             Date date1 = null;
@@ -139,20 +157,11 @@ public class MyBookingActivity extends AppBaseActivity {
                         }
                     }
                     else {
-                        Utility.message(getApplicationContext(), response.body().msg);
+                        Utility.message(getApplicationContext(), response.body().message);
                     }
                 } else {
-                    Utility.message(getApplicationContext(), response.body().msg);
+                    Utility.message(getApplicationContext(), response.body().message);
                 }
-
-
-
-               /* if (response!=null && response.body().status){
-                    bookingHistory.addAll(response.body().response.booking);
-                    setMyTabs(bookingHistory);
-                } else {
-                    Toast.makeText(MyBookingActivity.this, "No data found ", Toast.LENGTH_SHORT).show();
-                }*/
             }
 
             @Override
@@ -161,9 +170,7 @@ public class MyBookingActivity extends AppBaseActivity {
                 Utility.hidepopup();
             }
         });
-
     }
-
 
     private void setMyTabs(){
 
@@ -191,11 +198,9 @@ public class MyBookingActivity extends AppBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         actionBar.setTitle(R.string.txtmybooking);
         token = tinyDB.getString("access_token");
-
-        getBook();
+        setMyTabs();
     }
 
     @Override
@@ -208,6 +213,15 @@ public class MyBookingActivity extends AppBaseActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(this, MainActivity.class);
+        i.setFlags(i.FLAG_ACTIVITY_NEW_TASK | i.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i); // Launch the HomescreenActivity
+        finish();
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

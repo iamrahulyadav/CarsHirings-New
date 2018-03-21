@@ -72,6 +72,7 @@
                 </LinearLayout>
                 
                 <TextView
+                    android:visibility="gone"
                     android:layout_margin="3dp"
                     android:padding="5dp"
                     android:textSize="18sp"
@@ -80,6 +81,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
                 <LinearLayout
+                    android:visibility="gone"
                     android:orientation="vertical"
                     android:padding="5dp"
                     android:layout_margin="3dp"

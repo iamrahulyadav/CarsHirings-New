@@ -2,6 +2,9 @@ package com.carshiring.activities.home;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,10 +17,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carshiring.R;
+import com.carshiring.activities.mainsetup.LoginActivity;
 import com.carshiring.models.PointHistoryData;
 import com.carshiring.models.UserDetails;
 import com.carshiring.models.WalletHistoryData;
 import com.carshiring.utilities.AppBaseActivity;
+import com.carshiring.utilities.AppGlobal;
 import com.carshiring.utilities.Utility;
 import com.carshiring.webservices.ApiResponse;
 import com.carshiring.webservices.RetroFitApis;
@@ -25,6 +30,12 @@ import com.carshiring.webservices.RetrofitApiBuilder;
 import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,12 +56,14 @@ public class UserDashActivity extends AppBaseActivity {
     public static List<WalletHistoryData>walletHistoryData = new ArrayList<>();
     public static List<PointHistoryData>pointHistoryData = new ArrayList<>();
     double creditAmt, debitAmt,walletAmt, totalDebit, totalCredit,totalPoint,totalDebitPoint, totalCreditPoint, creditPoint, debitPoint;
+    AppGlobal appGlobal=AppGlobal.getInstancess();
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_dash);
+        appGlobal.context=getApplicationContext();
 
         actionBar = getSupportActionBar() ;
         if(actionBar!=null){
@@ -78,12 +91,7 @@ public class UserDashActivity extends AppBaseActivity {
         txtName = findViewById(R.id.dash_profile_txtName);
         txtPointValue = findViewById(R.id.dash_profile_txtpointValue);
 
-        txtEmail.setText(getResources().getString(R.string.email)+": "+userDetails.getUser_email());
-        txtPhone.setText(getResources().getString(R.string.phone)+ ": "+userDetails.getUser_phone());
-        txtDrvLnc.setText(getResources().getString(R.string.drvlncno)+": "+userDetails.getUser_license_no());
-        if (userDetails.getUser_lname()!=null){
-            txtName.setText(userDetails.getUser_name()+ " "+userDetails.getUser_lname());
-        }
+
         getWal();
         getPoint();
     }
@@ -102,15 +110,31 @@ public class UserDashActivity extends AppBaseActivity {
     public void icon_update(View view){
         startActivity(new Intent(UserDashActivity.this, AccountDetailsActivity.class));
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId())
+        {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
 
+    }
     @Override
     protected void onResume() {
         super.onResume();
         actionBar.setTitle(getResources().getString(R.string.txtDashTitle));
+        getProfile();
     }
 
 
     public void getWal(){
+        if (walletHistoryData!=null){
+            walletHistoryData.clear();
+        }
+
         RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();
         final Call<ApiResponse> walList = fitApis.walletHistory(user_id);
         walList.enqueue(new Callback<ApiResponse>() {
@@ -134,12 +158,9 @@ public class UserDashActivity extends AppBaseActivity {
                                 totalCredit+= creditAmt;
                             }
                         }
-                        Log.d("TAG", "onResponse: totalDebit"+debitAmt);
                         walletAmt = totalCredit-totalDebit;
                         Log.d("TAG", "onResponse: totalDebit"+totalCredit+"\n"+walletAmt);
-//                    txtCreditPt.setText(getResources().getString(R.string.txtCredit)+" : "+ String.valueOf(totalCredit));
-//                    txtdebitPt.setText(getResources().getString(R.string.txtDebit)+" : "+ String.valueOf(totalDebit));
-                        txtWalletAmt.setText(String.valueOf(walletAmt));
+                        txtWalletAmt.setText(String.valueOf( df2.format(walletAmt)));
                     } else {
                       //  Toast.makeText(UserDashActivity.this, ""+response.body().message, Toast.LENGTH_SHORT).show();
                     }
@@ -156,7 +177,126 @@ public class UserDashActivity extends AppBaseActivity {
         });
     }
 
+    String img;
+    public class GetImage extends AsyncTask<String, Void, Bitmap> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Utility.showLoading(UserDashActivity.this,getResources().getString(R.string.loading));
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... urls) {
+            Bitmap map = null;
+            for (String url : urls) {
+                map = downloadImage(url);
+            }
+            return map;
+        }
+
+        // Sets the Bitmap returned by doInBackground
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            Utility.hidepopup();
+            imgUser.setImageBitmap(result);
+            img = Utility.BitMapToString(result);
+//
+//            Glide.with(getActivity()).load(result)
+//                    .apply(RequestOptions.circleCropTransform()).into(imgUser);
+        }
+
+        // Creates Bitmap from InputStream and returns it
+        private Bitmap downloadImage(String url) {
+            Bitmap bitmap = null;
+            InputStream stream = null;
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            bmOptions.inSampleSize = 1;
+
+            try {
+                stream = getHttpConnection(url);
+                bitmap = BitmapFactory.
+                        decodeStream(stream, null, bmOptions);
+                stream.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            return bitmap;
+        }
+
+        // Makes HttpURLConnection and returns InputStream
+        private InputStream getHttpConnection(String urlString)
+                throws IOException {
+            InputStream stream = null;
+            URL url = new URL(urlString);
+            URLConnection connection = url.openConnection();
+
+            try {
+                HttpURLConnection httpConnection = (HttpURLConnection) connection;
+                httpConnection.setRequestMethod("GET");
+                httpConnection.connect();
+
+                if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    stream = httpConnection.getInputStream();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return stream;
+        }
+    }
+
+
+    public void getProfile(){
+        RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();
+        final Call<ApiResponse> walList = fitApis.profile(user_id);
+        walList.enqueue(new Callback<ApiResponse>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                if (response!=null){
+                    if(response.body().status)
+                    {
+                        UserDetails userDetails = new UserDetails();
+                        userDetails = response.body().response.user_detail;
+                        String logindata=gson.toJson(userDetails);
+                        Log.d("TAG", "onResponse: "+logindata);
+                        appGlobal.setLoginData(logindata);
+                        String st =  appGlobal.getUser_id();
+                        txtEmail.setText(getResources().getString(R.string.email)+": "+userDetails.getUser_email());
+                        txtPhone.setText(getResources().getString(R.string.phone)+ ": "+userDetails.getUser_phone());
+                        txtDrvLnc.setText(getResources().getString(R.string.drvlncno)+": "+userDetails.getUser_license_no());
+                        if (userDetails.getUser_lname()!=null){
+                            txtName.setText(userDetails.getUser_name()+ " "+userDetails.getUser_lname());
+                        }
+                        if (userDetails.getUser_image()!=null&&userDetails.getUser_image().length()>1){
+                            String url = RetrofitApiBuilder.IMG_BASE_URL+userDetails.getUser_image();
+                            GetImage task = new GetImage();
+                            // Execute the task
+                            task.execute(new String[] { url });
+                        }
+
+                    }
+                    else{
+                        Utility.message(getApplicationContext(), getResources().getString(R.string.no_internet_connection));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                Toast.makeText(UserDashActivity.this, ""+ getResources().getString(R.string.check_internet), Toast.LENGTH_SHORT).show();
+
+                //   Utility.message(getApplicationContext(), getResources().getString(R.string.check_internet));
+                Log.d("TAG", "onFailure: "+t.getMessage());
+            }
+        });
+    }
+
+    private static DecimalFormat df2 = new DecimalFormat(".##");
     public void getPoint(){
+        if (pointHistoryData!=null){
+            pointHistoryData.clear();
+        }
 //        debitPoint = 0;
 
         RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();
@@ -183,13 +323,15 @@ public class UserDashActivity extends AppBaseActivity {
                                totalCreditPoint+= creditPoint;
                            }
                        }
-
-                       Log.d("TAG", "onResponse: totalDebit"+debitPoint);
                        totalPoint = totalCreditPoint-totalDebitPoint;
+                       if (totalPoint>0){
+                           txtPointValue.setText(String.valueOf(totalPoint));
+                       } else {
+                           txtPointValue.setText(String.valueOf(0.0));
+                       }
                        Log.d("TAG", "onResponse: totalDebit"+totalCreditPoint+"\n"+totalPoint);
                        txtCreditPt.setText(getResources().getString(R.string.txtCredit)+" : "+ String.valueOf(totalCreditPoint));
                        txtdebitPt.setText(getResources().getString(R.string.txtDebit)+" : "+ String.valueOf(debitPoint));
-                       txtPointValue.setText(String.valueOf(totalPoint));
                    } else {
                      //  Toast.makeText(UserDashActivity.this, ""+response.body().message, Toast.LENGTH_SHORT).show();
                    }

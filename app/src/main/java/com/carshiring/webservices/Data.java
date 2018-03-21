@@ -5,6 +5,7 @@ import com.carshiring.models.BookingHistory;
 import com.carshiring.models.Category;
 import com.carshiring.models.ContactUs;
 import com.carshiring.models.LanguageModel;
+import com.carshiring.models.MArkupdata;
 import com.carshiring.models.Point;
 import com.carshiring.models.PointHistoryData;
 import com.carshiring.models.SearchData;
@@ -27,6 +28,7 @@ public class Data {
     public List<Location> location;
     public CarDetailBean car_detail;
     public Point point;
+    public MArkupdata markup;
     public List<Category> cat;
     public AboutUs about_us;
     public ContactUs contact_us;

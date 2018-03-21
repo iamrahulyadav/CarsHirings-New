@@ -7,8 +7,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-    <android.support.v4.widget.SwipeRefreshLayout
+        <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:id="@+id/previous_booking_refresh_layout"
         android:layout_height="match_parent">
         <android.support.v7.widget.RecyclerView
@@ -20,14 +21,13 @@
         </android.support.v7.widget.RecyclerView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:id="@+id/rec_prev_booki_no_data"
             android:gravity="center"
+            android:visibility="gone"
             android:orientation="vertical">
 
             <TextView
@@ -53,6 +53,8 @@
         </LinearLayout>
 
     </LinearLayout>
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -60,8 +62,7 @@
         android:layout_alignParentEnd="true"
         android:visibility="gone"
         android:layout_alignParentBottom="true">
-        <include layout="@layout/bottom_toolbar"
-
-            ></include></LinearLayout>
+        <include layout="@layout/bottom_toolbar"/>
+    </LinearLayout>
 
 </RelativeLayout>

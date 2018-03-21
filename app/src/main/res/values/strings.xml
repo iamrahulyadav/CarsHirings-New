@@ -91,7 +91,7 @@
     <string name="rating">Rating</string>
     <string name="car_group">Car Group</string>
 
-    <string name="dummy">This is a Dummy Text.</string>
+    <string name="dummy">Your booking is success</string>
     <string-array name="selectlanguage">
         <item>Select Language</item>
         <item>English</item>
@@ -357,6 +357,8 @@
     <string name="txtPayOnline">Pay online</string>
     <string name="txtUsepoint">Use Points</string>
     <string name="txtUseWallet">Use wallet</string>
+    <string name="paymentMethod">Payment Methods</string>
+    <string name="paymentWith">Pay with credit cards </string>
     <!--activity user dash-->
     <string name="drvlncno">Driving LIC-id</string>
     <string name="txtwallet">Wallet Amount</string>

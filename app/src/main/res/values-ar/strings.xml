@@ -87,7 +87,7 @@
     <string name="price_h_to_l">السعر الاعلى الى الادنى)</string>
     <string name="rating">تقييم</string>
     <string name="car_group">مجموعة السيارات</string>
-    <string name="dummy">هذا هو نص الدمية.</string>
+    <string name="dummy">حجزك هو النجاح</string>
 
     <string-array name="selectlanguage">
         <item>اختار اللغة</item>
@@ -354,7 +354,8 @@
     <!--PayActivity-->
     <string name="txtPayTotal">مجموع المبلغ الواجب دفعه</string>
     <string name="txtPayNow">دفع</string>
-
+    <string name="paymentMethod">Payment Methods</string>
+    <string name="paymentWith">Pay with credit cards </string>
     <!--activity user dash-->
     <string name="drvlncno">القيادة LIC معرف</string>
     <string name="txtwallet">مبلغ المحفظة</string>

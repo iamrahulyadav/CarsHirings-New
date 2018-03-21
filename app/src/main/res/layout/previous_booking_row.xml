@@ -128,6 +128,7 @@
                 android:textColor="@color/white"
                 android:layout_weight="0.85"
                 android:padding="5dp"/>
+
             <TextView
                 android:id="@+id/txt_rate"
                 android:layout_width="wrap_content"
@@ -140,6 +141,18 @@
                 android:layout_gravity="end"
                 android:padding="5dp"/>
         </LinearLayout>
+        <TextView
+            android:background="@color/redStrong"
+            android:id="@+id/txt_bookingdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="20/5/2017 at 10:00PM"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_weight="0.85"
+            android:padding="5dp"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -147,13 +160,13 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="35dp"
-                android:paddingLeft="10dp"
-                android:paddingTop="13dp"
-                android:id="@+id/previous_booking_txtPoints"
+                android:layout_height="45dp"
+                android:padding="13dp"
+                android:gravity="center_horizontal"
+                android:id="@+id/previous_booking_txtcancel"
                 android:textColor="@color/white"
-                android:background="@color/redStrong"
-                android:text="Points Collected: 35" />
+                android:background="@color/colorYellow"
+                android:text="Cancel your Booking" />
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"

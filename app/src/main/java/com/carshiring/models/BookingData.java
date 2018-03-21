@@ -50,7 +50,7 @@ public class BookingData {
      * bookingdetail_from_date : 2017-11-26 10:15:00
      * bookingdetail_to_date : 2017-11-30 10:15:00
      * bookingdetail_fno : null
-     * bookingdetail_status : 1
+     * bookingdetail_status : ab
      */
 
     private String booking_id;

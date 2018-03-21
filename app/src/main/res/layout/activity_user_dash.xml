@@ -21,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="170dp"
                 android:id="@+id/dash_profile_wal"
-                android:background="@drawable/a">
+                android:background="@color/Light_grey">
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

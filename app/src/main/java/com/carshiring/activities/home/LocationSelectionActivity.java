@@ -44,7 +44,7 @@ public class LocationSelectionActivity extends AppBaseActivity {
     public static final int RESPONSE_LOCATION = 200;
     LocationAdapter adapter ;
     RecyclerView rvLocations ;
-    AutoCompleteTextView etSearchLocation;
+    EditText etSearchLocation;
     private String token,cityname, languagecode, keyword,TAG = LocationSelectionActivity.class.getName();
     List<Location> listLocations;
     ImageView imgBack;

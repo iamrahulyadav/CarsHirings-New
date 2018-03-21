@@ -30,7 +30,7 @@ public class UserDetails {
      * user_type : 5
      * user_department_id : 0
      * user_language_id :
-     * user_status : 1
+     * user_status : ab
      * user_createdate :
      * user_license_no :
      */

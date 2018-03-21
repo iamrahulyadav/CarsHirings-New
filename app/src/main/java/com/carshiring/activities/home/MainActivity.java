@@ -1,5 +1,6 @@
 package com.carshiring.activities.home;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,7 +23,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +43,8 @@ import com.carshiring.webservices.RetroFitApis;
 import com.carshiring.webservices.RetrofitApiBuilder;
 import com.mukesh.tinydb.TinyDB;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -58,7 +63,7 @@ public class MainActivity extends AppCompatActivity
     public Toolbar toolbar;
     public SearchQuery searchQuery = new SearchQuery();
     View v;
-    String qu,set,fname,lname,email,phone,zip,license,licenseorigin,city,address;
+    String qu,set,fname,lname,email,phone,zip,license,dob,licenseorigin,city,address;
     TinyDB tinyDB;
     DrawerLayout drawer;
     String userId,language_code;
@@ -321,6 +326,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
     Button btupdate,btnCancel;
+    TextView txtDob;
 
     private void setupoverlay(String set) {
 
@@ -337,10 +343,20 @@ public class MainActivity extends AppCompatActivity
             edtZip = dialog.findViewById(R.id.etUserzip);
             edtLicense = dialog.findViewById(R.id.etlicense);
             edtLicenseOrign = dialog.findViewById(R.id.etlicenseorigion);
+            txtDob = dialog.findViewById(R.id.etUserDob);
             edtCity = dialog.findViewById(R.id.etcity);
             edtAddress = dialog.findViewById(R.id.etAddress);
             btupdate = dialog.findViewById(R.id.bt_update);
             btnCancel = dialog.findViewById(R.id.bt_cancel);
+            txtDob.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new DatePickerDialog(MainActivity.this, date, mCalendar
+                            .get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
+                            mCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                }
+            });
+
 //            set onclick on update
             btupdate.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -407,6 +423,31 @@ public class MainActivity extends AppCompatActivity
         dialog.show();
     }
 
+    Calendar mCalendar = Calendar.getInstance();
+    int year, monthOfYear, dayOfMonth;
+
+    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            // TODO Auto-generated method stub
+            mCalendar.set(Calendar.YEAR, year);
+            mCalendar.set(Calendar.MONTH, monthOfYear);
+            mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabel();
+        }
+
+    };
+
+    private void updateLabel() {
+
+        String myFormat = "MM/dd/yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+        dob = sdf.format(mCalendar.getTime());
+        txtDob.setText(dob);
+    }
+
 
     private void updateProfile(String userid, String fname) {
         if(!Utility.isNetworkConnected(getApplicationContext())){
@@ -416,7 +457,7 @@ public class MainActivity extends AppCompatActivity
         Utility.showloadingPopup(this);
         RetroFitApis retroFitApis= RetrofitApiBuilder.getCargHiresapis();
         Call<ApiResponse> responseCall=retroFitApis.updateprofile(userid,fname,lname,email,phone,zip,license,
-                licenseorigin,"dob",city,address);
+                licenseorigin,dob,city,address);
         responseCall.enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
@@ -464,7 +505,7 @@ public class MainActivity extends AppCompatActivity
         final Fragment fragment;
         if (getSupportFragmentManager().getBackStackEntryCount()>0){
         }
-//        if(getSupportFragmentManager().getBackStackEntryCount()>1)
+//        if(getSupportFragmentManager().getBackStackEntryCount()>ab)
 //        {
 //            getSupportFragmentManager().popBackStackImmediate();
 //
@@ -479,9 +520,9 @@ public class MainActivity extends AppCompatActivity
                 setupSubView(R.id.action_quotes);
             }
         }
-//            else if (getSupportFragmentManager().getBackStackEntryCount()>1){
+//            else if (getSupportFragmentManager().getBackStackEntryCount()>ab){
 //
-//                int index = getSupportFragmentManager().getBackStackEntryCount() - 1;
+//                int index = getSupportFragmentManager().getBackStackEntryCount() - ab;
 //                FragmentManager.BackStackEntry backStackEntry = getSupportFragmentManager().getBackStackEntryAt(index);
 //                String tag = backStackEntry.getName();
 //

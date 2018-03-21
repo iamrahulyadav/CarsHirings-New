@@ -7,10 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.carshiring.R;
-import com.carshiring.models.BookingData;
 import com.carshiring.models.BookingHistory;
 
 import java.util.List;
@@ -25,10 +25,14 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
     List<BookingHistory> bookinglist;
     Context context;
     int lastpositon= -1;
-    public MyBookingAdapter(Context context, List<BookingHistory> bookinglist) {
-        this.bookinglist=bookinglist;
-        this.context=context;
+    String type;
+
+    public MyBookingAdapter(List<BookingHistory> bookinglist, Context context, String type) {
+        this.bookinglist = bookinglist;
+        this.context = context;
+        this.type = type;
     }
+
     ClickItem item;
 
     public interface ClickItem
@@ -48,28 +52,25 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
         //BookingData bookingModel=bookinglist.get(position);
         holder.refnumb.setText(bookinglist.get(position).getBooking_id());
         holder.date_time.setText(bookinglist.get(position).getBooking_from_date());
-        holder.rate.setText(bookinglist.get(position).getBooking_currency() + " " + bookinglist.get(position).getBooking_actual_price());
-
-/*rate, txtStatus, txtPickUp, txtDropUp, txtPoint*/
+        holder.rate.setText(bookinglist.get(position).getBooking_currency()
+                + " " + bookinglist.get(position).getBooking_actual_price());
 
         if (bookinglist.get(position).getBooking_status().equals("0")){
-            holder.txtStatus.setText(context.getResources().getString(R.string.processing));
-        } else if (bookinglist.get(position).getBooking_status().equals("1")){
+            holder.txtStatus.setText(context.getResources().getString(R.string.failed));
+        } else if (bookinglist.get(position).getBooking_status().equals("ab")){
             holder.txtStatus.setText(context.getResources().getString(R.string.completed));
         } else if (bookinglist.get(position).getBooking_status().equals("2")){
             holder.txtStatus.setText(context.getResources().getString(R.string.canceled));
         } else {
             holder.txtStatus.setText(context.getResources().getString(R.string.failed));
         }
-        holder.txtPoint.setText(" " /*+ bookinglist.get(position).getBooking_point_used()*/);
         holder.txtDropUp.setText(bookinglist.get(position).getBooking_to_location());
         holder.txtPickUp.setText(bookinglist.get(position).getBooking_from_location());
         holder.txtCarName.setText(bookinglist.get(position).getBooking_car_model());
         holder.txtPaymentBy.setText(bookinglist.get(position).getBooking_company_name());
+        holder.txtBookingDate.setText("Booking Date: "+ bookinglist.get(position).getBokking_date());
         Glide.with(context).load(bookinglist.get(position).getBooking_supllier_log()).into(holder.imgLogo);
         Glide.with(context).load(bookinglist.get(position).getBooking_car_image()).into(holder.car_image);
-
-
        /* if(position>lastPosition)
         {
             Animation animation= AnimationUtils.loadAnimation(context,R.anim.up_from_bottom);
@@ -99,10 +100,10 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView refnumb,date_time,rate, txtStatus, txtPickUp, txtDropUp, txtPoint, txtCarName, txtPaymentBy;
+        TextView refnumb,date_time,rate, txtStatus, txtPickUp,txtBookingDate, txtDropUp,  txtCancel, txtCarName, txtPaymentBy;
         ImageView imgLogo, car_image;
 
-        public MyViewHolder(View itemView) {
+        public MyViewHolder(final View itemView) {
             super(itemView);
 
             refnumb= (TextView) itemView.findViewById(R.id.txt_bookingInvoicenumber);
@@ -111,20 +112,29 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
             txtStatus = (TextView) itemView.findViewById(R.id.previous_booking_txtStatus);
             txtPickUp = (TextView) itemView.findViewById(R.id.previous_booking_pickUp);
             txtDropUp = (TextView) itemView.findViewById(R.id.previous_booking_dropUp);
-            txtPoint = (TextView) itemView.findViewById(R.id.previous_booking_txtPoints);
             txtPaymentBy = (TextView) itemView.findViewById(R.id.previous_booking_txtCarName);
             txtCarName = (TextView) itemView.findViewById(R.id.previous_booking_txtPaymentBy);
             imgLogo = (ImageView) itemView.findViewById(R.id.previous_booking_imgCarLogo);
             car_image = (ImageView) itemView.findViewById(R.id.my_booking_image);
+            txtCancel = itemView.findViewById(R.id.previous_booking_txtcancel);
+            txtBookingDate = itemView.findViewById(R.id.txt_bookingdate);
+          /*  txtCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
+                }
+            });*/
 
-            itemView.setOnClickListener(this);
+          if (type.equals("p")){
+              txtCancel.setVisibility(View.GONE);
+          }
+            txtCancel.setOnClickListener(this);
     }
     @Override
         public void onClick(View v) {
             if(item!=null)
             {
                 item.click(v,getPosition());
-
 
             }
         }

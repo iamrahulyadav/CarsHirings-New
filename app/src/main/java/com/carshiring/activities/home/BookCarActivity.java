@@ -106,7 +106,7 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
             fullProtection = "no";
         }
 
-        txtPoint.setText(getResources().getString(R.string.colletcted_point) + CarResultsListAdapter.calPoint);
+        txtPoint.setText(getResources().getString(R.string.colletcted_point) + String.valueOf(CarDetailActivity.point));
         terms.setOnClickListener(this);
         quotes.setOnClickListener(this);
 

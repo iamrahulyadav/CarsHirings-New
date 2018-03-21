@@ -158,7 +158,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
         String login = sharedpref.getString("login_data");
         userDetails = gson.fromJson(login, UserDetails.class);
 
-        userId = userDetails.getUser_id();//sharedpref.getString("userid");
+        userId = userDetails.getUser_id();
         str_fname = userDetails.getUser_name();//sharedpref.getString("user_name");
         str_lname = userDetails.getUser_lname().toString();////sharedpref.getString("user_lname");
         str_email = userDetails.getUser_email();//sharedpref.getString("user_email");
@@ -205,6 +205,9 @@ public class AccountDetailsActivity extends AppBaseActivity {
 //        etUserAge.setText(Integer.toString(sharedpref.getInt("userage")));
     }
 
+    public void cancel(View view){
+        finish();
+    }
     public void update_profile(View view){
 
         str_fname = edt_fname.getText().toString().trim();
@@ -277,19 +280,17 @@ public class AccountDetailsActivity extends AppBaseActivity {
                 Utility.hidepopup();
                 if(response.body().status==true)
                 {
-                    Log.d("TAG", "onResponse: "+response.body().message);
-                    Utility.message(getApplicationContext(), response.body().message);
+                    Log.d("TAG", "onResponse: "+response.body().msg);
+                    Utility.message(getApplicationContext(), response.body().msg);
 //                    String logindata=gson.toJson(response.body().response.userdetail);
                     userDetails = response.body().response.user_detail;
                     String logindata = gson.toJson(userDetails);
                     appGlobal.setLoginData(logindata);
-                    String st=  appGlobal.getUser_id();
-                    //dialog.dismiss();
-                    //dialog.dismiss();
+                    finish();
 
                 }
                 else{
-                    Utility.message(getApplicationContext(), response.body().message);
+                    Utility.message(getApplicationContext(), response.body().msg);
                 }
             }
 

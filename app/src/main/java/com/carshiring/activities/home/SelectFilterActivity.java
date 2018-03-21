@@ -157,7 +157,7 @@ public class SelectFilterActivity extends AppBaseActivity implements View.OnClic
     private void setupcategorygroup() {
         if(Utility.isNetworkConnected(getApplicationContext()))
         {
-            categories.add("1");
+            categories.add("ab");
             categories.add("33");
             String cat=categories.toString();
             RetroFitApis retroFitApis=RetrofitApiBuilder.getCargHiresapis();

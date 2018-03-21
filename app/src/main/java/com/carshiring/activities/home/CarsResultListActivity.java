@@ -57,7 +57,6 @@ import static android.content.ContentValues.TAG;
 
 public class CarsResultListActivity extends AppBaseActivity {
     Gson gson = new Gson();
-
     public String filter ;
     Category category = new Category();
     public static List<Category.ResponseBean.CatBean>catBeanList = new ArrayList<>();
@@ -120,9 +119,7 @@ public class CarsResultListActivity extends AppBaseActivity {
             supplierList.add(searchData.getSupplier());
             cateList.add(Integer.parseInt(searchData.getCategory()));
         }
-        for (SearchData searchData: listCarResult){
-            Log.d(TAG, "onResponse: price"+searchData.getPrice()+"\n"+searchData.getModel());
-        }
+
         cateRequest.setCode(cateList);
         Set<String> hs = new HashSet<>();
         hs.addAll(supplierList);
@@ -158,8 +155,6 @@ public class CarsResultListActivity extends AppBaseActivity {
                 listCarResult1.add(listCarResult.get(i));
             }
         }
-        Log.d("Size", listCarResult.size()+"");
-        Log.d("size", listCarResult1.size()+"");
         listdispaly(listCarResult1);
 //        listAdapter.notifyDataSetChanged();
 
@@ -168,6 +163,7 @@ public class CarsResultListActivity extends AppBaseActivity {
     public void cat_All(View v){
         listdispaly(listCarResult);
     }
+    double pointpercent, calPoint,calPrice;
 
     public void listdispaly(List<SearchData> listCarResult ) {
         Log.d("Search Data List", listCarResult.size()+"");
@@ -175,7 +171,6 @@ public class CarsResultListActivity extends AppBaseActivity {
         listAdapter = new CarResultsListAdapter(this,listCarResult, new CarResultsListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(SearchData carDetail) {
-
                 if (tinyDB.contains("login_data")){
                     String data = tinyDB.getString("login_data");
                     userDetails = gson.fromJson(data,UserDetails.class);
@@ -190,8 +185,13 @@ public class CarsResultListActivity extends AppBaseActivity {
                         Intent intent = new Intent(CarsResultListActivity.this,CarDetailActivity.class);
                         intent.putExtra("id_context",id_context);
                         intent.putExtra("type",type);
+                        double pricea = Double.parseDouble(carDetail.getPrice());
+                        pointpercent = Double.parseDouble(SearchCarFragment.pointper);
+                        calPrice = (pricea*pointpercent)/100;
+                        calPoint = (int) (calPrice/0.05);
                         intent.putExtra("day",carDetail.getTime());
                         intent.putExtra("refer_type",refertype);
+                        intent.putExtra("point_earn",calPoint );
                         startActivity(intent);
                     }
                 } else {
@@ -378,7 +378,7 @@ public class CarsResultListActivity extends AppBaseActivity {
 
                         break ;
                   /*  case "Price (Low to High)" :
-                        result = (int)(Double.parseDouble(o1.getCar_list())-Double.parseDouble(o2.carmanagement_price)+1);
+                        result = (int)(Double.parseDouble(o1.getCar_list())-Double.parseDouble(o2.carmanagement_price)+ab);
                         break ;
 
                     case "Price (High to Low)" :
@@ -597,7 +597,7 @@ public class CarsResultListActivity extends AppBaseActivity {
                                         if(o1.getCategory_name().equalsIgnoreCase(o2.getCategory_name())){
                                             return 0;
                                         }
-                                        return 1;
+                                        return ab;
                                     }
                                 });
                                 Log.d("TAG", "onResponse: " + catBeanList.size());    // 16

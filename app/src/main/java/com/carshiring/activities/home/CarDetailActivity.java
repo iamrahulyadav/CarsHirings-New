@@ -21,6 +21,7 @@ import com.carshiring.adapters.Page_Adapter;
 import com.carshiring.fragments.CarDetailTab1Fragment;
 import com.carshiring.fragments.CarDetailTab2Fragment;
 import com.carshiring.fragments.CarDetailTab3Fragment;
+import com.carshiring.fragments.SearchCarFragment;
 import com.carshiring.models.CarDetailBean;
 import com.carshiring.models.CoveragesBean;
 import com.carshiring.models.ExtraBean;
@@ -31,9 +32,13 @@ import com.carshiring.webservices.RetrofitApiBuilder;
 import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,7 +55,8 @@ public class CarDetailActivity extends AppCompatActivity {
     Page_Adapter adapter;
     ActionBar actionBar;
     TinyDB tinyDB ;
-
+    double markUp;
+    public static double point;
     public static String logo,carPrice,carImage,modelname,currency,suppliername,suppliercity,termsurl
             ,fullprotectioncurrency,fullprotectionammount,fullProcted,driver_minage,driver_maxage,CDW,THP,carid;
     Gson gson = new Gson();
@@ -70,13 +76,13 @@ public class CarDetailActivity extends AppCompatActivity {
             actionBar.setHomeAsUpIndicator(R.drawable.back);
         }
 
-
         tinyDB = new TinyDB(getApplicationContext());
         token = tinyDB.getString("access_token");
         type = getIntent().getStringExtra("type");
         refer_type = getIntent().getStringExtra("refer_type");
         day = getIntent().getStringExtra("day");
         id_context = getIntent().getStringExtra("id_context");
+        point = getIntent().getDoubleExtra("point_earn",0);
 
 //        call api
 
@@ -92,17 +98,19 @@ public class CarDetailActivity extends AppCompatActivity {
         apiResponseCall.enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                Log.d("TAG", "onResponse:cardetails "+gson.toJson(response.body()));
 
                if (response.body()!=null){
                    CarDetailBean carDetailBean = new CarDetailBean();
                    carDetailBean = response.body().response.car_detail;
-                   Log.d("TAG", "onResponse: "+gson.toJson(carDetailBean));
                    carImage=response.body().response.car_detail.image;
-                   Log.d("respsonse",carImage);
                    logo=response.body().response.car_detail.supplier_logo;
-                   Log.d("respsonse",logo);
                    modelname=response.body().response.car_detail.model;
-                   carPrice=response.body().response.car_detail.price;
+                   markUp = Double.parseDouble(SearchCarFragment.markup);
+                   String price =response.body().response.car_detail.price;
+                   double d = Double.parseDouble(price);
+                   double priceNew  = d+(d*markUp)/100;
+                   carPrice=String.valueOf(df2.format(priceNew));
                    currency=response.body().response.car_detail.currency;
                    extralist= (ArrayList<ExtraBean>) response.body().response.car_detail.extra;
                    carSpecificationList= Arrays.asList(response.body().response.car_detail.feature);
@@ -122,19 +130,36 @@ public class CarDetailActivity extends AppCompatActivity {
                    for (int i=0;i<1;i++) {
                        THP = response.body().response.car_detail.theft_protection.get(i);
                    }
-                   Log.d("respsonse",""+carSpecificationList.size());
                    handletablayout();
                }
 
             }
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), getResources().getString(R.string.error) ,Toast.LENGTH_SHORT).show();
+                Log.d("TAG", "onFailure: "+t.getMessage());
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_internet_connection) ,Toast.LENGTH_SHORT).show();
                 Utility.hidepopup();
             }
         });
     }
 
+
+    public static boolean isValid(String url)
+    {
+        /* Try creating a valid URL */
+        try {
+            new URL(url).toURI();
+            return true;
+        }
+
+        // If there was an Exception
+        // while creating URL object
+        catch (Exception e) {
+            return false;
+        }
+    }
+
+    private static DecimalFormat df2 = new DecimalFormat(".##");
     @Override
     public void onBackPressed() {
         super.onBackPressed();

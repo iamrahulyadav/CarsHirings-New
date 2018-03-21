@@ -27,6 +27,8 @@ import com.carshiring.webservices.RetroFitApis;
 import com.carshiring.webservices.RetrofitApiBuilder;
 import com.google.gson.Gson;
 
+import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +49,7 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
     private final Context context;
     List<SearchData> list;
     ProgressBar bar1;
-    double pointpercent,calPrice;
+    double pointpercent,calPrice, markUp;
     public static int calPoint;
 
     public interface  OnItemClickListener {
@@ -79,7 +81,13 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
             holder.tvBagNo.setVisibility(View.GONE);
         }
         holder.tvBagNo.setText(model.getFeature().getBag() + context.getResources().getString(R.string.large_bag));
-        holder.tvCarPricing.setText(model.getCurrency() +" "+model.getPrice()+" /"+ model.getTime()
+        markUp = Double.parseDouble(SearchCarFragment.markup);
+        String price = model.getPrice();
+        double d = Double.parseDouble(price);
+        double priceNew  = d+(d*markUp)/100;
+
+        holder.tvCarPricing.setText(model.getCurrency()
+                +" "+String.valueOf(df2.format(priceNew))+" /"+ model.getTime()
                 +" "+model.getTime_unit());
         holder.txtDoor.setText(model.getFeature().getDoor()+ context.getResources().getString(R.string.doors));
         if (model.getFeature().getAircondition().equals("true")){
@@ -96,28 +104,69 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
                 context.startActivity(i);
             }
         });
-        Glide.with(context)
-                .load(model.getSupplier_logo())
-        .into(holder.imgCarAgencyLogo);
-        Glide.with(context)
-                .load(model.getImage())
-                .into(holder.imgCarResult);
+        Log.d(TAG, "onBindViewHolder: "+model.getSupplier_logo());
+
+
+        String url =model.getSupplier_logo();
+        if (isValid(url)){
+            Log.d("TAG", "onResponse: valid"+"yes");
+            Glide.with(context)
+                    .load(model.getSupplier_logo())
+                    .into(holder.imgCarAgencyLogo);
+        } else {
+            Log.d("TAG", "onResponse: valid"+"no");
+            String carImage = "http://www.page-rank-calculator.com/img/not-available.png";
+            Glide.with(context)
+                    .load(carImage)
+                    .into(holder.imgCarAgencyLogo);
+        }
+        String m = model.getImage();
+        if (isValid(m)){
+            Log.d("TAG", "onResponse: valid"+"yes");
+            Glide.with(context)
+                    .load(model.getImage())
+                    .into(holder.imgCarResult);
+        } else {
+            Log.d("TAG", "onResponse: valid"+"no");
+            String carImage = "http://www.page-rank-calculator.com/img/not-available.png";
+            Glide.with(context)
+                    .load(carImage)
+                    .into(holder.imgCarResult);
+        }
+
+
+
         bar1.setVisibility(View.GONE);
-        double price = Double.parseDouble(model.getPrice());
+        double pricea = Double.parseDouble(model.getPrice());
 //        calculate point
         pointpercent = Double.parseDouble(SearchCarFragment.pointper);
-        calPrice = (price*pointpercent)/100;
+        calPrice = (pricea*pointpercent)/100;
         calPoint = (int) (calPrice/0.05);
 
         holder.txtPoint.setText(context.getResources().getString(R.string.points_collected) + String.valueOf(calPoint));
         holder.bindListener(model,listener);
     }
 
+    private static DecimalFormat df2 = new DecimalFormat(".##");
+
     @Override
     public int getItemCount() {
         return list.size() ;
     }
+    public static boolean isValid(String url)
+    {
+        /* Try creating a valid URL */
+        try {
+            new URL(url).toURI();
+            return true;
+        }
 
+        // If there was an Exception
+        // while creating URL object
+        catch (Exception e) {
+            return false;
+        }
+    }
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView tvCarModelName,tvCarPricing,txtClass,txtSupplierNmae, tvBagNo,
                 txtDropCity,txtDoor,txtTrans, txtTerms,txtFuel,txtPoint;
@@ -185,7 +234,7 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
 //                CarSpecification spec = specs.get(indexSpec);
 //
 //                switch(spec.specification_display) {
-//                    case "1" :
+//                    case "ab" :
 //                        View v  = LayoutInflater.from(context).inflate(R.layout.spec1_item,spec1Container,false) ;
 //                        TextView tvCarSpec1 = (TextView) v.findViewById(R.id.tvCarSpec1) ;
 //                        tvCarSpec1.setText(spec.specification_name);

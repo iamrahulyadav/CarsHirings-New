@@ -30,6 +30,7 @@ import com.carshiring.activities.home.CarsResultListActivity;
 import com.carshiring.activities.home.LocationSelectionActivity;
 import com.carshiring.activities.home.MainActivity;
 import com.carshiring.activities.home.SearchQuery;
+import com.carshiring.models.MArkupdata;
 import com.carshiring.models.Point;
 import com.carshiring.models.SearchData;
 import com.carshiring.splash.SplashActivity;
@@ -45,6 +46,10 @@ import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -78,7 +83,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
     Calendar calendar_pick, calendar_drop;
 
     public static String pickName ="",pickup_loc_id="",drop_loc_id="", dropName="",drop_date="",pick_date="",
-            drop_hour="",drop_minute="",pick_minute="",pointper="",pick_hour="",pickTime="", dropTime="";
+            drop_hour="",drop_minute="",pick_minute="",markup="",pointper="",pick_hour="",pickTime="", dropTime="";
 
     int useCurrentLocation = 0;
     int useSameDestLocation = 1;
@@ -171,14 +176,15 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         chkUseCurrentLocation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
+                //comment for testing
+               /* if (isChecked) {
                     et_pickup_location.setText("");
                     et_pickup_location.setEnabled(false);
                     if (Utility.checkGooglePlayService(getActivity()))
                         setupLocation();
                 }else{
                     et_pickup_location.setEnabled(true);
-                }
+                }*/
             }
         });
 
@@ -349,6 +355,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         super.onResume();
         Toolbar toolbar = ((MainActivity) getActivity()).toolbar;
         toolbar.setTitle(getResources().getString(R.string.action_search_car));
+        getMarkUp();
 
 //        checkGPSStatus();
     }
@@ -442,29 +449,19 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
 
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 Utility.hidepopup();
-
-                if(response.body()!=null){
-
-                    if(response.body().status){
+                Log.d(TAG, "Complete Search List: " + gson.toJson(response.body()));
+                if (response!=null){
+                    if (response.body().status){
                         searchData=response.body().response.car_list;
                         String data = gson.toJson(searchData);
-                        Log.d(TAG, "Complete Search List: " + data);
                         ArrayList<SearchData>searchData1 = new ArrayList<>();
                         searchData1.addAll(searchData);
 
-
                         chooseSearchAction(searchData);
 
-//                        for testing
-                       /* Intent  intent = new Intent(getActivity(), CarsResultListActivity.class);
-                        startActivity(intent);*/
-
-                    }else{
-                        if(response.body().error_code==102)
-                            ((AppBaseActivity)getActivity()).getToken(_this);
+                    } else {
+                        Toast.makeText(activity, ""+response.body().msg, Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Toast.makeText(getActivity(), response.body().message, Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -513,6 +510,36 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             }
         });
     }
+
+
+    public void getMarkUp(){
+        RetroFitApis retroFitApis = RetrofitApiBuilder.getCargHiresapis() ;
+
+        Call<ApiResponse> responseCall = retroFitApis.markup(" ") ;
+        final Gson gson = new Gson();
+        responseCall.enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                Utility.hidepopup();
+                MArkupdata point = new MArkupdata();
+                if(response.body()!=null){
+                    Log.d(SplashActivity.TAG, "onResponse: point "+gson.toJson(response.body().response.point));
+
+                    if(response.body().status){
+                        point = response.body().response.markup;
+                        markup = point.getMarkup_percentage();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                Utility.hidepopup();
+                Toast.makeText(getContext(), getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
