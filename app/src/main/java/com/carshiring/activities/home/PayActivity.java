@@ -121,7 +121,10 @@ public class PayActivity extends AppBaseActivity {
         extraData = BookCarActivity.extraData;
 
         price = CarDetailActivity.carPrice;
-        totalPrice = Double.parseDouble(price);
+        if (price!=null){
+            totalPrice = Double.parseDouble(price);
+
+        }
         txtCheckPay = findViewById(R.id.check_pay_online);
         txtcheckPoint = findViewById(R.id.check_points);
         txtCheckWallet = findViewById(R.id.check_wallet);

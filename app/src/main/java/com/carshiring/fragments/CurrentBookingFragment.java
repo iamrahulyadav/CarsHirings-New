@@ -180,8 +180,6 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
                 }
             }
         });
-
-
     }
 
     private void getBook() {

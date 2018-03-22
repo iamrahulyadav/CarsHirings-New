@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -50,14 +51,30 @@ public class SplashActivity extends AppBaseActivity {
         sharedpref=new TinyDB(getApplicationContext());
          String language_code = sharedpref.getString("language_code") ;
         boolean isSkipLogin = sharedpref.getBoolean("isSkipLogin");
+        spinner_language = (Spinner) findViewById(R.id.spinner_language);
+
         if(language_code!=null && !language_code.isEmpty()) {
 //            updateResources(this, language_code);
             if (isSkipLogin) {
-                startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                finish();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        spinner_language.setVisibility(View.GONE);
+                        startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                        finish();
+                    }
+                },2000);
+
             } else if (sharedpref.contains("login_data")){
-                startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                finish();
+                spinner_language.setVisibility(View.GONE);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                        finish();
+                    }
+                },2000);
+
             } else {
                 startActivity(new Intent(SplashActivity.this, LoginActivity.class));finish();
             }
@@ -69,7 +86,6 @@ public class SplashActivity extends AppBaseActivity {
         langlistcode=new ArrayList<>();
         langlistId=new ArrayList<>();
         lan=new String[langlistname.size()];
-        spinner_language = (Spinner) findViewById(R.id.spinner_language);
         if(actionBar!=null) actionBar.hide();
         accessToken = sharedpref.getString("access_token");
         if(accessToken!=null && !accessToken.isEmpty()) {

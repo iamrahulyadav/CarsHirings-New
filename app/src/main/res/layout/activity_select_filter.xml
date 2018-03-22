@@ -15,7 +15,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:textColor="#bc1a20"
+                android:textColor="@color/black"
                 android:textSize="18sp"
                 android:gravity="center"
                 android:text="@string/car_group"
@@ -128,10 +128,12 @@
                     android:padding="5dp"
                     android:textSize="18sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     android:text="Included Insurance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
                 <LinearLayout
+                    android:visibility="gone"
                     android:orientation="vertical"
                     android:padding="5dp"
                     android:layout_margin="3dp"

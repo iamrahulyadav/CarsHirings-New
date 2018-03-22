@@ -24,7 +24,7 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
 {
     List<BookingHistory> bookinglist;
     Context context;
-    int lastpositon= -1;
+
     String type;
 
     public MyBookingAdapter(List<BookingHistory> bookinglist, Context context, String type) {
