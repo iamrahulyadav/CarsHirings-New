@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.carshiring.R;
 import com.carshiring.activities.mainsetup.LoginActivity;
 import com.carshiring.fragments.AccountFragment;
+import com.carshiring.fragments.LoginFragment;
 import com.carshiring.fragments.SearchCarFragment;
 import com.carshiring.interfaces.ISubViewSetupHandler;
 import com.carshiring.models.UserDetails;
@@ -190,8 +191,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        super.onBackPressed();
+      /*  if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }
         else {
@@ -212,8 +213,8 @@ public class MainActivity extends AppCompatActivity
             });
             builder.create();
             builder.show();
-            //super.onBackPressed();
-        }
+
+        }*/
     }
 
     @Override
@@ -239,11 +240,77 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         qu = "";
-        int id = item.getItemId();
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        setupSubView(id);
         switch (item.getItemId()){
+
+            case R.id.action_about_us:
+                startActivity(new Intent(MainActivity.this, AboutUsActivity.class));
+                break;
+
+            case R.id.action_contact_us:
+                startActivity(new Intent(MainActivity.this, ContactUsActivity.class));
+                break;
+         /*   case R.id.action_logout:
+                tinyDB.remove("login_data");
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                break;
+         */   case R.id.action_language:
+                startActivity(new Intent(MainActivity.this, Language.class));
+//                Toast.makeText(MainActivity.this, "Currency Change", Toast.LENGTH_SHORT).show();
+                break;
+
+           /* case R.id.action_settings:
+                startActivity(new Intent(MainActivity.this, ChangePasswordActivity.class));
+                Toast.makeText(MainActivity.this, "Settings Action", Toast.LENGTH_SHORT).show();
+                break;*/
+            case R.id.action_accounts:
+                if (checkLogin()) {
+                    AccountFragment myaccountFragment = new AccountFragment();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, myaccountFragment)
+                            .addToBackStack("null").commit();
+                    toolbar.setTitle(getResources().getString(R.string.action_accounts));
+                }
+                break;
+
+            case R.id.action_booking:
+                if (checkLogin()) {
+                    startActivity(new Intent(MainActivity.this,MyBookingActivity.class));
+                }
+                break;
+
+            case R.id.action_search_car:
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("query", searchQuery);
+                SearchCarFragment searchCarFragment = new SearchCarFragment();
+                searchCarFragment.setArguments(bundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, searchCarFragment)
+                        .commit();
+                toolbar.setTitle(getResources().getString(R.string.action_search_car));
+                break;
+
+        }
+
+        return true;
+    }
+
+    AppGlobal appGlobal = AppGlobal.getInstancess();
+
+
+    private void updateRes(String lang){
+        Resources res = getApplicationContext().getResources();
+// Change locale settings in the app.
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.setLocale(new Locale(lang.toLowerCase())); // API 17+ only.
+// Use conf.locale = new Locale(...) if targeting lower versions
+        res.updateConfiguration(conf, dm);
+    }
+    @Override
+    public void setupSubView(int id) {
+//        updateResources(this,language_code);
+
+        switch (id){
             case R.id.action_accounts:
                 if (checkLogin()) {
                     AccountFragment myaccountFragment = new AccountFragment();
@@ -269,59 +336,19 @@ public class MainActivity extends AppCompatActivity
                 toolbar.setTitle(getResources().getString(R.string.action_search_car));
                 break;
 
-            case R.id.action_about_us:
-                startActivity(new Intent(MainActivity.this, AboutUsActivity.class));
-                break;
-
-            case R.id.action_contact_us:
-                startActivity(new Intent(MainActivity.this, ContactUsActivity.class));
-                break;
-         /*   case R.id.action_logout:
-                tinyDB.remove("login_data");
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                break;
-         */   case R.id.action_language:
-                startActivity(new Intent(MainActivity.this, Language.class));
-//                Toast.makeText(MainActivity.this, "Currency Change", Toast.LENGTH_SHORT).show();
-                break;
-
-           /* case R.id.action_settings:
-                startActivity(new Intent(MainActivity.this, ChangePasswordActivity.class));
-                Toast.makeText(MainActivity.this, "Settings Action", Toast.LENGTH_SHORT).show();
-                break;*/
-
         }
-
-        return true;
-    }
-
-    AppGlobal appGlobal = AppGlobal.getInstancess();
-
-
-    private void updateRes(String lang){
-        Resources res = getApplicationContext().getResources();
-// Change locale settings in the app.
-        DisplayMetrics dm = res.getDisplayMetrics();
-        android.content.res.Configuration conf = res.getConfiguration();
-        conf.setLocale(new Locale(lang.toLowerCase())); // API 17+ only.
-// Use conf.locale = new Locale(...) if targeting lower versions
-        res.updateConfiguration(conf, dm);
-    }
-    @Override
-    public void setupSubView(int id) {
-//        updateResources(this,language_code);
-//        switch (id) {
-
     }
 
     private boolean checkLogin() {
         if (userId != null && !userId.trim().isEmpty()) {
             return true;
-        } else {
+        }
+        else {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
+
             return false;
         }
     }

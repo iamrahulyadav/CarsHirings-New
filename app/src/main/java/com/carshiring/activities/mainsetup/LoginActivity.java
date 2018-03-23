@@ -37,7 +37,7 @@ public class LoginActivity extends AppBaseActivity implements View.OnClickListen
     TextView txtWelcome, txtEmail, txtPass, txtLoginForgot;
     EditText username,password;
     LinearLayout ll_forgetpassword;
-    Button bt_signup, btnSkip;
+    Button  btnSkip,bt_signup;
     TinyDB sharedpref;
     String token,language_code;
     Toolbar toolbar;
@@ -55,7 +55,7 @@ public class LoginActivity extends AppBaseActivity implements View.OnClickListen
 
 //        find id
         ll_forgetpassword= (LinearLayout) findViewById(R.id.ll_forgetpassword);
-        bt_signup= (Button) findViewById(R.id.bt_signup);
+        bt_signup=  findViewById(R.id.bt_signup);
         txtWelcome = (TextView) findViewById(R.id.login_welcome);
         txtEmail = (TextView) findViewById(R.id.txtEmail);
         txtPass = (TextView) findViewById(R.id.txtPass);

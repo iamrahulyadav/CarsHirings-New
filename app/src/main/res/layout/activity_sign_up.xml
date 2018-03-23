@@ -27,9 +27,8 @@
                 android:text="@string/SignUpAccount"
                 android:gravity="center"
                 android:layout_margin="5dp"
-                android:textStyle="bold"
                 android:textColor="@color/bottom_color"
-                android:textSize="16sp"/>
+                android:textSize="@dimen/extra_large_size"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -44,6 +43,7 @@
                 android:layout_marginTop="10dp"
                 android:paddingStart="10dp"
                 android:padding="5dp"
+                android:textSize="@dimen/small_size"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:imeOptions="actionNext"
@@ -73,6 +73,7 @@
                 android:drawableLeft="@drawable/ic_password_icon"
                 android:drawableStart="@drawable/ic_password_icon"
                 android:drawablePadding="10dp"
+                android:textSize="@dimen/small_size"
                 android:hint="@string/enter_password"
                 android:inputType="textPassword"
                 />
@@ -93,6 +94,7 @@
                 android:textAlignment="viewStart"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
+                android:textSize="@dimen/small_size"
                 android:layout_marginBottom="13dp"
                 android:imeOptions="actionDone"
                 android:drawableLeft="@drawable/ic_password_icon"

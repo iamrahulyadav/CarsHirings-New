@@ -377,4 +377,8 @@
     <string name="booking_point_type">نوع نقطة الحجز</string>
     <string name="point_hist">وجهة نظري التاريخ</string>
 
+
+    <string name="txtTotalPay">Payable Today</string>
+    <string name="paymentSADAD">Pay with SADAD</string>
+    <string name="txtPay">Tap \'Book Now\' to complete your booking and expect carshirng</string>
 </resources>

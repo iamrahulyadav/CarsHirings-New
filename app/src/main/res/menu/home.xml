@@ -10,7 +10,6 @@
     <item
         android:id="@+id/action_booking"
         android:orderInCategory="100"
-        android:visible="false"
         android:icon="@drawable/icn_bookings"
         android:title="@string/action_quotes"
         app:showAsAction="ifRoom" />

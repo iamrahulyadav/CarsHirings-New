@@ -63,7 +63,6 @@ public class CarsResultListActivity extends AppBaseActivity {
     List<SearchData> listCarResult =  new ArrayList<>();
     List<SearchData.FeatureBean> featuresAllList =  new ArrayList<>();
     public static List<String>supplierList=new ArrayList<>();
-    List<String>featuresList=new ArrayList<>();
     List<Integer>cateList=new ArrayList<>();
     CarResultsListAdapter listAdapter;
     UserDetails userDetails = new UserDetails();
@@ -112,10 +111,12 @@ public class CarsResultListActivity extends AppBaseActivity {
                 .load("https://carshiring.com/site/images/car.png")
                 .into(cat_image_all);
 
-
 //        get supplier
-
+        if (supplierList!=null){
+            supplierList.clear();
+        }
         for (SearchData searchData : listCarResult){
+
             supplierList.add(searchData.getSupplier());
             cateList.add(Integer.parseInt(searchData.getCategory()));
         }
@@ -187,8 +188,13 @@ public class CarsResultListActivity extends AppBaseActivity {
                         intent.putExtra("type",type);
                         double pricea = Double.parseDouble(carDetail.getPrice());
                         pointpercent = Double.parseDouble(SearchCarFragment.pointper);
-                        calPrice = (pricea*pointpercent)/100;
-                        calPoint = (int) (calPrice/0.05);
+                        double markUp = Double.parseDouble(SearchCarFragment.markup);
+                        double d = pricea;
+                        double priceNew  = d+(d*markUp)/100;
+
+
+                        calPrice = (priceNew*pointpercent)/100;
+                        calPoint = (int) (calPrice/0.02);
                         intent.putExtra("day",carDetail.getTime());
                         intent.putExtra("refer_type",refertype);
                         intent.putExtra("point_earn",calPoint );
@@ -220,6 +226,7 @@ public class CarsResultListActivity extends AppBaseActivity {
     protected void onResume() {
         super.onResume();
         actionBar.setTitle(getResources().getString(R.string.car_results));
+
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recycler_search_cars.setLayoutManager(layoutManager);

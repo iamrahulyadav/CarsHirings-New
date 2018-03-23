@@ -140,8 +140,8 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
         double pricea = Double.parseDouble(model.getPrice());
 //        calculate point
         pointpercent = Double.parseDouble(SearchCarFragment.pointper);
-        calPrice = (pricea*pointpercent)/100;
-        calPoint = (int) (calPrice/0.05);
+        calPrice = (priceNew*pointpercent)/100;
+        calPoint = (int) (calPrice/0.02);
 
         holder.txtPoint.setText(context.getResources().getString(R.string.points_collected) + String.valueOf(calPoint));
         holder.bindListener(model,listener);
@@ -179,7 +179,6 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
             bar1= (ProgressBar) itemView.findViewById(R.id.progressbar);
             tvCarModelName= (TextView) itemView.findViewById(R.id.tvCarModelName);
             tvCarPricing= (TextView) itemView.findViewById(R.id.tvCarPricing);
-
 
             tvBagNo = itemView.findViewById(R.id.tvBagSp);
             txtSupplierNmae = itemView.findViewById(R.id.txtSupplierName);

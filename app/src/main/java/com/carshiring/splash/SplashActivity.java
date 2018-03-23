@@ -10,9 +10,13 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carshiring.R;
@@ -39,19 +43,29 @@ public class SplashActivity extends AppBaseActivity {
     public String accessToken,languageselected;
     TinyDB sharedpref;
     Spinner spinner_language;
+    TextView txten, txtAr;
     View v;
+    LinearLayout layout;
+    TextView txtChoose;
     ArrayList<String> langlistname,langlistcode,langlistId  ;
     String[] lan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
 
         sharedpref=new TinyDB(getApplicationContext());
+        layout = findViewById(R.id.language_layout);
+        txtChoose = findViewById(R.id.textView);
          String language_code = sharedpref.getString("language_code") ;
         boolean isSkipLogin = sharedpref.getBoolean("isSkipLogin");
         spinner_language = (Spinner) findViewById(R.id.spinner_language);
+        txten = findViewById(R.id.splashtxtEn);
+        txtAr = findViewById(R.id.splashtxtAr);
 
         if(language_code!=null && !language_code.isEmpty()) {
 //            updateResources(this, language_code);
@@ -59,14 +73,14 @@ public class SplashActivity extends AppBaseActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        spinner_language.setVisibility(View.GONE);
+                        layout.setVisibility(View.GONE);
                         startActivity(new Intent(SplashActivity.this, MainActivity.class));
                         finish();
                     }
                 },2000);
 
             } else if (sharedpref.contains("login_data")){
-                spinner_language.setVisibility(View.GONE);
+                layout.setVisibility(View.GONE);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -79,6 +93,9 @@ public class SplashActivity extends AppBaseActivity {
                 startActivity(new Intent(SplashActivity.this, LoginActivity.class));finish();
             }
             return ;
+        } else {
+            layout.setVisibility(View.VISIBLE);
+            txtChoose.setVisibility(View.VISIBLE);
         }
 
         v=findViewById(android.R.id.content);
@@ -134,12 +151,14 @@ public class SplashActivity extends AppBaseActivity {
                     if(response.body().status) {
                         List<LanguageModel> language_list = response.body().response.language_list;
                         if (language_list != null) {
-                            langlistname.add("Select Language");
+                           /* langlistname.add("Select Language");
                             langlistcode.add("");
 
-                            langlistId.add("");
+                            langlistId.add("");*/
                             for (int i = 0; i < language_list.size(); i++) {
                                 LanguageModel languages = language_list.get(i);
+                                txten.setText(language_list.get(0).language_code);
+                                txtAr.setText(language_list.get(1).language_code);
                                 String languageId = languages.language_id;
                                 String languageCode = languages.language_code;
                                 String languageName = languages.language_name;
@@ -199,6 +218,26 @@ public class SplashActivity extends AppBaseActivity {
     }
 
     private void handlespinner() {
+
+        txtAr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String language_code  = txtAr.getText().toString().trim();
+                sharedpref.putString("language_code",language_code);
+                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                finish();
+            }
+        });
+
+        txten.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String language_code  = txten.getText().toString().trim();
+                sharedpref.putString("language_code",language_code);
+                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                finish();
+            }
+        });
 
         final ArrayAdapter<String> adapt=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinner_item,lan);
         adapt.setDropDownViewResource(R.layout.spinner_item);

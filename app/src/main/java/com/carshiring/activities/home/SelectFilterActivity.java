@@ -310,7 +310,6 @@ public class SelectFilterActivity extends AppBaseActivity implements View.OnClic
                else
                {
                    listModel.setSupplier("");
-
                }
 
                if (SelectedFeatures.size()>0)

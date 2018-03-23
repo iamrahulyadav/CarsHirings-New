@@ -21,8 +21,7 @@ public class ThankYou extends AppCompatActivity implements View.OnClickListener 
         bt_viewquotes= (Button) findViewById(R.id.bt_viewquotes);
         bt_viewquotes.setOnClickListener(this);
         ActionBar actionBar=getSupportActionBar();
-        if(actionBar!=null)
-        {
+        if(actionBar!=null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.back);
             actionBar.setTitle("Thank You");

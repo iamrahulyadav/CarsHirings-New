@@ -28,6 +28,7 @@
     <string name="enter_email">Enter your email</string>
     <string name="enter_password">Enter your Password</string>
     <string name="confirm_password">Confirm Password</string>
+    <string name="sign_upbnt">Don\'t have an account? Sign up now </string>
     <string name="sign_up">Sign Up</string>
     <string name="skip">Skip</string>
     <string name="filter">Filter</string>
@@ -354,11 +355,13 @@
     <string name="txtPayTotal">Total Amount to be pay</string>
     <string name="txtPayNow">Pay</string>
     <string name="txtAvailable">Available balance is</string>
-    <string name="txtPayOnline">Pay online</string>
+    <string name="txtPayOnline">Pay with payfort</string>
     <string name="txtUsepoint">Use Points</string>
     <string name="txtUseWallet">Use wallet</string>
     <string name="paymentMethod">Payment Methods</string>
     <string name="paymentWith">Pay with credit cards </string>
+    <string name="paymentSADAD">Pay with SADAD</string>
+    <string name="txtPay">Tap \'Book Now\' to complete your booking and expect carshirng</string>
     <!--activity user dash-->
     <string name="drvlncno">Driving LIC-id</string>
     <string name="txtwallet">Wallet Amount</string>
@@ -380,4 +383,6 @@
     <string name="booking_point_type">Booking Point Type</string>
     <string name="point_hist">My Point History</string>
 
+
+    <string name="txtTotalPay">Payable Today</string>
 </resources>
