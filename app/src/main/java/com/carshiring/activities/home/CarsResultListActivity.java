@@ -1,6 +1,7 @@
 package com.carshiring.activities.home;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.carshiring.R;
+import com.carshiring.activities.mainsetup.SignUpActivity;
 import com.carshiring.adapters.CarListCategory;
 import com.carshiring.adapters.CarResultsListAdapter;
 import com.carshiring.fragments.SearchCarFragment;
@@ -36,11 +39,14 @@ import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
@@ -164,6 +170,7 @@ public class CarsResultListActivity extends AppBaseActivity {
     public void cat_All(View v){
         listdispaly(listCarResult);
     }
+
     double pointpercent, calPoint,calPrice;
 
     public void listdispaly(List<SearchData> listCarResult ) {
@@ -235,10 +242,12 @@ public class CarsResultListActivity extends AppBaseActivity {
         recycler_search_cars.addItemDecoration(itemDecoration);
         if(isApplyFiltered)
         {
-            if(filteredtList.size() == 0) {
+            if (filteredtList.size()>0){
+                listdispaly(filteredtList);
+            } else {
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_filters_applied), Toast.LENGTH_SHORT).show();
-                listdispaly(listCarResult);
-            }else listdispaly(filteredtList);
+                listdispaly(filteredtList);
+            }
         }
         else
         {
@@ -406,10 +415,13 @@ public class CarsResultListActivity extends AppBaseActivity {
         Intent intent = new Intent(CarsResultListActivity.this,SelectFilterActivity.class);
         startActivityForResult(intent,201);
     }
+    TextView etdob;
 
     private void setupoverlay(String set) {
 
-        final EditText edtFname, edtLname, edtemail,edtPhone,edtZip, edtLicense,edtLicenseOrign,edtCity, edtAddress,etdob;
+        final EditText edtFname, edtLname, edtemail,edtPhone,edtZip, edtLicense,edtLicenseOrign,edtCity,
+                edtAddress;
+
         Button btupdate, btnCancel;
 //        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         if (set.equals("login")){
@@ -418,6 +430,12 @@ public class CarsResultListActivity extends AppBaseActivity {
             final EditText edtPass= dialog.findViewById(R.id.et_password);
             final Button login= dialog.findViewById(R.id.bt_login);
             Button signup =(Button)dialog.findViewById(R.id.bt_signup);
+            signup.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(CarsResultListActivity.this, SignUpActivity.class));
+                }
+            });
             login.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -452,6 +470,15 @@ public class CarsResultListActivity extends AppBaseActivity {
             btnCancel = dialog.findViewById(R.id.bt_cancel);
             edtemail.setText(userDetails.getUser_email());
             edtemail.setEnabled(false);
+
+            etdob.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new DatePickerDialog(CarsResultListActivity.this, date, mCalendar
+                            .get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
+                            mCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                }
+            });
 //            set onclick on update
 
             btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -466,7 +493,7 @@ public class CarsResultListActivity extends AppBaseActivity {
                 public void onClick(View view) {
                     fname = edtFname.getText().toString().trim();
                     lname = edtLname.getText().toString().trim();
-                    dob=etdob.getText().toString().trim();
+                    dob= etdob.getText().toString().trim();
                     email = edtemail.getText().toString().trim();
                     phone = edtPhone.getText().toString().trim();
                     zip = edtZip.getText().toString().trim();
@@ -522,6 +549,30 @@ public class CarsResultListActivity extends AppBaseActivity {
         dialog.setCanceledOnTouchOutside(true);
         dialog.setCancelable(true);
         dialog.show();
+    }
+    Calendar mCalendar = Calendar.getInstance();
+    int year, monthOfYear, dayOfMonth;
+
+    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            // TODO Auto-generated method stub
+            mCalendar.set(Calendar.YEAR, year);
+            mCalendar.set(Calendar.MONTH, monthOfYear);
+            mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabel();
+        }
+
+    };
+
+    private void updateLabel() {
+
+        String myFormat = "MM/dd/yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+        dob = sdf.format(mCalendar.getTime());
+        etdob.setText(dob);
     }
 
     public static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
@@ -613,9 +664,6 @@ public class CarsResultListActivity extends AppBaseActivity {
                                 catBeanList.addAll(set1);
                                 Log.d("TAG", "onResponse: " + catBeanList.size());   // 16
 */
-
-
-
                                 adapter.notifyDataSetChanged();
                             }
                         });

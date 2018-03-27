@@ -28,7 +28,8 @@ public class FilterValRecyclerAdapter extends RecyclerView.Adapter<FilterValRecy
          void itemclick(View v, int i);
     }
 
-    public FilterValRecyclerAdapter(Context context, int resource, ArrayList<FilterDefaultMultipleListModel> filterModels) {
+    public FilterValRecyclerAdapter(Context context, int resource,
+                                    ArrayList<FilterDefaultMultipleListModel> filterModels) {
         this.context = context;
         this.resource = resource;
         this.filterModels = filterModels;
@@ -55,10 +56,8 @@ public class FilterValRecyclerAdapter extends RecyclerView.Adapter<FilterValRecy
     {
         this.clickItem=clickItem;
     }
-    public void setitemselected(int position)
-    {
-        if(position!=-1)
-        {
+    public void setitemselected(int position) {
+        if(position!=-1) {
             filterModels.get(position).setChecked(!filterModels.get(position).isChecked());
             notifyDataSetChanged();
         }

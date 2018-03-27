@@ -12,10 +12,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carshiring.R;
+import com.carshiring.models.UserDetails;
 import com.carshiring.utilities.AppBaseActivity;
 import com.carshiring.webservices.ApiResponse;
 import com.carshiring.webservices.RetroFitApis;
 import com.carshiring.webservices.RetrofitApiBuilder;
+import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
 
 import retrofit2.Call;
@@ -28,6 +30,8 @@ public class ChangePasswordActivity extends AppBaseActivity {
     private TinyDB sherprf;
     private String token;
     private String userId;
+    UserDetails userDetails =new UserDetails();
+    private Gson gson = new Gson();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,7 +39,9 @@ public class ChangePasswordActivity extends AppBaseActivity {
         setContentView(R.layout.activity_change_password);
 
         sherprf = new TinyDB(getApplicationContext());
-        userId = sherprf.getString("userid");
+        String login = sherprf.getString("login_data");
+        userDetails = gson.fromJson(login,UserDetails.class);
+        userId = userDetails.getUser_id();
         //Handling Layout EditText
         layoutCurrentpass= (TextInputLayout) findViewById(R.id.lay_current_pass);
         layoutNewpass= (TextInputLayout) findViewById(R.id.lay_new_pass);
@@ -70,14 +76,14 @@ public class ChangePasswordActivity extends AppBaseActivity {
                 if(!currentPass.isEmpty() && !newPass.isEmpty() && !newConfirmPass.isEmpty() && newPass.equals(newConfirmPass))
                 {
                     changePassword(currentPass,newPass);
-                    Snackbar.make(v, getResources().getString(R.string.saved_successfully),
+                 /*   Snackbar.make(v, getResources().getString(R.string.saved_successfully),
                             Snackbar.LENGTH_LONG).setAction("Finish",
                             new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     finish();
                                 }
-                            }).show();
+                            }).show();*/
                 }
                 else {
                     //layoutCurrentpass.setError("Please Check");
@@ -98,7 +104,7 @@ public class ChangePasswordActivity extends AppBaseActivity {
         responseCall.enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                Toast.makeText(ChangePasswordActivity.this, response.body().message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChangePasswordActivity.this, response.body().msg, Toast.LENGTH_SHORT).show();
                 finish();
             }
 

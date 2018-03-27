@@ -57,7 +57,7 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
 
         if (bookinglist.get(position).getBooking_status().equals("0")){
             holder.txtStatus.setText(context.getResources().getString(R.string.failed));
-        } else if (bookinglist.get(position).getBooking_status().equals("ab")){
+        } else if (bookinglist.get(position).getBooking_status().equals("1")){
             holder.txtStatus.setText(context.getResources().getString(R.string.completed));
         } else if (bookinglist.get(position).getBooking_status().equals("2")){
             holder.txtStatus.setText(context.getResources().getString(R.string.canceled));

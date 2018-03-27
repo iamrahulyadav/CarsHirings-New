@@ -32,7 +32,14 @@
             android:layout_marginLeft="7dp"
             android:textColor="@color/redStrong"
             />
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="15dp"
+            android:id="@+id/check1"/>
         <Spinner
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

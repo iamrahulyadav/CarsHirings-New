@@ -45,6 +45,60 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="1dp"
                     android:background="@color/Light_grey"/>
+                <HorizontalScrollView
+                    android:background="@drawable/fill_border_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:id="@+id/spec1Container"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        >
+                        <TextView
+                            android:id="@+id/tvBagSp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="10sp"
+                            android:padding="5dp"
+                            android:text="Bag"
+                            android:drawableTop="@drawable/ic_bag"
+                            android:drawablePadding="5dp"/>
+
+                        <TextView
+                            android:padding="5dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Door"
+                            android:id="@+id/tvDoor"
+                            android:textSize="10sp"
+                            android:drawableTop="@drawable/ic_car_door"
+                            android:drawablePadding="5dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/txtac"
+                            android:textSize="10sp"
+                            android:padding="5dp"
+                            android:visibility="gone"
+                            android:drawablePadding="5dp"
+                            android:drawableTop="@drawable/ic_ac"
+                            android:text="Air Condition"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/txttrans"
+                            android:textSize="10sp"
+                            android:padding="5dp"
+                            android:drawablePadding="5dp"
+                            android:drawableTop="@drawable/manual"
+                            android:text="Drop"/>
+
+
+                    </LinearLayout>
+
+                </HorizontalScrollView>
 
                 <FrameLayout
                     android:layout_width="match_parent"

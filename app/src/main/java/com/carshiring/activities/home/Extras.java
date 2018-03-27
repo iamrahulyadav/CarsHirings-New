@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -76,6 +77,7 @@ public class Extras extends AppBaseActivity {
             public void onClick(View view) {
                 extraData= extrasAdapter.getExtra();
                 String extra = gson.toJson(extraData);
+                Log.d("TAG", "onClick: extradata"+extra);
                 tinyDB.putString("extra_added", extra);
                 Utility.message(getApplication(), getResources().getString(R.string.extra_added));
                 finish();

@@ -88,6 +88,7 @@ public class MyBookingActivity extends AppBaseActivity {
 
     private List<BookingHistory> bookingHistory = new ArrayList<>();
 
+/*
     public void getBook() {
         if (bookingHistory != null) {
             bookingHistory.clear();
@@ -171,6 +172,7 @@ public class MyBookingActivity extends AppBaseActivity {
             }
         });
     }
+*/
 
     private void setMyTabs(){
 

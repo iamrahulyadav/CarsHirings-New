@@ -77,7 +77,6 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_my_booking_previous,container,false);
 
-        tinyDB = new TinyDB(getContext());
         bookingData = new ArrayList<>();
         tinyDB = new TinyDB(getContext());
         String  login = tinyDB.getString("login_data");
@@ -95,22 +94,25 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
                 getActivity().finish();
             }
         });
-        bookingData.addAll(MyBookingActivity.bookingHistoryList2);
 
         recyclerView= (RecyclerView) view.findViewById(R.id.rec_prev_booki_list);
 
         RecyclerView.LayoutManager mlayoutManager=new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mlayoutManager);
-        setMyAdapter(bookingData);
 
         return view;
     }
 
     private void setMyAdapter(List<BookingHistory> bookingHistory){
         bookingAdapter = new MyBookingAdapter(bookingHistory, getContext(),"p");
-
-        recyclerView.setVisibility(View.VISIBLE);
-        recyclerView.setAdapter(bookingAdapter);
+        if (bookingHistory.size()>0){
+            recyclerView.setVisibility(View.VISIBLE);
+            linearLayout.setVisibility(View.GONE);
+            recyclerView.setAdapter(bookingAdapter);
+        } else {
+            recyclerView.setVisibility(View.GONE);
+            linearLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     Gson gson = new Gson() ;
@@ -167,11 +169,11 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
                         }
                         if (bookingData.size()>0){
                             linearLayout.setVisibility(View.GONE);
-                            swipeRefreshLayout.setVisibility(View.VISIBLE);
+                            setMyAdapter(bookingData);
 
                         } else {
+
                             linearLayout.setVisibility(View.VISIBLE);
-                            swipeRefreshLayout.setVisibility(View.GONE);
                         }
                         bookingAdapter.notifyDataSetChanged();
                     }
@@ -191,10 +193,10 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
         });
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
+        setMyAdapter(bookingData);
         getBook();
     }
 

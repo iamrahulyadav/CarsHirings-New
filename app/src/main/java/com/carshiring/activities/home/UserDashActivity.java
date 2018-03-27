@@ -323,7 +323,12 @@ public class UserDashActivity extends AppBaseActivity {
                                totalCreditPoint+= creditPoint;
                            }
                        }
-                       totalPoint = totalCreditPoint-totalDebitPoint;
+                       if (totalCreditPoint>totalDebitPoint){
+                           totalPoint = totalCreditPoint-totalDebitPoint;
+                       }
+                      /* else {
+                           totalPoint = totalDebitPoint-totalCreditPoint;
+                       }*/
                        if (totalPoint>0){
                            txtPointValue.setText(String.valueOf(totalPoint));
                        } else {

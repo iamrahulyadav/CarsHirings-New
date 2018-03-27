@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity
     UserDetails userDetails = new UserDetails();
     Gson gson = new Gson();
 //    ////
-
 //chnage by vaibhav
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +109,15 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        Menu menu =navigationView.getMenu();
+
+        target = menu.findItem(R.id.action_logout);
+        if(tinyDB.contains("login_data"))
+        {
+            target.setVisible(true);
+        } else {
+            target.setVisible(false);
+        }
 
 //        updateResources(this,language_code);
         Intent it = getIntent();
@@ -224,13 +232,16 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    MenuItem target;
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         qu = "";
+
         int id = item.getItemId();
+
         setupSubView(id);
         return super.onOptionsItemSelected(item);
     }
@@ -242,6 +253,7 @@ public class MainActivity extends AppCompatActivity
         qu = "";
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
         switch (item.getItemId()){
 
             case R.id.action_about_us:
@@ -251,11 +263,11 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_contact_us:
                 startActivity(new Intent(MainActivity.this, ContactUsActivity.class));
                 break;
-         /*   case R.id.action_logout:
+            case R.id.action_logout:
                 tinyDB.remove("login_data");
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 break;
-         */   case R.id.action_language:
+            case R.id.action_language:
                 startActivity(new Intent(MainActivity.this, Language.class));
 //                Toast.makeText(MainActivity.this, "Currency Change", Toast.LENGTH_SHORT).show();
                 break;

@@ -120,6 +120,9 @@ public class PayActivity extends AppBaseActivity {
         protection_val = BookCarActivity.protection_val;
         extraData = BookCarActivity.extraData;
 
+
+
+
         price = CarDetailActivity.carPrice;
         if (price!=null){
             totalPrice = Double.parseDouble(price);

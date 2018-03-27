@@ -37,7 +37,6 @@ public class SelectFilterActivity extends AppBaseActivity implements View.OnClic
     private ArrayList<String> features = new ArrayList<>();
     private ArrayList<String> packages = new ArrayList<>();
     private ArrayList<String> insurance = new ArrayList<>();
-
     private ArrayList<FilterDefaultMultipleListModel> supplierMultipleListModels = new ArrayList<>();
     private ArrayList<FilterDefaultMultipleListModel> featuresMultipleListModels = new ArrayList<>();
     private ArrayList<FilterDefaultMultipleListModel> packageMultipleListModels = new ArrayList<>();
@@ -47,7 +46,7 @@ public class SelectFilterActivity extends AppBaseActivity implements View.OnClic
     private ArrayList<String> SelectedFeatures = new ArrayList<String>();
     private ArrayList<String> SelectedPackages = new ArrayList<String>();
     private ArrayList<String> SelectedInsurances = new ArrayList<String>();
-
+    String sup , feat;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +57,6 @@ public class SelectFilterActivity extends AppBaseActivity implements View.OnClic
         rec_supplier=findViewById(R.id.rec_supplier);
         recy_package=findViewById(R.id.recy_package);
         recy_carfeatures=findViewById(R.id.recy_carfeatures);
-
         ArrayList<String> getlist= (ArrayList<String>) CarsResultListActivity.supplierList;
         recy_insurance=findViewById(R.id.recy_insurance);
         supplier .addAll(getlist);
@@ -143,7 +141,6 @@ public class SelectFilterActivity extends AppBaseActivity implements View.OnClic
         });
         setuptoolbar();
 
-
         //Buttons
         reset= findViewById(R.id.reset);
         applyfilter=  findViewById(R.id.apply_filter);
@@ -157,7 +154,7 @@ public class SelectFilterActivity extends AppBaseActivity implements View.OnClic
     private void setupcategorygroup() {
         if(Utility.isNetworkConnected(getApplicationContext()))
         {
-            categories.add("ab");
+            categories.add("1");
             categories.add("33");
             String cat=categories.toString();
             RetroFitApis retroFitApis=RetrofitApiBuilder.getCargHiresapis();
@@ -170,7 +167,7 @@ public class SelectFilterActivity extends AppBaseActivity implements View.OnClic
     }
 
     private void selectinsurance(int i) {
-        filterValAdapterinsuran.setitemselected(i);
+        filterValAdapterinsuran. setitemselected(i);
     }
 
     private void selectpack(int i) {

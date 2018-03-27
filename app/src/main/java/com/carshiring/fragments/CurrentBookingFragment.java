@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,7 +51,7 @@ import static com.carshiring.splash.SplashActivity.TAG;
  * Created by rakhi on 13-03-2018.
  */
 
-public class CurrentBookingFragment extends Fragment implements View.OnClickListener {
+public class CurrentBookingFragment extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     public List<BookingHistory> currentBookingData;
     private TinyDB tinyDB;
@@ -58,9 +59,10 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
     private LinearLayout linearLayout;
     private RecyclerView recyclerView;
     private Button btn_search;
-    private List<BookingHistory> list = new ArrayList<>();
     UserDetails userDetails = new UserDetails();
-
+    SwipeRefreshLayout swipeRefreshLayout;
+    private List<BookingHistory> bookingData;
+    MyBookingAdapter bookingAdapter;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,68 +75,68 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_my_booking_current,container,false);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        dialog=new Dialog(getContext());
+        View view = inflater.inflate(R.layout.fragment_my_booking_current,container,false);
+         dialog=new Dialog(getContext());
         tinyDB = new TinyDB(getContext());
         currentBookingData = new ArrayList<>();
         String  login = tinyDB.getString("login_data");
         userDetails = gson.fromJson(login, UserDetails.class);
         userId =userDetails.getUser_id();
-
+        bookingData = new ArrayList<>();
         token = tinyDB.getString("access_token");
         language = tinyDB.getString("language_code");
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.previous_booking_refresh_layout);
+        linearLayout = (LinearLayout) view.findViewById(R.id.rec_prev_booki_no_data);
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.redStrong));
+        btn_search= (Button) view.findViewById(R.id.bt_previousbooking);
+        swipeRefreshLayout.setOnRefreshListener(this);
+        btn_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
 
-      init();
+        recyclerView= (RecyclerView) view.findViewById(R.id.rec_prev_booki_list);
 
-    }
-
-    private void init(){
-        linearLayout = (LinearLayout) getView().findViewById(R.id.fragment_my_booking_current_no_data_view);
-
-        btn_search= (Button) getView().findViewById(R.id.bt_current_search);
-        btn_search.setOnClickListener(this);
-
-        recyclerView= (RecyclerView) getView().findViewById(R.id.fragment_my_booking_current_recycler);
         RecyclerView.LayoutManager mlayoutManager=new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mlayoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
 
-        if (list.size()>0){
-            linearLayout.setVisibility(View.GONE);
-            setMyAdapter(list);
-
-        } else {
-            linearLayout.setVisibility(View.VISIBLE);
-        }
-        setMyAdapter(list);
-
+        return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        setMyAdapter(bookingData);
         getBook();
+
     }
 
     private Gson gson = new Gson();
-    MyBookingAdapter adapter;
-    private void setMyAdapter(List<BookingHistory> bookingHistory){
-        adapter = new MyBookingAdapter(bookingHistory, getContext(),"c");
-        recyclerView.setVisibility(View.VISIBLE);
-        recyclerView.setAdapter(adapter);
-        adapter.submit(new MyBookingAdapter.ClickItem() {
-            @Override
-            public void click(View view, int Position) {
-                bookingid=list.get(Position).getBooking_id();
-                setCancelationPop(bookingid);
-            }
-        });
+
+    private void setMyAdapter(final List<BookingHistory> bookingHistory){
+        bookingAdapter = new MyBookingAdapter(bookingHistory, getContext(),"c");
+
+        if (bookingHistory.size()>0){
+            recyclerView.setVisibility(View.VISIBLE);
+            linearLayout.setVisibility(View.GONE);
+            recyclerView.setAdapter(bookingAdapter);
+
+            bookingAdapter.submit(new MyBookingAdapter.ClickItem() {
+                @Override
+                public void click(View view, int Position) {
+                    bookingid=bookingHistory.get(Position).getBooking_id();
+                    setCancelationPop(bookingid);
+                }
+            });
+        } else {
+            recyclerView.setVisibility(View.GONE);
+            linearLayout.setVisibility(View.VISIBLE);
+        }
+
     }
+
 
     Dialog dialog;
 
@@ -183,8 +185,8 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
     }
 
     private void getBook() {
-        if (list != null) {
-            list.clear();
+        if (bookingData != null) {
+            bookingData.clear();
         }
 
         Utility.showloadingPopup(getActivity());
@@ -202,38 +204,45 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
                         String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
                         List<BookingHistory>booking_detail =new ArrayList<>();
                         booking_detail = response.body().response.booking;
+
+
                         for (BookingHistory bookingData1 : booking_detail){
-                            if (bookingData1.getBooking_status().equals("ab")){
-                                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                Date date1 = null;
-                                try {
-                                    date1 = format.parse(timeStamp);
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                                Date date2 = null;
-                                try {
-                                    date2 = format.parse(bookingData1.getBooking_from_date());
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                                if (date1.compareTo(date2) <0 ) {
-                                    list.add(bookingData1);
-                                    Collections.sort(list, new Comparator<BookingHistory>() {
-                                        @Override
-                                        public int compare(BookingHistory o1, BookingHistory o2) {
-                                            if (o1.getBooking_from_date() == null || o2.getBooking_from_date() == null)
-                                                return 0;
-                                            return o2.getBooking_from_date().compareTo(o1.getBooking_from_date());
-                                        }
-                                    });
-                                }
+                            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            Date date1 = null;
+                            try {
+                                date1 = format.parse(timeStamp);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            Date date2 = null;
+                            try {
+                                date2 = format.parse(bookingData1.getBooking_from_date());
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            if (date2.compareTo(date1) >0 && bookingData1.getBooking_status().equals("1")) {
+
+                                bookingData.add(bookingData1);
+                                Collections.sort(bookingData, new Comparator<BookingHistory>() {
+                                    @Override
+                                    public int compare(BookingHistory o1, BookingHistory o2) {
+                                        if (o1.getBooking_from_date() == null || o2.getBooking_from_date() == null)
+                                            return 0;
+                                        return o2.getBooking_from_date().compareTo(o1.getBooking_from_date());
+                                    }
+                                });
                             }
                         }
-                        Log.d("TAG", "onResponse:book "+gson.toJson(list));
 
-//                        Collections.sort(list, Collections.reverseOrder());
-                        adapter.notifyDataSetChanged();
+                        Log.d("TAG", "onResponse:book current"+gson.toJson(bookingData));
+                        if (bookingData.size()>0){
+                            linearLayout.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
+                            setMyAdapter(bookingData);
+                        } else {
+                            linearLayout.setVisibility(View.VISIBLE);
+                        }
+                        bookingAdapter.notifyDataSetChanged();
                     }
                     else {
                         Utility.message(getContext(), response.body().message);
@@ -253,11 +262,7 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        if(v.getId()==R.id.bt_current_search){
-            getActivity().finish();
-        }else{
 
-        }
     }
 
     private void cancelBooking(String type,String bookingid){
@@ -292,4 +297,12 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
 
     }
 
+    @Override
+    public void onRefresh() {
+        swipeRefreshLayout.setRefreshing(false);
+        getBook();
+        setMyAdapter(bookingData);
+
+        swipeRefreshLayout.setRefreshing(false);
+    }
 }
