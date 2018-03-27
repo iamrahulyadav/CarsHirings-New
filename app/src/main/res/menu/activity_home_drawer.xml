@@ -7,7 +7,7 @@
             android:icon="@drawable/ic_sb_search_car"
             android:title="@string/action_search_car" />
         <item
-            android:id="@+id/action_quotes"
+            android:id="@+id/action_booking"
             android:icon="@drawable/ic_sb_bookings"
             android:title="@string/action_quotes" />
         <item
@@ -29,7 +29,7 @@
             android:title="@string/action_language" />
         <item
             android:id="@+id/action_logout"
-            android:icon="@drawable/ic_language"
+            android:icon="@drawable/ic_logout"
             android:title="@string/logout" />
         <item
             android:id="@+id/action_settings"

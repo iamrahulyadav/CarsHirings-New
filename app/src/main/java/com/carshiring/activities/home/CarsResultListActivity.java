@@ -1,6 +1,7 @@
 package com.carshiring.activities.home;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,11 +12,16 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.carshiring.R;
+import com.carshiring.activities.mainsetup.SignUpActivity;
+import com.carshiring.adapters.CarListCategory;
 import com.carshiring.adapters.CarResultsListAdapter;
 import com.carshiring.fragments.SearchCarFragment;
 import com.carshiring.models.FilterDefaultMultipleListModel;
@@ -33,12 +39,16 @@ import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
@@ -49,32 +59,36 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.ContentValues.TAG;
+
 public class CarsResultListActivity extends AppBaseActivity {
     Gson gson = new Gson();
-
     public String filter ;
     Category category = new Category();
     public static List<Category.ResponseBean.CatBean>catBeanList = new ArrayList<>();
     List<SearchData> listCarResult =  new ArrayList<>();
     List<SearchData.FeatureBean> featuresAllList =  new ArrayList<>();
     public static List<String>supplierList=new ArrayList<>();
-    List<String>featuresList=new ArrayList<>();
     List<Integer>cateList=new ArrayList<>();
     CarResultsListAdapter listAdapter;
     UserDetails userDetails = new UserDetails();
     TinyDB tinyDB;
+    public static String id_context, refertype, type;
     AppGlobal appGlobal=AppGlobal.getInstancess();
     Dialog dialog;
     TextView tvFromDate,tvPickDate,tvTodate,txtPlaceDrop;
     String fname,lname,email,phone,zip,license,licenseorigin,city,address,emaillogin,pass,set ="",userid="",dob;
     RecyclerView recycler_search_cars;
     CatRequest cateRequest = new CatRequest();
+    CarListCategory adapter;
+    ImageView cat_image_all;
+    private RecyclerView recyclerView_carlist_category;
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cars_result_list);
+        setContentView(R.layout.activity_cars_result_list2);
 
         filter =  getResources().getString(R.string.recommended);
         actionBar = getSupportActionBar() ;
@@ -93,15 +107,22 @@ public class CarsResultListActivity extends AppBaseActivity {
         tvTodate= (TextView) findViewById(R.id.tvToDT);
         txtPlaceDrop = findViewById(R.id.txtPlaceName_drop);
 
-
         tvFromDate.setText(SearchCarFragment.pick_date+"\n"+ SearchCarFragment.pickTime);
         tvPickDate.setText(SearchCarFragment.pickName);
         tvTodate.setText(SearchCarFragment.drop_date+"\n"+SearchCarFragment.dropTime);
         txtPlaceDrop.setText(SearchCarFragment.dropName);
 
-//        get supplier
+        cat_image_all = (ImageView) findViewById(R.id.car_cat_image_all);
+        Glide.with(getApplicationContext())
+                .load("https://carshiring.com/site/images/car.png")
+                .into(cat_image_all);
 
+//        get supplier
+        if (supplierList!=null){
+            supplierList.clear();
+        }
         for (SearchData searchData : listCarResult){
+
             supplierList.add(searchData.getSupplier());
             cateList.add(Integer.parseInt(searchData.getCategory()));
         }
@@ -112,28 +133,78 @@ public class CarsResultListActivity extends AppBaseActivity {
         supplierList.clear();
         supplierList.addAll(hs);
         recycler_search_cars = (RecyclerView) findViewById(R.id.recycler_search_cars);
+        recyclerView_carlist_category = (RecyclerView) findViewById(R.id.recycler_carlist_by_category);
+        LinearLayoutManager horizontalLayoutManagaer
+                = new LinearLayoutManager(CarsResultListActivity.this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerView_carlist_category.setLayoutManager(horizontalLayoutManagaer);
+
+        adapter = new CarListCategory(getApplicationContext(), listCarResult, catBeanList, new CarListCategory.OnItemClickListenerCategory() {
+            @Override
+            public void onItemClickCategory(int position) {
+
+                catgory_clicked(position);
+            }
+        });
+        recyclerView_carlist_category.setAdapter(adapter);
 
     }
 
-    public void listdispaly(List<SearchData> listCarResult )
-    {
+    private void catgory_clicked(int position){
+        List<SearchData> listCarResult1 =  new ArrayList<>();
+        listCarResult1.clear();
+
+
+        Toast.makeText(getApplicationContext(), catBeanList.get(position).getCode() + "", Toast.LENGTH_SHORT).show();
+
+        for(int i=0; i<listCarResult.size(); i++) {
+            if((catBeanList.get(position).getCode()+"").equals(listCarResult.get(i).getCategory())){
+
+                listCarResult1.add(listCarResult.get(i));
+            }
+        }
+        listdispaly(listCarResult1);
+//        listAdapter.notifyDataSetChanged();
+
+    }
+
+    public void cat_All(View v){
+        listdispaly(listCarResult);
+    }
+
+    double pointpercent, calPoint,calPrice;
+
+    public void listdispaly(List<SearchData> listCarResult ) {
+        Log.d("Search Data List", listCarResult.size()+"");
+        CarResultsListAdapter listAdapter;
         listAdapter = new CarResultsListAdapter(this,listCarResult, new CarResultsListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(SearchData carDetail) {
-
                 if (tinyDB.contains("login_data")){
                     String data = tinyDB.getString("login_data");
                     userDetails = gson.fromJson(data,UserDetails.class);
                     userid = userDetails.getUser_id();
-                    if (userDetails.getUser_name()==null || userDetails.getUser_name().length()==0){
+                    if (userDetails.getUser_lname()==null || userDetails.getUser_lname().length()==0){
                         set = "update_profile";
                         setupoverlay(set);
                     } else {
+                        id_context = carDetail.getId_context();
+                        type = carDetail.getType();
+                        refertype = carDetail.getRefer_type();
                         Intent intent = new Intent(CarsResultListActivity.this,CarDetailActivity.class);
-                        intent.putExtra("id_context",carDetail.getId_context());
-                        intent.putExtra("type",carDetail.getType());
+                        intent.putExtra("id_context",id_context);
+                        intent.putExtra("type",type);
+                        double pricea = Double.parseDouble(carDetail.getPrice());
+                        pointpercent = Double.parseDouble(SearchCarFragment.pointper);
+                        double markUp = Double.parseDouble(SearchCarFragment.markup);
+                        double d = pricea;
+                        double priceNew  = d+(d*markUp)/100;
+
+
+                        calPrice = (priceNew*pointpercent)/100;
+                        calPoint = (int) (calPrice/0.02);
                         intent.putExtra("day",carDetail.getTime());
-                        intent.putExtra("refer_type",carDetail.getRefer_type());
+                        intent.putExtra("refer_type",refertype);
+                        intent.putExtra("point_earn",calPoint );
                         startActivity(intent);
                     }
                 } else {
@@ -142,6 +213,8 @@ public class CarsResultListActivity extends AppBaseActivity {
                 }
             }
         });
+        recycler_search_cars.setAdapter(listAdapter);
+
     }
 
     @Override
@@ -161,6 +234,7 @@ public class CarsResultListActivity extends AppBaseActivity {
         super.onResume();
         actionBar.setTitle(getResources().getString(R.string.car_results));
 
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recycler_search_cars.setLayoutManager(layoutManager);
 
@@ -168,17 +242,19 @@ public class CarsResultListActivity extends AppBaseActivity {
         recycler_search_cars.addItemDecoration(itemDecoration);
         if(isApplyFiltered)
         {
-            if(filteredtList.size() == 0) {
-                Toast.makeText(getApplicationContext(), "No Filteres Applied", Toast.LENGTH_SHORT).show();
-                listdispaly(listCarResult);
-            }else listdispaly(filteredtList);
+            if (filteredtList.size()>0){
+                listdispaly(filteredtList);
+            } else {
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_filters_applied), Toast.LENGTH_SHORT).show();
+                listdispaly(filteredtList);
+            }
         }
         else
         {
             listdispaly(listCarResult);
         }
         isApplyFiltered = false ;
-        recycler_search_cars.setAdapter(listAdapter);
+//        recycler_search_cars.setAdapter(listAdapter);
         getCat();
     }
 
@@ -318,7 +394,7 @@ public class CarsResultListActivity extends AppBaseActivity {
 
                         break ;
                   /*  case "Price (Low to High)" :
-                        result = (int)(Double.parseDouble(o1.getCar_list())-Double.parseDouble(o2.carmanagement_price)+1);
+                        result = (int)(Double.parseDouble(o1.getCar_list())-Double.parseDouble(o2.carmanagement_price)+ab);
                         break ;
 
                     case "Price (High to Low)" :
@@ -339,10 +415,13 @@ public class CarsResultListActivity extends AppBaseActivity {
         Intent intent = new Intent(CarsResultListActivity.this,SelectFilterActivity.class);
         startActivityForResult(intent,201);
     }
+    TextView etdob;
 
     private void setupoverlay(String set) {
 
-        final EditText edtFname, edtLname, edtemail,edtPhone,edtZip, edtLicense,edtLicenseOrign,edtCity, edtAddress,etdob;
+        final EditText edtFname, edtLname, edtemail,edtPhone,edtZip, edtLicense,edtLicenseOrign,edtCity,
+                edtAddress;
+
         Button btupdate, btnCancel;
 //        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         if (set.equals("login")){
@@ -351,6 +430,12 @@ public class CarsResultListActivity extends AppBaseActivity {
             final EditText edtPass= dialog.findViewById(R.id.et_password);
             final Button login= dialog.findViewById(R.id.bt_login);
             Button signup =(Button)dialog.findViewById(R.id.bt_signup);
+            signup.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(CarsResultListActivity.this, SignUpActivity.class));
+                }
+            });
             login.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -385,6 +470,15 @@ public class CarsResultListActivity extends AppBaseActivity {
             btnCancel = dialog.findViewById(R.id.bt_cancel);
             edtemail.setText(userDetails.getUser_email());
             edtemail.setEnabled(false);
+
+            etdob.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new DatePickerDialog(CarsResultListActivity.this, date, mCalendar
+                            .get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
+                            mCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                }
+            });
 //            set onclick on update
 
             btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -399,7 +493,7 @@ public class CarsResultListActivity extends AppBaseActivity {
                 public void onClick(View view) {
                     fname = edtFname.getText().toString().trim();
                     lname = edtLname.getText().toString().trim();
-                    dob=etdob.getText().toString().trim();
+                    dob= etdob.getText().toString().trim();
                     email = edtemail.getText().toString().trim();
                     phone = edtPhone.getText().toString().trim();
                     zip = edtZip.getText().toString().trim();
@@ -419,35 +513,35 @@ public class CarsResultListActivity extends AppBaseActivity {
                                                         if (!address.isEmpty()) {
                                                             updateProfile(userid, fname);
                                                         } else {
-                                                            Utility.message(getApplication(), "Please enter address");
+                                                            Utility.message(getApplication(), getResources().getString(R.string.please_enter_address));
                                                         }
                                                     } else {
-                                                        Utility.message(getApplication(), "Please enter city");
+                                                        Utility.message(getApplication(), getResources().getString(R.string.please_enter_city));
                                                     }
                                                 } else {
-                                                    Utility.message(getApplication(), "Please enter licenseorigin");
+                                                    Utility.message(getApplication(), getResources().getString(R.string.please_enter_license_origin));
                                                 }
                                             } else {
-                                                Utility.message(getApplication(), "Please enter license");
+                                                Utility.message(getApplication(), getResources().getString(R.string.please_enter_license));
                                             }
                                         } else {
-                                            Utility.message(getApplication(), "Please enter zipcode");
+                                            Utility.message(getApplication(), getResources().getString(R.string.please_enter_zipcode));
                                         }
                                     } else {
-                                        Utility.message(getApplication(), "Please enter valid phone number");
+                                        Utility.message(getApplication(), getResources().getString(R.string.please_enter_valid_phone_number));
                                     }
                                 } else {
-                                    Utility.message(getApplication(), "Please enter valid email");
+                                    Utility.message(getApplication(), getResources().getString(R.string.please_enter_valid_email));
                                 }
                             }
                             else {
-                                Utility.message(getApplication(),"Please enter Date of Birth");
+                                Utility.message(getApplication(),getResources().getString(R.string.please_enter_dob));
                             }
                         } else {
-                            Utility.message(getApplication(),"Please enter last name");
+                            Utility.message(getApplication(),getResources().getString(R.string.please_enter_last_name));
                         }
                     } else {
-                        Utility.message(getApplication(),"Please enter First name");
+                        Utility.message(getApplication(),getResources().getString(R.string.please_enter_first_name));
                     }
                 }
             });
@@ -456,9 +550,34 @@ public class CarsResultListActivity extends AppBaseActivity {
         dialog.setCancelable(true);
         dialog.show();
     }
+    Calendar mCalendar = Calendar.getInstance();
+    int year, monthOfYear, dayOfMonth;
+
+    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            // TODO Auto-generated method stub
+            mCalendar.set(Calendar.YEAR, year);
+            mCalendar.set(Calendar.MONTH, monthOfYear);
+            mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabel();
+        }
+
+    };
+
+    private void updateLabel() {
+
+        String myFormat = "MM/dd/yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+        dob = sdf.format(mCalendar.getTime());
+        etdob.setText(dob);
+    }
 
     public static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
     public void getCat(){
+        catBeanList.clear();
         Utility.showloadingPopup(this);
         String cat = gson.toJson(cateRequest);
 
@@ -484,7 +603,7 @@ public class CarsResultListActivity extends AppBaseActivity {
                     @Override
                     public void run() {
                         String msg = e.getMessage();
-                        Utility.message(getApplicationContext(), "Connection error ");
+                        Utility.message(getApplicationContext(), getResources().getString(R.string.no_internet_connection));
                         Utility.hidepopup();
                     }
                 });
@@ -497,10 +616,61 @@ public class CarsResultListActivity extends AppBaseActivity {
                     if (request.body()!=null){
                         String msg = response.body().string();
                         category = gson.fromJson(msg,Category.class);
-                        catBeanList.addAll(category.getResponse().getCat());
-                    }
-                    Log.d("TAG", "onResponse: "+catBeanList.size());
 
+                        List<Category.ResponseBean.CatBean>catBeans = new ArrayList<>();
+                        catBeans = category.getResponse().getCat();
+                        final List<Category.ResponseBean.CatBean> finalCatBeans = catBeans;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                catBeanList.addAll(finalCatBeans);
+
+                                /*//List<String> al = new ArrayList<>();
+// add elements to al, including duplicates
+                                Set<Category.ResponseBean.CatBean> hs = new LinkedHashSet<>();
+                                hs.addAll(catBeanList);
+                                catBeanList.clear();
+                                catBeanList.addAll(hs);*/
+                                TreeSet<Category.ResponseBean.CatBean> set = new TreeSet<>(new Comparator<Category.ResponseBean.CatBean>() {
+                                    @Override
+                                    public int compare(Category.ResponseBean.CatBean o1, Category.ResponseBean.CatBean o2) {
+                                        if(o1.getCategory_name().equalsIgnoreCase(o2.getCategory_name())){
+                                            return 0;
+                                        }
+                                        return 1;
+                                    }
+                                });
+                                Log.d("TAG", "onResponse: " + catBeanList.size());   // 116
+                                set.addAll(catBeanList);
+                                catBeanList.clear();
+                                catBeanList.addAll(set);
+                                Log.d("TAG", "onResponse: " + catBeanList.size());   // 16
+
+
+                                //2nd
+/*
+                                TreeSet<Category.ResponseBean.CatBean> set1 = new TreeSet<>(new Comparator<Category.ResponseBean.CatBean>() {
+                                    @Override
+                                    public int compare(Category.ResponseBean.CatBean o1, Category.ResponseBean.CatBean o2) {
+                                        if(o1.getCategory_name().equalsIgnoreCase(o2.getCategory_name())){
+                                            return 0;
+                                        }
+                                        return ab;
+                                    }
+                                });
+                                Log.d("TAG", "onResponse: " + catBeanList.size());    // 16
+                                set1.addAll(catBeanList);
+                                catBeanList.clear();
+                                catBeanList.addAll(set1);
+                                Log.d("TAG", "onResponse: " + catBeanList.size());   // 16
+*/
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
+
+                        Log.d("TAG", "onResponse: "+ msg);
+                    }
+  //                  Log.d("TAG", "onResponse: " + catBeanList.size());
                 }
             }
 
@@ -509,7 +679,7 @@ public class CarsResultListActivity extends AppBaseActivity {
 
     private void login(String user, String pass) {
         if(!Utility.isNetworkConnected(getApplicationContext())){
-            Toast.makeText(CarsResultListActivity.this, "No Network Connection!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CarsResultListActivity.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             return;
         }
         Utility.showloadingPopup(this);
@@ -530,21 +700,21 @@ public class CarsResultListActivity extends AppBaseActivity {
 
                 }
                 else{
-                    Utility.message(getApplicationContext(), response.body().msg);
+                    Utility.message(getApplicationContext(), response.body().message);
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
                 Utility.hidepopup();
-                Utility.message(getApplicationContext(),"Connection Error");
+                Utility.message(getApplicationContext(),getResources().getString(R.string.no_internet_connection));
             }
         });
     }
 
     private void updateProfile(String userid, String fname) {
         if(!Utility.isNetworkConnected(getApplicationContext())){
-            Toast.makeText(CarsResultListActivity.this, "No Network Connection!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CarsResultListActivity.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             return;
         }
         Utility.showloadingPopup(this);
@@ -566,14 +736,14 @@ public class CarsResultListActivity extends AppBaseActivity {
 
                 }
                 else{
-                    Utility.message(getApplicationContext(), response.body().msg);
+                    Utility.message(getApplicationContext(), response.body().message);
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
                 Utility.hidepopup();
-                Utility.message(getApplicationContext(),"Connection Error");
+                Utility.message(getApplicationContext(),getResources().getString(R.string.no_internet_connection));
             }
         });
     }

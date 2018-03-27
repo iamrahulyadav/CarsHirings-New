@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <supports-screens
         android:anyDensity="true"
@@ -52,14 +53,21 @@
         <activity android:name=".activities.home.ExcessProtectionActivity" />
         <activity android:name=".activities.home.FullProtectionActivity" />
         <activity android:name=".activities.home.Extras" />
-        <activity android:name=".activities.home.BookCarActivity" />
+        <activity
+            android:name=".activities.home.BookCarActivity"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".activities.mainsetup.MyAccountActivity" />
         <activity android:name=".activities.home.AboutUsActivity" />
         <activity android:name=".activities.home.ContactUsActivity" />
         <activity android:name=".activities.home.Language" />
         <activity android:name=".activities.home.AccountDetailsActivity" />
         <activity android:name=".activities.home.QuotedDetailsActivity" />
-        <activity android:name=".activities.home.MyBookingActivity"></activity>
+        <activity android:name=".activities.home.MyBookingActivity" />
+        <activity android:name=".activities.home.PayActivity" />
+        <activity android:name=".activities.home.UserDashActivity" />
+        <activity android:name=".activities.home.WalletView" />
+        <activity android:name=".activities.home.ThankYou" />
+        <activity android:name=".activities.home.Test"></activity>
     </application>
 
 </manifest>

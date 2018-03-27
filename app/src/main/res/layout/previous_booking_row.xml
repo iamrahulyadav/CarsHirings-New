@@ -18,30 +18,43 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="5.5"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="10dp">
             <ImageView
-                android:layout_width="25dp"
-                android:layout_height="wrap_content"
+                android:layout_width="80dp"
+                android:layout_height="50dp"
+                android:id="@+id/my_booking_image"
                 android:src="@drawable/ic_my_bookings"
-                android:scaleType="centerInside"
-                />
-
-            <TextView
-
-                android:id="@+id/textView3"
-                android:textSize="15sp"
-                android:layout_width="wrap_content"
+                android:scaleType="fitXY"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="4.5"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:textColor="@color/black"
-                android:text="@string/bookinginvoicenumber" />
+                android:orientation="vertical"
+                android:gravity="start">
+                <TextView
+                    android:id="@+id/textView3"
+                    android:textSize="15sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="@string/bookinginvoicenumber" />
+                <TextView
+                    android:id="@+id/txt_bookingInvoicenumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="13547896222"
+                    android:textStyle="bold"
+                    android:textColor="@color/redStrong"/>
+            </LinearLayout>
+
         </LinearLayout>
-        <TextView
-            android:id="@+id/txt_bookingInvoicenumber"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="13547896222"
-            android:textStyle="bold"
-            android:textColor="@color/redStrong"/>
         <View
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
@@ -115,6 +128,7 @@
                 android:textColor="@color/white"
                 android:layout_weight="0.85"
                 android:padding="5dp"/>
+
             <TextView
                 android:id="@+id/txt_rate"
                 android:layout_width="wrap_content"
@@ -127,6 +141,18 @@
                 android:layout_gravity="end"
                 android:padding="5dp"/>
         </LinearLayout>
+        <TextView
+            android:background="@color/redStrong"
+            android:id="@+id/txt_bookingdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="20/5/2017 at 10:00PM"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_weight="0.85"
+            android:padding="5dp"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -134,13 +160,13 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="35dp"
-                android:paddingLeft="10dp"
-                android:paddingTop="13dp"
-                android:id="@+id/previous_booking_txtPoints"
-                android:textColor="@color/greenish_yellow"
-                android:background="@color/redStrong"
-                android:text="Points Collected: 356" />
+                android:layout_height="45dp"
+                android:padding="13dp"
+                android:gravity="center_horizontal"
+                android:id="@+id/previous_booking_txtcancel"
+                android:textColor="@color/white"
+                android:background="@color/colorYellow"
+                android:text="Cancel your Booking" />
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -149,7 +175,7 @@
                 android:paddingTop="13dp"
                 android:gravity="right"
                 android:id="@+id/previous_booking_txtStatus"
-                android:textColor="@color/greenish_yellow"
+                android:textColor="@color/white"
                 android:background="@color/redStrong"
                 android:text="Success" />
 

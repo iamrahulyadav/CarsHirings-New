@@ -8,6 +8,7 @@
     tools:context=".splash.SplashActivity">
 
     <RelativeLayout
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
@@ -19,6 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/textView"
             android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:layout_marginBottom="15dp"
             android:padding="5dp"
             android:layout_margin="20dp"
@@ -32,11 +34,50 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
+            android:visibility="gone"
             android:text="@string/language"
             android:textSize="18sp"
             android:textStyle="bold" />
 
+        <LinearLayout
+            android:layout_below="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:id="@+id/language_layout"
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_margin="10dp"
+                android:id="@+id/splashtxtAr"
+                android:text="AR"
+                android:textSize="@dimen/extra_large_size"
+
+                android:textColor="@color/black"
+                android:textAllCaps="true"
+                android:padding="10dp"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/circle_splash"/>
+            <TextView
+                android:id="@+id/splashtxtEn"
+                android:text="EN"
+                android:layout_margin="10dp"
+                android:padding="10dp"
+                android:textAllCaps="true"
+                android:gravity="center"
+                android:textSize="@dimen/extra_large_size"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/circle_splash"/>
+
+        </LinearLayout>
+
         <Spinner
+            android:visibility="gone"
             android:id="@+id/spinner_language"
             style="@style/SpinnerTheme"
             android:layout_width="250dp"

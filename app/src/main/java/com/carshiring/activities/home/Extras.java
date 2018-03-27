@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -41,10 +42,11 @@ public class Extras extends AppBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_extras);
+
         tinyDB = new TinyDB(getApplicationContext());
         car_img=findViewById(R.id.img_car);
         carname=findViewById(R.id.txt_carname);
-        carname.setText(modelname+" "+"or Similar"+"\n \n"+currency+" "+carPrice);
+        carname.setText(modelname + " " + getResources().getString(R.string.or_similar)+ "\n \n" + currency+" "+carPrice);
         Glide.with(this).load(carImage).into(car_img);
         extra=findViewById(R.id.recy_extra);
         extrasAdapter=new ExtrasAdapter(Extras.this,extralist);
@@ -60,7 +62,7 @@ public class Extras extends AppBaseActivity {
         if(actionBar!=null)
         {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle("Select Your Extras");
+            actionBar.setTitle(getResources().getString(R.string.select_extras));
             actionBar.setHomeAsUpIndicator(R.drawable.back);
         }
     }
@@ -68,15 +70,16 @@ public class Extras extends AppBaseActivity {
     private void setUpToolbar() {
         Toolbar toolbar= (Toolbar) findViewById(R.id.bottomToolBar);
         TextView textView= (TextView) toolbar.findViewById(R.id.txt_bot);
-        textView.setText("Add These Extras");
+        textView.setText(getResources().getString(R.string.add_extra));
 
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 extraData= extrasAdapter.getExtra();
                 String extra = gson.toJson(extraData);
-                tinyDB.putString("extra_added",extra);
-                Utility.message(getApplication(), "Extras added");
+                Log.d("TAG", "onClick: extradata"+extra);
+                tinyDB.putString("extra_added", extra);
+                Utility.message(getApplication(), getResources().getString(R.string.extra_added));
                 finish();
             }
         });

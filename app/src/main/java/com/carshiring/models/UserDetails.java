@@ -30,7 +30,7 @@ public class UserDetails {
      * user_type : 5
      * user_department_id : 0
      * user_language_id :
-     * user_status : 1
+     * user_status : ab
      * user_createdate :
      * user_license_no :
      */
@@ -38,7 +38,7 @@ public class UserDetails {
     private String user_id;
     private String user_title;
     private String user_name;
-    private Object user_lname;
+    private String user_lname;
     private String user_username;
     private String user_email;
     private String user_countrycode;
@@ -60,6 +60,16 @@ public class UserDetails {
     private String user_status;
     private String user_createdate;
     private String user_license_no;
+
+    private String user_dob;
+
+    public String getUser_dob() {
+        return user_dob;
+    }
+
+    public void setUser_dob(String user_dob) {
+        this.user_dob = user_dob;
+    }
 
     public String getUser_id() {
         return user_id;
@@ -85,11 +95,11 @@ public class UserDetails {
         this.user_name = user_name;
     }
 
-    public Object getUser_lname() {
+    public String getUser_lname() {
         return user_lname;
     }
 
-    public void setUser_lname(Object user_lname) {
+    public void setUser_lname(String user_lname) {
         this.user_lname = user_lname;
     }
 

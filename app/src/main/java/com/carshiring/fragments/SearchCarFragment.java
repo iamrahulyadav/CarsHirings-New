@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -31,6 +30,7 @@ import com.carshiring.activities.home.CarsResultListActivity;
 import com.carshiring.activities.home.LocationSelectionActivity;
 import com.carshiring.activities.home.MainActivity;
 import com.carshiring.activities.home.SearchQuery;
+import com.carshiring.models.MArkupdata;
 import com.carshiring.models.Point;
 import com.carshiring.models.SearchData;
 import com.carshiring.splash.SplashActivity;
@@ -46,6 +46,10 @@ import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -79,7 +83,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
     Calendar calendar_pick, calendar_drop;
 
     public static String pickName ="",pickup_loc_id="",drop_loc_id="", dropName="",drop_date="",pick_date="",
-            drop_hour="",drop_minute="",pick_minute="",pointper="",pick_hour="",pickTime="", dropTime="";
+            drop_hour="",drop_minute="",pick_minute="",markup="",pointper="",pick_hour="",pickTime="", dropTime="";
 
     int useCurrentLocation = 0;
     int useSameDestLocation = 1;
@@ -172,14 +176,15 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         chkUseCurrentLocation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
+                //comment for testing
+               /* if (isChecked) {
                     et_pickup_location.setText("");
                     et_pickup_location.setEnabled(false);
                     if (Utility.checkGooglePlayService(getActivity()))
                         setupLocation();
                 }else{
                     et_pickup_location.setEnabled(true);
-                }
+                }*/
             }
         });
 
@@ -350,10 +355,10 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         super.onResume();
         Toolbar toolbar = ((MainActivity) getActivity()).toolbar;
         toolbar.setTitle(getResources().getString(R.string.action_search_car));
+        getMarkUp();
 
-        checkGPSStatus();
+//        checkGPSStatus();
     }
-
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
@@ -417,9 +422,9 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             return ;
         }
 
-        Utility.showLoading(getActivity(),"Searching cars...");
+        Utility.showLoading(getActivity(),getResources().getString(R.string.searching_cars));
         final SearchCarFragment _this = SearchCarFragment.this ;
-        RetroFitApis retroFitApis = RetrofitApiBuilder.getCarGatesapi() ;
+            RetroFitApis retroFitApis = RetrofitApiBuilder.getCarGatesapi() ;
 
         pick_hour=String.valueOf(pick_hours>9?pick_hours:"0"+pick_hours);
         pick_minute=String.valueOf(pick_minutes>9?pick_minutes:"0"+pick_minutes);
@@ -444,30 +449,20 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
 
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 Utility.hidepopup();
-
-                if(response.body()!=null){
-
-                    if(response.body().status){
+                Log.d(TAG, "Complete Search List: " + gson.toJson(response.body()));
+                if (response!=null){
+                    if (response.body().status){
                         searchData=response.body().response.car_list;
-
-
                         String data = gson.toJson(searchData);
-                        Log.d(TAG, "onResponse: "+data);
                         ArrayList<SearchData>searchData1 = new ArrayList<>();
                         searchData1.addAll(searchData);
 
                         chooseSearchAction(searchData);
 
-//                        for testing
-                       /* Intent  intent = new Intent(getActivity(), CarsResultListActivity.class);
-                        startActivity(intent);*/
-
-                    }else{
-                        if(response.body().error_code==102)
-                            ((AppBaseActivity)getActivity()).getToken(_this);
+                    } else {
+                        Toast.makeText(activity, ""+response.body().msg, Toast.LENGTH_SHORT).show();
                     }
                 }
-                Toast.makeText(getActivity(), response.body().msg, Toast.LENGTH_SHORT).show();
 
             }
 
@@ -476,7 +471,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 Utility.hidepopup();
                 Log.d(TAG, "onFailure: "+t.getMessage());
 
-                Toast.makeText(getActivity(), "Connection Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -511,10 +506,40 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
                 Utility.hidepopup();
-                Toast.makeText(getContext(), "Connection Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             }
         });
     }
+
+
+    public void getMarkUp(){
+        RetroFitApis retroFitApis = RetrofitApiBuilder.getCargHiresapis() ;
+
+        Call<ApiResponse> responseCall = retroFitApis.markup(" ") ;
+        final Gson gson = new Gson();
+        responseCall.enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                Utility.hidepopup();
+                MArkupdata point = new MArkupdata();
+                if(response.body()!=null){
+                    Log.d(SplashActivity.TAG, "onResponse: point "+gson.toJson(response.body().response.point));
+
+                    if(response.body().status){
+                        point = response.body().response.markup;
+                        markup = point.getMarkup_percentage();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                Utility.hidepopup();
+                Toast.makeText(getContext(), getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -630,7 +655,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             currentLat = 0.0 ;
             // pickup_loc_id
             if(pickup_loc_id==null || pickup_loc_id.trim().isEmpty()){
-                Toast.makeText(activity, "Please select Pickup location.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, getResources().getString(R.string.pick_up_location), Toast.LENGTH_SHORT).show();
                 return false;
             }
             if(switchSameDestLocation.isChecked()){
@@ -639,7 +664,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             }else {
                 if(drop_loc_id==null || drop_loc_id.trim().isEmpty()){
                     useSameDestLocation = 1;
-                    Toast.makeText(activity, "Please select drop location.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, getResources().getString(R.string.pleae_select_drop_loc), Toast.LENGTH_SHORT).show();
                     return false ;
                 }
             }
@@ -652,7 +677,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             if(!switchSameDestLocation.isChecked()) {
                 // drop_loc_id
                 if(drop_loc_id==null || drop_loc_id.trim().isEmpty()){
-                    Toast.makeText(activity, "Please select drop location.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, getResources().getString(R.string.pleae_select_drop_loc), Toast.LENGTH_SHORT).show();
                     return false ;
                 }
             }else{
@@ -666,7 +691,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         Log.d("Calender ",calendar_drop.compareTo(calendar_pick)+"");
 
         if(calendar_drop.compareTo(calendar_pick) <= 0){
-            Toast.makeText(activity, "Please select valid drop date.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, getResources().getString(R.string.selsect_valid_drop_date), Toast.LENGTH_SHORT).show();
             return false ;
         }
 
@@ -678,7 +703,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             isBetweenDriverAge= 0 ;
             driver_age = et_driver_age.getText().toString().trim();
             if(driver_age.isEmpty()){
-                Toast.makeText(activity, "Please enter driver age.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, getResources().getString(R.string.enter_driver_age), Toast.LENGTH_SHORT).show();
                 return false ;
             }
         }

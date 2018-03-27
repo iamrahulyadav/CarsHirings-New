@@ -7,8 +7,25 @@ package com.carshiring.models;
 public class ExtraAdded {
     String name;
     String price;
-    String number;
+    String qty;
+    String id;
     String currency;
+
+    public String getQty() {
+        return qty;
+    }
+
+    public void setQty(String qty) {
+        this.qty = qty;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getCurrency() {
         return currency;
@@ -34,11 +51,4 @@ public class ExtraAdded {
         this.price = price;
     }
 
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
 }

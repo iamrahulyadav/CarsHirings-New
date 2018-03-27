@@ -1,0 +1,78 @@
+package com.carshiring.adapters;
+
+import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.carshiring.R;
+import com.carshiring.models.Category;
+import com.carshiring.models.PointHistoryData;
+import com.carshiring.models.SearchData;
+import com.carshiring.models.WalletHistoryData;
+import com.carshiring.webservices.RetrofitApiBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by Muhib.
+ * Contact Number : +91 9796173066
+ */
+public class WalletViewAdapter extends RecyclerView.Adapter<WalletViewAdapter.MyViewHolder> {
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+
+        TextView tv_booking_date, tv_booking_type, tv_booking_amount, tv_booking_id, tv_booking_point;
+
+        public MyViewHolder(View view) {
+            super(view);
+
+            tv_booking_id = (TextView) view.findViewById(R.id.layout_wallet_view_booking_id);
+            tv_booking_amount = (TextView) view.findViewById(R.id.layout_wallet_view_booking_amount);
+            tv_booking_date = (TextView) view.findViewById(R.id.layout_wallet_view_booking_date);
+            tv_booking_point = (TextView) view.findViewById(R.id.layout_wallet_view_booking_point);
+            tv_booking_type = (TextView) view.findViewById(R.id.layout_wallet_view_booking_type);
+        }
+    }
+
+    private Context context;
+    private List<WalletHistoryData> walletHistoryData = new ArrayList<>();
+
+    public WalletViewAdapter(Context context, List<WalletHistoryData> walletHistoryData) {
+        this.context = context;
+        this.walletHistoryData = walletHistoryData;
+    }
+
+    @Override
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.layout_wallet_view, parent, false);
+
+        //Toast.makeText(context, walletHistoryData.size() + "", Toast.LENGTH_SHORT).show();
+
+        return new MyViewHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
+      //  Toast.makeText(context, walletHistoryData.size() + "", Toast.LENGTH_SHORT).show();
+
+        holder.tv_booking_id.setText(walletHistoryData.get(position).getBooking_id());
+        holder.tv_booking_amount.setText(walletHistoryData.get(position).get_$WalletAmount169());
+        holder.tv_booking_date.setText(walletHistoryData.get(position).getBooking_date());
+        holder.tv_booking_type.setText(walletHistoryData.get(position).get_$WalletType204());
+        holder.tv_booking_point.setText(walletHistoryData.get(position).get_$WalletAffetctedAmount6());
+    }
+
+    @Override
+    public int getItemCount() {
+        return walletHistoryData.size();
+    }
+}

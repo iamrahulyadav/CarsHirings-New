@@ -13,6 +13,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Base64;
 import android.util.Patterns;
 import android.widget.Toast;
 
@@ -21,9 +22,11 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 */
 
+import com.carshiring.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
+import java.io.ByteArrayOutputStream;
 import java.security.MessageDigest;
 import java.util.Random;
 import java.util.regex.Pattern;
@@ -64,7 +67,16 @@ public class Utility {
         }
         return salt.toString();
     }
-
+    public static String BitMapToString(Bitmap bitmap){
+        String temp="";
+        if(bitmap!=null) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100, baos);
+            byte[] b = baos.toByteArray();
+            temp = Base64.encodeToString(b, Base64.DEFAULT);
+        }
+        return temp;
+    }
     public static String getSHA256Hash(String base) {
         try{
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -124,7 +136,7 @@ public class Utility {
             progressDialog.dismiss();
         }
         progressDialog=new ProgressDialog(activity);
-        progressDialog.setMessage("Please Wait...");
+        progressDialog.setMessage(activity.getResources().getString(R.string.please_wait));
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setCanceledOnTouchOutside(true);
         progressDialog.show();
@@ -138,6 +150,7 @@ public class Utility {
         }
         progressDialog=new ProgressDialog(activity);
         progressDialog.setMessage(message);
+        progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setCancelable(false);
         progressDialog.show();
     }
@@ -162,7 +175,7 @@ public class Utility {
         if(checkGooglePlayService!= ConnectionResult.SUCCESS)
         {
             GooglePlayServicesUtil.getErrorDialog(checkGooglePlayService,activity,Requestcode);
-            Toast.makeText(activity," not working",Toast.LENGTH_LONG).show();
+            Toast.makeText(activity,activity.getResources().getString(R.string.no_working),Toast.LENGTH_LONG).show();
             return false;
         }
         return true;

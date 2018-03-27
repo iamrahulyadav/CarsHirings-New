@@ -86,7 +86,7 @@ public class DriversFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onRefresh()
     {
-        Toast.makeText(getContext(),"Loading...",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(),getResources().getString(R.string.loading),Toast.LENGTH_SHORT).show();
         /*driverAdapter=new DriverAdapter(getActivity(),driverlists);
         recyclerView.setAdapter(driverAdapter);
         driverAdapter.setClickListene(this);

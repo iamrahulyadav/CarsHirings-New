@@ -44,7 +44,7 @@ public class LocationSelectionActivity extends AppBaseActivity {
     public static final int RESPONSE_LOCATION = 200;
     LocationAdapter adapter ;
     RecyclerView rvLocations ;
-    AutoCompleteTextView etSearchLocation;
+    EditText etSearchLocation;
     private String token,cityname, languagecode, keyword,TAG = LocationSelectionActivity.class.getName();
     List<Location> listLocations;
     ImageView imgBack;
@@ -148,7 +148,7 @@ public class LocationSelectionActivity extends AppBaseActivity {
         }
 
         final LocationSelectionActivity _this =  this ;
-        Utility.showLoading(_this,"Finding Location List...");
+        Utility.showLoading(_this,getResources().getString(R.string.finding_location_list));
         RetroFitApis retroFitApis =  RetrofitApiBuilder.getCarGatesapi() ;
         Call<ApiResponse> responseCall = retroFitApis.location(token,keyword,languagecode) ;
         responseCall.enqueue(new Callback<ApiResponse>() {
@@ -166,7 +166,7 @@ public class LocationSelectionActivity extends AppBaseActivity {
                                 listLocations.addAll(data.location);
                                 adapter.notifyDataSetChanged();
                             } else {
-                                Utility.message(getApplicationContext(), "Location not found");
+                                Utility.message(getApplicationContext(), getResources().getString(R.string.location_not_found));
                             }
 
                         }
@@ -204,7 +204,7 @@ public class LocationSelectionActivity extends AppBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        actionBar.setTitle("Select Location");
+        actionBar.setTitle(getResources().getString(R.string.select_loc));
     }
 
     @Override

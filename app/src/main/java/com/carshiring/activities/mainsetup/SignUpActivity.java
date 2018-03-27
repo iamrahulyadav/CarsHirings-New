@@ -2,7 +2,6 @@ package com.carshiring.activities.mainsetup;
 
 import android.content.Context;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -26,15 +25,18 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SignUpActivity extends AppBaseActivity implements TextView.OnEditorActionListener {
+
     EditText username,pass,confirmpassword;
     View v;
     TinyDB sharedpref;
     String email,password,confirmpass;
     Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
         v=findViewById(android.R.id.content);
         sharedpref=new TinyDB(getApplicationContext());
 
@@ -114,32 +116,32 @@ public class SignUpActivity extends AppBaseActivity implements TextView.OnEditor
 
                         @Override
                         public void onFailure(Call<ApiResponse> call, Throwable t) {
-                            Utility.message(SignUpActivity.this, "Connection Error");
+                            Utility.message(SignUpActivity.this, getResources().getString(R.string.no_internet_connection));
                         }
                     });
                 } else {
-                    Utility.message(this, "Password and Confirm Password does not match.");
+                    Utility.message(this, getResources().getString(R.string.pass_doesnotmatch));
                 }
             } else {
-                Utility.message(this, "Please Enter valid Email");
+                Utility.message(this, getResources().getString(R.string.please_enter_valid_email));
             }
         } else {
             if (email.isEmpty() && password.isEmpty() && confirmpass.isEmpty()) {
-                Utility.message(this, "Please Fill all fields");
+                Utility.message(this, getResources().getString(R.string.fill_all_field));
             }
             else
             {
                 if(email.isEmpty())
                 {
-                    Utility.message(this, "Please enter Email");
+                    Utility.message(this, getResources().getString(R.string.please_enter_email));
                 }
                 if(password.isEmpty())
                 {
-                    Utility.message(this, "Please enter Password");
+                    Utility.message(this, getResources().getString(R.string.please_enter_pass));
                 }
                 if(confirmpass.isEmpty())
                 {
-                    Utility.message(this, "Please enter Confirm Password");
+                    Utility.message(this, getResources().getString(R.string.please_enter_confirm_pass));
                 }
             }
         }
@@ -147,7 +149,8 @@ public class SignUpActivity extends AppBaseActivity implements TextView.OnEditor
     public void checknetwork() {
         if(!Utility.isNetworkConnected(this))
         {
-            Snackbar.make(v,"Check Your Internet Connection",Snackbar.LENGTH_INDEFINITE).setAction("Retry",
+            Snackbar.make(v,getResources().getString(R.string.no_internet_connection), Snackbar.LENGTH_INDEFINITE)
+                    .setAction(getResources().getString(R.string.retry),
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -172,7 +175,7 @@ public class SignUpActivity extends AppBaseActivity implements TextView.OnEditor
                     {
                         if(!Utility.checkemail(email))
                         {
-                            Utility.message(this, "Please Enter valid Email");
+                            Utility.message(this, getResources().getString(R.string.please_enter_valid_email));
                             username.setFocusableInTouchMode(true);
                        /* username.requestFocus();
                         InputMethodManager methodManager= (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -180,7 +183,7 @@ public class SignUpActivity extends AppBaseActivity implements TextView.OnEditor
                         }
                     }
                     else {
-                        Utility.message(SignUpActivity.this, "Please enter Email");
+                        Utility.message(SignUpActivity.this, getResources().getString(R.string.please_enter_email));
                     }
 
                 }

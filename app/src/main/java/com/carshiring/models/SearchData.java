@@ -15,7 +15,7 @@ public class SearchData{
              * feature : {"aircondition":"true","transmission":"Manual","fueltype":"Petrol","bag":"0","door":"2"}
              * covprice :
              * covcurrency :
-             * category : 1
+             * category : ab
              * model : FORD KA
              * model_code : MBMR
              * image : https://static.carhire-solutions.com/images/car/Alamo/large/t_MBMR_DE.jpg
@@ -37,7 +37,7 @@ public class SearchData{
              * drop_city : BERLIN FLUGHAGEN TEGEL
              * tc : https://createpdf.carhire-solutions.com/termsandconditions.aspx?reference=62195346536011513679453762&languageId=2
              * rule : Prepayment: Full rental price due at time of reservation. For the local pick up the card holder (DRIVER) must provide a valid credit card. Prepaid or debit cards, such as Maestro, Visa electron, Visa Premier or Carte Bleue are not accepted.
-             * coverages : [{"code":"416","name":"Kilometer inclusive: 900 km (0,37 EUR/km)","currency":null,"amount":null,"desc":null,"currency2":"EUR","amount2":"0.37"},{"code":"418","name":"Other taxes and service charges","currency":null,"amount":null,"desc":null,"currency2":"EUR","amount2":"19.43"},{"code":"CDW","name":"Collision damage waiver","currency":"USD","amount":"0.00","desc":"Maximum excess of 1,000 EUR to be paid in the case of damage. Please note that comprehensive insurance does not cover damage to wheels, tires, mirrors and underbody","currency2":null,"amount2":"0.00"},{"code":"SLI","name":"Supplementary Liability Insurance","currency":"USD","amount":"0.00","desc":"Legally required, insurance for damages on the adversarial vehicle, persons and objects- In this offer it is included.","currency2":null,"amount2":"0.00"},{"code":"TP","name":"Theft protection","currency":"USD","amount":"0.00","desc":"In case of theft, there is an excess of 1,000 EUR.  Please note: this does not cover loss of personal items.","currency2":null,"amount2":"0.00"},{"code":"OW","name":"One way rental","currency":"USD","amount":"0.00","desc":"Onewayrental fees are included","currency2":null,"amount2":"0.00"},{"code":"L2L","name":"Fuel Information","currency":"USD","amount":"0.00","desc":"Level to Level: The vehicle should be returned with the same amount of fuel as delivered.","currency2":null,"amount2":"0.00"},{"code":"TAX","name":"VAT","currency":"USD","amount":"0.00","desc":"The rate corresponds with the VAT-rate of the particular country.","currency2":null,"amount2":"0.00"},{"code":"CF","name":"Cancellation fee","currency":null,"amount":null,"desc":null,"currency2":null,"amount2":null}]
+             * coverages : [{"code":"416","name":"Kilometer inclusive: 900 km (0,37 EUR/km)","currency":null,"amount":null,"desc":null,"currency2":"EUR","amount2":"0.37"},{"code":"418","name":"Other taxes and service charges","currency":null,"amount":null,"desc":null,"currency2":"EUR","amount2":"19.43"},{"code":"CDW","name":"Collision damage waiver","currency":"USD","amount":"0.00","desc":"Maximum excess of ab,000 EUR to be paid in the case of damage. Please note that comprehensive insurance does not cover damage to wheels, tires, mirrors and underbody","currency2":null,"amount2":"0.00"},{"code":"SLI","name":"Supplementary Liability Insurance","currency":"USD","amount":"0.00","desc":"Legally required, insurance for damages on the adversarial vehicle, persons and objects- In this offer it is included.","currency2":null,"amount2":"0.00"},{"code":"TP","name":"Theft protection","currency":"USD","amount":"0.00","desc":"In case of theft, there is an excess of ab,000 EUR.  Please note: this does not cover loss of personal items.","currency2":null,"amount2":"0.00"},{"code":"OW","name":"One way rental","currency":"USD","amount":"0.00","desc":"Onewayrental fees are included","currency2":null,"amount2":"0.00"},{"code":"L2L","name":"Fuel Information","currency":"USD","amount":"0.00","desc":"Level to Level: The vehicle should be returned with the same amount of fuel as delivered.","currency2":null,"amount2":"0.00"},{"code":"TAX","name":"VAT","currency":"USD","amount":"0.00","desc":"The rate corresponds with the VAT-rate of the particular country.","currency2":null,"amount2":"0.00"},{"code":"CF","name":"Cancellation fee","currency":null,"amount":null,"desc":null,"currency2":null,"amount2":null}]
              * type : 0
              */
 
@@ -45,7 +45,7 @@ public class SearchData{
             private FeatureBean feature;
             private String covprice;
             private String covcurrency;
-            private String category;
+            private String category;                              //
             private String model;
             private String model_code;
             private String image;

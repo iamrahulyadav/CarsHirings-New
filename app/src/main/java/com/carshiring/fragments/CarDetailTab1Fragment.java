@@ -104,8 +104,8 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
                 return false;
             }
         }).into(imglogo);
-        carname.setText(CarDetailActivity.modelname+" "+"or Similar");
-        txtPoint.setText("Collected point: "+CarResultsListAdapter.calPoint);
+        carname.setText(CarDetailActivity.modelname + getResources().getString(R.string.or_similar));
+        txtPoint.setText(getResources().getString(R.string.points_collected )+String.valueOf( CarDetailActivity.point));
         carprice.setText(CarDetailActivity.currency+"  "+CarDetailActivity.carPrice);
         LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -123,7 +123,7 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
                         tt1.setCompoundDrawablePadding(25);
                         tt1.setTextSize(16);
                         tt1.setTypeface(Typeface.DEFAULT_BOLD);
-                        tt1.setText("Air Condition");
+                        tt1.setText(getResources().getString(R.string.air_condition));
                         gl.addView(tt1);
                         gl.setOrientation(LinearLayout.VERTICAL);
                     }
@@ -159,7 +159,7 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
 
                         TextView tt1 = new TextView(getContext());
                         tt1.setLayoutParams(lparams);
-                        tt1.setText(carSpecification.getBag()+" "+"Bags");
+                        tt1.setText(carSpecification.getBag() + " " + getResources().getString(R.string.bags));
                         tt1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bag,0,0,0);
                         tt1.setCompoundDrawablePadding(25);
                         tt1.setTextSize(16);
@@ -172,7 +172,7 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
 
                         TextView tt1 = new TextView(getContext());
                         tt1.setLayoutParams(lparams);
-                        tt1.setText(carSpecification.getPassenger()+" "+"Passenger");
+                        tt1.setText(carSpecification.getPassenger() + " " + getResources().getString(R.string.passanger));
                         tt1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_walkway,0,0,0);
                         tt1.setCompoundDrawablePadding(25);
                         tt1.setTextSize(16);
@@ -185,7 +185,7 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
 
                         TextView tt1 = new TextView(getContext());
                         tt1.setLayoutParams(lparams);
-                        tt1.setText(carSpecification.getDoor()+" "+"Doors");
+                        tt1.setText(carSpecification.getDoor()+" "+ getResources().getString(R.string.doors));
                         tt1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_car_door,0,0,0);
                         tt1.setCompoundDrawablePadding(25);
                         tt1.setTextSize(16);

@@ -70,7 +70,7 @@ public class PaymentFragment extends Fragment implements SwipeRefreshLayout.OnRe
         ImageView imageView= (ImageView) toolbar.findViewById(R.id.img_bot);
         imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_add));
         TextView textView= (TextView) view.findViewById(R.id.txt_bot);
-        textView.setText("ADD");
+        textView.setText(getResources().getString(R.string.add));
       /*  toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,17 +124,17 @@ public class PaymentFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         }
                         else
                         {
-                            Utility.message(getContext(), response.body().msg);
+                            Utility.message(getContext(), response.body().message);
                         }
                     }
                     else
                     {
-                        //  Utility.message(getContext(), response.body().msg);
+                        //  Utility.message(getContext(), response.body().message);
                     }
                 }
                 else
                 {
-                    Utility.message(getContext(), response.body().msg);
+                    Utility.message(getContext(), response.body().message);
                 }
             }
 
@@ -151,7 +151,7 @@ public class PaymentFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onRefresh() {
-        Toast.makeText(getContext(),"Loading...",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(),getResources().getString(R.string.loading),Toast.LENGTH_SHORT).show();
 //        composedata();
         swipeRefreshLayout.setRefreshing(false);
     }

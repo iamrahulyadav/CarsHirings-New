@@ -2,7 +2,6 @@ package com.carshiring.activities.mainsetup;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -33,11 +32,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppBaseActivity implements View.OnClickListener,TextView.OnEditorActionListener {
+
     AppGlobal appGlobal=AppGlobal.getInstancess();
     TextView txtWelcome, txtEmail, txtPass, txtLoginForgot;
     EditText username,password;
     LinearLayout ll_forgetpassword;
-    Button bt_signup, btnSkip;
+    Button  btnSkip,bt_signup;
     TinyDB sharedpref;
     String token,language_code;
     Toolbar toolbar;
@@ -47,6 +47,7 @@ public class LoginActivity extends AppBaseActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         sharedpref=new TinyDB(getApplicationContext());
         language_code = sharedpref.getString("language_code") ;
         token=sharedpref.getString("access_token");
@@ -54,7 +55,7 @@ public class LoginActivity extends AppBaseActivity implements View.OnClickListen
 
 //        find id
         ll_forgetpassword= (LinearLayout) findViewById(R.id.ll_forgetpassword);
-        bt_signup= (Button) findViewById(R.id.bt_signup);
+        bt_signup=  findViewById(R.id.bt_signup);
         txtWelcome = (TextView) findViewById(R.id.login_welcome);
         txtEmail = (TextView) findViewById(R.id.txtEmail);
         txtPass = (TextView) findViewById(R.id.txtPass);
@@ -101,7 +102,7 @@ public class LoginActivity extends AppBaseActivity implements View.OnClickListen
         if (!user.isEmpty() && !pass.isEmpty())
         {
             if(!Utility.isNetworkConnected(getApplicationContext())){
-                Toast.makeText(LoginActivity.this, "No Network Connection!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
                 return;
             }
             Utility.showloadingPopup(this);
@@ -121,29 +122,30 @@ public class LoginActivity extends AppBaseActivity implements View.OnClickListen
                         String st =  appGlobal.getUser_id();
                         Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                         startActivity(intent);
+                        Utility.message(getApplicationContext(), "Login success");
                         finish();
                     }
                     else{
-                        Utility.message(getApplicationContext(), response.body().msg);
+                        Utility.message(getApplicationContext(), "Username or password invalid");
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ApiResponse> call, Throwable t) {
                     Utility.hidepopup();
-                    Utility.message(getApplicationContext(),"Connection Error");
+                    Utility.message(getApplicationContext(),getResources().getString(R.string.no_internet_connection));
                 }
             });
         }
         else {
             if (user.isEmpty() && pass.isEmpty()) {
-                Toast.makeText(LoginActivity.this, "Please Enter username and Password.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, getResources().getString(R.string.enter_email_pass), Toast.LENGTH_SHORT).show();
             } else {
                 if (Utility.checkemail(user)) {
-                    Toast.makeText(LoginActivity.this, "Please Enter Username", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.enter_uname), Toast.LENGTH_SHORT).show();
                 }
                 if (pass.isEmpty()) {
-                    Toast.makeText(LoginActivity.this, "Please Enter Password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.enter_pass), Toast.LENGTH_SHORT).show();
                 }
             }
         }

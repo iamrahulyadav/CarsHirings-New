@@ -52,4 +52,8 @@
     <style name="GreyBorderButtonTheme" parent="buttondesign">
         <item name="android:background">@drawable/buttoncurve</item>
     </style>
+    <style name="MyEditText" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/white</item>
+        <item name="colorControlActivated">@color/white</item>
+    </style>
 </resources>

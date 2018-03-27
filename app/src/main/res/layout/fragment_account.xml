@@ -14,6 +14,7 @@
     android:layout_margin="18dp"
     android:layout_gravity="center_vertical"
     android:padding="18dp">
+
     <LinearLayout
         android:id="@+id/ll_booking"
         android:layout_marginTop="3dp"
@@ -39,7 +40,32 @@
 
     </LinearLayout>
     <LinearLayout
-        android:id="@+id/ll_change"
+        android:id="@+id/ll_profile"
+        android:layout_marginTop="3dp"
+        android:orientation="horizontal"
+        style="@style/GreyBorderButtonTheme"
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_user"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/ic_profile" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/myProfile"
+            android:layout_marginLeft="10dp"
+            android:textSize="15sp"
+            android:layout_gravity="center"
+            android:textColor="@color/redStrong" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_change_password"
         android:layout_marginTop="9dp"
         android:orientation="horizontal"
         style="@style/GreyBorderButtonTheme"
@@ -55,14 +81,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/bookingHistory"
+            android:text="@string/change_your_password"
             android:layout_marginLeft="10dp"
-            android:textSize="18sp"
+            android:textSize="15sp"
             android:layout_gravity="center"
             android:textColor="@color/redStrong"
             />
     </LinearLayout>
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/ll_acccountdetails"
         android:layout_marginTop="9dp"
         android:orientation="horizontal"
@@ -101,9 +128,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-           android:text="200 Points"
+            android:text="@string/points"
             android:layout_marginLeft="10dp"
             android:textSize="18sp"
+            android:id="@+id/fragment_account_point"
             android:layout_gravity="center"
             android:textColor="@color/redStrong"
             />

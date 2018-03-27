@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,12 +21,14 @@
         android:textColor="@color/colorPrimaryDark"
         android:textSize="16sp"/>
 
-    <ScrollView
-        android:layout_above="@+id/below"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:layout_height="match_parent">
+    <ScrollView
+        android:layout_above="@+id/update_profile_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/update_profile_scroll">
         <LinearLayout
             android:id="@+id/linear_part"
             android:orientation="vertical"
@@ -72,17 +76,18 @@
                 android:text="@string/dateofbirth"
                 android:textSize="13sp"
                 android:textColor="#000"/>
-            <EditText
+            <TextView
                 android:id="@+id/etUserDob"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/simpleRectangle"
                 android:layout_marginTop="2dp"
+                android:drawableRight="@drawable/ic_calendar"
                 android:layout_marginBottom="3dp"
                 android:imeOptions="actionNext"
                 android:inputType="text"
-                android:maxLines="1" >
-            </EditText>
+                android:maxLines="1">
+            </TextView>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -169,8 +174,7 @@
                 style="@style/simpleRectangle"
                 android:layout_marginTop="2dp"
                 android:paddingBottom="5dp"
-                android:inputType="number"
-                android:imeOptions="actionDone"
+                android:imeOptions="actionNext"
                 android:maxLines="1"
                 >
             </EditText>
@@ -208,38 +212,39 @@
                 android:maxLines="1"
                 >
             </EditText>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="19dp"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp">
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/update"
-                    android:textColor="@color/white"
-                    style="@style/GreenButtonTheme"
-                    android:id="@+id/bt_update"
-                    android:layout_marginRight="3dp"
-                    />
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Cancel"
-                    android:textColor="@color/white"
-                    style="@style/GreenButtonTheme"
-                    android:id="@+id/bt_cancel"
-                    android:layout_marginRight="3dp"
-                    />
-
-
-            </LinearLayout>
         </LinearLayout>
-
     </ScrollView>
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/update_profile_bottom"
+        android:orientation="horizontal"
+        android:layout_marginTop="19dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/update"
+            android:textColor="@color/white"
+            style="@style/GreenButtonTheme"
+            android:id="@+id/bt_update"
+            android:layout_marginRight="3dp"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cancel"
+            android:textColor="@color/white"
+            style="@style/GreenButtonTheme"
+            android:id="@+id/bt_cancel"
+            android:layout_marginRight="3dp"
+            />
+
+    </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>

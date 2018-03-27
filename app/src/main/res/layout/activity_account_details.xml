@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-
     android:layout_height="match_parent">
     <ScrollView
         android:layout_above="@+id/below"
@@ -45,7 +45,7 @@
                 android:layout_marginBottom="3dp"
                 android:imeOptions="actionNext"
                 android:inputType="text"
-                android:maxLines="1">
+                android:maxLinabs="1">
             </EditText>
             <TextView
                 android:layout_width="match_parent"
@@ -62,7 +62,7 @@
                 android:layout_marginBottom="3dp"
                 android:imeOptions="actionNext"
                 android:inputType="text"
-                android:maxLines="1" >
+                android:maxLinabs="1" >
             </EditText>
             <TextView
                 android:layout_width="match_parent"
@@ -79,7 +79,7 @@
                 android:layout_marginBottom="3dp"
                 android:imeOptions="actionNext"
                 android:inputType="text"
-                android:maxLines="1"  >
+                android:maxLinabs="1"  >
             </EditText>
             <TextView
                 android:layout_width="match_parent"
@@ -98,7 +98,7 @@
                 android:imeOptions="actionNext"
                 android:inputType="phone"
                 android:maxLength="14"
-                android:maxLines="1">
+                android:maxLinabs="1">
             </EditText>
             <TextView
                 android:layout_width="match_parent"
@@ -116,7 +116,7 @@
                 android:maxLength="2"
                 android:inputType="number"
                 android:imeOptions="actionDone"
-                android:maxLines="1"
+                android:maxLinabs="1"
                 >
             </EditText>
         </LinearLayout>
@@ -131,4 +131,280 @@
             layout="@layout/bottom_toolbar" />
 
     </LinearLayout>
-</RelativeLayout>
+</RelativeLayout>-->
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+<!--
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/update_profile_txt"
+        android:gravity="center"
+        android:id="@+id/login_welcome"
+        android:layout_margin="5dp"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="16sp"/>
+-->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+
+
+        <LinearLayout
+            android:id="@+id/linear_part"
+            android:orientation="vertical"
+            android:padding="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="170dp"
+                android:gravity="center"
+                android:background="@drawable/a">
+                <FrameLayout
+                    android:layout_width="100dp"
+                    android:layout_height="100dp">
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:id="@+id/update_user_image"
+                    android:src="@mipmap/ic_launcher"
+                    android:scaleType="fitXY"
+                    android:layout_gravity="center"/>
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/ic_menu_camera"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="3dp"
+                    android:onClick="upload_my_image"/>
+                </FrameLayout>
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/firstname"
+                android:textSize="13sp"
+                android:textColor="#000"/>
+            <EditText
+                android:id="@+id/update_user_fname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/simpleRectangle"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="3dp"
+                android:inputType="text"
+                android:maxLines="1">
+            </EditText>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/surname"
+                android:textSize="13sp"
+                android:textColor="#000"/>
+            <EditText
+                android:id="@+id/update_user_lname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/simpleRectangle"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="3dp"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:maxLines="1" >
+            </EditText>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dateofbirth"
+                android:textSize="13sp"
+                android:textColor="#000"/>
+            <TextView
+                android:id="@+id/update_user_dob"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/simpleRectangle"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="3dp"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:maxLines="1"
+                android:drawableRight="@drawable/ic_calendar"
+                android:onClick="dob_pick">
+            </TextView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/email"
+                android:textSize="13sp"
+                android:textColor="#000"/>
+            <EditText
+                android:id="@+id/update_user_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/simpleRectangle"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="3dp"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:maxLines="1"  >
+            </EditText>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/phnumb"
+                android:textSize="13sp"
+
+                android:textColor="#000"/>
+            <EditText
+                android:id="@+id/update_user_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/simpleRectangle"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="3dp"
+                android:imeOptions="actionNext"
+                android:inputType="phone"
+                android:maxLength="14"
+                android:maxLines="1">
+            </EditText>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/zipcode"
+                android:textSize="13sp"
+                android:textColor="#000"/>
+            <EditText
+                android:id="@+id/update_user_zip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/simpleRectangle"
+                android:layout_marginTop="2dp"
+                android:paddingBottom="5dp"
+                android:maxLength="6"
+                android:inputType="number"
+                android:imeOptions="actionDone"
+                android:maxLines="1"
+                >
+            </EditText>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/licenseno"
+                android:textSize="13sp"
+                android:textColor="#000"/>
+            <EditText
+                android:id="@+id/update_user_licence"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/simpleRectangle"
+                android:layout_marginTop="2dp"
+                android:paddingBottom="5dp"
+                android:inputType="number"
+                android:imeOptions="actionDone"
+                android:maxLines="1"
+                >
+            </EditText>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/licenseorigion"
+                android:textSize="13sp"
+                android:textColor="#000"/>
+            <EditText
+                android:id="@+id/update_user_licnce_origin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/simpleRectangle"
+                android:layout_marginTop="2dp"
+                android:paddingBottom="5dp"
+                android:inputType="number"
+                android:imeOptions="actionDone"
+                android:maxLines="1"
+                >
+            </EditText>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/city"
+                android:textSize="13sp"
+                android:textColor="#000"/>
+            <EditText
+                android:id="@+id/update_user_city"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/simpleRectangle"
+                android:layout_marginTop="2dp"
+                android:paddingBottom="5dp"
+                android:imeOptions="actionDone"
+                android:maxLines="1"
+                >
+            </EditText>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/address"
+                android:textSize="13sp"
+                android:textColor="#000"/>
+            <EditText
+                android:id="@+id/update_user_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/simpleRectangle"
+                android:layout_marginTop="2dp"
+                android:paddingBottom="5dp"
+                android:imeOptions="actionDone"
+                android:maxLines="1"
+                >
+            </EditText>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="19dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/update"
+                    android:textColor="@color/white"
+                    style="@style/GreenButtonTheme"
+                    android:id="@+id/btn_save"
+                    android:onClick="update_profile"
+                    android:layout_marginRight="3dp"
+                    />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Cancel"
+                    android:onClick="cancel"
+                    android:textColor="@color/white"
+                    style="@style/GreenButtonTheme"
+                    android:id="@+id/btn_cancel"
+                    android:layout_marginRight="3dp"
+                    />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

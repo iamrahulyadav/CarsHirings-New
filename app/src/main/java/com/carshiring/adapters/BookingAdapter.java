@@ -23,7 +23,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.MyViewHo
 {
     List<BookingData> bookinglist;
     Context context;
-    int lastpositon= -1;
+    int lastpositon= 1;
     public BookingAdapter(Context context, List<BookingData> bookinglist) {
         this.bookinglist=bookinglist;
         this.context=context;
@@ -49,7 +49,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.MyViewHo
         /*rate, txtStatus, txtPickUp, txtDropUp, txtPoint*/
         if (bookingModel.getBooking_status().equals("0")){
             holder.txtStatus.setText("Processing");
-        } else if (bookingModel.getBooking_status().equals("1")){
+        } else if (bookingModel.getBooking_status().equals("ab")){
             holder.txtStatus.setText("Completed");
         } else if (bookingModel.getBooking_status().equals("2")){
             holder.txtStatus.setText("Canceled");
@@ -101,7 +101,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.MyViewHo
         txtStatus = (TextView) itemView.findViewById(R.id.previous_booking_txtStatus);
         txtPickUp = (TextView) itemView.findViewById(R.id.previous_booking_pickUp);
         txtDropUp = (TextView) itemView.findViewById(R.id.previous_booking_dropUp);
-        txtPoint = (TextView) itemView.findViewById(R.id.previous_booking_txtPoints);
+        txtPoint = (TextView) itemView.findViewById(R.id.previous_booking_txtcancel);
         txtPaymentBy = (TextView) itemView.findViewById(R.id.previous_booking_txtCarName);
         txtCarName = (TextView) itemView.findViewById(R.id.previous_booking_txtPaymentBy);
         imgLogo = (ImageView) itemView.findViewById(R.id.previous_booking_imgCarLogo);

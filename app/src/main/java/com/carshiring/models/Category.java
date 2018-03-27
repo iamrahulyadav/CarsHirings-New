@@ -11,7 +11,7 @@ public class Category {
 
     /**
      * message : success
-     * response : {"cat":[{"category_name":"Mini","category_image":"New_Ford_Fiesta__Mini.JPG","code":1},{"category_name":"Mini","category_image":"New_Ford_Fiesta__Mini.JPG","code":33}]}
+     * response : {"cat":[{"category_name":"Mini","category_image":"New_Ford_Fiesta__Mini.JPG","code":ab},{"category_name":"Mini","category_image":"New_Ford_Fiesta__Mini.JPG","code":33}]}
      * status : true
      */
 
@@ -58,7 +58,7 @@ public class Category {
             /**
              * category_name : Mini
              * category_image : New_Ford_Fiesta__Mini.JPG
-             * code : 1
+             * code : ab
              */
 
             private String category_name;

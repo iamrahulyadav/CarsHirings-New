@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,7 @@ import android.widget.Toast;
 
 import com.carshiring.R;
 import com.carshiring.models.LanguageModel;
+import com.carshiring.utilities.AppBaseActivity;
 import com.carshiring.utilities.Utility;
 import com.carshiring.webservices.ApiResponse;
 import com.carshiring.webservices.RetroFitApis;
@@ -30,13 +30,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Language extends AppCompatActivity
+public class Language extends AppBaseActivity
 {
     RadioGroup langgroup;
     String language,token,langId,language_code ;
     TinyDB sharedpref;
     HashMap<String, String>langMap;
     ArrayList<String> langlistname,langlistcode,langlistId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +46,7 @@ public class Language extends AppCompatActivity
         ActionBar actionBar=getSupportActionBar();
         if(actionBar!=null)
         {
-            actionBar.setTitle("Language Selection");
+            actionBar.setTitle(getResources().getString(R.string.lang_select));
             actionBar.setHomeAsUpIndicator(R.drawable.back);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -56,12 +57,19 @@ public class Language extends AppCompatActivity
         langlistcode=new ArrayList<>();
         langlistId=new ArrayList<>();
         langMap = new HashMap<>();
-        getLanguageList();
+//        getLanguageList();
 
         //  langgroup= (RadioGroup) findViewById(R.id.LanguageGroup);
         setSelectedFilter(language);
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        getLanguageList();
     }
 
     private void setSelectedFilter(String language)
@@ -148,16 +156,16 @@ public class Language extends AppCompatActivity
                         }
                         addradio();
                     } else {
-                        Utility.message(Language.this, response.body().msg);
+                        Utility.message(Language.this, response.body().message);
                     }
                 }else{
-                    Toast.makeText(Language.this, "Connection Error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Language.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
-                Toast.makeText(Language.this, "Connection Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Language.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             }
         });
 

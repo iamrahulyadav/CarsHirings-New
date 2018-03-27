@@ -45,22 +45,23 @@ public class ExcessProtectionActivity extends AppCompatActivity implements View.
         View v=findViewById(android.R.id.content);
         toolbar=  findViewById(R.id.bottomToolBar);
         toolbartext= toolbar.findViewById(R.id.txt_bot);
-        toolbartext.setText("Add Full Protection");
+        toolbartext.setText(getResources().getString(R.string.add_full_protection));
         tinyDB = new TinyDB(getApplicationContext());
         layoutbuttons= (LinearLayout) findViewById(R.id.ll_buttons);
         bt_standPro= (Button)findViewById(R.id.bt_standardPro);
         bt_fullPro=(Button) findViewById(R.id.bt_fullpro);
         txt_fullprotection=findViewById(R.id.txt_fullprotection);
-        txt_fullprotection.setText("Full Protection Only "+fullprotectioncurrency+" "+fullprotectionammount +" For Day");
+        txt_fullprotection.setText(getResources().getString(R.string.full_protection_only) + fullprotectioncurrency +
+                " " + fullprotectionammount + getResources().getString(R.string.for_day));
         bt_fullPro.setOnClickListener(this);
         bt_standPro.setOnClickListener(this);
 
         toolbartext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tinyDB.putString("full_prot",fullprotectioncurrency+" "+fullprotectionammount);
+                tinyDB.putString("full_prot", fullprotectioncurrency+" "+fullprotectionammount);
                 finish();
-                Utility.message(getApplication(), "Full protection added");
+                Utility.message(getApplication(), getResources().getString(R.string.full_protection_addedd));
             }
         });
 
@@ -81,8 +82,8 @@ public class ExcessProtectionActivity extends AppCompatActivity implements View.
             else if(val.equalsIgnoreCase("Forquotes"))
             {
                toolbar.setVisibility(View.GONE);
-                bt_standPro.setText("Get a quote with Standard Coverage");
-                bt_fullPro.setText("Get a quote with Full Protection");
+                bt_standPro.setText(getResources().getString(R.string.get_a_quote_1));
+                bt_fullPro.setText(getResources().getString(R.string.get_a_quote_2));
                 FromQuotes="Yes";
             }
 
@@ -100,7 +101,7 @@ public class ExcessProtectionActivity extends AppCompatActivity implements View.
         {
             actionBar.setHomeAsUpIndicator(R.drawable.back);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle("Excess Protection");
+            actionBar.setTitle(getResources().getString(R.string.excess_prot));
         }
     }
 

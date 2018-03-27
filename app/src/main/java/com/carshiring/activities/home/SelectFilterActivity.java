@@ -37,7 +37,6 @@ public class SelectFilterActivity extends AppBaseActivity implements View.OnClic
     private ArrayList<String> features = new ArrayList<>();
     private ArrayList<String> packages = new ArrayList<>();
     private ArrayList<String> insurance = new ArrayList<>();
-
     private ArrayList<FilterDefaultMultipleListModel> supplierMultipleListModels = new ArrayList<>();
     private ArrayList<FilterDefaultMultipleListModel> featuresMultipleListModels = new ArrayList<>();
     private ArrayList<FilterDefaultMultipleListModel> packageMultipleListModels = new ArrayList<>();
@@ -47,7 +46,7 @@ public class SelectFilterActivity extends AppBaseActivity implements View.OnClic
     private ArrayList<String> SelectedFeatures = new ArrayList<String>();
     private ArrayList<String> SelectedPackages = new ArrayList<String>();
     private ArrayList<String> SelectedInsurances = new ArrayList<String>();
-
+    String sup , feat;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +57,6 @@ public class SelectFilterActivity extends AppBaseActivity implements View.OnClic
         rec_supplier=findViewById(R.id.rec_supplier);
         recy_package=findViewById(R.id.recy_package);
         recy_carfeatures=findViewById(R.id.recy_carfeatures);
-
         ArrayList<String> getlist= (ArrayList<String>) CarsResultListActivity.supplierList;
         recy_insurance=findViewById(R.id.recy_insurance);
         supplier .addAll(getlist);
@@ -143,7 +141,6 @@ public class SelectFilterActivity extends AppBaseActivity implements View.OnClic
         });
         setuptoolbar();
 
-
         //Buttons
         reset= findViewById(R.id.reset);
         applyfilter=  findViewById(R.id.apply_filter);
@@ -170,7 +167,7 @@ public class SelectFilterActivity extends AppBaseActivity implements View.OnClic
     }
 
     private void selectinsurance(int i) {
-        filterValAdapterinsuran.setitemselected(i);
+        filterValAdapterinsuran. setitemselected(i);
     }
 
     private void selectpack(int i) {
@@ -289,7 +286,12 @@ public class SelectFilterActivity extends AppBaseActivity implements View.OnClic
                         SelectedInsurances.add(model.getName());
                     }
                 }
-               Utility.message(this,"Selected Packages are"+SelectedPackages.toString()+"\n"+"Selected Suppliers are"+SelectedSupplier.toString()+"\n"+"Selected Features are"+SelectedFeatures.toString()+"\n"+"Selected Insurances are"+SelectedInsurances.toString());
+               Utility.message(this,getResources().getString(R.string.selected_packages_are) +
+                       SelectedPackages.toString() + "\n" + getResources().getString(R.string.selected_suppliers_are) +
+                       SelectedSupplier.toString() + "\n" + getResources().getString(R.string.selected_features_are) +
+                       SelectedFeatures.toString() + "\n" + getResources().getString(R.string.selected_insurances_are) +
+                       SelectedInsurances.toString());
+
                FilterDefaultMultipleListModel listModel=new FilterDefaultMultipleListModel();
 
                if (SelectedSupplier.size()>0) {
@@ -305,7 +307,6 @@ public class SelectFilterActivity extends AppBaseActivity implements View.OnClic
                else
                {
                    listModel.setSupplier("");
-
                }
 
                if (SelectedFeatures.size()>0)

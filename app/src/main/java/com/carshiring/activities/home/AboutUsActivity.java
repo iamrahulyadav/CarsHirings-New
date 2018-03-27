@@ -26,6 +26,7 @@ public class AboutUsActivity extends AppBaseActivity {
 
     private TinyDB sharedpref;
     private String language_code ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +34,7 @@ public class AboutUsActivity extends AppBaseActivity {
 
         sharedpref=new TinyDB(getApplicationContext());
         language_code = sharedpref.getString("language_code");
+
         actionBar=getSupportActionBar();
         if(actionBar!=null)
         {

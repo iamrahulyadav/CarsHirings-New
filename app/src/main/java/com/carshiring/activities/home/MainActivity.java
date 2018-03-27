@@ -1,12 +1,14 @@
 package com.carshiring.activities.home;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
@@ -21,14 +23,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carshiring.R;
 import com.carshiring.activities.mainsetup.LoginActivity;
 import com.carshiring.fragments.AccountFragment;
-import com.carshiring.fragments.MyAccountsFragment;
+import com.carshiring.fragments.LoginFragment;
 import com.carshiring.fragments.SearchCarFragment;
 import com.carshiring.interfaces.ISubViewSetupHandler;
 import com.carshiring.models.UserDetails;
@@ -40,6 +44,8 @@ import com.carshiring.webservices.RetroFitApis;
 import com.carshiring.webservices.RetrofitApiBuilder;
 import com.mukesh.tinydb.TinyDB;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -53,11 +59,12 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ISubViewSetupHandler {
+    //public static int bookingHistory;
     NavigationView navigationView;
     public Toolbar toolbar;
     public SearchQuery searchQuery = new SearchQuery();
     View v;
-    String qu,set,fname,lname,email,phone,zip,license,licenseorigin,city,address;
+    String qu,set,fname,lname,email,phone,zip,license,dob,licenseorigin,city,address;
     TinyDB tinyDB;
     DrawerLayout drawer;
     String userId,language_code;
@@ -65,11 +72,14 @@ public class MainActivity extends AppCompatActivity
     TextView txtemail, txtusername;
     UserDetails userDetails = new UserDetails();
     Gson gson = new Gson();
-
+//    ////
+//chnage by vaibhav
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        checkGPSStatus();
+
         tinyDB = new TinyDB(getApplicationContext());
         language_code = tinyDB.getString("language_code");
         updateRes(language_code);
@@ -99,6 +109,15 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        Menu menu =navigationView.getMenu();
+
+        target = menu.findItem(R.id.action_logout);
+        if(tinyDB.contains("login_data"))
+        {
+            target.setVisible(true);
+        } else {
+            target.setVisible(false);
+        }
 
 //        updateResources(this,language_code);
         Intent it = getIntent();
@@ -113,7 +132,6 @@ public class MainActivity extends AppCompatActivity
             }*/
 //for test
 //           setupSubView(R.id.action_search_car);
-
        }
 
         SearchCarFragment searchCarFragment = new SearchCarFragment();
@@ -124,12 +142,11 @@ public class MainActivity extends AppCompatActivity
             String data = tinyDB.getString("login_data");
             userDetails = gson.fromJson(data,UserDetails.class);
             userId = userDetails.getUser_id();
-            if (userDetails.getUser_name()==null || userDetails.getUser_name().length()==0){
+            if (userDetails.getUser_lname()==null || userDetails.getUser_lname().length()==0){
                 set = "update_profile";
                 setupoverlay(set);
             }
         }
-
     }
 
     @Override
@@ -139,11 +156,51 @@ public class MainActivity extends AppCompatActivity
         invalidateOptionsMenu();
         return super.onPrepareOptionsMenu(menu);
     }
+    public void checkGPSStatus()
+    {
+        LocationManager locationManager =(LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+        boolean isGPSProviderEnable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if(!isGPSProviderEnable)
+        {
+            showSettingsAlert();
+        }
+    }
+
+    private void showSettingsAlert(){
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+        // Setting Dialog Title
+        alertDialog.setTitle(getResources().getString(R.string.gps_sett));
+
+        // Setting Dialog Message
+        alertDialog.setMessage(getResources().getString(R.string.gps_not_enabled));
+
+        // Setting Icon to Dialog
+        //alertDialog.setIcon(R.drawable.delete);
+
+        // On pressing Settings button
+        alertDialog.setPositiveButton(getResources().getString(R.string.settings), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog,int which) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        });
+        // on pressing cancel button
+        alertDialog.setNegativeButton(getResources().getString(R.string.cancle), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+//                checkGPSStatus();
+            }
+        });
+        // Showing Alert Message
+        alertDialog.show();
+    }
+
 
     @Override
     public void onBackPressed() {
-
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        super.onBackPressed();
+      /*  if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }
         else {
@@ -164,26 +221,27 @@ public class MainActivity extends AppCompatActivity
             });
             builder.create();
             builder.show();
-            //super.onBackPressed();
-        }
+
+        }*/
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-//        updateResources(this,language_code);
         getMenuInflater().inflate(R.menu.home, menu);
         return true;
     }
 
+    MenuItem target;
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        updateResources(this,language_code);
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         qu = "";
+
         int id = item.getItemId();
+
         setupSubView(id);
         return super.onOptionsItemSelected(item);
     }
@@ -193,35 +251,10 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         qu = "";
-        int id = item.getItemId();
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        setupSubView(id);
+
         switch (item.getItemId()){
-            case R.id.action_accounts:
-                if (checkLogin()) {
-                    AccountFragment myaccountFragment = new AccountFragment();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, myaccountFragment)
-                            .addToBackStack("null").commit();
-                    toolbar.setTitle(getResources().getString(R.string.action_accounts));
-                }
-                break;
-
-            case R.id.action_quotes:
-                if (checkLogin()) {
-                    startActivity(new Intent(MainActivity.this,MyBookingActivity.class));
-                }
-                break;
-
-            case R.id.action_search_car:
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("query", searchQuery);
-                SearchCarFragment searchCarFragment = new SearchCarFragment();
-                searchCarFragment.setArguments(bundle);
-                getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, searchCarFragment)
-                        .addToBackStack("search").commit();
-                toolbar.setTitle(getResources().getString(R.string.action_search_car));
-                break;
 
             case R.id.action_about_us:
                 startActivity(new Intent(MainActivity.this, AboutUsActivity.class));
@@ -236,13 +269,37 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.action_language:
                 startActivity(new Intent(MainActivity.this, Language.class));
-                Toast.makeText(MainActivity.this, "Currency Change", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Currency Change", Toast.LENGTH_SHORT).show();
                 break;
 
            /* case R.id.action_settings:
                 startActivity(new Intent(MainActivity.this, ChangePasswordActivity.class));
                 Toast.makeText(MainActivity.this, "Settings Action", Toast.LENGTH_SHORT).show();
                 break;*/
+            case R.id.action_accounts:
+                if (checkLogin()) {
+                    AccountFragment myaccountFragment = new AccountFragment();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, myaccountFragment)
+                            .addToBackStack("null").commit();
+                    toolbar.setTitle(getResources().getString(R.string.action_accounts));
+                }
+                break;
+
+            case R.id.action_booking:
+                if (checkLogin()) {
+                    startActivity(new Intent(MainActivity.this,MyBookingActivity.class));
+                }
+                break;
+
+            case R.id.action_search_car:
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("query", searchQuery);
+                SearchCarFragment searchCarFragment = new SearchCarFragment();
+                searchCarFragment.setArguments(bundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, searchCarFragment)
+                        .commit();
+                toolbar.setTitle(getResources().getString(R.string.action_search_car));
+                break;
 
         }
 
@@ -264,22 +321,51 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void setupSubView(int id) {
 //        updateResources(this,language_code);
-//        switch (id) {
 
+        switch (id){
+            case R.id.action_accounts:
+                if (checkLogin()) {
+                    AccountFragment myaccountFragment = new AccountFragment();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, myaccountFragment)
+                            .addToBackStack("null").commit();
+                    toolbar.setTitle(getResources().getString(R.string.action_accounts));
+                }
+                break;
+
+            case R.id.action_booking:
+                if (checkLogin()) {
+                    startActivity(new Intent(MainActivity.this,MyBookingActivity.class));
+                }
+                break;
+
+            case R.id.action_search_car:
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("query", searchQuery);
+                SearchCarFragment searchCarFragment = new SearchCarFragment();
+                searchCarFragment.setArguments(bundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, searchCarFragment)
+                        .addToBackStack("search").commit();
+                toolbar.setTitle(getResources().getString(R.string.action_search_car));
+                break;
+
+        }
     }
 
     private boolean checkLogin() {
         if (userId != null && !userId.trim().isEmpty()) {
             return true;
-        } else {
+        }
+        else {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
+
             return false;
         }
     }
     Button btupdate,btnCancel;
+    TextView txtDob;
 
     private void setupoverlay(String set) {
 
@@ -296,10 +382,20 @@ public class MainActivity extends AppCompatActivity
             edtZip = dialog.findViewById(R.id.etUserzip);
             edtLicense = dialog.findViewById(R.id.etlicense);
             edtLicenseOrign = dialog.findViewById(R.id.etlicenseorigion);
+            txtDob = dialog.findViewById(R.id.etUserDob);
             edtCity = dialog.findViewById(R.id.etcity);
             edtAddress = dialog.findViewById(R.id.etAddress);
             btupdate = dialog.findViewById(R.id.bt_update);
             btnCancel = dialog.findViewById(R.id.bt_cancel);
+            txtDob.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new DatePickerDialog(MainActivity.this, date, mCalendar
+                            .get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
+                            mCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                }
+            });
+
 //            set onclick on update
             btupdate.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -324,36 +420,36 @@ public class MainActivity extends AppCompatActivity
                                                     if (!address.isEmpty()){
                                                         updateProfile(userId,fname);
                                                     } else {
-                                                        Utility.message(getApplication(),"Please enter address");
+                                                        Utility.message(getApplication(), getResources().getString(R.string.please_enter_address));
                                                     }
                                                 } else {
-                                                    Utility.message(getApplication(),"Please enter city");
+                                                    Utility.message(getApplication(), getResources().getString(R.string.please_enter_city));
                                                 }
-                                             } else {
-                                                Utility.message(getApplication(),"Please enter licenseorigin");
+                                            } else {
+                                                Utility.message(getApplication(), getResources().getString(R.string.please_enter_license_origin));
                                             }
                                         } else {
-                                            Utility.message(getApplication(),"Please enter license");
+                                            Utility.message(getApplication(), getResources().getString(R.string.please_enter_license));
                                         }
                                     } else {
-                                        Utility.message(getApplication(),"Please enter zipcode");
+                                        Utility.message(getApplication(), getResources().getString(R.string.please_enter_zipcode));
                                     }
                                 } else {
-                                    Utility.message(getApplication(),"Please enter valid phone number");
+                                    Utility.message(getApplication(), getResources().getString(R.string.please_enter_valid_phone_number));
                                 }
                             } else {
-                                Utility.message(getApplication(),"Please enter valid email");
+                                Utility.message(getApplication(), getResources().getString(R.string.please_enter_valid_email));
                             }
-                        } else {
-                            Utility.message(getApplication(),"Please enter last name");
-                        }
                     } else {
-                        Utility.message(getApplication(),"Please enter First name");
+                        Utility.message(getApplication(),getResources().getString(R.string.please_enter_last_name));
                     }
-
+                } else {
+                    Utility.message(getApplication(),getResources().getString(R.string.please_enter_first_name));
                 }
-            });
+            }
+        });
         }
+
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -366,16 +462,41 @@ public class MainActivity extends AppCompatActivity
         dialog.show();
     }
 
+    Calendar mCalendar = Calendar.getInstance();
+    int year, monthOfYear, dayOfMonth;
+
+    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            // TODO Auto-generated method stub
+            mCalendar.set(Calendar.YEAR, year);
+            mCalendar.set(Calendar.MONTH, monthOfYear);
+            mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabel();
+        }
+
+    };
+
+    private void updateLabel() {
+
+        String myFormat = "MM/dd/yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+        dob = sdf.format(mCalendar.getTime());
+        txtDob.setText(dob);
+    }
+
 
     private void updateProfile(String userid, String fname) {
         if(!Utility.isNetworkConnected(getApplicationContext())){
-            Toast.makeText(MainActivity.this, "No Network Connection!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             return;
         }
         Utility.showloadingPopup(this);
         RetroFitApis retroFitApis= RetrofitApiBuilder.getCargHiresapis();
         Call<ApiResponse> responseCall=retroFitApis.updateprofile(userid,fname,lname,email,phone,zip,license,
-                licenseorigin,"dob",city,address);
+                licenseorigin,dob,city,address);
         responseCall.enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
@@ -383,13 +504,10 @@ public class MainActivity extends AppCompatActivity
                 if(response.body().status==true)
                 {
                     Log.d("TAG", "onResponse: "+response.body().msg);
-                    Utility.message(getApplicationContext(), response.body().msg);
-//                    String logindata=gson.toJson(response.body().response.userdetail);
+                    Toast.makeText(MainActivity.this, ""+ response.body().msg, Toast.LENGTH_SHORT).show();
                     userDetails = response.body().response.user_detail;
                     String logindata=gson.toJson(userDetails);
                     appGlobal.setLoginData(logindata);
-                    String st=  appGlobal.getUser_id();
-                    dialog.dismiss();
                     dialog.dismiss();
 
                 }
@@ -401,7 +519,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
                 Utility.hidepopup();
-                Utility.message(getApplicationContext(),"Connection Error");
+                Utility.message(getApplicationContext(),getResources().getString(R.string.no_internet_connection));
             }
         });
     }
@@ -426,7 +544,7 @@ public class MainActivity extends AppCompatActivity
         final Fragment fragment;
         if (getSupportFragmentManager().getBackStackEntryCount()>0){
         }
-//        if(getSupportFragmentManager().getBackStackEntryCount()>1)
+//        if(getSupportFragmentManager().getBackStackEntryCount()>ab)
 //        {
 //            getSupportFragmentManager().popBackStackImmediate();
 //
@@ -441,9 +559,9 @@ public class MainActivity extends AppCompatActivity
                 setupSubView(R.id.action_quotes);
             }
         }
-//            else if (getSupportFragmentManager().getBackStackEntryCount()>1){
+//            else if (getSupportFragmentManager().getBackStackEntryCount()>ab){
 //
-//                int index = getSupportFragmentManager().getBackStackEntryCount() - 1;
+//                int index = getSupportFragmentManager().getBackStackEntryCount() - ab;
 //                FragmentManager.BackStackEntry backStackEntry = getSupportFragmentManager().getBackStackEntryAt(index);
 //                String tag = backStackEntry.getName();
 //
@@ -472,7 +590,7 @@ public class MainActivity extends AppCompatActivity
 
     public void checknetwork() {
         if (!Utility.isNetworkConnected(MainActivity.this)) {
-            Snackbar.make(v, "Check Your Internet Connection", Snackbar.LENGTH_INDEFINITE).setAction("Retry", new View.OnClickListener() {
+            Snackbar.make(v, getResources().getString(R.string.check_internet), Snackbar.LENGTH_INDEFINITE).setAction(getResources().getString(R.string.retry), new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     checknetwork();
