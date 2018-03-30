@@ -49,7 +49,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_user"
+            android:src="@drawable/ic_account"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp"
             android:id="@+id/ic_profile" />
@@ -74,7 +74,7 @@
         <ImageView
             android:layout_width="37dp"
             android:layout_height="37dp"
-            android:src="@drawable/ic_sb_bookings"
+            android:src="@drawable/ic_password"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp"
             />

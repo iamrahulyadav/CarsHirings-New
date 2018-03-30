@@ -128,7 +128,35 @@
                 android:textColor="@color/white"
                 android:layout_weight="0.85"
                 android:padding="5dp"/>
+            <TextView
+                android:id="@+id/txt_date_totime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="20/5/2017 at 10:00PM"
+                android:visibility="gone"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_weight="0.85"
+                android:padding="5dp"/>
 
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:background="@color/redStrong"
+                android:id="@+id/txt_bookingdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="20/5/2017 at 10:00PM"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_weight="0.85"
+                android:padding="5dp"/>
             <TextView
                 android:id="@+id/txt_rate"
                 android:layout_width="wrap_content"
@@ -137,21 +165,53 @@
                 android:gravity="end"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                android:background="@color/redStrong"
                 android:textColor="@color/white"
                 android:layout_gravity="end"
                 android:padding="5dp"/>
+
         </LinearLayout>
-        <TextView
-            android:background="@color/redStrong"
-            android:id="@+id/txt_bookingdate"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="20/5/2017 at 10:00PM"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:layout_weight="0.85"
-            android:padding="5dp"/>
+            android:orientation="vertical"
+            android:background="@color/redStrong">
+            <TextView
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtCuoponValue"
+                android:text="Coupon value "
+                android:textColor="@color/white"
+                android:padding="5dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtCreditValueAmt"
+                android:text="Credit value "
+                android:visibility="gone"
+                android:textColor="@color/white"
+                android:padding="5dp"/>
+            <TextView
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtWalletValueAmt"
+                android:text="Wallet value "
+                android:textColor="@color/white"
+                android:padding="5dp"/>
+            <TextView
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtPointValueAmt"
+                android:text="Point value "
+                android:textColor="@color/white"
+                android:padding="5dp"/>
+
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

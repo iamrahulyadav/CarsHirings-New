@@ -11,8 +11,24 @@ public class BookingRequest {
     private String name="",sarname="",number="",email="",address="",city="",zipcode="",countrycode="",car_id="",
             type="",rtype="",fullprotection="",flight_no="",dob="",user_id="",pick_date="",
             drop_date="", pick_city="",drop_city="",protection_val="",booking_point="",booking_wallet="",
-            booking_payfort="", transaction_id="";
+            booking_payfort="", transaction_id="",discountCoupon="",discountvalue="";
     List<ExtraAdded> extraData = new ArrayList<>();
+
+    public String getDiscountCoupon() {
+        return discountCoupon;
+    }
+
+    public void setDiscountCoupon(String discountCoupon) {
+        this.discountCoupon = discountCoupon;
+    }
+
+    public String getDiscountvalue() {
+        return discountvalue;
+    }
+
+    public void setDiscountvalue(String discountvalue) {
+        this.discountvalue = discountvalue;
+    }
 
     public String getTransaction_id() {
         return transaction_id;

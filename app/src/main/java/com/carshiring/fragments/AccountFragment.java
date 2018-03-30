@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carshiring.R;
+import com.carshiring.activities.home.MainActivity;
 import com.carshiring.activities.home.MyBookingActivity;
 import com.carshiring.activities.home.UserDashActivity;
 import com.carshiring.activities.mainsetup.ChangePasswordActivity;
@@ -95,9 +96,10 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         switch (id)
         {
             case R.id.ll_booking:
-                startActivity(new Intent(getContext(), MyBookingActivity.class));
-//               MyBookingsFragment myBookingsFragment=new MyBookingsFragment();
-//                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.subview_container,myBookingsFragment).addToBackStack(null).commit();
+              //  startActivity(new Intent(getContext(), MyBookingActivity.class));
+               MyBookingsFragment myBookingsFragment=new MyBookingsFragment();
+                MainActivity.toolbar.setTitle(getResources().getString(R.string.mybooking));
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.subview_container,myBookingsFragment).addToBackStack(null).commit();
                 break;
             case R.id.ll_acccountdetails:
               // startActivity(new Intent(getActivity(),AccountDetailsActivity.class));
@@ -116,6 +118,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
     public void onResume() {
         super.onResume();
         getPoint();
+        MainActivity.toolbar.setTitle(getResources().getString(R.string.account));
 
     }
 

@@ -160,7 +160,10 @@ public class UserDashActivity extends AppBaseActivity {
                         }
                         walletAmt = totalCredit-totalDebit;
                         Log.d("TAG", "onResponse: totalDebit"+totalCredit+"\n"+walletAmt);
-                        txtWalletAmt.setText(String.valueOf( df2.format(walletAmt)));
+                        if (walletAmt>0){
+                            txtWalletAmt.setText(String.valueOf( df2.format(walletAmt)));
+                        }
+
                     } else {
                       //  Toast.makeText(UserDashActivity.this, ""+response.body().message, Toast.LENGTH_SHORT).show();
                     }

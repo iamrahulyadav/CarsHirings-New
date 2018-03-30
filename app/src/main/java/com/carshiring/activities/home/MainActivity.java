@@ -22,10 +22,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,9 +36,13 @@ import com.carshiring.R;
 import com.carshiring.activities.mainsetup.LoginActivity;
 import com.carshiring.fragments.AccountFragment;
 import com.carshiring.fragments.LoginFragment;
+import com.carshiring.fragments.MyAccountsFragment;
+import com.carshiring.fragments.MyBookingsFragment;
 import com.carshiring.fragments.SearchCarFragment;
 import com.carshiring.interfaces.ISubViewSetupHandler;
+import com.carshiring.models.DiscountData;
 import com.carshiring.models.UserDetails;
+import com.carshiring.splash.SplashActivity;
 import com.carshiring.utilities.AppGlobal;
 import com.carshiring.utilities.Utility;
 import com.google.gson.Gson;
@@ -44,9 +51,21 @@ import com.carshiring.webservices.RetroFitApis;
 import com.carshiring.webservices.RetrofitApiBuilder;
 import com.mukesh.tinydb.TinyDB;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -61,7 +80,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ISubViewSetupHandler {
     //public static int bookingHistory;
     NavigationView navigationView;
-    public Toolbar toolbar;
+    public static Toolbar toolbar;
     public SearchQuery searchQuery = new SearchQuery();
     View v;
     String qu,set,fname,lname,email,phone,zip,license,dob,licenseorigin,city,address;
@@ -70,8 +89,10 @@ public class MainActivity extends AppCompatActivity
     String userId,language_code;
     Dialog dialog;
     TextView txtemail, txtusername;
+
     UserDetails userDetails = new UserDetails();
     Gson gson = new Gson();
+
 //    ////
 //chnage by vaibhav
     @Override
@@ -93,7 +114,7 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-      //  userId = tinyDB.getString("userid");
+        //  userId = tinyDB.getString("userid");
         v = MainActivity.this.findViewById(android.R.id.content);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         dialog=new Dialog(this);
@@ -265,6 +286,8 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.action_logout:
                 tinyDB.remove("login_data");
+                tinyDB.remove("extra_added");
+                tinyDB.remove("full_prot");
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 break;
             case R.id.action_language:
@@ -287,7 +310,10 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.action_booking:
                 if (checkLogin()) {
-                    startActivity(new Intent(MainActivity.this,MyBookingActivity.class));
+                    getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, new MyBookingsFragment())
+                            .addToBackStack("null").commit();
+                    toolbar.setTitle(getResources().getString(R.string.mybooking));
+                 //   startActivity(new Intent(MainActivity.this,MyBookingActivity.class));
                 }
                 break;
 
@@ -369,7 +395,8 @@ public class MainActivity extends AppCompatActivity
 
     private void setupoverlay(String set) {
 
-        final EditText edtFname, edtLname, edtemail,edtPhone,edtZip, edtLicense,edtLicenseOrign,edtCity, edtAddress;
+        final EditText edtFname, edtLname, edtemail,edtPhone,edtZip, edtLicense,edtCity, edtAddress;
+        Spinner edtLicenseOrign;
 //        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         if (set.equals("update_profile")){
             dialog.setContentView(R.layout.popup_updateprofile);
@@ -381,7 +408,7 @@ public class MainActivity extends AppCompatActivity
             edtPhone = dialog.findViewById(R.id.etUserPhoneNo);
             edtZip = dialog.findViewById(R.id.etUserzip);
             edtLicense = dialog.findViewById(R.id.etlicense);
-            edtLicenseOrign = dialog.findViewById(R.id.etlicenseorigion);
+            edtLicenseOrign = dialog.findViewById(R.id.spinnerlicenseorigion);
             txtDob = dialog.findViewById(R.id.etUserDob);
             edtCity = dialog.findViewById(R.id.etcity);
             edtAddress = dialog.findViewById(R.id.etAddress);
@@ -395,6 +422,30 @@ public class MainActivity extends AppCompatActivity
                             mCalendar.get(Calendar.DAY_OF_MONTH)).show();
                 }
             });
+            // Creating adapter for spinner
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                    android.R.layout.simple_spinner_item, SplashActivity.counrtyList);
+
+            // Drop down layout style - list view with radio button
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            // attaching data adapter to spinner
+            edtLicenseOrign.setAdapter(dataAdapter);
+
+            edtLicenseOrign.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    String item = adapterView.getItemAtPosition(i).toString();
+                    licenseorigin = (String) getKeyFromValue(SplashActivity.country,item);
+
+                    Toast.makeText(MainActivity.this, ""+licenseorigin, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
 
 //            set onclick on update
             btupdate.setOnClickListener(new View.OnClickListener() {
@@ -406,7 +457,6 @@ public class MainActivity extends AppCompatActivity
                     phone = edtPhone.getText().toString().trim();
                     zip = edtZip.getText().toString().trim();
                     license = edtLicense.getText().toString().trim();
-                    licenseorigin = edtLicenseOrign.getText().toString().trim();
                     city = edtCity.getText().toString().trim();
                     address = edtAddress.getText().toString().trim();
                     if (!fname.isEmpty()){
@@ -462,9 +512,18 @@ public class MainActivity extends AppCompatActivity
         dialog.show();
     }
 
+
+
     Calendar mCalendar = Calendar.getInstance();
     int year, monthOfYear, dayOfMonth;
-
+    public static Object getKeyFromValue(Map hm, Object value) {
+        for (Object o : hm.keySet()) {
+            if (hm.get(o).equals(value)) {
+                return o;
+            }
+        }
+        return null;
+    }
     DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
         @Override

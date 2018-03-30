@@ -1,5 +1,6 @@
 package com.carshiring.activities.home;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -58,6 +59,7 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
     EditText edtflight;
     public static String flight_no,fullProtection ,protection_val;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,12 +76,13 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
         userDetails = gson.fromJson(logindata,UserDetails.class);
         name = userDetails.getUser_name();
 
-        if (tinyDB.contains("extra_added")){
+       /* if (tinyDB.contains("extra_added")){
             String extra = tinyDB.getString("extra_added");
             extraData= Arrays.asList(gson.fromJson(extra,ExtraAdded[].class));
             Log.d("TAG", "onCreate: "+extraData.size());
-        }
+        }*/
 
+        extraData = Extras.extraData;
         terms= (TextView)findViewById(R.id.txt_terms);
         txtPoint = findViewById(R.id.txtpoint_cal);
         edtflight = findViewById(R.id.edtFlight);
@@ -138,7 +141,8 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
             }
         }).into(imglogo);
         carname.setText(CarDetailActivity.modelname + getResources().getString(R.string.or_similar));
-        carprice.setText(CarDetailActivity.currency + "  " + CarDetailActivity.carPrice);
+        carprice.setText(CarDetailActivity.currency + "  " + CarDetailActivity.carPrice+ "/ "
+                +CarsResultListActivity.day + " "+ CarsResultListActivity.time);
 
         if (extraData.size()>0){
             txtAddExtra.setVisibility(View.VISIBLE);
@@ -177,25 +181,12 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
         tinyDB.remove("extra_added");
         tinyDB.remove("full_prot");
 
-    }
-
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            /*Intent intent = new Intent(getApplicationContext(), TeacherSide.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);*/
-            // you don't need to call finish(); because
-            // return super.onKeyDown(keyCode, event); does that for you
-
-            // clear your SharedPreferences
-            tinyDB.remove("extra_added");
-            tinyDB.remove("full_prot");
-
+        if (extraData!=null){
+            extraData.clear();
         }
-        return super.onKeyDown(keyCode, event);
+
     }
+
 
     private void addLayout(String name, String price, String number, String currency, final String i) {
         LayoutInflater layoutInflater =

@@ -27,6 +27,7 @@ import com.carshiring.webservices.RetroFitApis;
 import com.carshiring.webservices.RetrofitApiBuilder;
 import com.google.gson.Gson;
 
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -107,33 +108,31 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
         Log.d(TAG, "onBindViewHolder: "+model.getSupplier_logo());
 
 
-        String url =model.getSupplier_logo();
-        if (isValid(url)){
-            Log.d("TAG", "onResponse: valid"+"yes");
-            Glide.with(context)
-                    .load(model.getSupplier_logo())
-                    .into(holder.imgCarAgencyLogo);
-        } else {
-            Log.d("TAG", "onResponse: valid"+"no");
-            String carImage = "http://www.page-rank-calculator.com/img/not-available.png";
-            Glide.with(context)
-                    .load(carImage)
-                    .into(holder.imgCarAgencyLogo);
-        }
-        String m = model.getImage();
-        if (isValid(m)){
-            Log.d("TAG", "onResponse: valid"+"yes");
-            Glide.with(context)
-                    .load(model.getImage())
-                    .into(holder.imgCarResult);
-        } else {
-            Log.d("TAG", "onResponse: valid"+"no");
-            String carImage = "http://www.page-rank-calculator.com/img/not-available.png";
-            Glide.with(context)
-                    .load(carImage)
-                    .into(holder.imgCarResult);
+        String urla =model.getSupplier_logo();
+        Glide.with(context)
+                .load(urla)
+                .into(holder.imgCarAgencyLogo);
+        try {
+            URL url = new URL(urla);
+            HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+            httpConn.setInstanceFollowRedirects(false);
+            httpConn.setRequestMethod("HEAD");
+            httpConn.connect();
+            if (httpConn.getResponseCode()!=404){
+                Glide.with(context)
+                        .load(urla)
+                        .into(holder.imgCarAgencyLogo);
+            }
+
+            System.out.println("Response Code : " + httpConn.getResponseCode());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
+        String m = model.getImage();
+        Glide.with(context)
+                .load(model.getImage())
+                .into(holder.imgCarResult);
 
 
         bar1.setVisibility(View.GONE);
@@ -153,20 +152,7 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
     public int getItemCount() {
         return list.size() ;
     }
-    public static boolean isValid(String url)
-    {
-        /* Try creating a valid URL */
-        try {
-            new URL(url).toURI();
-            return true;
-        }
 
-        // If there was an Exception
-        // while creating URL object
-        catch (Exception e) {
-            return false;
-        }
-    }
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView tvCarModelName,tvCarPricing,txtClass,txtSupplierNmae, tvBagNo,
                 txtDropCity,txtDoor,txtTrans, txtTerms,txtFuel,txtPoint;

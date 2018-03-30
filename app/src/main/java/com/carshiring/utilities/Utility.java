@@ -138,7 +138,6 @@ public class Utility {
         progressDialog=new ProgressDialog(activity);
         progressDialog.setMessage(activity.getResources().getString(R.string.please_wait));
         progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setCanceledOnTouchOutside(true);
         progressDialog.show();
     }
 

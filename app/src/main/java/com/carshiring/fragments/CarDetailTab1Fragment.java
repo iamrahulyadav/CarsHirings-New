@@ -25,6 +25,7 @@ import com.bumptech.glide.request.target.Target;
 import com.carshiring.R;
 
 import com.carshiring.activities.home.CarDetailActivity;
+import com.carshiring.activities.home.CarsResultListActivity;
 import com.carshiring.activities.home.ExcessProtectionActivity;
 import com.carshiring.activities.home.Extras;
 import com.carshiring.adapters.CarResultsListAdapter;
@@ -106,7 +107,8 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
         }).into(imglogo);
         carname.setText(CarDetailActivity.modelname + getResources().getString(R.string.or_similar));
         txtPoint.setText(getResources().getString(R.string.points_collected )+String.valueOf( CarDetailActivity.point));
-        carprice.setText(CarDetailActivity.currency+"  "+CarDetailActivity.carPrice);
+        carprice.setText(CarDetailActivity.currency + "  " + CarDetailActivity.carPrice+ "/ "
+                + CarsResultListActivity.day + " "+ CarsResultListActivity.time);
         LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 

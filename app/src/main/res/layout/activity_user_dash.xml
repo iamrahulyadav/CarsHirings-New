@@ -20,8 +20,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="170dp"
-                android:id="@+id/dash_profile_wal"
-                android:background="@color/Light_grey">
+                android:id="@+id/dash_profile_wal">
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -38,6 +37,7 @@
                     android:layout_height="100dp"
                     android:id="@+id/dash_profile_img"
                     android:paddingBottom="10dp"
+                    android:src="@drawable/ic_user"
                     android:layout_gravity="bottom|center" />
 
             </FrameLayout>

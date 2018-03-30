@@ -66,7 +66,7 @@ public class Extras extends AppBaseActivity {
             actionBar.setHomeAsUpIndicator(R.drawable.back);
         }
     }
-    public List<ExtraAdded> extraData = new ArrayList<>();
+    public static List<ExtraAdded> extraData = new ArrayList<>();
     private void setUpToolbar() {
         Toolbar toolbar= (Toolbar) findViewById(R.id.bottomToolBar);
         TextView textView= (TextView) toolbar.findViewById(R.id.txt_bot);

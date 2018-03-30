@@ -1,5 +1,6 @@
 package com.carshiring.activities.home;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -28,6 +30,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.carshiring.R;
 import com.carshiring.models.UserDetails;
+import com.carshiring.splash.SplashActivity;
 import com.carshiring.utilities.AppBaseActivity;
 import com.carshiring.utilities.AppGlobal;
 import com.carshiring.utilities.Utility;
@@ -42,11 +45,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Calendar;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.carshiring.activities.home.MainActivity.getKeyFromValue;
 
 /**
  * Created by rakhi on 13-03-2018.
@@ -58,10 +66,12 @@ public class AccountDetailsActivity extends AppBaseActivity {
     String userId,token,title,ages,Rtitle;
     Spinner spTitle;
     int age;
+    TinyDB tinyDB;
     EditText etUserFirstName,etUserLastName, etUserEmail,etUserPhoneNo,etUserAge;
 
-    private EditText edt_fname, edt_lname, edt_email, edt_phone, edt_zipcode, edt_licence_no, edt_licence_origin,
+    private EditText edt_fname, edt_lname, edt_email, edt_phone, edt_zipcode, edt_licence_no,
             edt_city, edt_address;
+    Spinner edt_licence_origin;
     private  TextView edt_dob;
     private ImageView iv;
     private String str_fname, str_lname, str_dob, str_email, str_phone, str_zipcode, str_licence_no, str_licence_origin ,
@@ -71,8 +81,6 @@ public class AccountDetailsActivity extends AppBaseActivity {
 //    UserImage userImage = new UserImage();
     Gson gson = new Gson();
     AppGlobal appGlobal = AppGlobal.getInstancess();
-
-
     private static final int SELECT_PICTURE = 100;
 
     @Override
@@ -81,32 +89,12 @@ public class AccountDetailsActivity extends AppBaseActivity {
         setContentView(R.layout.activity_account_details);
 
         appGlobal.context = getApplicationContext();
-
-//        setUptoolbar();
-
-        //spTitle= (Spinner) findViewById(R.id.sp_title);
-        /*if(!Rtitle.isEmpty() || !Rtitle.equals(null))
-        {
-//            updatespinner();
-        }
-        else
-        {
-  //          setupspinner();
-        }*/
-
-
-/*        if(!userId.isEmpty() || !userId.equals(null))
-        {
-            if(!sharedpref.getString("user_email").equals(null) || !sharedpref.getString("user_email").isEmpty()) {
-                etUserEmail.setEnabled(false);
-                etUserEmail.setText(sharedpref.getString("user_email"));
-            }
-        }
-        etUserAge.setText(Integer.toString(sharedpref.getInt("userage")));
-    */
+        tinyDB = new TinyDB(getApplicationContext());
+        String data= tinyDB.getString("login_data");
+        userDetails = gson.fromJson(data, UserDetails.class);
+        userId = userDetails.getUser_id();
 
         init();
-//    setUserData();
     }
 
     private void init(){
@@ -119,9 +107,33 @@ public class AccountDetailsActivity extends AppBaseActivity {
         edt_phone = (EditText) findViewById(R.id.update_user_phone);
         edt_zipcode = (EditText) findViewById(R.id.update_user_zip);
         edt_licence_no = (EditText) findViewById(R.id.update_user_licence);
-        edt_licence_origin = (EditText) findViewById(R.id.update_user_licnce_origin);
+        edt_licence_origin =  findViewById(R.id.update_user_licnce_origin);
         edt_city = (EditText) findViewById(R.id.update_user_city);
         edt_address = (EditText) findViewById(R.id.update_user_address);
+
+        // Creating adapter for spinner
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, SplashActivity.counrtyList);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        edt_licence_origin.setAdapter(dataAdapter);
+
+        edt_licence_origin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String item = adapterView.getItemAtPosition(i).toString();
+                str_licence_origin= (String) getKeyFromValue(SplashActivity.country,item);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
     }
 
@@ -130,8 +142,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
         super.onResume();
 
         setMyToolBar();
-        getUserData();
-        setUserData();
+        getProfile();
     }
 
     private void setMyToolBar(){
@@ -144,65 +155,124 @@ public class AccountDetailsActivity extends AppBaseActivity {
         }
     }
 
-    private void getUserData(){
+    public void getProfile(){
+        RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();
+        final Call<ApiResponse> walList = fitApis.profile(userId);
+        walList.enqueue(new Callback<ApiResponse>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                if (response!=null){
+                    if(response.body().status)
+                    {
+                        UserDetails userDetails = new UserDetails();
+                        userDetails = response.body().response.user_detail;
+                        String logindata=gson.toJson(userDetails);
+                        Log.d("TAG", "onResponse: "+logindata);
+                        appGlobal.setLoginData(logindata);
+                        String st =  appGlobal.getUser_id();
+                        edt_email.setText(userDetails.getUser_email());
+                        edt_phone.setText(userDetails.getUser_phone());
+                        edt_licence_no.setText(userDetails.getUser_license_no());
+                        edt_fname.setText(userDetails.getUser_name());
+                        edt_dob.setText(userDetails.getUser_dob());
+                        edt_zipcode.setText(userDetails.getUser_zipcode());
+                       // edt_licence_origin.setText(userDetails.getUser_license_no());
+                        edt_city.setText(userDetails.getUser_city().toString());
+                        edt_address.setText(userDetails.getUser_address());
+                        if (userDetails.getUser_lname()!=null){
+                            edt_lname.setText(userDetails.getUser_lname());
+                        }
+                        if (userDetails.getUser_image()!=null&&userDetails.getUser_image().length()>1){
+                            String url = RetrofitApiBuilder.IMG_BASE_URL+userDetails.getUser_image();
+                            GetImage task = new GetImage();
+                            // Execute the task
+                            task.execute(new String[] { url });
+                        }
 
-/*
-        tinyDB = new TinyDB(getApplicationContext());
-        String login = tinyDB.getString("login_data");
-        userDetails = gson.fromJson(login, UserDetails.class);
-        language = tinyDB.getString("language_code");
-        user_id = userDetails.getUser_id();
-*/
+                    }
+                    else{
+                        Utility.message(getApplicationContext(), getResources().getString(R.string.no_internet_connection));
+                    }
+                }
+            }
 
-        sharedpref = new TinyDB(getApplicationContext());
-        String login = sharedpref.getString("login_data");
-        userDetails = gson.fromJson(login, UserDetails.class);
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                Toast.makeText(AccountDetailsActivity.this, ""+ getResources().getString(R.string.check_internet), Toast.LENGTH_SHORT).show();
 
-        userId = userDetails.getUser_id();
-        str_fname = userDetails.getUser_name();//sharedpref.getString("user_name");
-        str_lname = userDetails.getUser_lname().toString();////sharedpref.getString("user_lname");
-        str_email = userDetails.getUser_email();//sharedpref.getString("user_email");
-        str_phone = userDetails.getUser_phone();//sharedpref.getString("user_phone");
-        str_dob = userDetails.getUser_dob();
-        str_zipcode = userDetails.getUser_zipcode();
-        str_licence_no = userDetails.getUser_license_no();
-        str_image = userDetails.getUser_image();
-        Toast.makeText(getApplicationContext(), str_image, Toast.LENGTH_SHORT).show();
-        //str_licence_origin = userDetails.getUser_license();
-        str_city = userDetails.getUser_city().toString();
-        str_address = userDetails.getUser_address();
-
-        token = sharedpref.getString("access_token");
-        Rtitle = sharedpref.getString("usertitle");
-
-//        Toast.makeText(getApplicationContext(), userId + str_fname, Toast.LENGTH_SHORT).show();
+                //   Utility.message(getApplicationContext(), getResources().getString(R.string.check_internet));
+                Log.d("TAG", "onFailure: "+t.getMessage());
+            }
+        });
     }
 
-    private void setUserData(){
-//        Toast.makeText(getApplicationContext(), userId + str_image, Toast.LENGTH_SHORT).show();
-
-        edt_fname.setText(str_fname);
-        edt_lname.setText(str_lname);
-        edt_email.setText(str_email);
-        edt_phone.setText(str_phone);
-        edt_dob.setText(str_dob);
-        edt_zipcode.setText(str_zipcode);
-        edt_licence_no.setText(str_licence_no);
-        edt_licence_origin.setText(str_licence_origin);
-        edt_city.setText(str_city);
-        edt_address.setText(str_address);
-
-        Glide.with(getApplicationContext())
-                .load(RetrofitApiBuilder.IMG_BASE_URL + str_image)
-                .into(iv);
-
-        if(!userId.isEmpty() || !userId.equals(null))
-        {
-            if(!str_email.equals(null) || !str_email.isEmpty()) {
-                edt_email.setEnabled(false);
-            }
+    String img;
+    public class GetImage extends AsyncTask<String, Void, Bitmap> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Utility.showLoading(AccountDetailsActivity.this,getResources().getString(R.string.loading));
         }
-//        etUserAge.setText(Integer.toString(sharedpref.getInt("userage")));
+
+        @Override
+        protected Bitmap doInBackground(String... urls) {
+            Bitmap map = null;
+            for (String url : urls) {
+                map = downloadImage(url);
+            }
+            return map;
+        }
+
+        // Sets the Bitmap returned by doInBackground
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            Utility.hidepopup();
+            iv.setImageBitmap(result);
+            img = Utility.BitMapToString(result);
+//
+//            Glide.with(getActivity()).load(result)
+//                    .apply(RequestOptions.circleCropTransform()).into(imgUser);
+        }
+
+        // Creates Bitmap from InputStream and returns it
+        private Bitmap downloadImage(String url) {
+            Bitmap bitmap = null;
+            InputStream stream = null;
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            bmOptions.inSampleSize = 1;
+
+            try {
+                stream = getHttpConnection(url);
+                bitmap = BitmapFactory.
+                        decodeStream(stream, null, bmOptions);
+                stream.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            return bitmap;
+        }
+
+        // Makes HttpURLConnection and returns InputStream
+        private InputStream getHttpConnection(String urlString)
+                throws IOException {
+            InputStream stream = null;
+            URL url = new URL(urlString);
+            URLConnection connection = url.openConnection();
+
+            try {
+                HttpURLConnection httpConnection = (HttpURLConnection) connection;
+                httpConnection.setRequestMethod("GET");
+                httpConnection.connect();
+
+                if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    stream = httpConnection.getInputStream();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return stream;
+        }
     }
 
     public void cancel(View view){
@@ -216,7 +286,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
         str_phone = edt_phone.getText().toString().trim();
         str_zipcode = edt_zipcode.getText().toString().trim();
         str_licence_no = edt_licence_no.getText().toString().trim();
-        str_licence_origin = edt_licence_origin.getText().toString().trim();
+      //  str_licence_origin = edt_licence_origin.getText().toString().trim();
         str_city = edt_city.getText().toString().trim();
         str_address = edt_address.getText().toString().trim();
         str_dob = edt_dob.getText().toString().trim();

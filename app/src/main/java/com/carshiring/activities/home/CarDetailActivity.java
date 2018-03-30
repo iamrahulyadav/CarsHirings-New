@@ -94,7 +94,7 @@ public class CarDetailActivity extends AppCompatActivity {
         Utility.showloadingPopup(this);
         RetroFitApis retroFitApis= RetrofitApiBuilder.getCarGatesapi();
         Call<ApiResponse> apiResponseCall=retroFitApis.car_detail(token,id_context,type,day,refer_type);
-
+        Log.d("TAG", "setupApi: "+token+"\n"+id_context+"\n"+type+"\n"+day+"\n"+refer_type);
         apiResponseCall.enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
@@ -160,34 +160,13 @@ public class CarDetailActivity extends AppCompatActivity {
     }
 
     private static DecimalFormat df2 = new DecimalFormat(".##");
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        tinyDB.remove("extra_added");
-        tinyDB.remove("full_prot");
-    }
-
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            /*Intent intent = new Intent(getApplicationContext(), TeacherSide.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);*/
-            // you don't need to call finish(); because
-            // return super.onKeyDown(keyCode, event); does that for\ you
-
-            // clear your SharedPreferences
-            tinyDB.remove("extra_added");
-            tinyDB.remove("full_prot");
-        }
-        return super.onKeyDown(keyCode, event);
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
         actionBar.setTitle(getResources().getString(R.string.car_details));
+        /*tinyDB.remove("extra_added");
+        tinyDB.remove("full_prot");*/
         setupToolbar();
     }
 

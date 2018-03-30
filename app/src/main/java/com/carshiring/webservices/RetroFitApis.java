@@ -151,4 +151,8 @@ public interface RetroFitApis {
     Call<ApiResponse> debitWallet(@Field("wallet_user_id") String user_id,
                                  @Field("wallet_amount") String bookingpoint_point,
                                  @Field("wallet_booking_id") String bookingpoint_booking_id);
+
+    @FormUrlEncoded
+    @POST("discountCoupon")
+    Call<ApiResponse> coupon(@Field("code") String user_id);
 }

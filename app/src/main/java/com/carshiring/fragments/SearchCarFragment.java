@@ -239,7 +239,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(2017, 3, 1, hoursOfDay, minutes);
-        SimpleDateFormat monthFormat = new SimpleDateFormat("h:mm a", Locale.US);
+        SimpleDateFormat monthFormat = new SimpleDateFormat("h:mm", Locale.US);
         result = monthFormat.format(calendar.getTime());
 
         return result;
@@ -443,6 +443,14 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 useCurrentLocation, useSameDestLocation,isBetweenDriverAge,currentLat,
                 currentLng,location_code,location_iata,
                 location_type,location_code_drop,location_iata_drop,location_type_drop,languagecode) ;
+
+
+        Log.d(TAG, "requestForSearchCar: "+token+"\n"+pickName+"\n"+
+                pick_date+"\n"+pick_hour+"\n"+
+                pick_minute+"\n"+dropName+"\n"+drop_date+"\n"+drop_hour+"\n"+drop_minute+"\n"+driver_age+"\n"+
+                useCurrentLocation+"\n"+ useSameDestLocation+"\n"+isBetweenDriverAge+"\n"+currentLat+"\n"+
+                currentLng+"\n"+location_code+"\n"+location_iata+"\n"+
+                location_type+"\n"+location_code_drop+"\n"+location_iata_drop+"\n"+location_type_drop+"\n"+languagecode);
         final Gson gson = new Gson();
         responseCall.enqueue(new Callback<ApiResponse>() {
             @Override

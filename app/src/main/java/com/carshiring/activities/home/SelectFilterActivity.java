@@ -57,6 +57,10 @@ public class SelectFilterActivity extends AppBaseActivity implements View.OnClic
         rec_supplier=findViewById(R.id.rec_supplier);
         recy_package=findViewById(R.id.recy_package);
         recy_carfeatures=findViewById(R.id.recy_carfeatures);
+        if (getIntent().hasExtra("supl")){
+
+        }
+
         ArrayList<String> getlist= (ArrayList<String>) CarsResultListActivity.supplierList;
         recy_insurance=findViewById(R.id.recy_insurance);
         supplier .addAll(getlist);
@@ -286,11 +290,13 @@ public class SelectFilterActivity extends AppBaseActivity implements View.OnClic
                         SelectedInsurances.add(model.getName());
                     }
                 }
+/*
                Utility.message(this,getResources().getString(R.string.selected_packages_are) +
                        SelectedPackages.toString() + "\n" + getResources().getString(R.string.selected_suppliers_are) +
                        SelectedSupplier.toString() + "\n" + getResources().getString(R.string.selected_features_are) +
                        SelectedFeatures.toString() + "\n" + getResources().getString(R.string.selected_insurances_are) +
                        SelectedInsurances.toString());
+*/
 
                FilterDefaultMultipleListModel listModel=new FilterDefaultMultipleListModel();
 

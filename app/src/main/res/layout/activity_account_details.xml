@@ -172,8 +172,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="170dp"
-                android:gravity="center"
-                android:background="@drawable/a">
+                android:gravity="center">
                 <FrameLayout
                     android:layout_width="100dp"
                     android:layout_height="100dp">
@@ -181,7 +180,7 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:id="@+id/update_user_image"
-                    android:src="@mipmap/ic_launcher"
+                    android:src="@drawable/ic_user"
                     android:scaleType="fitXY"
                     android:layout_gravity="center"/>
                 <ImageView
@@ -313,8 +312,8 @@
                 style="@style/simpleRectangle"
                 android:layout_marginTop="2dp"
                 android:paddingBottom="5dp"
-                android:inputType="number"
-                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:imeOptions="actionNext"
                 android:maxLines="1"
                 >
             </EditText>
@@ -324,18 +323,23 @@
                 android:text="@string/licenseorigion"
                 android:textSize="13sp"
                 android:textColor="#000"/>
-            <EditText
-                android:id="@+id/update_user_licnce_origin"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/simpleRectangle"
-                android:layout_marginTop="2dp"
-                android:paddingBottom="5dp"
-                android:inputType="number"
-                android:imeOptions="actionDone"
-                android:maxLines="1"
-                >
-            </EditText>
+                style="@style/simpleRectangle">
+                <Spinner
+                    android:id="@+id/update_user_licnce_origin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:paddingBottom="5dp"
+                    android:inputType="text"
+                    android:imeOptions="actionDone"
+                    android:maxLines="1"
+                    >
+                </Spinner>
+
+            </LinearLayout>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -349,7 +353,7 @@
                 style="@style/simpleRectangle"
                 android:layout_marginTop="2dp"
                 android:paddingBottom="5dp"
-                android:imeOptions="actionDone"
+                android:imeOptions="actionNext"
                 android:maxLines="1"
                 >
             </EditText>

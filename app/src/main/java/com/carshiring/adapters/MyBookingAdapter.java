@@ -1,5 +1,6 @@
 package com.carshiring.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.carshiring.R;
+import com.carshiring.fragments.SearchCarFragment;
 import com.carshiring.models.BookingHistory;
 
 import java.util.List;
@@ -46,14 +48,32 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
         return new MyViewHolder(row);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
         //BookingData bookingModel=bookinglist.get(position);
         holder.refnumb.setText(bookinglist.get(position).getBooking_id());
         holder.date_time.setText(bookinglist.get(position).getBooking_from_date());
+        holder.txtjourneyToDate.setText(bookinglist.get(position).getBooking_to_date());
         holder.rate.setText(bookinglist.get(position).getBooking_currency()
                 + " " + bookinglist.get(position).getBooking_actual_price());
+        if (!bookinglist.get(position).getBooking_payfort_value().equals("0.00")){
+            holder.txtCreditValue.setVisibility(View.VISIBLE);
+            holder.txtCreditValue.setText("Credit value : SAR "+ bookinglist.get(position).getBooking_payfort_value());
+        }
+        if (!bookinglist.get(position).getBooking_coupon_value().equals("0.00")){
+            holder.txtCoupon.setVisibility(View.VISIBLE);
+            holder.txtCoupon.setText("Coupon value : SAR "+bookinglist.get(position).getBooking_coupon_value());
+        }
+        if (!bookinglist.get(position).getBooking_wallet_value().equals("0.00")){
+            holder.txtWallet.setVisibility(View.VISIBLE);
+            holder.txtWallet.setText("Wallet Amount : SAR "+ bookinglist.get(position).getBooking_wallet_value());
+        }
+        if (!bookinglist.get(position).getBooking_pont_value().equals("0.00")){
+            holder.txtPoint.setVisibility(View.VISIBLE);
+            holder.txtPoint.setText("Point value : SAR " + bookinglist.get(position).getBooking_pont_value() );
+        }
 
         if (bookinglist.get(position).getBooking_status().equals("0")){
             holder.txtStatus.setText(context.getResources().getString(R.string.failed));
@@ -100,7 +120,8 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView refnumb,date_time,rate, txtStatus, txtPickUp,txtBookingDate, txtDropUp,  txtCancel, txtCarName, txtPaymentBy;
+        TextView refnumb,date_time,rate,txtjourneyToDate, txtStatus, txtPickUp,txtBookingDate,
+                txtDropUp,  txtCancel, txtCarName, txtPaymentBy, txtCreditValue, txtWallet, txtPoint, txtCoupon;
         ImageView imgLogo, car_image;
 
         public MyViewHolder(final View itemView) {
@@ -118,6 +139,11 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
             car_image = (ImageView) itemView.findViewById(R.id.my_booking_image);
             txtCancel = itemView.findViewById(R.id.previous_booking_txtcancel);
             txtBookingDate = itemView.findViewById(R.id.txt_bookingdate);
+            txtjourneyToDate = itemView.findViewById(R.id.txt_date_totime);
+            txtCoupon = itemView.findViewById(R.id.txtCuoponValue);
+            txtCreditValue = itemView.findViewById(R.id.txtCreditValueAmt);
+            txtWallet = itemView.findViewById(R.id.txtWalletValueAmt);
+            txtPoint = itemView.findViewById(R.id.txtPointValueAmt);
           /*  txtCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

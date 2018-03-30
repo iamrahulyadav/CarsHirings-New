@@ -9,10 +9,12 @@ import android.view.View;
 import android.widget.Button;
 
 import com.carshiring.R;
+import com.mukesh.tinydb.TinyDB;
 
 
 public class ThankYou extends AppCompatActivity implements View.OnClickListener {
     Button bt_viewquotes;
+    TinyDB tinyDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,11 +22,14 @@ public class ThankYou extends AppCompatActivity implements View.OnClickListener 
         setContentView(R.layout.activity_thank_you);
         bt_viewquotes= (Button) findViewById(R.id.bt_viewquotes);
         bt_viewquotes.setOnClickListener(this);
+        tinyDB = new TinyDB(getApplicationContext());
         ActionBar actionBar=getSupportActionBar();
         if(actionBar!=null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.back);
             actionBar.setTitle("Thank You");
+            tinyDB.remove("extra_added");
+            tinyDB.remove("full_prot");
         }
     }
 

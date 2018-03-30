@@ -11,10 +11,13 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +32,7 @@ import com.carshiring.models.CatRequest;
 import com.carshiring.models.Category;
 import com.carshiring.models.SearchData;
 import com.carshiring.models.UserDetails;
+import com.carshiring.splash.SplashActivity;
 import com.carshiring.utilities.AppBaseActivity;
 import com.carshiring.utilities.AppGlobal;
 import com.carshiring.utilities.Utility;
@@ -60,6 +64,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.ContentValues.TAG;
+import static com.carshiring.activities.home.MainActivity.getKeyFromValue;
 
 public class CarsResultListActivity extends AppBaseActivity {
     Gson gson = new Gson();
@@ -73,9 +78,10 @@ public class CarsResultListActivity extends AppBaseActivity {
     CarResultsListAdapter listAdapter;
     UserDetails userDetails = new UserDetails();
     TinyDB tinyDB;
-    public static String id_context, refertype, type;
+    public static String id_context, refertype, type, day, time;
     AppGlobal appGlobal=AppGlobal.getInstancess();
     Dialog dialog;
+    TextView txtDob;
     TextView tvFromDate,tvPickDate,tvTodate,txtPlaceDrop;
     String fname,lname,email,phone,zip,license,licenseorigin,city,address,emaillogin,pass,set ="",userid="",dob;
     RecyclerView recycler_search_cars;
@@ -154,7 +160,7 @@ public class CarsResultListActivity extends AppBaseActivity {
         listCarResult1.clear();
 
 
-        Toast.makeText(getApplicationContext(), catBeanList.get(position).getCode() + "", Toast.LENGTH_SHORT).show();
+     //   Toast.makeText(getApplicationContext(), catBeanList.get(position).getCode() + "", Toast.LENGTH_SHORT).show();
 
         for(int i=0; i<listCarResult.size(); i++) {
             if((catBeanList.get(position).getCode()+"").equals(listCarResult.get(i).getCategory())){
@@ -202,6 +208,8 @@ public class CarsResultListActivity extends AppBaseActivity {
 
                         calPrice = (priceNew*pointpercent)/100;
                         calPoint = (int) (calPrice/0.02);
+                        day = carDetail.getTime();
+                        time = carDetail.getTime_unit();
                         intent.putExtra("day",carDetail.getTime());
                         intent.putExtra("refer_type",refertype);
                         intent.putExtra("point_earn",calPoint );
@@ -233,7 +241,8 @@ public class CarsResultListActivity extends AppBaseActivity {
     protected void onResume() {
         super.onResume();
         actionBar.setTitle(getResources().getString(R.string.car_results));
-
+      /*  tinyDB.remove("extra_added");
+        tinyDB.remove("full_prot");*/
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recycler_search_cars.setLayoutManager(layoutManager);
@@ -254,6 +263,7 @@ public class CarsResultListActivity extends AppBaseActivity {
             listdispaly(listCarResult);
         }
         isApplyFiltered = false ;
+
 //        recycler_search_cars.setAdapter(listAdapter);
         getCat();
     }
@@ -419,11 +429,13 @@ public class CarsResultListActivity extends AppBaseActivity {
 
     private void setupoverlay(String set) {
 
-        final EditText edtFname, edtLname, edtemail,edtPhone,edtZip, edtLicense,edtLicenseOrign,edtCity,
+        final EditText edtFname, edtLname, edtemail,edtPhone,edtZip, edtLicense,edtCity,
                 edtAddress;
+        Spinner edtLicenseOrign;
 
         Button btupdate, btnCancel;
 //        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         if (set.equals("login")){
             dialog.setContentView(R.layout.popup_login);
             final EditText edtEmail= dialog.findViewById(R.id.et_email);
@@ -458,20 +470,25 @@ public class CarsResultListActivity extends AppBaseActivity {
             dialog.setContentView(R.layout.popup_updateprofile);
             edtFname = dialog.findViewById(R.id.etUserFirstName);
             edtLname = dialog.findViewById(R.id.etUserLastName);
-            etdob= dialog.findViewById(R.id.etUserDob);
             edtemail = dialog.findViewById(R.id.etUserEmail);
+            edtemail.setText(userDetails.getUser_email());
+            edtemail.setEnabled(false);
             edtPhone = dialog.findViewById(R.id.etUserPhoneNo);
             edtZip = dialog.findViewById(R.id.etUserzip);
             edtLicense = dialog.findViewById(R.id.etlicense);
-            edtLicenseOrign = dialog.findViewById(R.id.etlicenseorigion);
+            edtLicenseOrign = dialog.findViewById(R.id.spinnerlicenseorigion);
+            txtDob = dialog.findViewById(R.id.etUserDob);
             edtCity = dialog.findViewById(R.id.etcity);
             edtAddress = dialog.findViewById(R.id.etAddress);
             btupdate = dialog.findViewById(R.id.bt_update);
             btnCancel = dialog.findViewById(R.id.bt_cancel);
-            edtemail.setText(userDetails.getUser_email());
-            edtemail.setEnabled(false);
-
-            etdob.setOnClickListener(new View.OnClickListener() {
+            btnCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
+                }
+            });
+            txtDob.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     new DatePickerDialog(CarsResultListActivity.this, date, mCalendar
@@ -479,63 +496,72 @@ public class CarsResultListActivity extends AppBaseActivity {
                             mCalendar.get(Calendar.DAY_OF_MONTH)).show();
                 }
             });
-//            set onclick on update
+            // Creating adapter for spinner
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                    android.R.layout.simple_spinner_item, SplashActivity.counrtyList);
 
-            btnCancel.setOnClickListener(new View.OnClickListener() {
+            // Drop down layout style - list view with radio button
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            // attaching data adapter to spinner
+            edtLicenseOrign.setAdapter(dataAdapter);
+
+            edtLicenseOrign.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    String item = adapterView.getItemAtPosition(i).toString();
+                    licenseorigin = (String) getKeyFromValue(SplashActivity.country,item);
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
                 }
             });
 
+//            set onclick on update
             btupdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     fname = edtFname.getText().toString().trim();
                     lname = edtLname.getText().toString().trim();
-                    dob= etdob.getText().toString().trim();
                     email = edtemail.getText().toString().trim();
                     phone = edtPhone.getText().toString().trim();
                     zip = edtZip.getText().toString().trim();
                     license = edtLicense.getText().toString().trim();
-                    licenseorigin = edtLicenseOrign.getText().toString().trim();
                     city = edtCity.getText().toString().trim();
                     address = edtAddress.getText().toString().trim();
                     if (!fname.isEmpty()){
                         if (!lname.isEmpty()){
-                            if(!dob.isEmpty()) {
-                                if (Utility.checkemail(email)) {
-                                    if (Utility.checkphone(phone)) {
-                                        if (!zip.isEmpty()) {
-                                            if (!license.isEmpty()) {
-                                                if (!licenseorigin.isEmpty()) {
-                                                    if (!city.isEmpty()) {
-                                                        if (!address.isEmpty()) {
-                                                            updateProfile(userid, fname);
-                                                        } else {
-                                                            Utility.message(getApplication(), getResources().getString(R.string.please_enter_address));
-                                                        }
+                            if (Utility.checkemail(email)){
+                                if (Utility.checkphone(phone)){
+                                    if (!zip.isEmpty()){
+                                        if (!license.isEmpty()){
+                                            if (!licenseorigin.isEmpty()){
+                                                if (!city.isEmpty()){
+                                                    if (!address.isEmpty()){
+                                                        updateProfile(userid,fname);
                                                     } else {
-                                                        Utility.message(getApplication(), getResources().getString(R.string.please_enter_city));
+                                                        Utility.message(getApplication(), getResources().getString(R.string.please_enter_address));
                                                     }
                                                 } else {
-                                                    Utility.message(getApplication(), getResources().getString(R.string.please_enter_license_origin));
+                                                    Utility.message(getApplication(), getResources().getString(R.string.please_enter_city));
                                                 }
                                             } else {
-                                                Utility.message(getApplication(), getResources().getString(R.string.please_enter_license));
+                                                Utility.message(getApplication(), getResources().getString(R.string.please_enter_license_origin));
                                             }
                                         } else {
-                                            Utility.message(getApplication(), getResources().getString(R.string.please_enter_zipcode));
+                                            Utility.message(getApplication(), getResources().getString(R.string.please_enter_license));
                                         }
                                     } else {
-                                        Utility.message(getApplication(), getResources().getString(R.string.please_enter_valid_phone_number));
+                                        Utility.message(getApplication(), getResources().getString(R.string.please_enter_zipcode));
                                     }
                                 } else {
-                                    Utility.message(getApplication(), getResources().getString(R.string.please_enter_valid_email));
+                                    Utility.message(getApplication(), getResources().getString(R.string.please_enter_valid_phone_number));
                                 }
-                            }
-                            else {
-                                Utility.message(getApplication(),getResources().getString(R.string.please_enter_dob));
+                            } else {
+                                Utility.message(getApplication(), getResources().getString(R.string.please_enter_valid_email));
                             }
                         } else {
                             Utility.message(getApplication(),getResources().getString(R.string.please_enter_last_name));
@@ -572,7 +598,7 @@ public class CarsResultListActivity extends AppBaseActivity {
         String myFormat = "MM/dd/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         dob = sdf.format(mCalendar.getTime());
-        etdob.setText(dob);
+        txtDob.setText(dob);
     }
 
     public static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
@@ -645,25 +671,6 @@ public class CarsResultListActivity extends AppBaseActivity {
                                 catBeanList.clear();
                                 catBeanList.addAll(set);
                                 Log.d("TAG", "onResponse: " + catBeanList.size());   // 16
-
-
-                                //2nd
-/*
-                                TreeSet<Category.ResponseBean.CatBean> set1 = new TreeSet<>(new Comparator<Category.ResponseBean.CatBean>() {
-                                    @Override
-                                    public int compare(Category.ResponseBean.CatBean o1, Category.ResponseBean.CatBean o2) {
-                                        if(o1.getCategory_name().equalsIgnoreCase(o2.getCategory_name())){
-                                            return 0;
-                                        }
-                                        return ab;
-                                    }
-                                });
-                                Log.d("TAG", "onResponse: " + catBeanList.size());    // 16
-                                set1.addAll(catBeanList);
-                                catBeanList.clear();
-                                catBeanList.addAll(set1);
-                                Log.d("TAG", "onResponse: " + catBeanList.size());   // 16
-*/
                                 adapter.notifyDataSetChanged();
                             }
                         });
@@ -700,7 +707,7 @@ public class CarsResultListActivity extends AppBaseActivity {
 
                 }
                 else{
-                    Utility.message(getApplicationContext(), response.body().message);
+                    Utility.message(getApplicationContext(), response.body().msg);
                 }
             }
 
@@ -733,7 +740,7 @@ public class CarsResultListActivity extends AppBaseActivity {
                     appGlobal.setLoginData(logindata);
                     String st=  appGlobal.getUser_id();
                     dialog.dismiss();
-
+                    Utility.message(getApplicationContext(), response.body().message);
                 }
                 else{
                     Utility.message(getApplicationContext(), response.body().message);

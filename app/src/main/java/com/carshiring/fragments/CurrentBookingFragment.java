@@ -93,7 +93,7 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
         btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().finish();
+               getActivity().onBackPressed();
             }
         });
 
@@ -178,7 +178,7 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
                 boolean checked = ((RadioButton) view).isChecked();
 
                 if (checked){
-                    accountType="ab";
+                    accountType="1";
                 }
             }
         });

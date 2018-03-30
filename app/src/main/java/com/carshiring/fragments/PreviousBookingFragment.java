@@ -91,7 +91,7 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
         bt_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().finish();
+                getActivity().onBackPressed();
             }
         });
 
@@ -170,9 +170,7 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
                         if (bookingData.size()>0){
                             linearLayout.setVisibility(View.GONE);
                             setMyAdapter(bookingData);
-
                         } else {
-
                             linearLayout.setVisibility(View.VISIBLE);
                         }
                         bookingAdapter.notifyDataSetChanged();
