@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -116,61 +117,99 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="1"
             android:background="@color/redStrong">
             <TextView
                 android:id="@+id/txt_date_time"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="20/5/2017 at 10:00PM"
-                android:textSize="16sp"
+                android:textSize="@dimen/small_size"
                 android:textStyle="bold"
                 android:textColor="@color/white"
-                android:layout_weight="0.85"
+                android:layout_weight="1"
                 android:padding="5dp"/>
             <TextView
                 android:id="@+id/txt_date_totime"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="20/5/2017 at 10:00PM"
-                android:visibility="gone"
-                android:textSize="16sp"
+                android:textSize="@dimen/small_size"
+                android:gravity="right"
                 android:textStyle="bold"
                 android:textColor="@color/white"
-                android:layout_weight="0.85"
+                android:layout_weight="1"
                 android:padding="5dp"/>
 
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/redStrong"
+            android:orientation="vertical">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:background="@color/white"
+                android:paddingLeft="10dp"
+                android:textSize="@dimen/extra_small_size"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="Booking Charges : SAR 600.60"
+                android:id="@+id/btnBookingCharge"/>
+            <Button
+                android:background="@color/white"
+                android:paddingLeft="10dp"
+                android:textSize="@dimen/extra_small_size"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="Cancelation Charges: SAR 100"
+                android:id="@+id/btn_cancelCharge"/>
 
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:background="@color/redStrong">
             <TextView
-                android:background="@color/redStrong"
                 android:id="@+id/txt_bookingdate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="20/5/2017 at 10:00PM"
-                android:textSize="16sp"
+                android:textSize="@dimen/small_size"
                 android:textStyle="bold"
                 android:textColor="@color/white"
-                android:layout_weight="0.85"
-                android:padding="5dp"/>
+                android:padding="5dp"
+                tools:ignore="InefficientWeight" />
             <TextView
                 android:id="@+id/txt_rate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="INR167.34"
-                android:gravity="end"
-                android:textSize="16sp"
+                android:textSize="@dimen/small_size"
                 android:textStyle="bold"
                 android:background="@color/redStrong"
                 android:textColor="@color/white"
-                android:layout_gravity="end"
                 android:padding="5dp"/>
 
         </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Full protection: 100"
+            android:background="@color/redStrong"
+            android:id="@+id/txtFullProtection"
+            android:visibility="gone"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:padding="@dimen/pf_5dp_space"/>
 
         <LinearLayout
             android:layout_width="match_parent"

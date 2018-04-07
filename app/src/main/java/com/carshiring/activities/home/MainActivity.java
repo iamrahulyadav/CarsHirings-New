@@ -438,7 +438,7 @@ public class MainActivity extends AppCompatActivity
                     String item = adapterView.getItemAtPosition(i).toString();
                     licenseorigin = (String) getKeyFromValue(SplashActivity.country,item);
 
-                    Toast.makeText(MainActivity.this, ""+licenseorigin, Toast.LENGTH_SHORT).show();
+                 //   Toast.makeText(MainActivity.this, ""+licenseorigin, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -500,7 +500,6 @@ public class MainActivity extends AppCompatActivity
         });
         }
 
-
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -511,7 +510,6 @@ public class MainActivity extends AppCompatActivity
         dialog.setCancelable(false);
         dialog.show();
     }
-
 
 
     Calendar mCalendar = Calendar.getInstance();

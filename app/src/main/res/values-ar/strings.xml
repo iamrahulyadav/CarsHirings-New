@@ -51,7 +51,7 @@
     <string name="accountdetails">إعدادات</string>
     <string name="changepass">تغيير كلمة السر</string>
     <string name="bookingHistory">سجل الحجز</string>
-    <string name="logout">Logout</string>
+    <string name="logout">الخروج</string>
     <string name="email">البريد الإلكتروني</string>
     <string name="phone">هاتف</string>
     <string name="age">عمر</string>
@@ -141,7 +141,7 @@
     <string name="txtDate">تاريخ</string>
     <string name="txtTime">زمن</string>
     <string name="txtDriveAge">العمر السائق</string>
-    <string name="switchDriverAgebw">سائق تتراوح أعمارهم بين 25 - 70؟</string>
+    <string name="switchDriverAgebw">سائق تتراوح أعمارهم بين 30 - 70؟</string>
     <string name="switchSearchMap">البحث عن طريق الخريطة</string>
     <string name="edtDriverAge">أدخل عمر البرنامج</string>
     <string name="licenseno">رقم الرخصة</string>
@@ -270,7 +270,7 @@
     <string name="please_enter_dob">الرجاء ادخال تاريخ ميلادك</string>
     <string name="please_enter_first_name">يرجى ادخال الاسم الاول</string>
     <string name="please_enter_last_name">يرجى إدخال اسمك الأخير</string>
-
+    <string name="something_wrong">something went wrong</string>
     <string name="no_internet_connection">لا اتصال إنترنت</string>
     <string name="loading">جار التحميل...</string>
     <string name="please_wait">أرجو الإنتظار...</string>
@@ -304,7 +304,9 @@
 
     <!--MyAccount-->
     <string name="points">200 نقطة</string>
-
+    <string name="transaction_date"> تاريخ الصفقة</string>
+    <string name="remain_point">النقاط المتبقية</string>
+    <string name="remain_wallet">ما تبقى من المحفظة</string>
     <!--SearchFilterActivity-->
     <string name="selected_packages_are">الحزم المختارة هي</string>
     <string name="selected_suppliers_are">الموردين المختارين هي</string>
@@ -381,4 +383,7 @@
     <string name="txtTotalPay">Payable Today</string>
     <string name="paymentSADAD">Pay with SADAD</string>
     <string name="txtPay">Tap \'Book Now\' to complete your booking and expect carshirng</string>
+
+    <!--booking adapter-->
+    <string name="txtTransactionDate">تاريخ الصفقة</string>
 </resources>

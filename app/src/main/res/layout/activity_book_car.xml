@@ -109,17 +109,16 @@
                         android:id="@+id/img_car"
                         android:layout_width="match_parent"
                         android:layout_height="170dp"
-                        android:src="@drawable/ic_car_img"
 
                         />
                     <TextView
                         android:id="@+id/txt_carPrice"
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
+                        android:layout_height="50dp"
                         android:layout_gravity="bottom|start"
                         android:background="@color/bottom_color"
                         android:textColor="#fff"
-                        android:paddingLeft="10dp"
+                        android:paddingStart="10dp"
                         android:paddingTop="5dp"
                         android:paddingBottom="5dp"
                         android:text="INR 5,540.64"
@@ -129,8 +128,8 @@
                     <TextView
                         android:layout_marginTop="10dp"
                         android:layout_width="match_parent"
-                        android:layout_height="30dp"
-                        android:paddingLeft="10dp"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="10dp"
                         android:paddingTop="10dp"
                         android:id="@+id/txtpoint_cal"
                         android:textColor="@color/black"
@@ -371,8 +370,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/qoutesbottom"
+        android:orientation="vertical"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:padding="10dp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            android:id="@+id/activity_booking_txtSaveLater"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:background="@color/colorPrimaryDark"
+            android:text="Save later"
+            android:gravity="center_horizontal"/>
         <include layout="@layout/bottom_toolbar"
             ></include></LinearLayout>
 

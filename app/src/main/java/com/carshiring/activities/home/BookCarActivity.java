@@ -1,16 +1,16 @@
 package com.carshiring.activities.home;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -27,26 +26,25 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.carshiring.R;
-import com.carshiring.adapters.CarResultsListAdapter;
-import com.carshiring.fragments.SearchCarFragment;
-import com.carshiring.models.BookingRequest;
 import com.carshiring.models.ExtraAdded;
 import com.carshiring.models.UserDetails;
 import com.carshiring.utilities.AppBaseActivity;
 import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static com.carshiring.activities.home.CarDetailActivity.fullprotectionammount;
-import static com.carshiring.activities.home.CarDetailActivity.fullprotectioncurrency;
+import static com.carshiring.activities.home.CarDetailActivity.carImage;
 import static com.carshiring.activities.home.CarDetailActivity.termsurl;
 
 public class BookCarActivity extends AppBaseActivity implements View.OnClickListener{
 
-    TextView terms,quotes,carname,carprice,txtAddExtra, txtFull,txtPoint, txtFullValue;
+    TextView terms,quotes,carname,carprice,txtAddExtra, txtSaveLater, txtFull,txtPoint, txtFullValue;
     ImageView carImg,imglogo;
     LinearLayout extraView,addExtra;
     //  List<CarSpecification> carSpecificationList;
@@ -97,17 +95,20 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
         txtAddExtra = findViewById(R.id.txt_additional_extra);
         txtFull = findViewById(R.id.txt_full_prote);
         txtFullValue = findViewById(R.id.txt_full_prote_value);
+        txtSaveLater = findViewById(R.id.activity_booking_txtSaveLater);
+
         if (tinyDB.contains("full_prot")){
-            String full = tinyDB.getString("full_prot");
+            String full = String.valueOf(CarDetailActivity.fullAmtValue);
             txtFull.setVisibility(View.VISIBLE);
             txtFullValue.setVisibility(View.VISIBLE);
             fullProtection = "yes";
             protection_val = full;
-            txtFullValue.setText(getResources().getString(R.string.full_protection_only) + full + getResources()
+            txtFullValue.setText(getResources().getString(R.string.full_protection_only) +" SAR "+ full + " "+getResources()
                     .getString(R.string.full_day));
         } else {
             fullProtection = "no";
         }
+        new AsyncCaller().execute();
 
         txtPoint.setText(getResources().getString(R.string.colletcted_point) + String.valueOf(CarDetailActivity.point));
         terms.setOnClickListener(this);
@@ -115,18 +116,6 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
 
         bar.setVisibility(View.VISIBLE);
         bar1.setVisibility(View.VISIBLE);
-        Glide.with(getApplication()).load(CarDetailActivity.carImage).listener(new RequestListener<Drawable>() {
-            @Override
-            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                bar.setVisibility(View.GONE);
-                return false;
-            }
-            @Override
-            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                bar.setVisibility(View.GONE);
-                return false;
-            }
-        }).into(carImg);
         Glide.with(getApplication()).load(CarDetailActivity.logo).listener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -154,7 +143,107 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
                addLayout(name,price,number,currency,extraData.get(i).getId());
            }
         }
+        txtSaveLater.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
+
+    private class AsyncCaller extends AsyncTask<Integer, Void, Integer>
+    {
+        ProgressDialog pdLoading = new ProgressDialog(BookCarActivity.this);
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            //this method will be running on UI thread
+            pdLoading.setMessage("\tLoading...");
+            pdLoading.show();
+        }
+        @Override
+        protected Integer doInBackground(Integer... params) {
+            URL url = null;
+            int s = 0;
+            try {
+                url = new URL(carImage);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+
+            HttpURLConnection httpConn = null;
+            try {
+                httpConn = (HttpURLConnection) url.openConnection();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            //this method will be running on background thread so don't update UI frome here
+            //do your long running http tasks here,you dont want to pass argument and u can access the parent class' variable url over here
+            try {
+                httpConn.setInstanceFollowRedirects(false);
+                httpConn.setRequestMethod("HEAD");
+                httpConn.connect();
+
+              s = httpConn.getResponseCode();
+
+
+
+                Log.d("TAG", "doInBackground: "+httpConn.getResponseCode());
+                System.out.println("Response Code : " + httpConn.getResponseCode());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return s;
+
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            super.onPostExecute(result);
+            Log.d("TAG", "onPostExecute: "+result);
+
+            //this method will be running on UI thread
+
+            pdLoading.dismiss();
+            if (result==404){
+
+              //  String sv="https://www.raceentry.com/img/Race-Registration-Image-Not-Found.png";
+                Glide.with(getApplication()).load("").listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        bar.setVisibility(View.GONE);
+                        return false;
+                    }
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        bar.setVisibility(View.GONE);
+                        return false;
+                    }
+                }).into(carImg);
+
+            } else {
+                Glide.with(getApplication()).load(CarDetailActivity.carImage).listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        bar.setVisibility(View.GONE);
+                        return false;
+                    }
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        bar.setVisibility(View.GONE);
+                        return false;
+                    }
+                }).into(carImg);
+
+            }
+        }
+
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

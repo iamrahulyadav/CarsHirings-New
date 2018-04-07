@@ -308,7 +308,7 @@ public class SelectFilterActivity extends AppBaseActivity implements View.OnClic
                    }
                    String sel = stringBuilder.toString();
                    sel = sel.substring(0, sel.length() - SEPARATOR.length());
-                   listModel.setSupplier(sel.toString());
+                   listModel.setSupplier(sel);
                }
                else
                {

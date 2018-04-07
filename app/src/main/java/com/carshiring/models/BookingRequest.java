@@ -11,8 +11,16 @@ public class BookingRequest {
     private String name="",sarname="",number="",email="",address="",city="",zipcode="",countrycode="",car_id="",
             type="",rtype="",fullprotection="",flight_no="",dob="",user_id="",pick_date="",
             drop_date="", pick_city="",drop_city="",protection_val="",booking_point="",booking_wallet="",
-            booking_payfort="", transaction_id="",discountCoupon="",discountvalue="";
+            booking_payfort="", transaction_id="",discountCoupon="",discountvalue="",merchant_reference="";
     List<ExtraAdded> extraData = new ArrayList<>();
+
+    public String getMerchant_reference() {
+        return merchant_reference;
+    }
+
+    public void setMerchant_reference(String merchant_reference) {
+        this.merchant_reference = merchant_reference;
+    }
 
     public String getDiscountCoupon() {
         return discountCoupon;

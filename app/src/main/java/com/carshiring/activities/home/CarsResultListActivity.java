@@ -4,7 +4,10 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -180,7 +183,7 @@ public class CarsResultListActivity extends AppBaseActivity {
     double pointpercent, calPoint,calPrice;
 
     public void listdispaly(List<SearchData> listCarResult ) {
-        Log.d("Search Data List", listCarResult.size()+"");
+        Log.d("Search Data List", gson.toJson(listCarResult));
         CarResultsListAdapter listAdapter;
         listAdapter = new CarResultsListAdapter(this,listCarResult, new CarResultsListAdapter.OnItemClickListener() {
             @Override
@@ -246,9 +249,12 @@ public class CarsResultListActivity extends AppBaseActivity {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recycler_search_cars.setLayoutManager(layoutManager);
-
-        DividerItemDecoration itemDecoration = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
-        recycler_search_cars.addItemDecoration(itemDecoration);
+        recycler_search_cars.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL) {
+            @Override
+            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                // Do not draw the divider
+            }
+        });
         if(isApplyFiltered)
         {
             if (filteredtList.size()>0){
@@ -303,6 +309,7 @@ public class CarsResultListActivity extends AppBaseActivity {
 
     private boolean isApplyFiltered = false ;
     private  ArrayList<SearchData>  filteredtList ;
+
     private void filterlist(String supl, String pack, String feat, String insur) {
 
         String[] suplier=supl.split(",");
@@ -321,8 +328,7 @@ public class CarsResultListActivity extends AppBaseActivity {
             String supleir_strg=  data.getSupplier();
             Log.d("Supplier",supleir_strg);
 
-            if(!supleir_strg.isEmpty())
-            {
+            if(!supleir_strg.isEmpty()) {
                 for (String suply:suplier)
                 {
                     if(!suply.isEmpty())
@@ -341,32 +347,38 @@ public class CarsResultListActivity extends AppBaseActivity {
                     continue;
                 }
             }
-            boolean ispackagefound=false;
-            String package_strg=data.getPackageX();
-            Log.d("Package",package_strg);
-            if(!package_strg.isEmpty())
+
+            boolean isAc=false;
+            String AC=  data.getFeature().getAircondition();
+            boolean isfeaturefound=false;
+            String feature_Aircondition=data.getFeature().getAircondition();
+            Log.d("feature_Aircondition",feature_Aircondition);
+/*
+            if(!AC.isEmpty() && !feature_Aircondition.isEmpty())
             {
-                for (String pac:packages)
+                for (String suply:features)
                 {
-                    if(!pac.isEmpty())
+                    if(!suply.isEmpty())
                     {
-                        if(package_strg.equalsIgnoreCase(pac))
+                        if(suply.equalsIgnoreCase("Air Condition"))
                         {
                             filteredtList.add(data);
-                            ispackagefound=true;
-                            Log.d("Filter","Package Matched");
+                            isAc=true;
+                            Log.d("Filter","Ac Matched");
                             break;
+                        } else if (suply.equalsIgnoreCase("Automatic")){
+                            filteredtList.add(data);
+                            isfeaturefound=true;
                         }
                     }
                 }
-                if(ispackagefound)
+                if(isAc && isfeaturefound)
                 {
                     continue;
                 }
             }
-            boolean isfeaturefound=false;
-           String feature_Aircondition=data.getFeature().getTransmission();
-            Log.d("feature_Aircondition",feature_Aircondition);
+*/
+
             if(!feature_Aircondition.isEmpty())
             {
                for (String Air:features)
@@ -387,8 +399,6 @@ public class CarsResultListActivity extends AppBaseActivity {
                    continue;
                }
             }
-
-
         }
         Log.d("Filtere list",""+ filteredtList.size());
         isApplyFiltered=true;
@@ -740,10 +750,10 @@ public class CarsResultListActivity extends AppBaseActivity {
                     appGlobal.setLoginData(logindata);
                     String st=  appGlobal.getUser_id();
                     dialog.dismiss();
-                    Utility.message(getApplicationContext(), response.body().message);
+                    Utility.message(getApplicationContext(), response.body().msg);
                 }
                 else{
-                    Utility.message(getApplicationContext(), response.body().message);
+                    Utility.message(getApplicationContext(), response.body().msg);
                 }
             }
 

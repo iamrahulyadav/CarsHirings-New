@@ -81,7 +81,9 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
         currentBookingData = new ArrayList<>();
         String  login = tinyDB.getString("login_data");
         userDetails = gson.fromJson(login, UserDetails.class);
-        userId =userDetails.getUser_id();
+        if (userDetails.getUser_id()!=null){
+            userId =userDetails.getUser_id();
+        }
         bookingData = new ArrayList<>();
         token = tinyDB.getString("access_token");
         language = tinyDB.getString("language_code");
@@ -273,11 +275,10 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
         bookingCancel.enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                Utility.hidepopup();
                 dialog.dismiss();
+                Log.d(TAG, "onResponse: cancel"+gson.toJson(response.body()));
                 if (response!=null){
                     if (response.body().status){
-
                         Toast.makeText(getContext(), ""+response.body().msg, Toast.LENGTH_SHORT).show();
                         getBook();
                     } else {
@@ -290,6 +291,7 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
             public void onFailure(Call<ApiResponse> call, Throwable t) {
                 Utility.hidepopup();
                 dialog.dismiss();
+                Log.d(TAG, "onFailure: "+t.getMessage());
                 Toast.makeText(getContext(), ""+getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onFailure: "+t.getMessage());
             }

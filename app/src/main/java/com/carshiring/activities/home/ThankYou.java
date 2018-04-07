@@ -1,5 +1,6 @@
 package com.carshiring.activities.home;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.carshiring.R;
 import com.mukesh.tinydb.TinyDB;
@@ -15,7 +17,9 @@ import com.mukesh.tinydb.TinyDB;
 public class ThankYou extends AppCompatActivity implements View.OnClickListener {
     Button bt_viewquotes;
     TinyDB tinyDB;
+    TextView txtThanku;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +34,12 @@ public class ThankYou extends AppCompatActivity implements View.OnClickListener 
             actionBar.setTitle("Thank You");
             tinyDB.remove("extra_added");
             tinyDB.remove("full_prot");
+            BookCarActivity.extraData.clear();
+            CarDetailActivity.fullprotectionammount=null;
         }
+        txtThanku = findViewById(R.id.txtthanku);
+        txtThanku.setText(getResources().getString(R.string.dummy) +" "+ getIntent().getStringExtra("bookingid"));
+
     }
 
     @Override

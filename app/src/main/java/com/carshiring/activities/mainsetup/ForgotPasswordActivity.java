@@ -76,7 +76,7 @@ public class ForgotPasswordActivity extends AppBaseActivity implements TextView.
                     @Override
                     public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                         if(response.body().status) {
-                            Message = response.body().message;
+                            Message = response.body().msg;
                             Utility.message(ForgotPasswordActivity.this, Message);
                             Utility.hidepopup();
                             finish();

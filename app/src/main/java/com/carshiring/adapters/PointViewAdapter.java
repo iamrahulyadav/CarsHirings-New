@@ -1,5 +1,6 @@
 package com.carshiring.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -53,14 +54,16 @@ public class PointViewAdapter extends RecyclerView.Adapter<PointViewAdapter.MyVi
         return new MyViewHolder(itemView);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
-        holder.tv_booking_id.setText(pointHistoryData.get(position).getBooking_id());
-        holder.tv_booking_amount.setText(pointHistoryData.get(position).get_$BookingPoint18());
-        holder.tv_booking_date.setText(pointHistoryData.get(position).getBokking_date());
+        holder.tv_booking_id.setText(context.getResources().getString(R.string.booking_id)+" : " +pointHistoryData.get(position).getBooking_id());
+
+        holder.tv_booking_amount.setText(context.getResources().getString(R.string.points)+" : "+pointHistoryData.get(position).get_$BookingPoint18());
+        holder.tv_booking_date.setText(context.getResources().getString(R.string.transaction_date)+" : "+pointHistoryData.get(position).getBokking_date());
         holder.tv_booking_type.setText(pointHistoryData.get(position).get_$BookingPointType184());
-        holder.tv_booking_point.setText(pointHistoryData.get(position).get_$BookingAffetctedPoint183());
+        holder.tv_booking_point.setText(context.getResources().getString(R.string.remain_point)+" : "+pointHistoryData.get(position).get_$BookingAffetctedPoint183());
     }
 
     @Override

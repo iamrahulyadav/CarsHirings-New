@@ -175,10 +175,13 @@ public class AccountDetailsActivity extends AppBaseActivity {
                         edt_phone.setText(userDetails.getUser_phone());
                         edt_licence_no.setText(userDetails.getUser_license_no());
                         edt_fname.setText(userDetails.getUser_name());
-                        edt_dob.setText(userDetails.getUser_dob());
+                        Log.d("TAG", "onResponse: "+userDetails.getUser_dob());
+                        if (userDetails.getUser_dob()!=null&&!userDetails.getUser_dob().equalsIgnoreCase("0000-00-00")){
+                            edt_dob.setText(Utility.convertSimpleDate(userDetails.getUser_dob()));
+                        }
                         edt_zipcode.setText(userDetails.getUser_zipcode());
                        // edt_licence_origin.setText(userDetails.getUser_license_no());
-                        edt_city.setText(userDetails.getUser_city().toString());
+                        edt_city.setText((String)userDetails.getUser_city());
                         edt_address.setText(userDetails.getUser_address());
                         if (userDetails.getUser_lname()!=null){
                             edt_lname.setText(userDetails.getUser_lname());
@@ -192,7 +195,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
 
                     }
                     else{
-                        Utility.message(getApplicationContext(), getResources().getString(R.string.no_internet_connection));
+                        Utility.message(getApplicationContext(), getResources().getString(R.string.something_wrong));
                     }
                 }
             }
@@ -385,32 +388,29 @@ public class AccountDetailsActivity extends AppBaseActivity {
 
     }
 
+    private int mYear, mMonth, mDay;
     public void dob_pick(View view){
-   //     Toast.makeText(getApplicationContext(), "clicked", Toast.LENGTH_SHORT).show();
-        showDialog(999);
+        // Get Current Date
+        final Calendar c = Calendar.getInstance();
+        mYear = c.get(Calendar.YEAR);
+        mMonth = c.get(Calendar.MONTH);
+        mDay = c.get(Calendar.DAY_OF_MONTH);
+
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+                        str_dob =year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+                        edt_dob.setText(Utility.convertSimpleDate(str_dob));
+
+                    }
+                }, mYear, mMonth, mDay);
+        datePickerDialog.show();
     }
 
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        // TODO Auto-generated method stub
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        if (id == 999) {
-            return new DatePickerDialog(this, myDateListener, year, month, day);
-        }
-        return null;
-    }
-
-    private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
-            str_dob = arg3 + "/" + arg2 + "/" + arg1;
-            edt_dob.setText(str_dob);
-        }
-    };
 
     public void upload_my_image(View view){
 
@@ -498,28 +498,12 @@ public class AccountDetailsActivity extends AppBaseActivity {
 //                    userDetails.setUser_image();
 //                    appGlobal.setUser_image(response.body().image);
                     String image = response.body().image;
-                    Toast.makeText(AccountDetailsActivity.this, image, Toast.LENGTH_SHORT).show();
-
-                    Glide.with(getApplicationContext())
-                            .load(RetrofitApiBuilder.IMG_BASE_URL + image)
-                            .into(iv);
-
-/*
-                    Glide.with(getApplicationContext())
+       /*             Glide.with(getApplicationContext())
                             .load(RetrofitApiBuilder.IMG_BASE_URL + image)
                             .into(iv);
 */
-
-
                     Toast.makeText(getApplicationContext(), response.body().msg, Toast.LENGTH_SHORT).show();
-                    /*Utility.message(getApplicationContext(), response.body().message);
-//                    String logindata=gson.toJson(response.body().response.userdetail);
-                    userDetails = response.body().response.user_detail;
-                    String logindata=gson.toJson(userDetails);
-                    appGlobal.setLoginData(logindata);
-                    String st=  appGlobal.getUser_id()*/;
-                    //dialog.dismiss();
-                    //dialog.dismiss();
+                    getProfile();
 
                 }
                 else{

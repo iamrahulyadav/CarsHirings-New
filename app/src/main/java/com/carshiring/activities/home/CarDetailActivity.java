@@ -1,6 +1,10 @@
 package com.carshiring.activities.home;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -16,6 +20,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.carshiring.R;
 import com.carshiring.adapters.Page_Adapter;
 import com.carshiring.fragments.CarDetailTab1Fragment;
@@ -32,7 +40,9 @@ import com.carshiring.webservices.RetrofitApiBuilder;
 import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -60,10 +70,12 @@ public class CarDetailActivity extends AppCompatActivity {
     public static String logo,carPrice,carImage,modelname,currency,suppliername,suppliercity,termsurl
             ,fullprotectioncurrency,fullprotectionammount,fullProcted,driver_minage,driver_maxage,CDW,THP,carid;
     Gson gson = new Gson();
+    public static double fullProAmt, fullAmtValue;
     public static ArrayList<ExtraBean> extralist=new ArrayList<>();
     public static List<CarDetailBean.FeatureBean> carSpecificationList=new ArrayList<>();
     public static List<CoveragesBean> coveragelist=new ArrayList<>();
     public static List<String> theft_protection=new ArrayList<>();
+    private String urla="https://static.carhire-solutions.com/images/car/Alamo/large/t_MCAR_AE.jpg";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,39 +110,63 @@ public class CarDetailActivity extends AppCompatActivity {
         apiResponseCall.enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                Log.d("TAG", "onResponse:cardetails "+gson.toJson(response.body()));
-
+                Utility.hidepopup();
+                Log.d("TAG", "onResponse:cardetails "+gson.toJson(response.body().response));
                if (response.body()!=null){
-                   CarDetailBean carDetailBean = new CarDetailBean();
-                   carDetailBean = response.body().response.car_detail;
-                   carImage=response.body().response.car_detail.image;
-                   logo=response.body().response.car_detail.supplier_logo;
-                   modelname=response.body().response.car_detail.model;
-                   markUp = Double.parseDouble(SearchCarFragment.markup);
-                   String price =response.body().response.car_detail.price;
-                   double d = Double.parseDouble(price);
-                   double priceNew  = d+(d*markUp)/100;
-                   carPrice=String.valueOf(df2.format(priceNew));
-                   currency=response.body().response.car_detail.currency;
-                   extralist= (ArrayList<ExtraBean>) response.body().response.car_detail.extra;
-                   carSpecificationList= Arrays.asList(response.body().response.car_detail.feature);
-                   suppliername=response.body().response.car_detail.supplier;
-                   suppliercity=response.body().response.car_detail.supplier_city;
-                   termsurl=response.body().response.car_detail.tc;
-                   fullprotectioncurrency=response.body().response.car_detail.fullprotection_currency;
-                   fullprotectionammount=response.body().response.car_detail.fullprotection_amount;
-                   coveragelist=response.body().response.car_detail.coverages;
-                   driver_minage=response.body().response.car_detail.driver_min_age;
-                   driver_maxage=response.body().response.car_detail.driver_max_age;
-                   theft_protection=response.body().response.car_detail.collision_damage_waiver;
+                   if (response.body().status){
+                       CarDetailBean carDetailBean = new CarDetailBean();
+                       carDetailBean = response.body().response.car_detail;
+                       carImage=response.body().response.car_detail.image;
+                       logo=response.body().response.car_detail.supplier_logo;
+                       modelname=response.body().response.car_detail.model;
+                       markUp = Double.parseDouble(SearchCarFragment.markup);
+                       String price =response.body().response.car_detail.price;
+                       double d = Double.parseDouble(price);
+                       double priceNew  = d+(d*markUp)/100;
+                       carPrice=String.valueOf(df2.format(priceNew));
+                       currency=response.body().response.car_detail.currency;
+                       if (response.body().response.car_detail.extra!=null){
+                           extralist= (ArrayList<ExtraBean>) response.body().response.car_detail.extra;
+                           for (int i=0; i<extralist.size();i++){
+                               if (extralist.get(i).name!=null){
+                                   if (extralist.get(i).getName().equalsIgnoreCase("Full Protection")){
+                                       extralist.remove(i);
+                                   }
+                               }
+                           }
+                       }
+
+                       carSpecificationList= Arrays.asList(response.body().response.car_detail.feature);
+                       suppliername=response.body().response.car_detail.supplier;
+                       suppliercity=response.body().response.car_detail.supplier_city;
+                       termsurl=response.body().response.car_detail.tc;
+                       if (response.body().response.car_detail.fullprotection_amount!=null){
+                           fullprotectionammount=response.body().response.car_detail.fullprotection_amount;
+                           fullProAmt = Float.parseFloat(fullprotectionammount);
+                           double du = fullProAmt*3.75;
+                           fullAmtValue = Double.parseDouble(df2.format(du));
+
+                       }
+                       if (response.body().response.car_detail.fullprotection_currency!=null){
+                           fullprotectioncurrency=response.body().response.car_detail.fullprotection_currency;
+
+                       }
+
+                       coveragelist=response.body().response.car_detail.coverages;
+                       driver_minage=response.body().response.car_detail.driver_min_age;
+                       driver_maxage=response.body().response.car_detail.driver_max_age;
+                       theft_protection=response.body().response.car_detail.theft_protection;
 //                   carid = response.body().response.car_detail.ca
-                   for (int i=0;i<1;i++) {
-                       CDW = response.body().response.car_detail.collision_damage_waiver.get(i);
+                       for (int i=0;i<1;i++) {
+                           CDW = response.body().response.car_detail.collision_damage_waiver.get(i);
+                       }
+                       for (int i=0;i<1;i++) {
+                           THP = response.body().response.car_detail.theft_protection.get(i);
+                       }
+                       handletablayout();
+                   } else {
+                       Utility.message(getApplicationContext(), response.body().msg);
                    }
-                   for (int i=0;i<1;i++) {
-                       THP = response.body().response.car_detail.theft_protection.get(i);
-                   }
-                   handletablayout();
                }
 
             }
@@ -158,6 +194,8 @@ public class CarDetailActivity extends AppCompatActivity {
             return false;
         }
     }
+
+
 
     private static DecimalFormat df2 = new DecimalFormat(".##");
 
@@ -235,4 +273,7 @@ public class CarDetailActivity extends AppCompatActivity {
             }
         });
     }
+
+
+
 }

@@ -130,6 +130,9 @@ public interface RetroFitApis {
     Call<ApiResponse> cancelBooking(@Field("language") String language,
                                       @Field("ctype") String ctype,
                                        @Field("booking_id") String booking_id);
+    @FormUrlEncoded
+    @POST("cancelation")
+    Call<ApiResponse> cancelDetails(@Field("cancelation_details") String cancelation_details);
 
     @FormUrlEncoded
     @POST("user_profile_details")

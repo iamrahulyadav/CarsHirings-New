@@ -130,6 +130,7 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
         }
 
         String m = model.getImage();
+        Log.d(TAG, "onBindViewHolder: "+m);
         Glide.with(context)
                 .load(model.getImage())
                 .into(holder.imgCarResult);

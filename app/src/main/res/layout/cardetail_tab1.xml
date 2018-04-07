@@ -54,18 +54,16 @@
                     <ImageView
                         android:id="@+id/img_car"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_car_img"
-
+                        android:layout_height="170dp"
                         />
                     <TextView
                         android:id="@+id/txt_carPrice"
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
+                        android:layout_height="50dp"
                         android:layout_gravity="bottom|start"
                         android:background="@color/bottom_color"
                         android:textColor="#fff"
-                        android:paddingLeft="10dp"
+                        android:paddingStart="10dp"
                         android:paddingTop="5dp"
                         android:paddingBottom="5dp"
                         android:text="INR 5,540.64"
@@ -75,8 +73,8 @@
                     <TextView
                         android:layout_marginTop="10dp"
                         android:layout_width="match_parent"
-                        android:layout_height="30dp"
-                        android:paddingLeft="10dp"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="10dp"
                         android:paddingTop="10dp"
                         android:id="@+id/point_get"
                         android:textColor="@color/black"

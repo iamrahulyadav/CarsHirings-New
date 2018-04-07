@@ -1,12 +1,16 @@
 package com.carshiring.fragments;
 
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +36,12 @@ import com.carshiring.adapters.CarResultsListAdapter;
 import com.carshiring.models.CarDetailBean;
 import com.carshiring.utilities.Utility;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import static com.carshiring.activities.home.CarDetailActivity.carImage;
 import static com.carshiring.activities.home.CarDetailActivity.carSpecificationList;
 import static com.carshiring.activities.home.CarDetailActivity.termsurl;
 
@@ -75,12 +85,13 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
         return view;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         bar.setVisibility(View.VISIBLE);
         bar1.setVisibility(View.VISIBLE);
-        Glide.with(getContext()).load(CarDetailActivity.carImage).listener(new RequestListener<Drawable>() {
+       /* Glide.with(getContext()).load(carImage).listener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                 bar.setVisibility(View.GONE);
@@ -91,7 +102,9 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
                 bar.setVisibility(View.GONE);
                 return false;
             }
-        }).into(carImg);
+        }).into(carImg);*/
+       new AsyncCaller().execute();
+
         Glide.with(getContext()).load(CarDetailActivity.logo).listener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -148,7 +161,8 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
 
                         TextView tt1 = new TextView(getContext());
                         tt1.setLayoutParams(lparams);
-                        tt1.setText(carSpecification.getFueltype());
+//                        tt1.setText(carSpecification.getFueltype());
+                        tt1.setText("Full to Full");
                         tt1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_fuel,0,0,0);
                         tt1.setCompoundDrawablePadding(25);
                         tt1.setTextSize(16);
@@ -199,6 +213,98 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
             }
         }
    }
+    private class AsyncCaller extends AsyncTask<Integer, Void, Integer>
+    {
+        ProgressDialog pdLoading = new ProgressDialog(getActivity());
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            //this method will be running on UI thread
+            pdLoading.setMessage("\tLoading...");
+            pdLoading.show();
+        }
+        @Override
+        protected Integer doInBackground(Integer... params) {
+            URL url = null;
+            int s = 0;
+            try {
+                url = new URL(carImage);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+
+            HttpURLConnection httpConn = null;
+            try {
+                httpConn = (HttpURLConnection) url.openConnection();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            //this method will be running on background thread so don't update UI frome here
+            //do your long running http tasks here,you dont want to pass argument and u can access the parent class' variable url over here
+            try {
+                httpConn.setInstanceFollowRedirects(false);
+                httpConn.setRequestMethod("HEAD");
+                httpConn.connect();
+
+                s = httpConn.getResponseCode();
+
+
+
+                Log.d("TAG", "doInBackground: "+httpConn.getResponseCode());
+                System.out.println("Response Code : " + httpConn.getResponseCode());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return s;
+
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            super.onPostExecute(result);
+            Log.d("TAG", "onPostExecute: "+result);
+
+            //this method will be running on UI thread
+
+            pdLoading.dismiss();
+            if (result==404){
+
+                String sv="https://www.raceentry.com/img/Race-Registration-Image-Not-Found.png";
+                Glide.with(getActivity()).load("").listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        bar.setVisibility(View.GONE);
+                        return false;
+                    }
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        bar.setVisibility(View.GONE);
+                        return false;
+                    }
+                }).into(carImg);
+
+            } else {
+                Glide.with(getActivity()).load(carImage).listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        bar.setVisibility(View.GONE);
+                        return false;
+                    }
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        bar.setVisibility(View.GONE);
+                        return false;
+                    }
+                }).into(carImg);
+
+            }
+        }
+
+    }
 
 
     @Override

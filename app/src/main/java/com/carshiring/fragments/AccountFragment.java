@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carshiring.R;
 import com.carshiring.activities.home.MainActivity;
@@ -21,6 +22,7 @@ import com.carshiring.activities.mainsetup.ChangePasswordActivity;
 import com.carshiring.activities.mainsetup.LoginActivity;
 import com.carshiring.models.PointHistoryData;
 import com.carshiring.models.UserDetails;
+import com.carshiring.models.WalletHistoryData;
 import com.carshiring.utilities.AppGlobal;
 import com.carshiring.utilities.Utility;
 import com.carshiring.webservices.ApiResponse;
@@ -48,7 +50,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
     LinearLayout ll_mybooking,ll_accountdetails,ll_changepassword,li_profile;
     Toolbar toolbar;
     TinyDB tinyDB ;
-    TextView txtPoint;
+    TextView txtPoint,txtWallet;
     View view;
     String user_id;
     UserDetails userDetails = new UserDetails();
@@ -63,6 +65,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         ll_accountdetails= (LinearLayout) view.findViewById(R.id.ll_acccountdetails);
         ll_changepassword= (LinearLayout) view.findViewById(R.id.ll_change_password);
         li_profile= (LinearLayout) view.findViewById(R.id.ll_profile);
+        txtWallet = view.findViewById(R.id.fragment_account_wallet);
         ll_mybooking.setOnClickListener(this);
         ll_accountdetails.setOnClickListener(this);
         ll_changepassword.setOnClickListener(this);
@@ -73,6 +76,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         userDetails = gson.fromJson(data, UserDetails.class);
         user_id = userDetails.getUser_id();
         txtPoint = view.findViewById(R.id.fragment_account_point);
+        getWal();
 
         return view;
     }
@@ -89,6 +93,60 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
             }
         });
     }
+
+    public List<WalletHistoryData>walletHistoryData = new ArrayList<>();
+    public void getWal(){
+        if (walletHistoryData!=null){
+            walletHistoryData.clear();
+        }
+
+        RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();
+        final Call<ApiResponse> walList = fitApis.walletHistory(user_id);
+        walList.enqueue(new Callback<ApiResponse>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                if (response!=null){
+                    if (response.body().status){
+                        walletHistoryData = response.body().response.wallet;
+                        Log.d("TAG", "onResponse: "+gson.toJson(walletHistoryData));
+                        for (WalletHistoryData walletHistoryData1 : walletHistoryData){
+                            if (walletHistoryData1.get_$WalletType204().equals("debit")){
+                                String debit = walletHistoryData1.get_$WalletAmount169();
+                                debitAmt = Double.parseDouble(debit);
+                                totalDebit += debitAmt;
+//                            Log.d("TAG", "onResponse: "+debit);
+                            }
+                            if (walletHistoryData1.get_$WalletType204().equals("credit")){
+                                String debit = walletHistoryData1.get_$WalletAmount169();
+                                creditAmt = Double.parseDouble(debit);
+                                totalCredit+= creditAmt;
+                            }
+                        }
+                        walletAmt = totalCredit-totalDebit;
+                        Log.d("TAG", "onResponse: totalDebit"+totalCredit+"\n"+walletAmt);
+                        if (walletAmt>0){
+                            txtWallet.setText("Wallet : SAR "+String.valueOf( df2.format(walletAmt)));
+                        }   else {
+                            txtWallet.setText("Wallet : SAR "+String.valueOf("0.00"));
+                        }
+
+                    } else {
+                        //  Toast.makeText(UserDashActivity.this, ""+response.body().message, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                Toast.makeText(getContext(), ""+ getResources().getString(R.string.check_internet), Toast.LENGTH_SHORT).show();
+
+                //   Utility.message(getApplicationContext(), getResources().getString(R.string.check_internet));
+                Log.d("TAG", "onFailure: "+t.getMessage());
+            }
+        });
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -170,9 +228,9 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                            totalPoint = totalDebitPoint-totalCreditPoint;
                        }*/
                         if (totalPoint>0){
-                            txtPoint.setText(getResources().getString(R.string.points)+" "+String.valueOf(totalPoint));
+                            txtPoint.setText(getResources().getString(R.string.points)+" : "+String.valueOf(totalPoint));
                         } else {
-                            txtPoint.setText(getResources().getString(R.string.points)+" "+String.valueOf(00.00));
+                            txtPoint.setText(getResources().getString(R.string.points)+" : "+String.valueOf("0.00"));
                         }
                        /* Log.d("TAG", "onResponse: totalDebit"+totalCreditPoint+"\n"+totalPoint);
                         txtCreditPt.setText(getResources().getString(R.string.txtCredit)+" : "+ String.valueOf(totalCreditPoint));

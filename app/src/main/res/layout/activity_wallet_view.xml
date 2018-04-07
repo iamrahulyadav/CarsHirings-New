@@ -9,6 +9,7 @@
     tools:context="com.carshiring.activities.home.WalletView">
 
     <TextView
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:id="@+id/wallet_view_title"
@@ -18,10 +19,14 @@
         android:paddingLeft="15dp"
         android:gravity="center_vertical"/>
     <View
+        android:visibility="gone"
+
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/lime_grey"/>
     <LinearLayout
+        android:visibility="gone"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -87,6 +92,7 @@
 
     </LinearLayout>
     <View
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/lime_grey"/>

@@ -1,7 +1,9 @@
 package com.carshiring.activities.home;
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -82,7 +84,7 @@ public class PayActivity extends AppBaseActivity {
             type="",rtype="",coupoun="",
             fullprotection="",flight_no="",extradata="",dob="",user_id="",pick_date="",
             drop_date="", pick_city="",drop_city="",protection_val="",booking_point="",booking_wallet="",
-            booking_payfort="",transaction_id="",language="", earnPoint;
+            booking_payfort="",transaction_id="",merchant_reference="",language="", earnPoint;
     TinyDB tinyDB;
     public List<WalletHistoryData> walletHistoryData = new ArrayList<>();
     public List<PointHistoryData>pointHistoryData = new ArrayList<>();
@@ -117,7 +119,7 @@ public class PayActivity extends AppBaseActivity {
         address = userDetails.getUser_address();
         city = (String) userDetails.getUser_city();
         zipcode = userDetails.getUser_zipcode();
-        countrycode = userDetails.getUser_countrycode();
+        countrycode = (String) userDetails.getUser_country();
         dob = userDetails.getUser_dob();
         flight_no = BookCarActivity.flight_no;
         car_id = CarsResultListActivity.id_context;
@@ -128,11 +130,11 @@ public class PayActivity extends AppBaseActivity {
         drop_city = SearchCarFragment.dropName;
         drop_date = SearchCarFragment.drop_date;
         fullprotection = BookCarActivity.fullProtection;
-        protection_val = CarDetailActivity.fullprotectionammount;
+        if (fullprotection.equalsIgnoreCase("yes")){
+            protection_val =String.valueOf( CarDetailActivity.fullAmtValue);
+        }
         extraData = BookCarActivity.extraData;
         fullProtectionLayout = findViewById(R.id.activity_pay_full_pro_layout);
-
-
         edtCoupon = findViewById(R.id.activity_pay_edtCoupon);
         txtEarnedPoint = findViewById(R.id.txtEarnedPoint);
         txtApply = findViewById(R.id.activity_pay_btnApply);
@@ -142,7 +144,7 @@ public class PayActivity extends AppBaseActivity {
         txtFullProAmt = findViewById(R.id.activity_pay_txtFullProtectionAmtValue);
         if (fullprotection.equalsIgnoreCase("yes")){
             fullProtectionLayout.setVisibility(View.VISIBLE);
-            txtFullProAmt.setText("SAR " +" "+CarDetailActivity.fullprotectionammount);
+            txtFullProAmt.setText("SAR " +" "+String.valueOf(CarDetailActivity.fullAmtValue));
         } else {
             fullProtectionLayout.setVisibility(View.GONE);
         }
@@ -175,8 +177,8 @@ public class PayActivity extends AppBaseActivity {
             public void onClick(View view) {
                 coupoun = edtCoupon.getText().toString().trim();
                 if (!coupoun.isEmpty()){
-                    validateCoupon(coupoun);
                     isCouponApplied = true;
+                    validateCoupon(coupoun);
                     txtCheckPay.setChecked(false);
                     txtCheckWallet.setChecked(false);
                     txtcheckPoint.setChecked(false);
@@ -336,7 +338,8 @@ public class PayActivity extends AppBaseActivity {
         });
         txtTotalAmyVal.setText(CarDetailActivity.currency + "  " + CarDetailActivity.carPrice+ "/ "
                 +CarsResultListActivity.day + " "+ CarsResultListActivity.time);
-        txtPAyAmt.setText("Total payable amount : "+CarDetailActivity.currency + "  " +String.valueOf(totalPrice));
+        txtPAyAmt.setText("Total payable amount : "+CarDetailActivity.currency + "  "
+                +String.valueOf(df2.format(totalPrice)));
 
         getPoint();
         getWal();
@@ -358,8 +361,8 @@ public class PayActivity extends AppBaseActivity {
         bookingRequest.setFlight_no(flight_no);
         bookingRequest.setDob(dob);
         bookingRequest.setUser_id(user_id);
-        bookingRequest.setPick_date(pick_date );
-        bookingRequest.setDrop_date(drop_date);
+        bookingRequest.setPick_date(pick_date +" "+SearchCarFragment.pickTime);
+        bookingRequest.setDrop_date(drop_date +" "+SearchCarFragment.dropTime);
         bookingRequest.setPick_city(pick_city);
         bookingRequest.setDrop_city(drop_city);
         bookingRequest.setProtection_val(protection_val);
@@ -392,10 +395,10 @@ public class PayActivity extends AppBaseActivity {
                         if (pointValue>=totalPrice){
                             booking_point = String.valueOf(totalPrice);
                             pointBal = pointValue-totalPrice;
-                            txtPointVal.setText("("+totalPoint+" Point value is : "+String.valueOf(pointBal)+")");
+                            txtPointVal.setText("( Remaining point value : SAR "+String.valueOf(pointBal)+")");
                         } else {
                             payfortAmt = totalPrice-pointValue;
-                            txtPointVal.setText("("+totalPoint+" Point value is : "+String.valueOf(pointBal)+")");
+                            txtPointVal.setText("( Remaining point value : SAR  "+String.valueOf(pointBal)+")");
                         }
                         txtPointValueAmt.setText("Point value: SAR "+ String.valueOf(pointValue));
                         txtPointValueAmt.setVisibility(View.VISIBLE);
@@ -403,7 +406,7 @@ public class PayActivity extends AppBaseActivity {
                     else{
                         txtPointValueAmt.setVisibility(View.GONE);
                         payfortAmt = totalPrice;
-                        txtPointVal.setText("("+totalPoint+" Point value is : "+String.valueOf(pointValue)+")");
+                        txtPointVal.setText("("+totalPoint+" Point value is : SAR "+String.valueOf(pointValue)+")");
                     }
                     txtPAyAmt.setText("Total payable amount : SAR "+ String.valueOf(df2.format(payfortAmt)));
                     break;
@@ -431,7 +434,7 @@ public class PayActivity extends AppBaseActivity {
                                 txtWalletBal.setText("("+getResources().getString(R.string.txtAvailable)+ String.valueOf(walBal) +")");
                                 payfortAmt = totalPrice-walletAmt;
                             }
-                            txtWalletValueAmt.setText("Wallet amount: SAR "+ String.valueOf(df2.format(walletAmt)));
+                            txtWalletValueAmt.setText("Wallet : SAR "+ String.valueOf(df2.format(walletAmt)));
                             txtWalletValueAmt.setVisibility(View.VISIBLE);
                         }
                         else {
@@ -479,7 +482,7 @@ public class PayActivity extends AppBaseActivity {
                             txtPointVal.setText("("+totalPoint+" Point value is : "+String.valueOf(pointBal)+")");
                         } else {
                             payfortAmt = totalPrice-pointValue;
-                            txtPointVal.setText("("+totalPoint+" Point value is : "+String.valueOf(pointBal)+")");
+                            txtPointVal.setText("(Remaining point value : SAR "+String.valueOf(pointBal)+")");
                         }
                         txtPointValueAmt.setText("Point value: SAR "+ String.valueOf(pointValue));
                         txtPointValueAmt.setVisibility(View.VISIBLE);
@@ -552,7 +555,7 @@ public class PayActivity extends AppBaseActivity {
                         booking_payfort = String.valueOf(payfortAmt);*/
                            }
                        }
-                        txtWalletValueAmt.setText("Wallet amount: SAR"+ String.valueOf(df2.format(walletAmt)));
+                        txtWalletValueAmt.setText("Wallet : SAR "+ String.valueOf(df2.format(walletAmt)));
                         txtWalletValueAmt.setVisibility(View.VISIBLE);
                         txtPAyAmt.setText("Total payable amount : SAR "+ String.valueOf(df2.format(payfortAmt)));
 
@@ -652,6 +655,8 @@ public class PayActivity extends AppBaseActivity {
                             Toast.makeText(getApplicationContext(), fortResponseMap.get("response_message"),
                                     Toast.LENGTH_SHORT).show();
                             transaction_id = fortResponseMap.get("fort_id");
+                            merchant_reference = fortResponseMap.get("merchant_reference");
+                            bookingRequest.setMerchant_reference(merchant_reference);
                             bookingRequest.setTransaction_id(transaction_id);
                             String s = gson.toJson(setBooking());
                             Log.d(TAG, "onSuccess: "+s);
@@ -807,6 +812,7 @@ public class PayActivity extends AppBaseActivity {
                                         if (discountcouponBean.getOffers_type().equals("1")){
                                             couponvalue = Double.parseDouble(discountcouponBean.getOffers_value());
                                             discountedPrice = totalPrice-couponvalue;
+                                            discountvalue = couponvalue;
                                             txtCoupanValue.setVisibility(View.VISIBLE);
                                             txtCoupanValue.setText("Coupon value : "+ String.valueOf(couponvalue));
                                         } else {
@@ -822,7 +828,12 @@ public class PayActivity extends AppBaseActivity {
                                 });
                             }
                         } else {
-                            Utility.message(getApplicationContext(), discountData.getMessage());
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Utility.message(getApplicationContext(), discountData.getMessage());
+                                }
+                            });
                         }
                         Log.d("TAG", "onResponse: sss"+ gson.toJson(discountData));
                     }
@@ -833,9 +844,13 @@ public class PayActivity extends AppBaseActivity {
 
 
 
-
     public void makeBooking(String cateRequest){
-        Utility.showloadingPopup(this);
+       // Utility.showloadingPopup(this);
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setMessage("Booking in processing...");
+        progressDialog.show();
+
         okhttp3.RequestBody requestBody = okhttp3.RequestBody.create(MEDIA_TYPE,cateRequest);
 
         final okhttp3.Request request = new okhttp3.Request.Builder()
@@ -850,28 +865,29 @@ public class PayActivity extends AppBaseActivity {
                 .readTimeout(30000, TimeUnit.SECONDS)
                 .build();
 
-        Utility.showloadingPopup(this);
         client.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(okhttp3.Call call, final IOException e) {
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        progressDialog.dismiss();
                         String msg = e.getMessage();
                         Utility.message(getApplicationContext(), getResources().getString(R.string.no_internet_connection));
-                        Utility.hidepopup();
                     }
                 });
             }
 
             @Override
             public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-                Utility.hidepopup();
+                progressDialog.dismiss();
+
                 if (response!=null&&response.body().toString().length()>0){
                     if (request.body()!=null){
                         String msg = response.body().string();
 
-                        Log.d("TAG", "onResponse: "+ msg);
+                        Log.d("TAG", "onResponse: booking"+ msg);
                         /*{"error_code":101,"status":true,"response":{"booking_id":"DT1521457211523"}}*/
                         try {
                             final JSONObject jsonObject = new JSONObject(msg);
@@ -895,7 +911,7 @@ public class PayActivity extends AppBaseActivity {
                                                       walletValue = walletAmt;
                                                   }
                                                   else {
-                                                      walletValue = walletAmt-remainingamt;
+                                                      walletValue = remainingamt;
                                                   }
                                               } else {
                                                   pointDebit = totalPrice/.02;
@@ -921,7 +937,7 @@ public class PayActivity extends AppBaseActivity {
                                           }
                                           creditPoint(booking,user_id,earnPoint);
 
-                                          startActivity(new Intent(PayActivity.this, ThankYou.class));
+                                          startActivity(new Intent(PayActivity.this, ThankYou.class).putExtra("bookingid", booking));
                                       } catch (JSONException e) {
                                           e.printStackTrace();
                                       }
@@ -1048,7 +1064,7 @@ public class PayActivity extends AppBaseActivity {
         creditPoint.enqueue(new retrofit2.Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, retrofit2.Response<ApiResponse> response) {
-                Log.d(TAG, "onResponse: data"+gson.toJson(response.body()));
+                 Log.d(TAG, "onResponse: data"+gson.toJson(response.body()));
                 if (response.body()!=null){
                     if (response.body().status){
                         Toast.makeText(PayActivity.this, ""+response.body().msg, Toast.LENGTH_SHORT).show();
@@ -1074,7 +1090,7 @@ public class PayActivity extends AppBaseActivity {
             public void onResponse(Call<ApiResponse> call, retrofit2.Response<ApiResponse> response) {
                 Log.d(TAG, "onResponse: data"+gson.toJson(response.body()));
                 if (response.body()!=null){
-                    if (response.body().status){
+                    if (response.body().status) {
                         Toast.makeText(PayActivity.this, ""+response.body().msg, Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(PayActivity.this, ""+response.body().msg, Toast.LENGTH_SHORT).show();

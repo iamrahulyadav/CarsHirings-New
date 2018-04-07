@@ -45,9 +45,9 @@ public class FullProtectionActivity extends AppCompatActivity {
             for (int i=0;i<coveragelist.size();i++)
             {
                 List<String> pro=new ArrayList<String>();
-             listparent.add(coveragelist.get(i).getName());
-             pro.add(coveragelist.get(i).getAmount()+" "+ coveragelist.get(i).getCurrency()+"\n"+coveragelist.get(i).getDesc());
-             listchild.put(listparent.get(i),pro);
+                listparent.add(coveragelist.get(i).getName());
+                pro.add(coveragelist.get(i).getAmount()+" "+ coveragelist.get(i).getCurrency()+"\n"+coveragelist.get(i).getDesc());
+                listchild.put(listparent.get(i),pro);
             }
         }
 

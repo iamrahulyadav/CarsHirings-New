@@ -49,10 +49,13 @@ import com.mukesh.tinydb.TinyDB;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -207,6 +210,20 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
 
     private void bindTimeToGUI(String type, int i, int i1) {
         String timeStr = setFullTime(i, i1);
+        DateFormat monthFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
+        Date date = null;
+        String output = null;
+        try{
+            //Converting the input String to Date
+            date= monthFormat.parse(timeStr);
+            //Changing the format of date and storing it in String
+            output = dateFormat.format(date);
+            //Displaying the date
+            System.out.println(output);
+        }catch(ParseException pe){
+            pe.printStackTrace();
+        }
         calendar_drop.set(calendar_drop.get(Calendar.YEAR),calendar_drop.get(Calendar.MONTH),
                 calendar_drop.get(Calendar.DAY_OF_MONTH),i,i1);
         switch (type) {
@@ -215,7 +232,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 pick_minutes =i1 ;
                 final LinearLayout dt_picker_journey = (LinearLayout) view.findViewById(R.id.dt_picker_journey);
                 final TextView tvPickFullTime = (TextView) dt_picker_journey.findViewById(R.id.tvFullTime);
-                tvPickFullTime.setText(getResources().getString(R.string.txtTime) +" : " + timeStr);
+                tvPickFullTime.setText(getResources().getString(R.string.txtTime) +" : " + output);
                 pickTime= timeStr;
                 calendar_pick.set(calendar_pick.get(Calendar.YEAR),calendar_pick.get(Calendar.MONTH),
                         calendar_pick.get(Calendar.DAY_OF_MONTH),i,i1);
@@ -228,7 +245,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 final LinearLayout dt_picker_returning = (LinearLayout) view.findViewById(R.id.dt_picker_returning);
                 final TextView tvDropFullTime = (TextView) dt_picker_returning.findViewById(R.id.tvFullTime);
                 dropTime=timeStr;
-                tvDropFullTime.setText(getResources().getString(R.string.txtTime) +" : " + timeStr);
+                tvDropFullTime.setText(getResources().getString(R.string.txtTime) +" : " + output);
                 break;
         }
     }
@@ -239,9 +256,9 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(2017, 3, 1, hoursOfDay, minutes);
-        SimpleDateFormat monthFormat = new SimpleDateFormat("h:mm", Locale.US);
+//        SimpleDateFormat monthFormat = new SimpleDateFormat("h:mm:a", Locale.US);
+        SimpleDateFormat monthFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
         result = monthFormat.format(calendar.getTime());
-
         return result;
     }
 
@@ -514,6 +531,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
                 Utility.hidepopup();
+                Log.d(TAG, "onFailure: "+t.getMessage());
                 Toast.makeText(getContext(), getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             }
         });

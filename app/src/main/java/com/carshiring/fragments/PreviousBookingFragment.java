@@ -117,6 +117,12 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
 
     Gson gson = new Gson() ;
 
+    private void cancelDetail(String Bookingid){
+
+        Utility.showloadingPopup(getActivity());
+        RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();
+        final Call<ApiResponse> bookingDataCall = fitApis.cancelDetails(Bookingid);
+    }
 
     public void getBook() {
         if (bookingData != null) {
@@ -140,7 +146,7 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
                         List<BookingHistory>booking_detail =new ArrayList<>();
                         booking_detail = response.body().response.booking;
                         for (BookingHistory bookingData1 : booking_detail){
-                            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             Date date1 = null;
                             try {
                                 date1 = format.parse(timeStamp);

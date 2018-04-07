@@ -136,6 +136,30 @@
             android:textColor="@color/redStrong"
             />
     </LinearLayout>
+
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="horizontal"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_point_thumb"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/wallet_amnt"
+            android:layout_marginLeft="10dp"
+            android:textSize="18sp"
+            android:id="@+id/fragment_account_wallet"
+            android:layout_gravity="center"
+            android:textColor="@color/redStrong"
+            />
+    </LinearLayout>
+
 </LinearLayout>
     </ScrollView>
     <include layout="@layout/bottom_toolbar"

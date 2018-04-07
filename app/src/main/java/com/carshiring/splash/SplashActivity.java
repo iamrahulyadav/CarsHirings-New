@@ -28,6 +28,7 @@ import com.carshiring.utilities.Utility;
 import com.carshiring.webservices.ApiResponse;
 import com.carshiring.webservices.RetroFitApis;
 import com.carshiring.webservices.RetrofitApiBuilder;
+import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
 
 import java.util.ArrayList;
@@ -397,7 +398,7 @@ public class SplashActivity extends AppBaseActivity {
         responseCall.enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                Log.d(TAG, "onResponse: "+response.body().toString());
+                Log.d(TAG, "onResponse: "+new Gson().toJson(response.body()));
                 if(response.body()!=null) {
                     if(response.body().status) {
                         List<LanguageModel> language_list = response.body().response.language_list;
@@ -406,10 +407,16 @@ public class SplashActivity extends AppBaseActivity {
                             langlistcode.add("");
 
                             langlistId.add("");*/
+
                             for (int i = 0; i < language_list.size(); i++) {
                                 LanguageModel languages = language_list.get(i);
-                                txten.setText(language_list.get(0).language_code);
-                                txtAr.setText(language_list.get(1).language_code);
+                                if (languages.language_code.equalsIgnoreCase("en")){
+                                    txten.setText(languages.language_code);
+
+                                } else if (languages.language_code.equalsIgnoreCase("ar")){
+                                    txtAr.setText(languages.language_code);
+                                }
+
                                 String languageId = languages.language_id;
                                 String languageCode = languages.language_code;
                                 String languageName = languages.language_name;
@@ -475,6 +482,7 @@ public class SplashActivity extends AppBaseActivity {
             public void onClick(View view) {
                 String language_code  = txtAr.getText().toString().trim();
                 sharedpref.putString("language_code",language_code);
+                updateRes(language_code);
                 startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                 finish();
             }
@@ -485,6 +493,7 @@ public class SplashActivity extends AppBaseActivity {
             public void onClick(View view) {
                 String language_code  = txten.getText().toString().trim();
                 sharedpref.putString("language_code",language_code);
+                updateRes(language_code);
                 startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                 finish();
             }

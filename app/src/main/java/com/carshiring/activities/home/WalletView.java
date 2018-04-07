@@ -55,7 +55,6 @@ public class WalletView extends AppBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         wallet_title = getIntent().getExtras().getString("wallet_title");
         setValues(wallet_title);
         setMyAdapter(wallet_title);

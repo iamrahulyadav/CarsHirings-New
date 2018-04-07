@@ -158,8 +158,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:fillViewport="true">
 
 
         <LinearLayout
@@ -184,8 +183,8 @@
                     android:scaleType="fitXY"
                     android:layout_gravity="center"/>
                 <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:src="@drawable/ic_menu_camera"
                     android:layout_gravity="bottom|end"
                     android:layout_margin="3dp"
@@ -353,9 +352,10 @@
                 style="@style/simpleRectangle"
                 android:layout_marginTop="2dp"
                 android:paddingBottom="5dp"
+                android:singleLine="true"
                 android:imeOptions="actionNext"
-                android:maxLines="1"
-                >
+                android:maxLines="1">
+
             </EditText>
             <TextView
                 android:layout_width="match_parent"
@@ -369,6 +369,7 @@
                 android:layout_height="wrap_content"
                 style="@style/simpleRectangle"
                 android:layout_marginTop="2dp"
+                android:singleLine="true"
                 android:paddingBottom="5dp"
                 android:imeOptions="actionDone"
                 android:maxLines="1"
