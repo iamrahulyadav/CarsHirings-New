@@ -10,11 +10,12 @@
         android:orientation="vertical"
         android:gravity="center"
         style="@style/simpleRectangle"
-        android:layout_margin="8dp"
+        android:layout_margin="10dp"
 
         >
 
         <LinearLayout
+            android:layout_margin="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -70,6 +71,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="1"
+            android:layout_margin="5dp"
             android:padding="5dp">
             <LinearLayout
                 android:layout_width="match_parent"
@@ -114,6 +116,8 @@
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -144,6 +148,8 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/redStrong"
@@ -172,6 +178,7 @@
 
         </LinearLayout>
         <LinearLayout
+            android:layout_margin="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -255,7 +262,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp">
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -283,7 +292,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="1">
+            android:weightSum="1"
+            android:layout_margin="5dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

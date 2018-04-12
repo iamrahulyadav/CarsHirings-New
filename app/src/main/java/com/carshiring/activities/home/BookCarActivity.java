@@ -108,8 +108,9 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
         } else {
             fullProtection = "no";
         }
-        new AsyncCaller().execute();
-
+        if (carImage!=null){
+            new AsyncCaller().execute();
+        }
         txtPoint.setText(getResources().getString(R.string.colletcted_point) + String.valueOf(CarDetailActivity.point));
         terms.setOnClickListener(this);
         quotes.setOnClickListener(this);

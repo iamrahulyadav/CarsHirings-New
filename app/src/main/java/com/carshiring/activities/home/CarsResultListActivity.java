@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -20,6 +21,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -73,7 +75,7 @@ public class CarsResultListActivity extends AppBaseActivity {
     Gson gson = new Gson();
     public String filter ;
     Category category = new Category();
-    public static List<Category.ResponseBean.CatBean>catBeanList = new ArrayList<>();
+    public List<Category.ResponseBean.CatBean>catBeanList = new ArrayList<>();
     List<SearchData> listCarResult =  new ArrayList<>();
     List<SearchData.FeatureBean> featuresAllList =  new ArrayList<>();
     public static List<String>supplierList=new ArrayList<>();
@@ -81,6 +83,7 @@ public class CarsResultListActivity extends AppBaseActivity {
     CarResultsListAdapter listAdapter;
     UserDetails userDetails = new UserDetails();
     TinyDB tinyDB;
+    LinearLayout allView;
     public static String id_context, refertype, type, day, time;
     AppGlobal appGlobal=AppGlobal.getInstancess();
     Dialog dialog;
@@ -109,7 +112,7 @@ public class CarsResultListActivity extends AppBaseActivity {
         appGlobal.context=getApplicationContext();
         tinyDB = new TinyDB(getApplicationContext());
         dialog=new Dialog(this);
-
+        allView = findViewById(R.id.all_view);
         listCarResult = SearchCarFragment.searchData;
         tvFromDate= (TextView) findViewById(R.id.tvFromDT);
         tvPickDate= (TextView) findViewById(R.id.txtPlaceName);
@@ -147,7 +150,8 @@ public class CarsResultListActivity extends AppBaseActivity {
                 = new LinearLayoutManager(CarsResultListActivity.this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView_carlist_category.setLayoutManager(horizontalLayoutManagaer);
 
-        adapter = new CarListCategory(getApplicationContext(), listCarResult, catBeanList, new CarListCategory.OnItemClickListenerCategory() {
+        adapter = new CarListCategory(getApplicationContext(), listCarResult, catBeanList,
+                new CarListCategory.OnItemClickListenerCategory() {
             @Override
             public void onItemClickCategory(int position) {
 
@@ -156,27 +160,28 @@ public class CarsResultListActivity extends AppBaseActivity {
         });
         recyclerView_carlist_category.setAdapter(adapter);
 
+
     }
 
     private void catgory_clicked(int position){
         List<SearchData> listCarResult1 =  new ArrayList<>();
         listCarResult1.clear();
+        if (position==0){
+            listdispaly(listCarResult);
 
-
-     //   Toast.makeText(getApplicationContext(), catBeanList.get(position).getCode() + "", Toast.LENGTH_SHORT).show();
-
-        for(int i=0; i<listCarResult.size(); i++) {
-            if((catBeanList.get(position).getCode()+"").equals(listCarResult.get(i).getCategory())){
-
-                listCarResult1.add(listCarResult.get(i));
+        } else {
+            for(int i=0; i<listCarResult.size(); i++) {
+                if((catBeanList.get(position).getCode()+"").equals(listCarResult.get(i).getCategory())){
+                    listCarResult1.add(listCarResult.get(i));
+                }
             }
+            listdispaly(listCarResult1);
         }
-        listdispaly(listCarResult1);
-//        listAdapter.notifyDataSetChanged();
 
     }
-
+    int coun=0;
     public void cat_All(View v){
+//        allView.setBackgroundColor(Color.parseColor("#079607"));
         listdispaly(listCarResult);
     }
 
@@ -207,15 +212,13 @@ public class CarsResultListActivity extends AppBaseActivity {
                         double markUp = Double.parseDouble(SearchCarFragment.markup);
                         double d = pricea;
                         double priceNew  = d+(d*markUp)/100;
-
-
                         calPrice = (priceNew*pointpercent)/100;
                         calPoint = (int) (calPrice/0.02);
                         day = carDetail.getTime();
                         time = carDetail.getTime_unit();
                         intent.putExtra("day",carDetail.getTime());
                         intent.putExtra("refer_type",refertype);
-                        intent.putExtra("point_earn",calPoint );
+                        intent.putExtra("point_earn",String.valueOf(calPoint) );
                         startActivity(intent);
                     }
                 } else {
@@ -296,12 +299,10 @@ public class CarsResultListActivity extends AppBaseActivity {
             {
                 FilterDefaultMultipleListModel multipleListModel= (FilterDefaultMultipleListModel) data.getSerializableExtra(SelectFilterActivity.FILTER_RESPONSE);
                 String supl=multipleListModel.getSupplier();
-                String pack=multipleListModel.getPackages();
                 String feat=multipleListModel.getFeatures();
-                String insur=multipleListModel.getInsurances();
-                if(supl!=null || pack!=null || feat!=null || insur!=null)
+                if(supl!=null || feat!=null)
                 {
-                    filterlist(supl,pack,feat,insur);
+                    filterlist(supl,feat);
                 }
             }
         }
@@ -310,12 +311,10 @@ public class CarsResultListActivity extends AppBaseActivity {
     private boolean isApplyFiltered = false ;
     private  ArrayList<SearchData>  filteredtList ;
 
-    private void filterlist(String supl, String pack, String feat, String insur) {
+    private void filterlist(String supl, String feat) {
 
         String[] suplier=supl.split(",");
-        String[] packages=pack.split(",");
         String[] features=feat.split(",");
-        String[] insurance=insur.split(",");
 
         filteredtList=new ArrayList<>();
         int listsize=listCarResult.size();
@@ -432,10 +431,9 @@ public class CarsResultListActivity extends AppBaseActivity {
     }
 
     public void openSelectionFilter(View view) {
-        Intent intent = new Intent(CarsResultListActivity.this,SelectFilterActivity.class);
+        Intent intent = new Intent(CarsResultListActivity.this,FilterListActivity.class);
         startActivityForResult(intent,201);
     }
-    TextView etdob;
 
     private void setupoverlay(String set) {
 
@@ -659,14 +657,9 @@ public class CarsResultListActivity extends AppBaseActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                catBeanList.addAll(finalCatBeans);
+                                Category.ResponseBean.CatBean catBean = new Category.ResponseBean.CatBean();
 
-                                /*//List<String> al = new ArrayList<>();
-// add elements to al, including duplicates
-                                Set<Category.ResponseBean.CatBean> hs = new LinkedHashSet<>();
-                                hs.addAll(catBeanList);
-                                catBeanList.clear();
-                                catBeanList.addAll(hs);*/
+                                catBeanList.addAll(finalCatBeans);
                                 TreeSet<Category.ResponseBean.CatBean> set = new TreeSet<>(new Comparator<Category.ResponseBean.CatBean>() {
                                     @Override
                                     public int compare(Category.ResponseBean.CatBean o1, Category.ResponseBean.CatBean o2) {
@@ -676,18 +669,13 @@ public class CarsResultListActivity extends AppBaseActivity {
                                         return 1;
                                     }
                                 });
-                                Log.d("TAG", "onResponse: " + catBeanList.size());   // 116
                                 set.addAll(catBeanList);
                                 catBeanList.clear();
                                 catBeanList.addAll(set);
-                                Log.d("TAG", "onResponse: " + catBeanList.size());   // 16
                                 adapter.notifyDataSetChanged();
                             }
                         });
-
-                        Log.d("TAG", "onResponse: "+ msg);
                     }
-  //                  Log.d("TAG", "onResponse: " + catBeanList.size());
                 }
             }
 

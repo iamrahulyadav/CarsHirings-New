@@ -16,6 +16,7 @@
     android:padding="18dp">
 
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/ll_booking"
         android:layout_marginTop="3dp"
         android:orientation="horizontal"

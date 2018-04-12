@@ -233,8 +233,10 @@
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="3dp">
+                    android:padding="3dp"
+                    android:scrollbars="none">
                     <LinearLayout
+                        android:layout_gravity="center_horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -473,7 +475,7 @@
                 android:background="@color/Light_grey"
                 android:layout_marginTop="4dp"/>
             <TextView
-                android:visibility="gone"
+                android:visibility="visible"
                 android:id="@+id/txt_savequote"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

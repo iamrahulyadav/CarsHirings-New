@@ -44,12 +44,12 @@ public class QuotedDetailsActivity extends AppBaseActivity {
         ImageView imageView= (ImageView) toolbar.findViewById(R.id.img_bot);
         imageView.setImageResource(R.drawable.ic_add);
         txt.setText("Book this Car");
-       /* toolbar.setOnClickListener(new View.OnClickListener() {
+        toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-             startActivity(new Intent(QuotedDetailsActivity.this,DriverSelectionActivity.class));
+             startActivity(new Intent(QuotedDetailsActivity.this,BookCarActivity.class));
             }
-        });*/
+        });
     }
 
     @Override

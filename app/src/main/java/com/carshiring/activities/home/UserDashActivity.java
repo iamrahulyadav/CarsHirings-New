@@ -46,8 +46,8 @@ import retrofit2.Response;
 public class UserDashActivity extends AppBaseActivity {
 
     FrameLayout wallFrame;
-    ImageView imgEdit,imgUser;
-    TextView txtEmail, txtPhone, txtDrvLnc, txtCreditPt, txtdebitPt,txtWalletAmt,txtPointValue, txtName;
+    ImageView imgEdit,imgUser, imgUserWall;
+    TextView txtEmail, txtPhone,txtAddress, txtAge, txtDrvLnc, txtCreditPt, txtdebitPt,txtWalletAmt,txtPointValue, txtName;
     UserDetails userDetails = new UserDetails();
     Gson gson = new Gson();
     TinyDB tinyDB;
@@ -79,6 +79,9 @@ public class UserDashActivity extends AppBaseActivity {
         user_id = userDetails.getUser_id();
 
         //        find id
+        imgUserWall = findViewById(R.id.user_profile_wall);
+        txtAddress = findViewById(R.id.dash_profile_txtAddress);
+        txtAge = findViewById(R.id.dash_profile_txtage);
         wallFrame = findViewById(R.id.dash_profile_wal);
         imgEdit = findViewById(R.id.dash_profile_edit);
         imgUser = findViewById(R.id.dash_profile_img);
@@ -91,7 +94,7 @@ public class UserDashActivity extends AppBaseActivity {
         txtName = findViewById(R.id.dash_profile_txtName);
         txtPointValue = findViewById(R.id.dash_profile_txtpointValue);
 
-
+//        get wallet and point value
         getWal();
         getPoint();
     }
@@ -185,7 +188,12 @@ public class UserDashActivity extends AppBaseActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Utility.showLoading(UserDashActivity.this,getResources().getString(R.string.loading));
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Utility.showLoading(UserDashActivity.this,getResources().getString(R.string.loading));
+                }
+            });
         }
 
         @Override
@@ -200,7 +208,12 @@ public class UserDashActivity extends AppBaseActivity {
         // Sets the Bitmap returned by doInBackground
         @Override
         protected void onPostExecute(Bitmap result) {
-            Utility.hidepopup();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Utility.hidepopup();
+                }
+            });
             imgUser.setImageBitmap(result);
             img = Utility.BitMapToString(result);
 //
@@ -237,7 +250,6 @@ public class UserDashActivity extends AppBaseActivity {
                 HttpURLConnection httpConnection = (HttpURLConnection) connection;
                 httpConnection.setRequestMethod("GET");
                 httpConnection.connect();
-
                 if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     stream = httpConnection.getInputStream();
                 }
@@ -268,6 +280,11 @@ public class UserDashActivity extends AppBaseActivity {
                         txtEmail.setText(getResources().getString(R.string.email)+": "+userDetails.getUser_email());
                         txtPhone.setText(getResources().getString(R.string.phone)+ ": "+userDetails.getUser_phone());
                         txtDrvLnc.setText(getResources().getString(R.string.drvlncno)+": "+userDetails.getUser_license_no());
+                        if (userDetails.getUser_age()!=null&&!userDetails.getUser_age().equalsIgnoreCase("0")){
+                            txtAge.setText(getResources().getString(R.string.age)+" : "+ userDetails.getUser_age()+" years");
+                        }
+
+                        txtAddress.setText(getResources().getString(R.string.address)+" : "+ userDetails.getUser_address());
                         if (userDetails.getUser_lname()!=null){
                             txtName.setText(userDetails.getUser_name()+ " "+userDetails.getUser_lname());
                         }
@@ -280,7 +297,7 @@ public class UserDashActivity extends AppBaseActivity {
 
                     }
                     else{
-                        Utility.message(getApplicationContext(), getResources().getString(R.string.no_internet_connection));
+                        Utility.message(getApplicationContext(), getResources().getString(R.string.something_wrong));
                     }
                 }
             }

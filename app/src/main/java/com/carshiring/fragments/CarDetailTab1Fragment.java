@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -33,17 +34,41 @@ import com.carshiring.activities.home.CarsResultListActivity;
 import com.carshiring.activities.home.ExcessProtectionActivity;
 import com.carshiring.activities.home.Extras;
 import com.carshiring.adapters.CarResultsListAdapter;
+import com.carshiring.models.BookingHistory;
 import com.carshiring.models.CarDetailBean;
+import com.carshiring.models.UserDetails;
 import com.carshiring.utilities.Utility;
+import com.carshiring.webservices.ApiResponse;
+import com.carshiring.webservices.RetroFitApis;
+import com.carshiring.webservices.RetrofitApiBuilder;
+import com.google.gson.Gson;
+import com.mukesh.tinydb.TinyDB;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.carshiring.activities.home.CarDetailActivity.carImage;
 import static com.carshiring.activities.home.CarDetailActivity.carSpecificationList;
+import static com.carshiring.activities.home.CarDetailActivity.day;
+import static com.carshiring.activities.home.CarDetailActivity.point;
+import static com.carshiring.activities.home.CarDetailActivity.refer_type;
 import static com.carshiring.activities.home.CarDetailActivity.termsurl;
+import static com.carshiring.activities.home.CarDetailActivity.type;
+import static com.carshiring.splash.SplashActivity.TAG;
 
 /**
  * Created by Muhib.
@@ -56,8 +81,13 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
     ImageView carImg,imglogo;
   //  List<CarSpecification> carSpecificationList;
     ProgressBar bar,bar1;
-    LinearLayout ll;
-    LinearLayout gl;
+    LinearLayout ll,gl;
+    UserDetails userDetails  = new UserDetails();
+    Gson gson = new Gson();
+    String userId,language, carnect_id,car_model,carnect_type,pick_city,pick_houre,pick_minute,
+    pick_datetyme,drop_city,pick_date,drop_date,drop_houre,drop_minute,drop_datetyme,age,image,booking_price;
+    TinyDB tinyDB ;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -76,6 +106,32 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
        /* SingleCarDetails singleCarDetails = new SingleCarDetails();
         singleCarDetails = CarDetail.singleCarDetails;
         carSpecificationList=CarDetail.spec;*/
+        tinyDB = new TinyDB(getContext());
+
+        String s= tinyDB.getString("login_data");
+        userDetails = gson.fromJson(s, UserDetails.class);
+        userId = userDetails.getUser_id();
+        language = tinyDB.getString("language_code");
+        carnect_id = CarDetailActivity.id_context;
+        car_model = CarDetailActivity.modelname;
+        /*  String userId,language, carnect_id,car_model,carnect_type,pick_city,pick_houre,pick_minute,
+    pick_datetyme,drop_city,pick_date,drop_date,drop_houre,drop_minute,drop_datetyme,age,image,booking_price;
+    */
+        carnect_type = CarDetailActivity.type;
+        pick_city = SearchCarFragment.pickName;
+        pick_houre = SearchCarFragment.pick_hour;
+        pick_minute = SearchCarFragment.pick_minute;
+        pick_date = SearchCarFragment.pick_date;
+        pick_datetyme=pick_date +" "+SearchCarFragment.pickTime;
+        drop_city = SearchCarFragment.dropName;
+        drop_date = SearchCarFragment.drop_date;
+        drop_houre = SearchCarFragment.drop_hour;
+        drop_minute = SearchCarFragment.drop_minute;
+        drop_datetyme= drop_date +" "+SearchCarFragment.dropTime;
+        booking_price = CarDetailActivity.currency + "  " + CarDetailActivity.carPrice;
+        image = CarDetailActivity.carImage;
+        age = userDetails.getUser_age();
+
         ll_extra.setOnClickListener(this);
         ll_protection.setOnClickListener(this);
         terms.setOnClickListener(this);
@@ -103,7 +159,10 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
                 return false;
             }
         }).into(carImg);*/
-       new AsyncCaller().execute();
+       if (carImage!=null){
+           new AsyncCaller().execute();
+
+       }
 
         Glide.with(getContext()).load(CarDetailActivity.logo).listener(new RequestListener<Drawable>() {
             @Override
@@ -121,7 +180,7 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
         carname.setText(CarDetailActivity.modelname + getResources().getString(R.string.or_similar));
         txtPoint.setText(getResources().getString(R.string.points_collected )+String.valueOf( CarDetailActivity.point));
         carprice.setText(CarDetailActivity.currency + "  " + CarDetailActivity.carPrice+ "/ "
-                + CarsResultListActivity.day + " "+ CarsResultListActivity.time);
+                + CarDetailActivity.time + " "+ CarDetailActivity.day);
         LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
@@ -129,33 +188,65 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
             for(int i=0;i<carSpecificationList.size();i++) {
                 CarDetailBean.FeatureBean carSpecification =carSpecificationList.get(i);
                 if (carSpecification.aircondition != null) {
-                    if (!carSpecification.aircondition.equalsIgnoreCase("false")) {
-                        View viw = getActivity().getLayoutInflater().inflate(R.layout.gridcustomstyle, null);
-                       // TextView tt = (TextView) viw.findViewById(R.id.txt_spec);
+                    if(!carSpecification.passenger.isEmpty())
+                    {
                         TextView tt1 = new TextView(getContext());
                         tt1.setLayoutParams(lparams);
-                        tt1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_ac,0,0,0);
-                        tt1.setCompoundDrawablePadding(25);
-                        tt1.setTextSize(16);
-                        tt1.setTypeface(Typeface.DEFAULT_BOLD);
-                        tt1.setText(getResources().getString(R.string.air_condition));
+                        tt1.setText(carSpecification.getPassenger() + " " + getResources().getString(R.string.passanger));
+                        tt1.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.ic_car_seat,0,0);
+                        tt1.setCompoundDrawablePadding(5);
+                        tt1.setTextSize(10);
+                        tt1.setPadding(0,0,8,0);
+                        tt1.setTypeface(Typeface.DEFAULT);
                         gl.addView(tt1);
-                        gl.setOrientation(LinearLayout.VERTICAL);
+                        gl.setOrientation(LinearLayout.HORIZONTAL);
                     }
 
+                    if(!carSpecification.door.isEmpty())
+                    {
+
+                        TextView tt1 = new TextView(getContext());
+                        tt1.setLayoutParams(lparams);
+                        tt1.setText(carSpecification.getDoor()+" "+ getResources().getString(R.string.doors));
+                        tt1.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.ic_car_door,0,0);
+                        tt1.setCompoundDrawablePadding(5);
+                        tt1.setTextSize(10);
+                        tt1.setPadding(5,0,8,0);
+                        tt1.setTypeface(Typeface.DEFAULT);
+                        gl.addView(tt1);
+                        gl.setOrientation(LinearLayout.HORIZONTAL);
+                    }
                     if(!carSpecification.transmission.isEmpty())
                     {
 
                         TextView tt1 = new TextView(getContext());
                         tt1.setLayoutParams(lparams);
                         tt1.setText(carSpecification.getTransmission());
-                        tt1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.manual,0,0,0);
-                        tt1.setCompoundDrawablePadding(25);
-                        tt1.setTextSize(16);
-                        tt1.setTypeface(Typeface.DEFAULT_BOLD);
+                        tt1.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.manual,0,0);
+                        tt1.setCompoundDrawablePadding(5);
+                        tt1.setTextSize(10);
+                        tt1.setPadding(5,0,8,0);
+                        tt1.setTypeface(Typeface.DEFAULT);
                         gl.addView(tt1);
-                        gl.setOrientation(LinearLayout.VERTICAL);
+                        gl.setOrientation(LinearLayout.HORIZONTAL);
                     }
+
+
+                    if (!carSpecification.aircondition.equalsIgnoreCase("false")) {
+                        View viw = getActivity().getLayoutInflater().inflate(R.layout.gridcustomstyle, null);
+                       // TextView tt = (TextView) viw.findViewById(R.id.txt_spec);
+                        TextView tt1 = new TextView(getContext());
+                        tt1.setLayoutParams(lparams);
+                        tt1.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.ic_ac,0,0);
+                        tt1.setCompoundDrawablePadding(5);
+                        tt1.setTextSize(10);
+                        tt1.setTypeface(Typeface.DEFAULT);
+                        tt1.setText(getResources().getString(R.string.air_condition));
+                        gl.addView(tt1);
+                        tt1.setPadding(5,0,8,0);
+                        gl.setOrientation(LinearLayout.HORIZONTAL);
+                    }
+
                     if(!carSpecification.fueltype.isEmpty())
                     {
 
@@ -163,58 +254,33 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
                         tt1.setLayoutParams(lparams);
 //                        tt1.setText(carSpecification.getFueltype());
                         tt1.setText("Full to Full");
-                        tt1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_fuel,0,0,0);
-                        tt1.setCompoundDrawablePadding(25);
-                        tt1.setTextSize(16);
-                        tt1.setTypeface(Typeface.DEFAULT_BOLD);
+                        tt1.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.ic_fuel,0,0);
+                        tt1.setCompoundDrawablePadding(5);
+                        tt1.setTextSize(10);
+                        tt1.setPadding(5,0,8,0);
+                        tt1.setTypeface(Typeface.DEFAULT);
                         gl.addView(tt1);
-                        gl.setOrientation(LinearLayout.VERTICAL);
+                        gl.setOrientation(LinearLayout.HORIZONTAL);
                     }
                     if(!carSpecification.bag.isEmpty())
                     {
-
                         TextView tt1 = new TextView(getContext());
                         tt1.setLayoutParams(lparams);
                         tt1.setText(carSpecification.getBag() + " " + getResources().getString(R.string.bags));
-                        tt1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bag,0,0,0);
-                        tt1.setCompoundDrawablePadding(25);
-                        tt1.setTextSize(16);
-                        tt1.setTypeface(Typeface.DEFAULT_BOLD);
+                        tt1.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.ic_bag,0,0);
+                        tt1.setCompoundDrawablePadding(5);
+                        tt1.setPadding(5,0,8,0);
+                        tt1.setTextSize(10);
+                        tt1.setTypeface(Typeface.DEFAULT);
                         gl.addView(tt1);
-                        gl.setOrientation(LinearLayout.VERTICAL);
-                    }
-                    if(!carSpecification.passenger.isEmpty())
-                    {
-
-                        TextView tt1 = new TextView(getContext());
-                        tt1.setLayoutParams(lparams);
-                        tt1.setText(carSpecification.getPassenger() + " " + getResources().getString(R.string.passanger));
-                        tt1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_walkway,0,0,0);
-                        tt1.setCompoundDrawablePadding(25);
-                        tt1.setTextSize(16);
-                        tt1.setTypeface(Typeface.DEFAULT_BOLD);
-                        gl.addView(tt1);
-                        gl.setOrientation(LinearLayout.VERTICAL);
-                    }
-                    if(!carSpecification.door.isEmpty())
-                    {
-
-                        TextView tt1 = new TextView(getContext());
-                        tt1.setLayoutParams(lparams);
-                        tt1.setText(carSpecification.getDoor()+" "+ getResources().getString(R.string.doors));
-                        tt1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_car_door,0,0,0);
-                        tt1.setCompoundDrawablePadding(25);
-                        tt1.setTextSize(16);
-                        tt1.setTypeface(Typeface.DEFAULT_BOLD);
-                        gl.addView(tt1);
-                        gl.setOrientation(LinearLayout.VERTICAL);
+                        gl.setOrientation(LinearLayout.HORIZONTAL);
                     }
                 }
             }
         }
    }
-    private class AsyncCaller extends AsyncTask<Integer, Void, Integer>
-    {
+
+    private class AsyncCaller extends AsyncTask<Integer, Void, Integer> {
         ProgressDialog pdLoading = new ProgressDialog(getActivity());
 
         @Override
@@ -250,9 +316,6 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
                 httpConn.connect();
 
                 s = httpConn.getResponseCode();
-
-
-
                 Log.d("TAG", "doInBackground: "+httpConn.getResponseCode());
                 System.out.println("Response Code : " + httpConn.getResponseCode());
             } catch (Exception e) {
@@ -272,8 +335,6 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
 
             pdLoading.dismiss();
             if (result==404){
-
-                String sv="https://www.raceentry.com/img/Race-Registration-Image-Not-Found.png";
                 Glide.with(getActivity()).load("").listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -327,9 +388,42 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
                 //    startActivity(new Intent(getActivity(), TermsandCondition.class));
                 break;
             case R.id.txt_savequote:
-                it.putExtra("get","Forquotes");
-                startActivity(it);
+              /*  it.putExtra("get","Forquotes");
+                startActivity(it);*/
+                savelater();
                 break;
         }
     }
+
+
+    private void savelater() {
+
+        Utility.showloadingPopup(getActivity());
+        RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();
+
+        final Call<ApiResponse> bookingDataCall = fitApis.savelater(language,carnect_id,car_model,carnect_type,
+                userId, pick_city, pick_date, pick_houre, pick_minute, pick_datetyme,drop_city,
+                drop_date,drop_houre, drop_minute, drop_datetyme, age, image, booking_price,day,refer_type,type,point);
+
+        bookingDataCall.enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                Utility.hidepopup();
+
+                if (response.body()!=null){
+                    Log.d(TAG, "onResponse: savelater"+gson.toJson(response.body()));
+                    Toast.makeText(getContext(), ""+response.body().msg, Toast.LENGTH_SHORT).show();
+                } else {
+                    Utility.message(getContext(), response.body().msg);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                Log.d("TAG", "onFailure: "+t.getMessage());
+                Utility.hidepopup();
+            }
+        });
+    }
+
 }

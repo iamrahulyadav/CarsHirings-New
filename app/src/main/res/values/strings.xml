@@ -303,7 +303,7 @@
     <!--MyBookingActivity-->
     <string name="current">Current</string>
     <string name="previous">Previous</string>
-    <string name="quotes">Quotes</string>
+    <string name="quotes">Saved Cars</string>
 
     <!--MyAccount-->
     <string name="points"> Points</string>
@@ -340,7 +340,7 @@
     <!--CarDetailTab1Fragment-->
     <string name="air_condition">Air Condition</string>
     <string name="bags">Bags</string>
-    <string name="passanger">Passenger</string>
+    <string name="passanger">Seats</string>
 
     <!--CarDetailTab2Fragment-->
     <string name="your_supplier_is">Your Supplier is </string>
@@ -373,7 +373,7 @@
     <string name="txtMyPoint">My points</string>
     <string name="txtCredit">Credit</string>
     <string name="txtDebit">Debit</string>
-    <string name="txtDashTitle">My Profile</string>
+    <string name="txtDashTitle">Account details</string>
     <!--WalletView-->
     <string name="wallet_hist_details">Wallet History Details</string>
     <string name="booking_id">Booking Id</string>
@@ -393,5 +393,8 @@
 
 
     <!--booking adapter-->
-    <string name="txtTransactionDate">Transaction Date</string>
+    <string name="txtTransactionDate">Booking Date</string>
+    <string name="txtCarPrice">Car Price </string>
+    <string name="txtDiscount">Discount</string>
+    <string name="txtWallet">Wallet</string>
 </resources>

@@ -60,20 +60,19 @@
         <activity android:name=".activities.home.AboutUsActivity" />
         <activity android:name=".activities.home.ContactUsActivity" />
         <activity android:name=".activities.home.Language" />
-        <activity android:name=".activities.home.AccountDetailsActivity"
-            android:windowSoftInputMode="stateAlwaysHidden">
-
-        </activity>
+        <activity
+            android:name=".activities.home.AccountDetailsActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"></activity>
         <activity android:name=".activities.home.QuotedDetailsActivity" />
         <activity android:name=".activities.home.MyBookingActivity" />
-        <activity android:name=".activities.home.PayActivity"
-            android:windowSoftInputMode="stateHidden">
-
-        </activity>
+        <activity
+            android:name=".activities.home.PayActivity"
+            android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".activities.home.UserDashActivity" />
         <activity android:name=".activities.home.WalletView" />
         <activity android:name=".activities.home.ThankYou" />
-        <activity android:name=".activities.home.Test"></activity>
+        <activity android:name=".activities.home.Test" />
+        <activity android:name=".activities.home.FilterListActivity"></activity>
     </application>
 
 </manifest>

@@ -78,6 +78,7 @@ public class LocationSelectionActivity extends AppBaseActivity {
             @Override
             public void afterTextChanged(Editable editable) {}
         });
+
         etSearchLocation.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

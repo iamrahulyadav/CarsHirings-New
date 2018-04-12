@@ -34,6 +34,7 @@ import com.mukesh.tinydb.TinyDB;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -301,13 +302,15 @@ public class SplashActivity extends AppBaseActivity {
         for (Iterator i = keys.iterator(); i.hasNext(); ) {
             String key = (String) i.next();
             String value = (String) country.get(key);
-
             counrtyList.add(value);
             countryCode.add(key);
 
         }
+        Set<String>strings = new HashSet<>();
+        strings.addAll(counrtyList);
+        counrtyList.clear();
+        counrtyList.addAll(strings);
         Collections.sort(counrtyList);
-
 
         sharedpref=new TinyDB(getApplicationContext());
         layout = findViewById(R.id.language_layout);

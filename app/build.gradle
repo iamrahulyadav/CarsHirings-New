@@ -45,4 +45,5 @@ dependencies {
     implementation project(':FORTSDKv1.4')
     compile 'org.bouncycastle:bcprov-jdk16:1.46'
     implementation 'com.google.guava:guava:16.0.1'
+    compile 'com.android.volley:volley:1.0.0'
 }

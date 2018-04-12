@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.carshiring.R;
+import com.carshiring.activities.home.FilterListActivity;
 import com.carshiring.models.FilterDefaultMultipleListModel;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class FilterValRecyclerAdapter extends RecyclerView.Adapter<FilterValRecy
     Context context;
     int resource;
     ArrayList<FilterDefaultMultipleListModel> filterModels;
+    ArrayList<FilterDefaultMultipleListModel> selected=new ArrayList<>();
     OnClickItem clickItem;
 
     public interface OnClickItem
@@ -45,6 +47,7 @@ public class FilterValRecyclerAdapter extends RecyclerView.Adapter<FilterValRecy
     public void onBindViewHolder(ViewHolder holder, int i) {
         holder.subCategoryName.setText(filterModels.get(i).getName());
         holder.cbSelected.setChecked(filterModels.get(i).isChecked());
+
     }
 
     @Override
@@ -56,12 +59,14 @@ public class FilterValRecyclerAdapter extends RecyclerView.Adapter<FilterValRecy
     {
         this.clickItem=clickItem;
     }
+
     public void setitemselected(int position) {
         if(position!=-1) {
             filterModels.get(position).setChecked(!filterModels.get(position).isChecked());
             notifyDataSetChanged();
         }
     }
+
     public class  ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView subCategoryName;
         CheckBox cbSelected;

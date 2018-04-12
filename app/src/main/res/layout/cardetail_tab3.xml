@@ -163,7 +163,7 @@
             android:id="@+id/txt_savequote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Save and Quote"
+            android:text="Save leter"
             android:gravity="center"
             android:textColor="@color/bottom_color"
             android:textStyle="bold"

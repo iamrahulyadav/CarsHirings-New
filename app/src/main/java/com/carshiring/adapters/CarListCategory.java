@@ -2,12 +2,14 @@ package com.carshiring.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -41,34 +43,39 @@ public class CarListCategory extends RecyclerView.Adapter<CarListCategory.MyView
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView txtName;
+        LinearLayout catLayout;
         public TextView txtCode;
         ImageView image;
 
         public MyViewHolder(View view) {
             super(view);
+
             txtName = (TextView) view.findViewById(R.id.car_cat_name);
             txtCode = (TextView) view.findViewById(R.id.car_cat_code);
+            catLayout = view.findViewById(R.id.cat_layout);
             image = (ImageView) view.findViewById(R.id.car_cat_image);
 
         }
-
         void bindListener(final int position, final OnItemClickListenerCategory listener) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    row_index=position;
+                    notifyDataSetChanged();
                     listener.onItemClickCategory(position);
+
                 }
             });
 
         }
     }
 
+    int row_index=-1;
 
-    public CarListCategory(Context context, List<SearchData> listCarResult, List<Category.ResponseBean.CatBean> catBeanList, OnItemClickListenerCategory listener
+    public CarListCategory(Context context, List<SearchData> listCarResult,
+                           List<Category.ResponseBean.CatBean> catBeanList, OnItemClickListenerCategory listener
                          ) {
-
         this.listener = listener;
-        //this.horizontalList = horizontalList;
         this.context = context;
         this.catBeanList = catBeanList;
         this.listCarResult = listCarResult;
@@ -86,15 +93,6 @@ public class CarListCategory extends RecyclerView.Adapter<CarListCategory.MyView
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
-        /*Set<Category.ResponseBean.CatBean> catBeans = new HashSet<>();
-        catBeans.addAll(catBeanList);
-        catBeanList.clear();
-        catBeanList.addAll(catBeans);*/
-
-/*        Set<Category.ResponseBean.CatBean> s = new LinkedHashSet<Category.ResponseBean.CatBean>(catBeanList);*/
-
-
-        //      Toast.makeText(context, catBeanList.get(0).getCategory_name(), Toast.LENGTH_SHORT).show();
         holder.txtName.setText(/*"name"*/catBeanList.get(position).getCategory_name());
 
         Glide.with(context)
@@ -109,18 +107,14 @@ public class CarListCategory extends RecyclerView.Adapter<CarListCategory.MyView
         holder.txtCode.setText(/*"code"*/listCarResult.get(position).getCurrency() + " " +
                 " "+String.valueOf(df2.format(priceNew)));
 
-        Log.d("TAG", catBeanList.get(position).getCategory_name() + " - "
-                + catBeanList.get(position).getCategory_image() + " - "
-                + catBeanList.get(position).getCode() + " - ");
-        //   holder.txtView.setText(horizontalList.get(position));
-
         holder.bindListener(position, listener);
-/*        holder.txtView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context,holder.txtView.getText().toString(),Toast.LENGTH_SHORT).show();
-            }
-        });*/
+        if(row_index==position){
+            holder.catLayout.setBackgroundColor(Color.parseColor("#079607"));
+        }
+        else
+        {
+           holder.catLayout.setBackgroundResource(R.drawable.buttoncurve_caategory);
+        }
     }
 
     @Override

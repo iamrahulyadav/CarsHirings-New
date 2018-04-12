@@ -3,64 +3,100 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-   >
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/simpleRectangle"
-        android:padding="5dp">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_address"
-                />
-            <TextView
-                android:id="@+id/txt_quoteaddress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textColor="#000"
-                android:textSize="15sp"
-                android:layout_marginLeft="5dp"
-                android:text="New Delhi DownTown" />
-        </LinearLayout>
-    </FrameLayout>
+    style="@style/simpleRectangle" >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        style="@style/simpleRectangle">
-        <TextView
-            android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Fri,27 Jan,2017"
-            android:textSize="15sp"
-            android:padding="5dp"
-            android:gravity="center"
-            />
-        <View
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:id="@+id/from_layout"
+            android:layout_margin="5dp"
+            android:padding="5dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="0.50">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="From"
+                    android:textColor="@color/black"
+                    android:padding="5dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="New Delhi"
+                    android:id="@+id/txt_quoteaddress_pick"
+                    android:textColor="@color/redStrong"
+                    style="@style/simpleRectangle"
+                    android:padding="8dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="0.50"
+                android:layout_marginLeft="5dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="To"
+                    android:textColor="@color/black"
+                    android:padding="5dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Noida"
+                    android:id="@+id/txt_quoteaddress_drop"
+                    android:textColor="@color/redStrong"
+                    style="@style/simpleRectangle"
+                    android:padding="8dp"/>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:layout_gravity="center"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-
-            />
-        <TextView
-
-            android:gravity="center"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sat,28 Jan,2017"
-            android:textSize="15sp"
-            android:padding="5dp"
-            />
+            android:orientation="horizontal"
+            android:background="@color/redStrong">
+            <TextView
+                android:id="@+id/txtPicktimeQuote"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="20/5/2017 at 10:00PM"
+                android:textSize="@dimen/small_size"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_weight="1"
+                android:padding="5dp"/>
+            <TextView
+                android:id="@+id/txtdroptimeQuote"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="20/5/2017 at 10:00PM"
+                android:textSize="@dimen/small_size"
+                android:gravity="right"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_weight="1"
+                android:padding="5dp"/>
+        </LinearLayout>
     </LinearLayout>
+    <View
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/Light_grey" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -73,7 +109,7 @@
             android:text="Toyota Innova Diesel"
             android:gravity="center"
             android:textColor="#b72025"
-            />
+            android:id="@+id/txtModelNameQuote"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -82,16 +118,15 @@
             />
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="170dp"
             >
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_car_img"
-                android:scaleType="fitXY"
-                />
+                android:layout_height="match_parent"
+                android:id="@+id/imgCar_quote"/>
 
             <TextView
+                android:visibility="gone"
                 android:id="@+id/txt_quoterate"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
@@ -110,20 +145,34 @@
                 android:layout_height="35dp"
                 android:paddingLeft="10dp"
                 android:paddingTop="13dp"
-                android:textColor="@color/greenish_yellow"
+                android:visibility="gone"
+                android:id="@+id/txtPointQuote"
+                android:textColor="@color/white"
                 android:layout_gravity="bottom|start"
                 android:text="Points Collected: 356" />
             <ImageView
                 android:layout_width="92dp"
                 android:layout_height="60dp"
                 android:scaleType="fitXY"
+                android:visibility="gone"
                 android:layout_gravity="bottom|end"
                 android:src="@drawable/ic_brand_logo"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Book Now"
+                android:id="@+id/quotes_btn_book_now"
+                android:background="@color/colorPrimaryDark"
+                android:textColor="@color/white"
+                android:textSize="@dimen/small_size"
+                android:layout_gravity="right|bottom"/>
         </FrameLayout>
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp">
+            android:padding="5dp"
+            android:visibility="gone">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

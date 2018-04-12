@@ -6,7 +6,6 @@ package com.carshiring.models;
 
 public class UserDetails {
 
-
     /**
      * user_id : 207
      * user_title :

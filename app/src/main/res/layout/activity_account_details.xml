@@ -1,160 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <ScrollView
-        android:layout_above="@+id/below"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
-        <LinearLayout
-            android:id="@+id/linear_part"
-            android:orientation="vertical"
-            android:padding="15dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/title"
-                android:textSize="13sp"
-                android:layout_marginBottom="3dp"
-                android:textColor="#000"/>
-            <Spinner
-                android:id="@+id/sp_title"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                style="@style/SimpleSpinnerTheme"
-                android:layout_marginBottom="3dp"
-                android:entries="@array/Titles"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/firstname"
-                android:textSize="13sp"
-                android:textColor="#000"/>
-            <EditText
-                android:id="@+id/etUserFirstName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/simpleRectangle"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="3dp"
-                android:imeOptions="actionNext"
-                android:inputType="text"
-                android:maxLinabs="1">
-            </EditText>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/lastname"
-                android:textSize="13sp"
-                android:textColor="#000"/>
-            <EditText
-                android:id="@+id/etUserLastName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/simpleRectangle"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="3dp"
-                android:imeOptions="actionNext"
-                android:inputType="text"
-                android:maxLinabs="1" >
-            </EditText>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/email"
-                android:textSize="13sp"
-                android:textColor="#000"/>
-            <EditText
-                android:id="@+id/etUserEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/simpleRectangle"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="3dp"
-                android:imeOptions="actionNext"
-                android:inputType="text"
-                android:maxLinabs="1"  >
-            </EditText>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/phnumb"
-                android:textSize="13sp"
-
-                android:textColor="#000"/>
-            <EditText
-                android:id="@+id/etUserPhoneNo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/simpleRectangle"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="3dp"
-                android:imeOptions="actionNext"
-                android:inputType="phone"
-                android:maxLength="14"
-                android:maxLinabs="1">
-            </EditText>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/age"
-                android:textSize="13sp"
-                android:textColor="#000"/>
-            <EditText
-                android:id="@+id/etUserAge"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/simpleRectangle"
-                android:layout_marginTop="2dp"
-                android:paddingBottom="5dp"
-                android:maxLength="2"
-                android:inputType="number"
-                android:imeOptions="actionDone"
-                android:maxLinabs="1"
-                >
-            </EditText>
-        </LinearLayout>
-    </ScrollView>
-    <LinearLayout
-        android:id="@+id/below"
-        android:layout_alignParentBottom="true"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:orientation="vertical">
-        <include
-            layout="@layout/bottom_toolbar" />
-
-    </LinearLayout>
-</RelativeLayout>-->
 <LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android" >
 
-<!--
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/logo"
-        android:padding="10dp"
-        android:layout_marginTop="10dp"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/update_profile_txt"
-        android:gravity="center"
-        android:id="@+id/login_welcome"
-        android:layout_margin="5dp"
-        android:textStyle="bold"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="16sp"/>
--->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -168,11 +17,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="170dp"
-                android:gravity="center">
+                android:id="@+id/wallpaper">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/user_wall"
+                    android:scaleType="fitXY"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_edit"
+                    android:id="@+id/imgWallEdit"
+                    android:layout_alignParentRight="true"
+                    android:padding="5dp"/>
                 <FrameLayout
+                    android:layout_below="@+id/imgWallEdit"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="5dp"
                     android:layout_width="100dp"
                     android:layout_height="100dp">
                 <ImageView
@@ -190,7 +55,7 @@
                     android:layout_margin="3dp"
                     android:onClick="upload_my_image"/>
                 </FrameLayout>
-            </LinearLayout>
+            </RelativeLayout>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -77,11 +77,11 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
 
         holder.tvCarModelName.setText(model.getModel());
         holder.txtSupplierNmae.setText(context.getResources().getString(R.string.supplied_by) + model.getSupplier());
-        holder.txtDropCity.setText(model.getDrop_city());
+        holder.txtDropCity.setText(SearchCarFragment.dropName);
         if (model.getFeature().getBag().equals("0")){
             holder.tvBagNo.setVisibility(View.GONE);
         }
-        holder.tvBagNo.setText(model.getFeature().getBag() + context.getResources().getString(R.string.large_bag));
+        holder.tvBagNo.setText(model.getFeature().getBag()+" " + context.getResources().getString(R.string.large_bag));
         markUp = Double.parseDouble(SearchCarFragment.markup);
         String price = model.getPrice();
         double d = Double.parseDouble(price);
@@ -90,12 +90,12 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
         holder.tvCarPricing.setText(model.getCurrency()
                 +" "+String.valueOf(df2.format(priceNew))+" /"+ model.getTime()
                 +" "+model.getTime_unit());
-        holder.txtDoor.setText(model.getFeature().getDoor()+ context.getResources().getString(R.string.doors));
+        holder.txtDoor.setText(model.getFeature().getDoor()+" "+ context.getResources().getString(R.string.doors));
         if (model.getFeature().getAircondition().equals("true")){
             holder.txtClass.setVisibility(View.VISIBLE);
         }
         holder.txtTrans.setText(model.getFeature().getTransmission());
-        holder.txtFuel.setText(model.getFeature().getFueltype());
+        holder.txtFuel.setText("Full to fuel");
         holder.txtTerms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -156,7 +156,7 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView tvCarModelName,tvCarPricing,txtClass,txtSupplierNmae, tvBagNo,
-                txtDropCity,txtDoor,txtTrans, txtTerms,txtFuel,txtPoint;
+                txtDropCity,txtDoor,txtTrans, txtTerms,txtFuel,txtPoint, txtSeat;
         LinearLayout spec1Container ;
         private View itemView  ;
         ImageView imgCarResult,imgCarAgencyLogo ;
@@ -177,6 +177,7 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
             txtTerms = itemView.findViewById(R.id.txtTermsCond);
             txtFuel = itemView.findViewById(R.id.txtFuel);
             txtPoint = itemView.findViewById(R.id.txtpoint);
+            txtSeat = itemView.findViewById(R.id.tvSeat);
 
             spec1Container= (LinearLayout) itemView.findViewById(R.id.spec1Container) ;
             imgCarResult= (ImageView) itemView.findViewById(R.id.imgCarResult) ;

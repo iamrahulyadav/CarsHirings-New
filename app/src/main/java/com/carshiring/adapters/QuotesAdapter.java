@@ -5,9 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.bumptech.glide.Glide;
 import com.carshiring.R;
 import com.carshiring.models.QuotesModel;
 
@@ -42,9 +45,15 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.Holder> {
     @Override
     public void onBindViewHolder(Holder holder, int position) {
         QuotesModel model = quoteslist.get(position);
-        holder.Reference.setText(model.getBookingrefNumber());
-        holder.Rate.setText(model.getRate());
-        holder.Address.setText(model.getAddress());
+        holder.txtPickUp.setText(model.getSavelater_pick_city());
+        holder.txtDrop.setText(model.getSavelater_drop_city());
+        holder.txtDropTime.setText((String)model.getSavelater_drop_date());
+        holder.txtPickTime.setText((String)model.getSavelater_pick_date());
+        holder.txtModelName.setText(model.getSavelater_carnect_model());
+        holder.txtPoint.setText(model.getSavelater_carnect_model());
+        Glide.with(context)
+                .load(model.getSavelater_carnect_image())
+                .into(holder.imgCar);
         // Animation animation= AnimationUtils.loadAnimation(context,(position>lastposition? R.anim.up_from_bottom:R.anim.bottom_from_up));
 
         /*Animation animation = AnimationUtils.loadAnimation(context, (position > lastposition) ? R.anim.up_from_bottom : R.anim.bottom_from_up);
@@ -71,14 +80,22 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.Holder> {
     }
 
     public class Holder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView Reference, Rate, Address;
-
+        TextView Reference, Rate,txtModelName,txtPoint, txtPickUp, txtDrop, txtPickTime, txtDropTime;
+        ImageView imgCar;
+        Button btnBook;
         public Holder(View view) {
             super(view);
             Reference = (TextView) view.findViewById(R.id.txt_Quote_refnumb);
             Rate = (TextView) view.findViewById(R.id.txt_quoterate);
-            Address = (TextView) view.findViewById(R.id.txt_quoteaddress);
-            view.setOnClickListener(this);
+            txtPickUp = view.findViewById(R.id.txt_quoteaddress_pick);
+            txtDrop = view.findViewById(R.id.txt_quoteaddress_drop);
+            imgCar = view.findViewById(R.id.imgCar_quote);
+            txtPickTime = view.findViewById(R.id.txtPicktimeQuote);
+            txtDropTime = view.findViewById(R.id.txtdroptimeQuote);
+            txtModelName = view.findViewById(R.id.txtModelNameQuote);
+            txtPoint = view.findViewById(R.id.txtPointQuote);
+            btnBook = view.findViewById(R.id.quotes_btn_book_now);
+            btnBook.setOnClickListener(this);
         }
 
         @Override

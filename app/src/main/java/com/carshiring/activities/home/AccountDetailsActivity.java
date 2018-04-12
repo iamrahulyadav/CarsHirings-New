@@ -73,7 +73,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
             edt_city, edt_address;
     Spinner edt_licence_origin;
     private  TextView edt_dob;
-    private ImageView iv;
+    private ImageView iv, imgWallEdit, imgUserWall;
     private String str_fname, str_lname, str_dob, str_email, str_phone, str_zipcode, str_licence_no, str_licence_origin ,
             str_city, str_address, str_image;
 
@@ -82,6 +82,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
     Gson gson = new Gson();
     AppGlobal appGlobal = AppGlobal.getInstancess();
     private static final int SELECT_PICTURE = 100;
+    private static final int SELECT_WALL_PICTURE = 101;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -110,31 +111,15 @@ public class AccountDetailsActivity extends AppBaseActivity {
         edt_licence_origin =  findViewById(R.id.update_user_licnce_origin);
         edt_city = (EditText) findViewById(R.id.update_user_city);
         edt_address = (EditText) findViewById(R.id.update_user_address);
+        imgWallEdit = findViewById(R.id.imgWallEdit);
+        imgUserWall = findViewById(R.id.user_wall);
 
-        // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, SplashActivity.counrtyList);
-
-        // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // attaching data adapter to spinner
-        edt_licence_origin.setAdapter(dataAdapter);
-
-        edt_licence_origin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        imgWallEdit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String item = adapterView.getItemAtPosition(i).toString();
-                str_licence_origin= (String) getKeyFromValue(SplashActivity.country,item);
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
+            public void onClick(View view) {
+                openImageChooser(SELECT_WALL_PICTURE);
             }
         });
-
     }
 
     @Override
@@ -143,6 +128,34 @@ public class AccountDetailsActivity extends AppBaseActivity {
 
         setMyToolBar();
         getProfile();
+    }
+
+    String s;
+    private void countrySpinner() {
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(getApplicationContext(),
+                R.layout.spinner_row, SplashActivity.counrtyList);
+        arrayAdapter.setDropDownViewResource(R.layout.spinner_row);
+        edt_licence_origin.setAdapter(arrayAdapter);
+        if (str_licence_origin != null) {
+            s=SplashActivity.country.get(str_licence_origin);
+            int spinnerPosition = arrayAdapter.getPosition(s);
+            edt_licence_origin.setSelection(spinnerPosition);
+        }
+
+        edt_licence_origin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String item = parent.getItemAtPosition(position).toString();
+
+                str_licence_origin= (String) getKeyFromValue(SplashActivity.country,item);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     private void setMyToolBar(){
@@ -156,6 +169,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
     }
 
     public void getProfile(){
+        Utility.showLoading(AccountDetailsActivity.this,getResources().getString(R.string.loading));
         RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();
         final Call<ApiResponse> walList = fitApis.profile(userId);
         walList.enqueue(new Callback<ApiResponse>() {
@@ -179,6 +193,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
                         if (userDetails.getUser_dob()!=null&&!userDetails.getUser_dob().equalsIgnoreCase("0000-00-00")){
                             edt_dob.setText(Utility.convertSimpleDate(userDetails.getUser_dob()));
                         }
+                        str_licence_origin = (String)userDetails.getUser_country();
                         edt_zipcode.setText(userDetails.getUser_zipcode());
                        // edt_licence_origin.setText(userDetails.getUser_license_no());
                         edt_city.setText((String)userDetails.getUser_city());
@@ -192,7 +207,8 @@ public class AccountDetailsActivity extends AppBaseActivity {
                             // Execute the task
                             task.execute(new String[] { url });
                         }
-
+                        Utility.hidepopup();
+                        countrySpinner();
                     }
                     else{
                         Utility.message(getApplicationContext(), getResources().getString(R.string.something_wrong));
@@ -233,9 +249,6 @@ public class AccountDetailsActivity extends AppBaseActivity {
             Utility.hidepopup();
             iv.setImageBitmap(result);
             img = Utility.BitMapToString(result);
-//
-//            Glide.with(getActivity()).load(result)
-//                    .apply(RequestOptions.circleCropTransform()).into(imgUser);
         }
 
         // Creates Bitmap from InputStream and returns it
@@ -396,7 +409,6 @@ public class AccountDetailsActivity extends AppBaseActivity {
         mMonth = c.get(Calendar.MONTH);
         mDay = c.get(Calendar.DAY_OF_MONTH);
 
-
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 new DatePickerDialog.OnDateSetListener() {
 
@@ -409,17 +421,23 @@ public class AccountDetailsActivity extends AppBaseActivity {
                     }
                 }, mYear, mMonth, mDay);
         datePickerDialog.show();
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                view.setMinDate(System.currentTimeMillis() - 1000);
+            }
+        };
     }
 
 
     public void upload_my_image(View view){
 
         //imageInputHelper.selectImageFromGallery();
-        openImageChooser();
+        openImageChooser(SELECT_PICTURE);
     }
 
     /* Choose an image from Gallery */
-    void openImageChooser() {
+    void openImageChooser(int SELECT_PICTURE) {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -433,14 +451,6 @@ public class AccountDetailsActivity extends AppBaseActivity {
                 Uri selectedImageUri = data.getData();
                 if (null != selectedImageUri) {
                     Log.d("TAG", selectedImageUri.toString());
-                    // Get the path from the Uri
-//                    String path = getPathFromURI(selectedImageUri);
-//                    Log.i("aa", "Image Path : " + path);
-
-//                    imageInputHelper.requestCropImage(selectedImageUri, 800, 450, 16, 9);
-                    // Set the image in ImageView
-
-
                     InputStream imageStream = null;
                     try {
                         imageStream = getContentResolver().openInputStream(selectedImageUri);
@@ -450,15 +460,26 @@ public class AccountDetailsActivity extends AppBaseActivity {
                     final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                     String encodedImage = encodeImage(selectedImage);
                     Log.d("Image123", encodedImage);
-
-
-
                     update_user_pic(encodedImage);
-
-
-
                     iv.setImageURI(selectedImageUri);
                 }
+            } else if (requestCode == SELECT_WALL_PICTURE) {
+                Uri selectedImageUri = data.getData();
+                if (null != selectedImageUri) {
+                    Log.d("TAG", selectedImageUri.toString());
+                    InputStream imageStream = null;
+                    try {
+                        imageStream = getContentResolver().openInputStream(selectedImageUri);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                    String encodedImage = encodeImage(selectedImage);
+                    Log.d("Image123", encodedImage);
+                    update_user_wall(encodedImage);
+                    imgUserWall.setImageURI(selectedImageUri);
+                }
+
             }
         }
     }
@@ -472,6 +493,42 @@ public class AccountDetailsActivity extends AppBaseActivity {
         return encImage;
     }
 
+
+    private void update_user_wall(String image){
+
+        if(!Utility.isNetworkConnected(getApplicationContext())){
+            Toast.makeText(AccountDetailsActivity.this, getResources().getString(R.string.no_internet_connection),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Utility.showLoading(AccountDetailsActivity.this,getResources().getString(R.string.loading));
+        RetroFitApis retroFitApis= RetrofitApiBuilder.getCargHiresapis();
+        Call<ApiResponse> responseCall = retroFitApis.update_user_wall(userId, image);
+        responseCall.enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                if(response.body().status==true)
+                {
+                    Log.d("TAG", "onResponse: " + response.body().message);
+                    Utility.hidepopup();
+                    Toast.makeText(getApplicationContext(), response.body().message, Toast.LENGTH_SHORT).show();
+                    getProfile();
+                }
+                else{
+                    Utility.message(getApplicationContext(), response.body().message);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                Utility.hidepopup();
+                Utility.message(getApplicationContext(),getResources().getString(R.string.no_internet_connection));
+            }
+        });
+
+    }
+
+
     private void update_user_pic(String image){
 
         if(!Utility.isNetworkConnected(getApplicationContext())){
@@ -479,32 +536,18 @@ public class AccountDetailsActivity extends AppBaseActivity {
                     Toast.LENGTH_SHORT).show();
             return;
         }
-        Utility.showloadingPopup(this);
+        Utility.showLoading(AccountDetailsActivity.this,getResources().getString(R.string.loading));
         RetroFitApis retroFitApis= RetrofitApiBuilder.getCargHiresapis();
         Call<ApiResponse> responseCall = retroFitApis.update_user_DP(userId, image);
         responseCall.enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                Utility.hidepopup();
                 if(response.body().status==true)
                 {
                     Log.d("TAG", "onResponse: " + response.body().message);
-
-
-//                    userImage = response.body().response.user_dp;
-
-//                    Toast.makeText(getApplicationContext(), userImage.getMsg(), Toast.LENGTH_SHORT).show();
-
-//                    userDetails.setUser_image();
-//                    appGlobal.setUser_image(response.body().image);
-                    String image = response.body().image;
-       /*             Glide.with(getApplicationContext())
-                            .load(RetrofitApiBuilder.IMG_BASE_URL + image)
-                            .into(iv);
-*/
+                    Utility.hidepopup();
                     Toast.makeText(getApplicationContext(), response.body().msg, Toast.LENGTH_SHORT).show();
                     getProfile();
-
                 }
                 else{
                     Utility.message(getApplicationContext(), response.body().message);

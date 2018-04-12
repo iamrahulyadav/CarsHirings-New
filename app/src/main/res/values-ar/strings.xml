@@ -336,7 +336,7 @@
     <!--CarDetailTab1Fragment-->
     <string name="air_condition">تكييف الهواء</string>
     <string name="bags">أكياس</string>
-    <string name="passanger">راكب</string>
+    <string name="passanger">مقاعد</string>
 
     <!--CarDetailTab2Fragment-->
     <string name="your_supplier_is">المورد الخاص بك هو</string>
@@ -364,7 +364,7 @@
     <string name="txtMyPoint">نقاطي</string>
     <string name="txtCredit">ائتمان</string>
     <string name="txtDebit">مدين</string>
-    <string name="txtDashTitle">ملفي</string>
+    <string name="txtDashTitle">تفاصيل الحساب</string>
     <!--WalletView-->
     <string name="wallet_hist_details">تفاصيل محفوظات المحفظة</string>
     <string name="booking_id">رقم الحجز</string>
@@ -385,5 +385,8 @@
     <string name="txtPay">Tap \'Book Now\' to complete your booking and expect carshirng</string>
 
     <!--booking adapter-->
-    <string name="txtTransactionDate">تاريخ الصفقة</string>
+    <string name="txtTransactionDate">تاريخ الحجز</string>
+    <string name="txtCarPrice">سعر السيارة</string>
+    <string name="txtDiscount">خصم</string>
+    <string name="txtWallet">محفظة نقود</string>
 </resources>

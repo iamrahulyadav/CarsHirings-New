@@ -19,6 +19,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -40,6 +46,11 @@ import com.carshiring.webservices.RetrofitApiBuilder;
 import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -47,8 +58,11 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -57,10 +71,10 @@ import retrofit2.Retrofit;
 
 public class CarDetailActivity extends AppCompatActivity {
     String token="fa6e9fcf829fbf3217d8e361421acf2c588903aa";
-    String type="0";
-    String refer_type="16";
-    String day="2";
-    String id_context="6226549648764871585476470";
+    public static String type="0";
+    public static String refer_type="16", day="2";
+
+    public static String id_context="6226549648764871585476470";
     TabLayout tabLayout;
     Page_Adapter adapter;
     ActionBar actionBar;
@@ -68,7 +82,7 @@ public class CarDetailActivity extends AppCompatActivity {
     double markUp;
     public static double point;
     public static String logo,carPrice,carImage,modelname,currency,suppliername,suppliercity,termsurl
-            ,fullprotectioncurrency,fullprotectionammount,fullProcted,driver_minage,driver_maxage,CDW,THP,carid;
+            ,fullprotectioncurrency,fullprotectionammount,fullProcted,time, driver_minage,driver_maxage,CDW,THP,carid;
     Gson gson = new Gson();
     public static double fullProAmt, fullAmtValue;
     public static ArrayList<ExtraBean> extralist=new ArrayList<>();
@@ -94,15 +108,127 @@ public class CarDetailActivity extends AppCompatActivity {
         refer_type = getIntent().getStringExtra("refer_type");
         day = getIntent().getStringExtra("day");
         id_context = getIntent().getStringExtra("id_context");
-        point = getIntent().getDoubleExtra("point_earn",0);
+        String s = getIntent().getStringExtra("point_earn");
+        point = Double.parseDouble(s);
 
 //        call api
 
         setupApi();
+//        getCarDetail();
+    }
+
+    public final okhttp3.MediaType MEDIA_TYPE = okhttp3.MediaType.parse("application/json");
+
+
+    private void getCarDetail(){
+       /* final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setMessage("Booking in processing...");
+        progressDialog.show();*/
+
+
+        String url = "https://carsgates.com/webservices/webservice/car_detail";
+
+        StringRequest  stringRequest = new StringRequest(Request.Method.POST, url, new com.android.volley.Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                String s =response;
+                Log.d("TAG", "onResponse: details"+response);
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    boolean status = jsonObject.getBoolean("status");
+                    if (status){
+                        JSONObject responseObject = jsonObject.getJSONObject("response");
+                        JSONObject car_detailObject = responseObject.getJSONObject("car_detail");
+                        JSONObject featureObject = car_detailObject.getJSONObject("feature");
+                        String aircondition = featureObject.getString("aircondition");
+                        String transmission = featureObject.getString("transmission");
+                        String fueltype = featureObject.getString("fueltype");
+                        String bag = featureObject.getString("bag");
+                        String passenger = featureObject.getString("passenger");
+                        String door = featureObject.getString("door");
+                        String category = car_detailObject.getString("category");
+                        String model= car_detailObject.getString("model");
+                        String model_code = car_detailObject.getString("model_code");
+                        String image = car_detailObject.getString("image");
+                        String price = car_detailObject.getString("price");
+                        String currency = car_detailObject.getString("currency");
+                        String time_unit = car_detailObject.getString("time_unit");
+                        String time = car_detailObject.getString("time");
+                        String driver_min_age = car_detailObject.getString("driver_min_age");
+                        String driver_max_age = car_detailObject.getString("driver_max_age");
+                        String opening_hours_start = car_detailObject.getString("opening_hours_start");
+                        String opening_hours_end = car_detailObject.getString("opening_hours_end");
+                        JSONArray collision_damage_waiver = car_detailObject.getJSONArray("collision_damage_waiver");
+                        if (car_detailObject.has("theft_protection")){
+                            Object json = new JSONTokener(car_detailObject.getString("theft_protection")).nextValue();
+                            if (json instanceof String){
+                                String theft_protection = car_detailObject.getString("theft_protection");
+                            }
+                            else if (json instanceof JSONArray){
+                                JSONArray jsonArray = car_detailObject.getJSONArray("theft_protection");
+                            }
+                        }
+
+                    } else {
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("TAG", "onFailure: detail"+error);
+
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String>cateRequest = new HashMap<>();
+        /*l(token,id_context,type,day,refer_type);*/
+                cateRequest.put("access_token",token);
+                cateRequest.put("id_context",id_context);
+                cateRequest.put("type",type);
+                cateRequest.put("day",day);
+                cateRequest.put("refer_type",refer_type);
+                return cateRequest;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        requestQueue.add(stringRequest);
+
+       /*
+        okhttp3.RequestBody requestBody = okhttp3.RequestBody.create(MEDIA_TYPE, String.valueOf(cateRequest));
+
+        final okhttp3.Request request = new okhttp3.Request.Builder()
+                .url("https://carsgates.com/webservices/webservice/car_detail")
+                .post(requestBody)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .build();
+        okhttp3.OkHttpClient client = new okhttp3.OkHttpClient.Builder()
+                .connectTimeout(10000, TimeUnit.SECONDS)
+                .writeTimeout(10000, TimeUnit.SECONDS)
+                .readTimeout(30000, TimeUnit.SECONDS)
+                .build();
+
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, IOException e) {
+                Log.d("TAG", "onFailure: detail"+e.getMessage());
+            }
+
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                String s = gson.toJson(response.body());
+                Log.d("TAG", "onResponse: details"+s);
+            }
+        });
+*/
     }
 
     private void setupApi() {
-
         Utility.showloadingPopup(this);
         RetroFitApis retroFitApis= RetrofitApiBuilder.getCarGatesapi();
         Call<ApiResponse> apiResponseCall=retroFitApis.car_detail(token,id_context,type,day,refer_type);
@@ -111,7 +237,7 @@ public class CarDetailActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 Utility.hidepopup();
-                Log.d("TAG", "onResponse:cardetails "+gson.toJson(response.body().response));
+                Log.d("TAG", "onResponse:cardetails "+gson.toJson(response.body()));
                if (response.body()!=null){
                    if (response.body().status){
                        CarDetailBean carDetailBean = new CarDetailBean();
@@ -120,6 +246,8 @@ public class CarDetailActivity extends AppCompatActivity {
                        logo=response.body().response.car_detail.supplier_logo;
                        modelname=response.body().response.car_detail.model;
                        markUp = Double.parseDouble(SearchCarFragment.markup);
+                       time = response.body().response.car_detail.time;
+                       day = response.body().response.car_detail.time_unit;
                        String price =response.body().response.car_detail.price;
                        double d = Double.parseDouble(price);
                        double priceNew  = d+(d*markUp)/100;
@@ -149,20 +277,27 @@ public class CarDetailActivity extends AppCompatActivity {
                        }
                        if (response.body().response.car_detail.fullprotection_currency!=null){
                            fullprotectioncurrency=response.body().response.car_detail.fullprotection_currency;
-
                        }
 
                        coveragelist=response.body().response.car_detail.coverages;
                        driver_minage=response.body().response.car_detail.driver_min_age;
                        driver_maxage=response.body().response.car_detail.driver_max_age;
-                       theft_protection=response.body().response.car_detail.theft_protection;
+                       if (response.body().response.car_detail.theft_protection!=null){
+                           theft_protection=response.body().response.car_detail.theft_protection;
+                       }
 //                   carid = response.body().response.car_detail.ca
-                       for (int i=0;i<1;i++) {
-                           CDW = response.body().response.car_detail.collision_damage_waiver.get(i);
+                       if (response.body().response.car_detail.collision_damage_waiver!=null){
+                           for (int i=0;i<1;i++) {
+                               CDW = response.body().response.car_detail.collision_damage_waiver.get(i);
+                           }
                        }
-                       for (int i=0;i<1;i++) {
-                           THP = response.body().response.car_detail.theft_protection.get(i);
+
+                       if (response.body().response.car_detail.theft_protection!=null){
+                           for (int i=0;i<1;i++) {
+                               THP = response.body().response.car_detail.theft_protection.get(i);
+                           }
                        }
+
                        handletablayout();
                    } else {
                        Utility.message(getApplicationContext(), response.body().msg);

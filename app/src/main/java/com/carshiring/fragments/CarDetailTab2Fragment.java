@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.carshiring.R;
+import com.carshiring.activities.home.ExcessProtectionActivity;
 
 import static com.carshiring.activities.home.CarDetailActivity.logo;
 import static com.carshiring.activities.home.CarDetailActivity.suppliercity;
@@ -38,14 +39,12 @@ public class CarDetailTab2Fragment extends Fragment implements View.OnClickListe
         quotes=(TextView) view.findViewById(R.id.txt_savequote);
         txt_supdetail=(TextView) view.findViewById(R.id.txt_supdetail);
         txt_suploc=view.findViewById(R.id.txt_suploc);
-        txt_supdetail.setText(getResources().getString(R.string.your_supplier_is) + suppliername);
+        txt_supdetail.setText(getResources().getString(R.string.your_supplier_is)+" " + suppliername);
         txt_suploc.setText(suppliercity);
         terms.setOnClickListener(this);
         quotes.setOnClickListener(this);
         return view;
     }
-
-
 
     @Override
     public void onClick(View v) {
@@ -58,9 +57,9 @@ public class CarDetailTab2Fragment extends Fragment implements View.OnClickListe
                // startActivity(new Intent(getContext(), TermsandCondition.class));;
                 break;
             case R.id.txt_savequote:
-               /* Intent it=new Intent(getActivity(), ExcessProtectionActivity.class);
+                Intent it=new Intent(getActivity(), ExcessProtectionActivity.class);
                 it.putExtra("get","Forquotes");
-                startActivity(it);*/
+                startActivity(it);
                 break;
         }
     }
