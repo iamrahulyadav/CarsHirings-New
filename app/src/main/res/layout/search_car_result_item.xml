@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_margin="10dp"
+    android:layout_margin="5dp"
+    app:cardElevation="5dp"
+    app:cardCornerRadius="5dp"
+    android:background="@drawable/cardview_border"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardElevation="3dp"
-        app:cardCornerRadius="3dp">
+        >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_margin="10dp">
 
             <LinearLayout
                 android:layout_marginTop="10dp"
@@ -48,15 +51,15 @@
                     android:gravity="center"
                     >
                     <TextView
-                        android:id="@+id/tvBagSp"
+                        android:id="@+id/tvSeat"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="10sp"
+                        android:visibility="gone"
                         android:padding="5dp"
-                        android:text="Bag"
-                        android:drawableTop="@drawable/ic_bag"
+                        android:text="7 Seats"
+                        android:drawableTop="@drawable/ic_seat"
                         android:drawablePadding="5dp"/>
-
                     <TextView
                         android:padding="5dp"
                         android:layout_width="wrap_content"
@@ -68,6 +71,16 @@
                         android:drawablePadding="5dp"/>
                     <TextView
                         android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:id="@+id/txttrans"
+                        android:layout_marginTop="3dp"
+                        android:textSize="10sp"
+                        android:padding="5dp"
+                        android:drawablePadding="5dp"
+                        android:drawableTop="@drawable/manual"
+                        android:text="Drop"/>
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/txtac"
                         android:textSize="10sp"
@@ -76,17 +89,26 @@
                         android:drawablePadding="5dp"
                         android:drawableTop="@drawable/ic_ac"
                         android:text="Air Condition"/>
+
                     <TextView
+                        android:id="@+id/tvBagSp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/txttrans"
                         android:textSize="10sp"
                         android:padding="5dp"
-                        android:drawablePadding="5dp"
-                        android:drawableTop="@drawable/manual"
-                        android:text="Drop"/>
+                        android:text="Bag"
+                        android:drawableTop="@drawable/ic_bag"
+                        android:drawablePadding="5dp"/>
 
-
+                    <TextView
+                        android:id="@+id/txtFuel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="10sp"
+                        android:padding="5dp"
+                        android:text="Full to fuel"
+                        android:drawableTop="@drawable/ic_fuel"
+                        android:drawablePadding="5dp"/>
                 </LinearLayout>
 
             </HorizontalScrollView>
@@ -126,16 +148,6 @@
                         android:id="@+id/txtpoint"
                         android:textColor="@color/white"
                         android:text="Points Collected: 356" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:id="@+id/txtFuel"
-                        android:visibility="gone"
-                        android:drawablePadding="5dp"
-                        android:drawableLeft="@drawable/ic_fuel"
-                        android:textColor="@color/white"
-                        android:text="Fuel Policy Full to Full" />
 
                 </LinearLayout>
                 <LinearLayout
@@ -180,15 +192,30 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:background="@color/green">
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:visibility="gone"
+                    android:id="@+id/txtDriverSurCharge"
+                    android:textColor="@color/white" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtclass"
+                    android:padding="5dp"
+                    android:drawablePadding="5dp"
+                    android:textColor="@color/white"
+                    android:text="Class"/>
+
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/dropCity"
                     android:padding="5dp"
                     android:drawablePadding="5dp"
-                    android:background="@color/green"
                     android:textColor="@color/white"
                     android:drawableStart="@drawable/ic_drop"
                     android:text="Drop"/>
@@ -197,7 +224,6 @@
 
             <LinearLayout
                 android:background="@drawable/border_bg"
-                android:weightSum="2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -205,6 +231,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:visibility="gone"
                     android:background="@drawable/border_bg"
                     android:gravity="center"
                     android:padding="5dp">
@@ -225,11 +252,11 @@
                     android:layout_weight="1"
                     android:background="@drawable/border_bg"
                     android:gravity="center"
-                    android:padding="5dp">
+                    android:padding="8dp">
 
                     <TextView
                         android:id="@+id/txtTermsCond"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawablePadding="10dp"
                         android:textColor="@color/colorPrimaryDark"
@@ -259,4 +286,4 @@
             </LinearLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>
-</LinearLayout>
+</android.support.v7.widget.CardView>

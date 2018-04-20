@@ -30,6 +30,10 @@ import com.carshiring.activities.home.CarsResultListActivity;
 import com.carshiring.activities.home.LocationSelectionActivity;
 import com.carshiring.activities.home.MainActivity;
 import com.carshiring.activities.home.SearchQuery;
+import com.carshiring.activities.home.SearchbyMapActivity;
+import com.carshiring.activities.home.TestActivity;
+import com.carshiring.models.CatRequest;
+import com.carshiring.models.Category;
 import com.carshiring.models.MArkupdata;
 import com.carshiring.models.Point;
 import com.carshiring.models.SearchData;
@@ -49,18 +53,34 @@ import com.mukesh.tinydb.TinyDB;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.TreeSet;
+import java.util.concurrent.TimeUnit;
 
+import in.technobuff.helper.utils.PermissionRequestHandler;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.ContentValues.TAG;
+import static com.google.android.gms.internal.zzahg.runOnUiThread;
 
 
 public class SearchCarFragment extends BaseFragment implements View.OnClickListener,
@@ -177,14 +197,14 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 //comment for testing
-               /* if (isChecked) {
+                if (isChecked) {
                     et_pickup_location.setText("");
                     et_pickup_location.setEnabled(false);
                     if (Utility.checkGooglePlayService(getActivity()))
                         setupLocation();
                 }else{
                     et_pickup_location.setEnabled(true);
-                }*/
+                }
             }
         });
 
@@ -207,6 +227,20 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
 
     private void bindTimeToGUI(String type, int i, int i1) {
         String timeStr = setFullTime(i, i1);
+        DateFormat monthFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
+        Date date = null;
+        String output = null;
+        try{
+            //Converting the input String to Date
+            date= monthFormat.parse(timeStr);
+            //Changing the format of date and storing it in String
+            output = dateFormat.format(date);
+            //Displaying the date
+            System.out.println(output);
+        }catch(ParseException pe){
+            pe.printStackTrace();
+        }
         calendar_drop.set(calendar_drop.get(Calendar.YEAR),calendar_drop.get(Calendar.MONTH),
                 calendar_drop.get(Calendar.DAY_OF_MONTH),i,i1);
         switch (type) {
@@ -215,7 +249,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 pick_minutes =i1 ;
                 final LinearLayout dt_picker_journey = (LinearLayout) view.findViewById(R.id.dt_picker_journey);
                 final TextView tvPickFullTime = (TextView) dt_picker_journey.findViewById(R.id.tvFullTime);
-                tvPickFullTime.setText(getResources().getString(R.string.txtTime) +" : " + timeStr);
+                tvPickFullTime.setText(getResources().getString(R.string.txtTime) +" : " + output);
                 pickTime= timeStr;
                 calendar_pick.set(calendar_pick.get(Calendar.YEAR),calendar_pick.get(Calendar.MONTH),
                         calendar_pick.get(Calendar.DAY_OF_MONTH),i,i1);
@@ -228,7 +262,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 final LinearLayout dt_picker_returning = (LinearLayout) view.findViewById(R.id.dt_picker_returning);
                 final TextView tvDropFullTime = (TextView) dt_picker_returning.findViewById(R.id.tvFullTime);
                 dropTime=timeStr;
-                tvDropFullTime.setText(getResources().getString(R.string.txtTime) +" : " + timeStr);
+                tvDropFullTime.setText(getResources().getString(R.string.txtTime) +" : " + output);
                 break;
         }
     }
@@ -239,9 +273,9 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(2017, 3, 1, hoursOfDay, minutes);
-        SimpleDateFormat monthFormat = new SimpleDateFormat("h:mm a", Locale.US);
+//        SimpleDateFormat monthFormat = new SimpleDateFormat("h:mm:a", Locale.US);
+        SimpleDateFormat monthFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
         result = monthFormat.format(calendar.getTime());
-
         return result;
     }
 
@@ -257,7 +291,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 
-        datePickerDialog.getDatePicker().setMinDate(calendar_pick.getTimeInMillis());
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         datePickerDialog.show();
     }
 
@@ -396,9 +430,117 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
 
             case R.id.btn_search_car:
                 requestForSearchCar();
-//                Intent intent = new Intent(getActivity(), CarsResultListActivity.class);
-//                startActivity(intent);
+
         }
+    }
+    Gson gson = new Gson();
+
+    public static List<Category.ResponseBean.CatBean>catBeanList = new ArrayList<>();
+    public static Category category = new Category();
+    CatRequest cateRequest = new CatRequest();
+
+    public static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
+    public void getCat() {
+        if (catBeanList!=null){
+            catBeanList.clear();
+        }
+        Utility.showloadingPopup(getActivity());
+        String cat = gson.toJson(cateRequest);
+        Log.d(TAG, "getCat: "+cat);
+
+        RequestBody requestBody = RequestBody.create(MEDIA_TYPE,cat);
+
+        final Request request = new Request.Builder()
+                .url(RetrofitApiBuilder.CarHires_BASE_URL+"category_list")
+                .post(requestBody)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("cache-control", "no-cache")
+                .build();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(10000, TimeUnit.SECONDS)
+                .writeTimeout(10000, TimeUnit.SECONDS)
+                .readTimeout(30000, TimeUnit.SECONDS)
+                .build();
+
+        Utility.showloadingPopup(getActivity());
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, final IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String msg = e.getMessage();
+                        category = gson.fromJson(msg, Category.class);
+                        Utility.message(getContext(), getResources().getString(R.string.no_internet_connection));
+                        Utility.hidepopup();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                Utility.hidepopup();
+                if (response!=null&&response.body().toString().length()>0){
+                    if (request.body()!=null){
+                        String msg = response.body().string();
+                        Log.d(TAG, "onResponse: msg"+msg);
+                        category = gson.fromJson(msg,Category.class);
+                        try {
+                            JSONObject jsonObject = new JSONObject(msg);
+                            if (jsonObject.getBoolean("status")){
+                                List<Category.ResponseBean.CatBean>catBeans = new ArrayList<>();
+                                if (category.getResponse()!=null){
+                                    catBeans = category.getResponse().getCat();
+                                }
+                                ArrayList<Double>doubles = new ArrayList<>();
+                                ArrayList<String>name = new ArrayList<>();
+                                HashMap< ArrayList<Double>,String>map1 = new HashMap<>();
+                                for (Category.ResponseBean.CatBean catBean: catBeans){
+                                    name.add(catBean.getCategory_name());
+                                    for (SearchData searchDatas: searchData){
+                                        if (String.valueOf(catBean.getCode()).equalsIgnoreCase(searchDatas.getCategory())){
+                                            double d = Double.parseDouble(searchDatas.getPrice());
+                                            double priceNew  = d+(d*Double.parseDouble(markup))/100;
+                                            doubles.add(priceNew);
+                                            map1 .put(doubles,catBean.getCategory_name());
+                                        }
+                                    }
+                                }
+                                Log.d(TAG, "onResponse: map value"+gson.toJson(map1));
+
+                                final List<Category.ResponseBean.CatBean> finalCatBeans = catBeans;
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        catBeanList.addAll(finalCatBeans);
+
+                                        TreeSet<Category.ResponseBean.CatBean> set = new TreeSet<>(new Comparator<Category.ResponseBean.CatBean>() {
+                                            @Override
+                                            public int compare(Category.ResponseBean.CatBean o1, Category.ResponseBean.CatBean o2) {
+                                                if(o1.getCategory_name().equalsIgnoreCase(o2.getCategory_name())){
+                                                    return 0;
+                                                }
+                                                return 1;
+                                            }
+                                        });
+                                        set.addAll(catBeanList);
+                                        catBeanList.clear();
+                                        catBeanList.addAll(set);
+
+                                        chooseSearchAction(searchData);
+
+                                        Log.d(TAG, "run: "+gson.toJson(catBeanList));
+                                    }
+                                });
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
     }
 
     private void chooseSearchAction(List<SearchData> car_list) {
@@ -406,15 +548,16 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         final SwitchCompat switchSearchByMap = (SwitchCompat) view.findViewById(R.id.switchSearchByMap);
         Intent intent ;
         if (switchSearchByMap.isChecked()) {
-          /*  intent = new Intent(getActivity(), SearchByMapActivity.class);
-            intent.putExtra("car_list", (Serializable) car_list) ;
-            startActivity(intent);*/
+            intent = new Intent(getActivity(), SearchbyMapActivity.class);
+//            intent.putExtra("car_list", (Serializable) searchData) ;
+            startActivity(intent);
         } else {
             getPoint();
         }
     }
 
     public static List<SearchData>searchData = new ArrayList<>();
+    List<Integer>cateList=new ArrayList<>();
 
 
     private void requestForSearchCar() {
@@ -424,7 +567,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
 
         Utility.showLoading(getActivity(),getResources().getString(R.string.searching_cars));
         final SearchCarFragment _this = SearchCarFragment.this ;
-            RetroFitApis retroFitApis = RetrofitApiBuilder.getCarGatesapi() ;
+        RetroFitApis retroFitApis = RetrofitApiBuilder.getCarGatesapi() ;
 
         pick_hour=String.valueOf(pick_hours>9?pick_hours:"0"+pick_hours);
         pick_minute=String.valueOf(pick_minutes>9?pick_minutes:"0"+pick_minutes);
@@ -443,6 +586,14 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 useCurrentLocation, useSameDestLocation,isBetweenDriverAge,currentLat,
                 currentLng,location_code,location_iata,
                 location_type,location_code_drop,location_iata_drop,location_type_drop,languagecode) ;
+
+
+        Log.d(TAG, "requestForSearchCar: "+token+"\n"+pickName+"\n"+
+                pick_date+"\n"+pick_hour+"\n"+
+                pick_minute+"\n"+dropName+"\n"+drop_date+"\n"+drop_hour+"\n"+drop_minute+"\n"+driver_age+"\n"+
+                useCurrentLocation+"\n"+ useSameDestLocation+"\n"+isBetweenDriverAge+"\n"+currentLat+"\n"+
+                currentLng+"\n"+location_code+"\n"+location_iata+"\n"+
+                location_type+"\n"+location_code_drop+"\n"+location_iata_drop+"\n"+location_type_drop+"\n"+languagecode);
         final Gson gson = new Gson();
         responseCall.enqueue(new Callback<ApiResponse>() {
             @Override
@@ -456,14 +607,16 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                         String data = gson.toJson(searchData);
                         ArrayList<SearchData>searchData1 = new ArrayList<>();
                         searchData1.addAll(searchData);
-
-                        chooseSearchAction(searchData);
+                        for (SearchData searchDatas : searchData){
+                            cateList.add(Integer.parseInt(searchDatas.getCategory()));
+                        }
+                        cateRequest.setCode(cateList);
+                        getCat();
 
                     } else {
                         Toast.makeText(activity, ""+response.body().msg, Toast.LENGTH_SHORT).show();
                     }
                 }
-
             }
 
             @Override
@@ -506,6 +659,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
                 Utility.hidepopup();
+                Log.d(TAG, "onFailure: "+t.getMessage());
                 Toast.makeText(getContext(), getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             }
         });
@@ -539,7 +693,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             }
         });
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -588,7 +741,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
     }
 
     protected synchronized void setupLocation() {
-/*
         if (PermissionRequestHandler.requestPermissionToLocation(getActivity(),this)) {
             checkGPSStatus();
             mgoogleApiclient = new GoogleApiClient.Builder(getActivity()).
@@ -598,13 +750,11 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
 
             mgoogleApiclient.connect();
         }
-*/
 
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -698,7 +848,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         // Age
         if(switchDriverAge.isChecked()) {
             isBetweenDriverAge = 1 ;
-            driver_age =  "";
+            driver_age =  "25";
         }else{
             isBetweenDriverAge= 0 ;
             driver_age = et_driver_age.getText().toString().trim();

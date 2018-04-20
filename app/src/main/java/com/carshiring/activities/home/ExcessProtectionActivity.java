@@ -1,5 +1,6 @@
 package com.carshiring.activities.home;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.carshiring.activities.home.CarDetailActivity.fullAmtValue;
 import static com.carshiring.activities.home.CarDetailActivity.fullprotectionammount;
 import static com.carshiring.activities.home.CarDetailActivity.fullprotectioncurrency;
 
@@ -38,6 +40,7 @@ public class ExcessProtectionActivity extends AppCompatActivity implements View.
     String FromQuotes="";
     TinyDB tinyDB;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,15 +54,20 @@ public class ExcessProtectionActivity extends AppCompatActivity implements View.
         bt_standPro= (Button)findViewById(R.id.bt_standardPro);
         bt_fullPro=(Button) findViewById(R.id.bt_fullpro);
         txt_fullprotection=findViewById(R.id.txt_fullprotection);
-        txt_fullprotection.setText(getResources().getString(R.string.full_protection_only) + fullprotectioncurrency +
-                " " + fullprotectionammount + getResources().getString(R.string.for_day));
+        if (fullprotectionammount!=null&&!fullprotectionammount.equalsIgnoreCase("null")){
+            txt_fullprotection.setText(getResources().getString(R.string.full_protection_only) +" "+ "SAR " +
+                    " " + String.valueOf(fullAmtValue) + getResources().getString(R.string.for_day));
+        } else {
+            txt_fullprotection.setVisibility(View.GONE);
+        }
+
         bt_fullPro.setOnClickListener(this);
         bt_standPro.setOnClickListener(this);
 
         toolbartext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tinyDB.putString("full_prot", fullprotectioncurrency+" "+fullprotectionammount);
+                tinyDB.putString("full_prot", fullprotectioncurrency+" "+String.valueOf(fullAmtValue));
                 finish();
                 Utility.message(getApplication(), getResources().getString(R.string.full_protection_addedd));
             }
@@ -81,7 +89,7 @@ public class ExcessProtectionActivity extends AppCompatActivity implements View.
             }
             else if(val.equalsIgnoreCase("Forquotes"))
             {
-               toolbar.setVisibility(View.GONE);
+                toolbar.setVisibility(View.GONE);
                 bt_standPro.setText(getResources().getString(R.string.get_a_quote_1));
                 bt_fullPro.setText(getResources().getString(R.string.get_a_quote_2));
                 FromQuotes="Yes";
@@ -162,8 +170,8 @@ public class ExcessProtectionActivity extends AppCompatActivity implements View.
         {
             case android.R.id.home:
                 onBackPressed();
-                default:
-                    return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

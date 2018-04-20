@@ -32,8 +32,11 @@ import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.TreeSet;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -78,6 +81,7 @@ public class LocationSelectionActivity extends AppBaseActivity {
             @Override
             public void afterTextChanged(Editable editable) {}
         });
+
         etSearchLocation.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -164,6 +168,21 @@ public class LocationSelectionActivity extends AppBaseActivity {
                         if(data!=null){
                             if (data.location.size()>0){
                                 listLocations.addAll(data.location);
+
+                                Set<Location> catBeans1 = new TreeSet<>(new Comparator<Location>() {
+                                    @Override
+                                    public int compare(Location catBean,Location t1) {
+                                        if(catBean.getCity_name().equalsIgnoreCase(t1.getCity_name())){
+                                            return 0;
+                                        }
+                                        return 1;
+                                    }
+                                });
+
+                                catBeans1.addAll(listLocations);
+                                listLocations.clear();
+                                listLocations.addAll(catBeans1);
+
                                 adapter.notifyDataSetChanged();
                             } else {
                                 Utility.message(getApplicationContext(), getResources().getString(R.string.location_not_found));
@@ -171,7 +190,7 @@ public class LocationSelectionActivity extends AppBaseActivity {
 
                         }
                     }else{
-                            getToken(_this);
+                        getToken(_this);
                     }
                 }
             }

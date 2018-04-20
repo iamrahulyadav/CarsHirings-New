@@ -94,12 +94,14 @@ public interface RetroFitApis {
     @FormUrlEncoded
     @POST("webservice/location")
     Call<ApiResponse> location(@Field("access_token") String access_token,
-                                    @Field("keyword") String keyword,
-                                    @Field("language_code") String language_code);
+                               @Field("keyword") String keyword,
+                               @Field("language_code") String language_code);
     @FormUrlEncoded
     @POST("webservice/car_detail")
-    Call<ApiResponse> car_detail(@Field("access_token") String access_token,@Field("id_context") String id_context, @Field("type") String type,@Field("day") String day,
-    @Field("refer_type") String refer_type);
+    Call<ApiResponse> car_detail(@Field("access_token") String access_token,
+                                 @Field("id_context") String id_context, @Field("type")
+                                         String type,@Field("day") String day,
+                                 @Field("refer_type") String refer_type);
 
 
     @FormUrlEncoded
@@ -124,12 +126,19 @@ public interface RetroFitApis {
     @FormUrlEncoded
     @POST("update_profile_pic")
     Call<ApiResponse> update_user_DP(@Field("userid") String user_id,
-                                          @Field("profile_image") String user_profile_image);
+                                     @Field("profile_image") String user_profile_image);
+    @FormUrlEncoded
+    @POST("update_wallpaper")
+    Call<ApiResponse> update_user_wall(@Field("user_id") String user_id,
+                                       @Field("wallpaper_image") String user_profile_image);
     @FormUrlEncoded
     @POST("cancelation")
     Call<ApiResponse> cancelBooking(@Field("language") String language,
-                                      @Field("ctype") String ctype,
-                                       @Field("booking_id") String booking_id);
+                                    @Field("ctype") String ctype,
+                                    @Field("booking_id") String booking_id);
+    @FormUrlEncoded
+    @POST("cancelation_details")
+    Call<ApiResponse> cancelDetails(@Field("booking_id") String cancelation_details);
 
     @FormUrlEncoded
     @POST("user_profile_details")
@@ -144,11 +153,48 @@ public interface RetroFitApis {
     @FormUrlEncoded
     @POST("debit_point")
     Call<ApiResponse> debitPoint(@Field("bookingpoint_user_id") String user_id,
-                                  @Field("bookingpoint_point") String bookingpoint_point,
-                                  @Field("bookingpoint_booking_id") String bookingpoint_booking_id);
+                                 @Field("bookingpoint_point") String bookingpoint_point,
+                                 @Field("bookingpoint_booking_id") String bookingpoint_booking_id);
     @FormUrlEncoded
     @POST("debit_wallet")
     Call<ApiResponse> debitWallet(@Field("wallet_user_id") String user_id,
-                                 @Field("wallet_amount") String bookingpoint_point,
-                                 @Field("wallet_booking_id") String bookingpoint_booking_id);
+                                  @Field("wallet_amount") String bookingpoint_point,
+                                  @Field("wallet_booking_id") String bookingpoint_booking_id);
+
+    @FormUrlEncoded
+    @POST("discountCoupon")
+    Call<ApiResponse> coupon(@Field("code") String user_id);
+
+    @FormUrlEncoded
+    @POST("save_later")
+    Call<ApiResponse> savelater(@Field("language") String language,
+                                @Field("carnect_id") String carnect_id,
+                                @Field("car_model") String car_model,
+                                @Field("carnect_type") String carnect_type,
+                                @Field("user_id") String user_id,
+                                @Field("pick_city") String pick_city,
+                                @Field("pick_date") String pick_date,
+                                @Field("pick_houre") String pick_houre,
+                                @Field("pick_minute") String pick_minute,
+                                @Field("pick_datetyme") String pick_datetyme,
+                                @Field("drop_city") String drop_city,
+                                @Field("drop_date") String drop_date,
+                                @Field("drop_houre") String drop_houre,
+                                @Field("drop_minute") String drop_minute,
+                                @Field("drop_datetyme") String drop_datetyme,
+                                @Field("age") String age,
+                                @Field("image") String image,
+                                @Field("booking_price") String booking_price,
+                                @Field("day") String day,
+                                @Field("refer_type") String refer_type,
+                                @Field("type")String type,
+                                @Field("Boking_point") double point);
+
+
+    /*day,refer_type,type,point*/
+
+    @FormUrlEncoded
+    @POST("savecars")
+    Call<ApiResponse> getQuotes(@Field("user_id") String user_id);
+
 }

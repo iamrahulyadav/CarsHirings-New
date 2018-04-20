@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -9,11 +10,12 @@
         android:orientation="vertical"
         android:gravity="center"
         style="@style/simpleRectangle"
-        android:layout_margin="8dp"
+        android:layout_margin="10dp"
 
         >
 
         <LinearLayout
+            android:layout_margin="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -25,12 +27,12 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="10dp">
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="50dp"
-                android:id="@+id/my_booking_image"
-                android:src="@drawable/ic_my_bookings"
-                android:scaleType="fitXY"/>
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/my_booking_image"
+                    android:src="@drawable/ic_my_bookings"
+                    android:scaleType="fitXY"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="0dp"
@@ -69,6 +71,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="1"
+            android:layout_margin="5dp"
             android:padding="5dp">
             <LinearLayout
                 android:layout_width="match_parent"
@@ -113,51 +116,179 @@
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="1"
             android:background="@color/redStrong">
             <TextView
                 android:id="@+id/txt_date_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="20/5/2017 at 10:00PM"
+                android:textSize="@dimen/extra_small_size"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_weight="1"
+                android:padding="5dp"/>
+            <TextView
+                android:id="@+id/txt_date_totime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="20/5/2017 at 10:00PM"
+                android:textSize="@dimen/extra_small_size"
+                android:gravity="right"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_weight="1"
+                android:padding="5dp"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/redStrong"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:background="@android:color/transparent"
+                    android:paddingLeft="5dp"
+                    android:textSize="@dimen/extra_small_size"
+                    android:layout_marginRight="5dp"
+                    android:paddingRight="5dp"
+                    android:textColor="@color/white"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="Booking Charges : SAR 600.60"
+                    android:id="@+id/btnBookingCharge"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="35dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="13dp"
+                    android:gravity="right"
+                    android:id="@+id/previous_booking_txtStatus"
+                    android:textColor="@color/white"
+                    android:background="@color/redStrong"
+                    android:text="Success" />
+
+
+            </LinearLayout>
+            <Button
+                android:background="@color/white"
+                android:paddingLeft="10dp"
+                android:textSize="@dimen/extra_small_size"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="Cancelation Charges: SAR 100"
+                android:id="@+id/btn_cancelCharge"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_margin="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:background="@color/redStrong">
+            <TextView
+                android:id="@+id/txt_bookingdate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="20/5/2017 at 10:00PM"
-                android:textSize="16sp"
+                android:textSize="@dimen/small_size"
                 android:textStyle="bold"
                 android:textColor="@color/white"
-                android:layout_weight="0.85"
-                android:padding="5dp"/>
-
+                android:padding="5dp"
+                tools:ignore="InefficientWeight" />
             <TextView
                 android:id="@+id/txt_rate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="INR167.34"
-                android:gravity="end"
-                android:textSize="16sp"
+                android:textSize="@dimen/small_size"
                 android:textStyle="bold"
+                android:background="@color/redStrong"
                 android:textColor="@color/white"
-                android:layout_gravity="end"
                 android:padding="5dp"/>
+
         </LinearLayout>
+
         <TextView
-            android:background="@color/redStrong"
-            android:id="@+id/txt_bookingdate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="20/5/2017 at 10:00PM"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            android:text="Full protection: 100"
+            android:background="@color/redStrong"
+            android:id="@+id/txtFullProtection"
+            android:visibility="gone"
             android:textColor="@color/white"
-            android:layout_weight="0.85"
-            android:padding="5dp"/>
+            android:textStyle="bold"
+            android:padding="@dimen/pf_5dp_space"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:background="@color/redStrong">
             <TextView
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtCuoponValue"
+                android:text="Coupon value "
+                android:textColor="@color/white"
+                android:padding="5dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtCreditValueAmt"
+                android:text="Credit value "
+                android:visibility="gone"
+                android:textColor="@color/white"
+                android:padding="5dp"/>
+            <TextView
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtWalletValueAmt"
+                android:text="Wallet value "
+                android:textColor="@color/white"
+                android:padding="5dp"/>
+            <TextView
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtPointValueAmt"
+                android:text="Point value "
+                android:textColor="@color/white"
+                android:padding="5dp"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginRight="5dp"
+            android:background="@color/redStrong"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:layout_marginLeft="5dp">
+            <TextView
+                android:layout_marginLeft="5dp"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="45dp"
@@ -168,23 +299,26 @@
                 android:background="@color/colorYellow"
                 android:text="Cancel your Booking" />
             <TextView
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="35dp"
+                android:layout_height="45dp"
                 android:paddingRight="10dp"
                 android:paddingTop="13dp"
                 android:gravity="right"
-                android:id="@+id/previous_booking_txtStatus"
                 android:textColor="@color/white"
-                android:background="@color/redStrong"
-                android:text="Success" />
+                android:background="@color/colorYellow"
+                android:id="@+id/previous_booking_txtPricedetails"
+                android:text="Show price details" />
 
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="1">
+            android:weightSum="1"
+            android:layout_margin="5dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

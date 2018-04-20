@@ -1,39 +1,49 @@
 package com.carshiring.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import java.util.List;
+import java.io.Serializable;
 
 /**
  * Created by Muhib.
  * Contact Number : +91 9796173066
  */
-public class BookingHistory implements Parcelable {
+public class BookingHistory implements Serializable {
+
+
 
             /**
-             * Booking_id : DT1521023886494
-             * bokking_date : 2018-03-14
-             * booking_company_name : S S TRAVELS
-             * booking_actual_price : 726.00
-             * booking_supplier_price : 660.00
+             * Booking_id :
+             * bokking_date : 2018-04-09
+             * booking_company_name : InterRent Germany
+             * booking_actual_price : 612.12
+             * booking_total_price : 612.12
+             * booking_supplier_price : 612.12
+             * booking_fullprotection_value : 0.00
              * booking_currency : SAR
-             * booking_bysupplier : S S TRAVELS
-             * booking_supllier_log : https://static.carhire-solutions.com/images/supplier/logo/logo338.png
-             * booking_car_model : Maruti Esteem
-             * booking_car_category : 4
-             * booking_car_image : https://static.carhire-solutions.com/images/car/SSTravel/large/CDMR.jpg
-             * booking_from_location : Delhi Indira Gandhi Airport (DEL)
-             * booking_from_date : 2018-03-16 10:15:00
-             * booking_to_location : Delhi Indira Gandhi Airport (DEL)
-             * booking_status : 2
+             * booking_bysupplier : InterRent Germany
+             * booking_supllier_log : https://static.carhire-solutions.com/images/supplier/logo/logo247.png
+             * booking_car_model : VW Up
+             * booking_car_category : 1
+             * booking_car_image : https://static.carhire-solutions.com/images/car/GlobalRentaCar/large/MBMN.jpg
+             * booking_from_location : Duesseldorf International Airport (DUS)
+             * booking_from_date : 2018-04-11 17:43:00
+             * booking_to_location : Duesseldorf International Airport (DUS)
+             * booking_to_date : 2018-04-13 17:43:00
+             * booking_coupon_code :
+             * booking_coupon_value : 0.00
+             * booking_pont_value : 0.00
+             * booking_wallet_value : 0.00
+             * booking_payfort_value : 612.12
+             * booking_status : 0
+             * booking_canceldetail : {"booking_cancel_booking_id":"","booking_cancel_booking_amount":"","booking_cancel_cancel_charge":"","booking_cancel_refundable_amount":"","booking_cancel_credit_amount":"","booking_cancel_wallet_amount":"","booking_cancel_point_amount":""}
              */
 
             private String Booking_id;
             private String bokking_date;
             private String booking_company_name;
             private String booking_actual_price;
+            private String booking_total_price;
             private String booking_supplier_price;
+            private String booking_fullprotection_value;
             private String booking_currency;
             private String booking_bysupplier;
             private String booking_supllier_log;
@@ -43,39 +53,16 @@ public class BookingHistory implements Parcelable {
             private String booking_from_location;
             private String booking_from_date;
             private String booking_to_location;
+            private String booking_to_date;
+            private String booking_coupon_code;
+            private String booking_coupon_value;
+            private String booking_pont_value;
+            private String booking_wallet_value;
+            private String booking_payfort_value;
             private String booking_status;
+            private BookingCanceldetailBean booking_canceldetail;
 
-    protected BookingHistory(Parcel in) {
-        Booking_id = in.readString();
-        bokking_date = in.readString();
-        booking_company_name = in.readString();
-        booking_actual_price = in.readString();
-        booking_supplier_price = in.readString();
-        booking_currency = in.readString();
-        booking_bysupplier = in.readString();
-        booking_supllier_log = in.readString();
-        booking_car_model = in.readString();
-        booking_car_category = in.readString();
-        booking_car_image = in.readString();
-        booking_from_location = in.readString();
-        booking_from_date = in.readString();
-        booking_to_location = in.readString();
-        booking_status = in.readString();
-    }
-
-    public static final Creator<BookingHistory> CREATOR = new Creator<BookingHistory>() {
-        @Override
-        public BookingHistory createFromParcel(Parcel in) {
-            return new BookingHistory(in);
-        }
-
-        @Override
-        public BookingHistory[] newArray(int size) {
-            return new BookingHistory[size];
-        }
-    };
-
-    public String getBooking_id() {
+            public String getBooking_id() {
                 return Booking_id;
             }
 
@@ -107,12 +94,28 @@ public class BookingHistory implements Parcelable {
                 this.booking_actual_price = booking_actual_price;
             }
 
+            public String getBooking_total_price() {
+                return booking_total_price;
+            }
+
+            public void setBooking_total_price(String booking_total_price) {
+                this.booking_total_price = booking_total_price;
+            }
+
             public String getBooking_supplier_price() {
                 return booking_supplier_price;
             }
 
             public void setBooking_supplier_price(String booking_supplier_price) {
                 this.booking_supplier_price = booking_supplier_price;
+            }
+
+            public String getBooking_fullprotection_value() {
+                return booking_fullprotection_value;
+            }
+
+            public void setBooking_fullprotection_value(String booking_fullprotection_value) {
+                this.booking_fullprotection_value = booking_fullprotection_value;
             }
 
             public String getBooking_currency() {
@@ -187,6 +190,54 @@ public class BookingHistory implements Parcelable {
                 this.booking_to_location = booking_to_location;
             }
 
+            public String getBooking_to_date() {
+                return booking_to_date;
+            }
+
+            public void setBooking_to_date(String booking_to_date) {
+                this.booking_to_date = booking_to_date;
+            }
+
+            public String getBooking_coupon_code() {
+                return booking_coupon_code;
+            }
+
+            public void setBooking_coupon_code(String booking_coupon_code) {
+                this.booking_coupon_code = booking_coupon_code;
+            }
+
+            public String getBooking_coupon_value() {
+                return booking_coupon_value;
+            }
+
+            public void setBooking_coupon_value(String booking_coupon_value) {
+                this.booking_coupon_value = booking_coupon_value;
+            }
+
+            public String getBooking_pont_value() {
+                return booking_pont_value;
+            }
+
+            public void setBooking_pont_value(String booking_pont_value) {
+                this.booking_pont_value = booking_pont_value;
+            }
+
+            public String getBooking_wallet_value() {
+                return booking_wallet_value;
+            }
+
+            public void setBooking_wallet_value(String booking_wallet_value) {
+                this.booking_wallet_value = booking_wallet_value;
+            }
+
+            public String getBooking_payfort_value() {
+                return booking_payfort_value;
+            }
+
+            public void setBooking_payfort_value(String booking_payfort_value) {
+                this.booking_payfort_value = booking_payfort_value;
+            }
+
             public String getBooking_status() {
                 return booking_status;
             }
@@ -195,27 +246,88 @@ public class BookingHistory implements Parcelable {
                 this.booking_status = booking_status;
             }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+            public BookingCanceldetailBean getBooking_canceldetail() {
+                return booking_canceldetail;
+            }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(Booking_id);
-        dest.writeString(bokking_date);
-        dest.writeString(booking_company_name);
-        dest.writeString(booking_actual_price);
-        dest.writeString(booking_supplier_price);
-        dest.writeString(booking_currency);
-        dest.writeString(booking_bysupplier);
-        dest.writeString(booking_supllier_log);
-        dest.writeString(booking_car_model);
-        dest.writeString(booking_car_category);
-        dest.writeString(booking_car_image);
-        dest.writeString(booking_from_location);
-        dest.writeString(booking_from_date);
-        dest.writeString(booking_to_location);
-        dest.writeString(booking_status);
-    }
+            public void setBooking_canceldetail(BookingCanceldetailBean booking_canceldetail) {
+                this.booking_canceldetail = booking_canceldetail;
+            }
+
+            public static class BookingCanceldetailBean {
+                /**
+                 * booking_cancel_booking_id :
+                 * booking_cancel_booking_amount :
+                 * booking_cancel_cancel_charge :
+                 * booking_cancel_refundable_amount :
+                 * booking_cancel_credit_amount :
+                 * booking_cancel_wallet_amount :
+                 * booking_cancel_point_amount :
+                 */
+
+                private String booking_cancel_booking_id;
+                private String booking_cancel_booking_amount;
+                private String booking_cancel_cancel_charge;
+                private String booking_cancel_refundable_amount;
+                private String booking_cancel_credit_amount;
+                private String booking_cancel_wallet_amount;
+                private String booking_cancel_point_amount;
+
+                public String getBooking_cancel_booking_id() {
+                    return booking_cancel_booking_id;
+                }
+
+                public void setBooking_cancel_booking_id(String booking_cancel_booking_id) {
+                    this.booking_cancel_booking_id = booking_cancel_booking_id;
+                }
+
+                public String getBooking_cancel_booking_amount() {
+                    return booking_cancel_booking_amount;
+                }
+
+                public void setBooking_cancel_booking_amount(String booking_cancel_booking_amount) {
+                    this.booking_cancel_booking_amount = booking_cancel_booking_amount;
+                }
+
+                public String getBooking_cancel_cancel_charge() {
+                    return booking_cancel_cancel_charge;
+                }
+
+                public void setBooking_cancel_cancel_charge(String booking_cancel_cancel_charge) {
+                    this.booking_cancel_cancel_charge = booking_cancel_cancel_charge;
+                }
+
+                public String getBooking_cancel_refundable_amount() {
+                    return booking_cancel_refundable_amount;
+                }
+
+                public void setBooking_cancel_refundable_amount(String booking_cancel_refundable_amount) {
+                    this.booking_cancel_refundable_amount = booking_cancel_refundable_amount;
+                }
+
+                public String getBooking_cancel_credit_amount() {
+                    return booking_cancel_credit_amount;
+                }
+
+                public void setBooking_cancel_credit_amount(String booking_cancel_credit_amount) {
+                    this.booking_cancel_credit_amount = booking_cancel_credit_amount;
+                }
+
+                public String getBooking_cancel_wallet_amount() {
+                    return booking_cancel_wallet_amount;
+                }
+
+                public void setBooking_cancel_wallet_amount(String booking_cancel_wallet_amount) {
+                    this.booking_cancel_wallet_amount = booking_cancel_wallet_amount;
+                }
+
+                public String getBooking_cancel_point_amount() {
+                    return booking_cancel_point_amount;
+                }
+
+                public void setBooking_cancel_point_amount(String booking_cancel_point_amount) {
+                    this.booking_cancel_point_amount = booking_cancel_point_amount;
+                }
+            }
+
 }

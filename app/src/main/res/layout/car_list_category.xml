@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="wrap_content"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:gravity="center"
     android:layout_marginRight="10dp"
+    android:id="@+id/cat_layout"
     android:background="@drawable/buttoncurve_caategory">
 
     <ImageView
@@ -28,7 +30,6 @@
         android:id="@+id/car_cat_code"
         android:background="@color/colorPrimary"
         android:textColor="@color/white"
-        android:text="SAR 296.03"
         android:textStyle="bold"
         android:paddingTop="3dp"
         android:paddingBottom="3dp"

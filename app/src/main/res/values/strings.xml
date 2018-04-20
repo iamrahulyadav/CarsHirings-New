@@ -6,7 +6,7 @@
     <string name="wantExit">Do you want to Exit?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="title_home">CarsGates</string>
+    <string name="title_home">CarsHiring</string>
     <string name="permissionsetting">Please enable all Permissions. </string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -92,7 +92,7 @@
     <string name="rating">Rating</string>
     <string name="car_group">Car Group</string>
 
-    <string name="dummy">Your booking is success</string>
+    <string name="dummy">You have emailed your quote to you. Your booking reference number is </string>
     <string-array name="selectlanguage">
         <item>Select Language</item>
         <item>English</item>
@@ -276,6 +276,7 @@
     <string name="no_internet_connection">No Internet Connection</string>
     <string name="loading">Loading...</string>
     <string name="please_wait">Please Wait...</string>
+    <string name="something_wrong">something went wrong</string>
 
     <string name="finding_location_list">Finding Location List...</string>
     <string name="location_not_found">Location not found</string>
@@ -302,10 +303,13 @@
     <!--MyBookingActivity-->
     <string name="current">Current</string>
     <string name="previous">Previous</string>
-    <string name="quotes">Quotes</string>
+    <string name="quotes">Saved Cars</string>
 
     <!--MyAccount-->
     <string name="points"> Points</string>
+    <string name="transaction_date"> Transaction date</string>
+    <string name="remain_point"> Remaining Points</string>
+    <string name="remain_wallet"> Remaining Wallet</string>
 
     <!--SearchFilterActivity-->
     <string name="selected_packages_are">Selected Packages are</string>
@@ -336,7 +340,7 @@
     <!--CarDetailTab1Fragment-->
     <string name="air_condition">Air Condition</string>
     <string name="bags">Bags</string>
-    <string name="passanger">Passenger</string>
+    <string name="passanger">Seats</string>
 
     <!--CarDetailTab2Fragment-->
     <string name="your_supplier_is">Your Supplier is </string>
@@ -352,8 +356,8 @@
     <!--PaymentFragment-->
     <string name="add">Add</string>
     <!--pay activity-->
-    <string name="txtPayTotal">Total Amount to be pay</string>
-    <string name="txtPayNow">Pay</string>
+    <string name="txtPayTotal">Total Car Amount to be pay</string>
+    <string name="txtPayNow">Pay Now </string>
     <string name="txtAvailable">Available balance is</string>
     <string name="txtPayOnline">Pay with payfort</string>
     <string name="txtUsepoint">Use Points</string>
@@ -362,13 +366,14 @@
     <string name="paymentWith">Pay with credit cards </string>
     <string name="paymentSADAD">Pay with SADAD</string>
     <string name="txtPay">Tap \'Book Now\' to complete your booking and expect carshirng</string>
+
     <!--activity user dash-->
     <string name="drvlncno">Driving LIC-id</string>
     <string name="txtwallet">Wallet Amount</string>
     <string name="txtMyPoint">My points</string>
     <string name="txtCredit">Credit</string>
     <string name="txtDebit">Debit</string>
-    <string name="txtDashTitle">My Profile</string>
+    <string name="txtDashTitle">Account details</string>
     <!--WalletView-->
     <string name="wallet_hist_details">Wallet History Details</string>
     <string name="booking_id">Booking Id</string>
@@ -385,4 +390,11 @@
 
 
     <string name="txtTotalPay">Payable Today</string>
+
+
+    <!--booking adapter-->
+    <string name="txtTransactionDate">Booking Date</string>
+    <string name="txtCarPrice">Car Price </string>
+    <string name="txtDiscount">Discount</string>
+    <string name="txtWallet">Wallet</string>
 </resources>

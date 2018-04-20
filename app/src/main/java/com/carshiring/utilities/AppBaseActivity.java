@@ -1,9 +1,14 @@
 package com.carshiring.utilities;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.provider.Settings;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -34,6 +39,44 @@ public class AppBaseActivity extends AppCompatActivity implements IBaseActivity,
         super.onCreate(savedInstanceState, persistentState);
 
     }
+    public void checkGPSStatus()
+    {
+        LocationManager locationManager =(LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        boolean isGPSProviderEnable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if(!isGPSProviderEnable)
+        {
+            showSettingsAlert();
+        }
+    }
+    private void showSettingsAlert(){
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+        // Setting Dialog Title
+        alertDialog.setTitle("GPS is settings");
+
+        // Setting Dialog Message
+        alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
+
+        // Setting Icon to Dialog
+        //alertDialog.setIcon(R.drawable.delete);
+
+        // On pressing Settings button
+        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        });
+        // on pressing cancel button
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        // Showing Alert Message
+        alertDialog.show();
+    }
+
 
     @Override
     protected void onResume() {

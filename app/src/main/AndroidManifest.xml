@@ -68,6 +68,15 @@
         <activity android:name=".activities.home.WalletView" />
         <activity android:name=".activities.home.ThankYou" />
         <activity android:name=".activities.home.Test"></activity>
+        <activity android:name=".activities.home.SearchbyMapActivity"/>
+        <activity android:name=".activities.home.TestActivity"/>
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAp-4py1BmVVoF7q4TdYogCkVX5vO5qPPk" />
+        <activity android:name=".activities.home.FilterListActivity"/>
     </application>
 
 </manifest>

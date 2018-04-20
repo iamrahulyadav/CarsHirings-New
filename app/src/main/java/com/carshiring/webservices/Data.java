@@ -8,6 +8,7 @@ import com.carshiring.models.LanguageModel;
 import com.carshiring.models.MArkupdata;
 import com.carshiring.models.Point;
 import com.carshiring.models.PointHistoryData;
+import com.carshiring.models.QuotesModel;
 import com.carshiring.models.SearchData;
 import com.carshiring.models.UserDetails;
 import com.carshiring.models.CarDetailBean;
@@ -36,5 +37,7 @@ public class Data {
     public String booking_id;
     public List<WalletHistoryData>wallet;
     public List<PointHistoryData>points;
+    public CarDetailBean cancel_detail;
+    public List<QuotesModel>save_later_list;
 //    public UserImage user_dp;
 }

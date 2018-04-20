@@ -51,7 +51,7 @@
     <string name="accountdetails">إعدادات</string>
     <string name="changepass">تغيير كلمة السر</string>
     <string name="bookingHistory">سجل الحجز</string>
-    <string name="logout">Logout</string>
+    <string name="logout">الخروج</string>
     <string name="email">البريد الإلكتروني</string>
     <string name="phone">هاتف</string>
     <string name="age">عمر</string>
@@ -270,7 +270,7 @@
     <string name="please_enter_dob">الرجاء ادخال تاريخ ميلادك</string>
     <string name="please_enter_first_name">يرجى ادخال الاسم الاول</string>
     <string name="please_enter_last_name">يرجى إدخال اسمك الأخير</string>
-
+    <string name="something_wrong">something went wrong</string>
     <string name="no_internet_connection">لا اتصال إنترنت</string>
     <string name="loading">جار التحميل...</string>
     <string name="please_wait">أرجو الإنتظار...</string>
@@ -304,7 +304,9 @@
 
     <!--MyAccount-->
     <string name="points">200 نقطة</string>
-
+    <string name="transaction_date"> تاريخ الصفقة</string>
+    <string name="remain_point">النقاط المتبقية</string>
+    <string name="remain_wallet">ما تبقى من المحفظة</string>
     <!--SearchFilterActivity-->
     <string name="selected_packages_are">الحزم المختارة هي</string>
     <string name="selected_suppliers_are">الموردين المختارين هي</string>
@@ -334,7 +336,7 @@
     <!--CarDetailTab1Fragment-->
     <string name="air_condition">تكييف الهواء</string>
     <string name="bags">أكياس</string>
-    <string name="passanger">راكب</string>
+    <string name="passanger">مقاعد</string>
 
     <!--CarDetailTab2Fragment-->
     <string name="your_supplier_is">المورد الخاص بك هو</string>
@@ -362,7 +364,7 @@
     <string name="txtMyPoint">نقاطي</string>
     <string name="txtCredit">ائتمان</string>
     <string name="txtDebit">مدين</string>
-    <string name="txtDashTitle">ملفي</string>
+    <string name="txtDashTitle">تفاصيل الحساب</string>
     <!--WalletView-->
     <string name="wallet_hist_details">تفاصيل محفوظات المحفظة</string>
     <string name="booking_id">رقم الحجز</string>
@@ -381,4 +383,10 @@
     <string name="txtTotalPay">Payable Today</string>
     <string name="paymentSADAD">Pay with SADAD</string>
     <string name="txtPay">Tap \'Book Now\' to complete your booking and expect carshirng</string>
+
+    <!--booking adapter-->
+    <string name="txtTransactionDate">تاريخ الحجز</string>
+    <string name="txtCarPrice">سعر السيارة</string>
+    <string name="txtDiscount">خصم</string>
+    <string name="txtWallet">محفظة نقود</string>
 </resources>

@@ -5,23 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_marginBottom="10dp"
     tools:context="com.carshiring.activities.home.UserDashActivity">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:layout_margin="10dp">
         <LinearLayout
-            android:layout_margin="10dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="170dp"
-                android:id="@+id/dash_profile_wal"
-                android:background="@color/Light_grey">
+                android:layout_height="150dp"
+                android:id="@+id/dash_profile_wal">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY"
+                    android:layout_marginRight="40dp"
+                    android:id="@+id/user_profile_wall"/>
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -38,14 +42,15 @@
                     android:layout_height="100dp"
                     android:id="@+id/dash_profile_img"
                     android:paddingBottom="10dp"
+                    android:src="@drawable/ic_user"
                     android:layout_gravity="bottom|center" />
 
             </FrameLayout>
             <TextView
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="15dp"
+                android:padding="10dp"
                 android:gravity="center_horizontal"
                 android:textStyle="bold"
                 android:textSize="@dimen/extra_large_size"
@@ -62,6 +67,7 @@
                 android:textSize="@dimen/small_size"
                 android:textColor="@color/black"
                 android:id="@+id/dash_profile_txtemail"/>
+
             <TextView
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border_bg"
@@ -74,12 +80,35 @@
                 android:id="@+id/dash_profile_txtPhn"/>
             <TextView
                 android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/address"
+                android:padding="10dp"
+                android:background="@drawable/border_bg"
+                android:textSize="@dimen/small_size"
+                android:textColor="@color/black"
+                android:id="@+id/dash_profile_txtAddress"/>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/age"
+                android:padding="10dp"
+                android:visibility="gone"
+                android:background="@drawable/border_bg"
+                android:textSize="@dimen/small_size"
+                android:textColor="@color/black"
+                android:id="@+id/dash_profile_txtage"/>
+
+            <TextView
+                android:layout_marginTop="10dp"
                 android:background="@drawable/border_bg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/drvlncno"
                 android:padding="10dp"
                 android:textSize="@dimen/small_size"
+                android:visibility="gone"
                 android:textColor="@color/black"
                 android:id="@+id/dash_profile_txtDrivingLnc"/>
             <LinearLayout

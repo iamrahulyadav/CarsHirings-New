@@ -42,7 +42,9 @@ dependencies {
     compile 'com.victor:lib:1.0.1'
     compile 'com.shamanland:fonticon:0.1.8'
     compile 'com.google.android.gms:play-services:11.4.0'
-    implementation project(':FORTSDKv1.4')
     compile 'org.bouncycastle:bcprov-jdk16:1.46'
     implementation 'com.google.guava:guava:16.0.1'
+    compile 'com.android.volley:volley:1.0.0'
+    implementation project(':FORTSDKv1.4.2')
+    implementation project(':gd_helper-release')
 }

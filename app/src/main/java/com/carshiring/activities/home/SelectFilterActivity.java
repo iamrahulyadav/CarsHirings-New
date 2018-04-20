@@ -57,6 +57,10 @@ public class SelectFilterActivity extends AppBaseActivity implements View.OnClic
         rec_supplier=findViewById(R.id.rec_supplier);
         recy_package=findViewById(R.id.recy_package);
         recy_carfeatures=findViewById(R.id.recy_carfeatures);
+        if (getIntent().hasExtra("supl")){
+
+        }
+
         ArrayList<String> getlist= (ArrayList<String>) CarsResultListActivity.supplierList;
         recy_insurance=findViewById(R.id.recy_insurance);
         supplier .addAll(getlist);
@@ -95,22 +99,22 @@ public class SelectFilterActivity extends AppBaseActivity implements View.OnClic
             insuranceMultipleListModels.add(modelinsu);
         }
 
-        filterValAdapterSupl=new FilterValRecyclerAdapter(this,R.layout.filter_list_val_item_layout,supplierMultipleListModels);
+        filterValAdapterSupl=new FilterValRecyclerAdapter(this,R.layout.filter_list_val_item_layout,supplierMultipleListModels,SelectedSupplier);
         rec_supplier.setAdapter(filterValAdapterSupl);
         rec_supplier.setLayoutManager(new LinearLayoutManager(this));
         rec_supplier.setHasFixedSize(true);
 
-        filterValAdapterpackFeature=new FilterValRecyclerAdapter(this,R.layout.filter_list_val_item_layout,featuresMultipleListModels);
+        filterValAdapterpackFeature=new FilterValRecyclerAdapter(this,R.layout.filter_list_val_item_layout,featuresMultipleListModels,SelectedFeatures);
         recy_carfeatures.setAdapter(filterValAdapterpackFeature);
         recy_carfeatures.setLayoutManager(new LinearLayoutManager(this));
         recy_carfeatures.setHasFixedSize(true);
 
-        filterValAdapterpack=new FilterValRecyclerAdapter(this,R.layout.filter_list_val_item_layout,packageMultipleListModels);
+        filterValAdapterpack=new FilterValRecyclerAdapter(this,R.layout.filter_list_val_item_layout,packageMultipleListModels,SelectedPackages);
         recy_package.setAdapter(filterValAdapterpack);
         recy_package.setLayoutManager(new LinearLayoutManager(this));
         recy_package.setHasFixedSize(true);
 
-        filterValAdapterinsuran=new FilterValRecyclerAdapter(this,R.layout.filter_list_val_item_layout,insuranceMultipleListModels);
+        filterValAdapterinsuran=new FilterValRecyclerAdapter(this,R.layout.filter_list_val_item_layout,insuranceMultipleListModels,SelectedInsurances);
         recy_insurance.setAdapter(filterValAdapterinsuran);
         recy_insurance.setLayoutManager(new LinearLayoutManager(this));
         recy_insurance.setHasFixedSize(true);
@@ -286,45 +290,47 @@ public class SelectFilterActivity extends AppBaseActivity implements View.OnClic
                         SelectedInsurances.add(model.getName());
                     }
                 }
+/*
                Utility.message(this,getResources().getString(R.string.selected_packages_are) +
                        SelectedPackages.toString() + "\n" + getResources().getString(R.string.selected_suppliers_are) +
                        SelectedSupplier.toString() + "\n" + getResources().getString(R.string.selected_features_are) +
                        SelectedFeatures.toString() + "\n" + getResources().getString(R.string.selected_insurances_are) +
                        SelectedInsurances.toString());
+*/
 
-               FilterDefaultMultipleListModel listModel=new FilterDefaultMultipleListModel();
+                FilterDefaultMultipleListModel listModel=new FilterDefaultMultipleListModel();
 
-               if (SelectedSupplier.size()>0) {
-                   StringBuilder stringBuilder = new StringBuilder();
-                   for (String se : SelectedSupplier) {
-                       stringBuilder.append(se);
-                       stringBuilder.append(SEPARATOR);
-                   }
-                   String sel = stringBuilder.toString();
-                   sel = sel.substring(0, sel.length() - SEPARATOR.length());
-                   listModel.setSupplier(sel.toString());
-               }
-               else
-               {
-                   listModel.setSupplier("");
-               }
-
-               if (SelectedFeatures.size()>0)
-               {
-                   StringBuilder stringBuilder2=new StringBuilder();
-                   for(String se:SelectedFeatures)
-                   {
-                       stringBuilder2.append(se);
-                       stringBuilder2.append(SEPARATOR);
-                   }
-                   String sel2=stringBuilder2.toString();
-                   sel2=sel2.substring(0,sel2.length()-SEPARATOR.length());
-                   listModel.setFeatures(sel2.toString());
-               }
+                if (SelectedSupplier.size()>0) {
+                    StringBuilder stringBuilder = new StringBuilder();
+                    for (String se : SelectedSupplier) {
+                        stringBuilder.append(se);
+                        stringBuilder.append(SEPARATOR);
+                    }
+                    String sel = stringBuilder.toString();
+                    sel = sel.substring(0, sel.length() - SEPARATOR.length());
+                    listModel.setSupplier(sel);
+                }
                 else
-               {
-                   listModel.setFeatures("");
-               }
+                {
+                    listModel.setSupplier("");
+                }
+
+                if (SelectedFeatures.size()>0)
+                {
+                    StringBuilder stringBuilder2=new StringBuilder();
+                    for(String se:SelectedFeatures)
+                    {
+                        stringBuilder2.append(se);
+                        stringBuilder2.append(SEPARATOR);
+                    }
+                    String sel2=stringBuilder2.toString();
+                    sel2=sel2.substring(0,sel2.length()-SEPARATOR.length());
+                    listModel.setFeatures(sel2.toString());
+                }
+                else
+                {
+                    listModel.setFeatures("");
+                }
                 if(SelectedPackages.size()>0) {
                     StringBuilder stringBuilder3 = new StringBuilder();
                     for (String se : SelectedPackages) {

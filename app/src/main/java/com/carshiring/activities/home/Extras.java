@@ -31,12 +31,12 @@ import static com.carshiring.activities.home.CarDetailActivity.extralist;
 import static com.carshiring.activities.home.CarDetailActivity.modelname;
 
 public class Extras extends AppBaseActivity {
-        ImageView car_img;
-        TextView carname;
-        RecyclerView extra;
-        ExtrasAdapter extrasAdapter;
-        TinyDB tinyDB;
-        Gson gson = new Gson();
+    ImageView car_img;
+    TextView carname;
+    RecyclerView extra;
+    ExtrasAdapter extrasAdapter;
+    TinyDB tinyDB;
+    Gson gson = new Gson();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +66,7 @@ public class Extras extends AppBaseActivity {
             actionBar.setHomeAsUpIndicator(R.drawable.back);
         }
     }
-    public List<ExtraAdded> extraData = new ArrayList<>();
+    public static List<ExtraAdded> extraData = new ArrayList<>();
     private void setUpToolbar() {
         Toolbar toolbar= (Toolbar) findViewById(R.id.bottomToolBar);
         TextView textView= (TextView) toolbar.findViewById(R.id.txt_bot);
@@ -91,8 +91,8 @@ public class Extras extends AppBaseActivity {
         {
             case android.R.id.home:
                 onBackPressed();
-                default:
-                    return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

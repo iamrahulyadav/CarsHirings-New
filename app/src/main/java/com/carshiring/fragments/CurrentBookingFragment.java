@@ -24,6 +24,7 @@ import com.carshiring.R;
 import com.carshiring.activities.home.MyBookingActivity;
 import com.carshiring.adapters.MyBookingAdapter;
 import com.carshiring.models.BookingHistory;
+import com.carshiring.models.CancledetailBean;
 import com.carshiring.models.UserDetails;
 import com.carshiring.utilities.Utility;
 import com.carshiring.webservices.ApiResponse;
@@ -55,7 +56,7 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
 
     public List<BookingHistory> currentBookingData;
     private TinyDB tinyDB;
-    private String token, userId, language, bookingid, accountType="";// ab=wallet, 2 account
+    private String token, userId, language, bookingid, accountType="1";// 1=wallet, 2 account
     private LinearLayout linearLayout;
     private RecyclerView recyclerView;
     private Button btn_search;
@@ -76,12 +77,14 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_my_booking_current,container,false);
-         dialog=new Dialog(getContext());
+        dialog=new Dialog(getContext());
         tinyDB = new TinyDB(getContext());
         currentBookingData = new ArrayList<>();
         String  login = tinyDB.getString("login_data");
         userDetails = gson.fromJson(login, UserDetails.class);
-        userId =userDetails.getUser_id();
+        if (userDetails.getUser_id()!=null){
+            userId =userDetails.getUser_id();
+        }
         bookingData = new ArrayList<>();
         token = tinyDB.getString("access_token");
         language = tinyDB.getString("language_code");
@@ -93,8 +96,9 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
         btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().finish();
-            }
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.subview_container,
+                        new SearchCarFragment())
+                        .commit();            }
         });
 
         recyclerView= (RecyclerView) view.findViewById(R.id.rec_prev_booki_list);
@@ -114,22 +118,24 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
     }
 
     private Gson gson = new Gson();
-
+    List<CancledetailBean>cancledetailBeans = new ArrayList<>();
     private void setMyAdapter(final List<BookingHistory> bookingHistory){
-        bookingAdapter = new MyBookingAdapter(bookingHistory, getContext(),"c");
-
+        bookingAdapter = new MyBookingAdapter(bookingHistory, cancledetailBeans,getContext(),"c");
+        recyclerView.setVisibility(View.VISIBLE);
+//        recyclerView.setAdapter(bookingAdapter);
+        bookingAdapter.submit(new MyBookingAdapter.ClickItem() {
+            @Override
+            public void click(View view, int Position) {
+                bookingid=bookingHistory.get(Position).getBooking_id();
+                setCancelationPop(bookingid);
+            }
+        });
         if (bookingHistory.size()>0){
             recyclerView.setVisibility(View.VISIBLE);
             linearLayout.setVisibility(View.GONE);
             recyclerView.setAdapter(bookingAdapter);
 
-            bookingAdapter.submit(new MyBookingAdapter.ClickItem() {
-                @Override
-                public void click(View view, int Position) {
-                    bookingid=bookingHistory.get(Position).getBooking_id();
-                    setCancelationPop(bookingid);
-                }
-            });
+
         } else {
             recyclerView.setVisibility(View.GONE);
             linearLayout.setVisibility(View.VISIBLE);
@@ -147,11 +153,15 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
         final TextView txtSubmit= dialog.findViewById(R.id.account_btnsubit);
         TextView txtCancel = dialog.findViewById(R.id.account_btnCancel);
         dialog.show();
+
         txtSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cancelBooking(accountType, bookingid);
-                dialog.dismiss();
+                if (accountType!=null&&accountType.length()>0){
+                    cancelBooking(accountType, bookingid);
+                    dialog.dismiss();
+                }
+
             }
         });
 
@@ -172,13 +182,14 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
                 }
             }
         });
+
         walletRadioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 boolean checked = ((RadioButton) view).isChecked();
 
                 if (checked){
-                    accountType="ab";
+                    accountType="1";
                 }
             }
         });
@@ -204,7 +215,6 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
                         String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
                         List<BookingHistory>booking_detail =new ArrayList<>();
                         booking_detail = response.body().response.booking;
-
 
                         for (BookingHistory bookingData1 : booking_detail){
                             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -245,7 +255,7 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
                         bookingAdapter.notifyDataSetChanged();
                     }
                     else {
-                        Utility.message(getContext(), response.body().message);
+                        // Utility.message(getContext(), response.body().message);
                     }
                 } else {
                     Utility.message(getContext(), response.body().message);
@@ -273,11 +283,10 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
         bookingCancel.enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                Utility.hidepopup();
                 dialog.dismiss();
+                Log.d(TAG, "onResponse: cancel"+gson.toJson(response.body()));
                 if (response!=null){
                     if (response.body().status){
-
                         Toast.makeText(getContext(), ""+response.body().msg, Toast.LENGTH_SHORT).show();
                         getBook();
                     } else {
@@ -290,8 +299,8 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
             public void onFailure(Call<ApiResponse> call, Throwable t) {
                 Utility.hidepopup();
                 dialog.dismiss();
-                Toast.makeText(getContext(), ""+getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onFailure: "+t.getMessage());
+                Toast.makeText(getContext(), ""+getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             }
         });
 

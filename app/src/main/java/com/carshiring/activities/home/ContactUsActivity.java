@@ -48,6 +48,7 @@ public class ContactUsActivity extends AppBaseActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.back);
+            actionBar.setTitle(getResources().getString(R.string.action_contact_us));
         }
 
         getData();
@@ -69,16 +70,15 @@ public class ContactUsActivity extends AppBaseActivity {
 
                 if (response.body() != null) {
                     if (response.body().status) {
-
                         res = response.body().response.contact_us;
-
+                        Log.d(TAG, "onResponse: contact"+gson.toJson(res));
                         address = (TextView) findViewById(R.id.contact_us_address);
                         phone = (TextView) findViewById(R.id.contact_us_phone);
                         TextView email = (TextView) findViewById(R.id.contact_us_email);
-//                      address.setText(res.getSitesetting_address());
+                        address.setText(res.getSitesetting_address());
                         phone.setText(res.getSitesetting_phone());
                         email.setText(res.getSitesetting_email());
-                      } else {
+                    } else {
                     }
                 } else {
 

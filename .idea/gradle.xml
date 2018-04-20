@@ -8,8 +8,9 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/FORTSDKv1.4" />
+            <option value="$PROJECT_DIR$/FORTSDKv1.4.2" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/gd_helper-release" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
