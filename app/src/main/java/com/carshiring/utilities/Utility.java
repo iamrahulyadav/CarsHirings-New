@@ -89,34 +89,6 @@ public class Utility {
     }
 
 
-    @SuppressLint("SimpleDateFormat")
-    public static String convertdate(String dateString){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        // use SimpleDateFormat to define how to PARSE the INPUT
-        Date date = null;
-        try {
-            date = sdf.parse(dateString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        sdf = new SimpleDateFormat("MMMM d, yyyy HH:mm a");
-        return sdf.format(date);
-    }
-
-
-    @SuppressLint("SimpleDateFormat")
-    public static String convertSimpleDate(String dateString){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        // use SimpleDateFormat to define how to PARSE the INPUT
-        Date date = null;
-        try {
-            date = sdf.parse(dateString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        sdf = new SimpleDateFormat("MMMM d, yyyy ");
-        return sdf.format(date);
-    }
 
     public static String  getRandomString(int length) {
         String VALID_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_abcdefghijklmnopqrstuvwxyz";

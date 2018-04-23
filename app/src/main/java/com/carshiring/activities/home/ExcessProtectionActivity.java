@@ -59,7 +59,7 @@ public class ExcessProtectionActivity extends AppCompatActivity implements View.
                     " " + String.valueOf(fullAmtValue) + getResources().getString(R.string.for_day));
         } else {
             txt_fullprotection.setVisibility(View.GONE);
-            toolbartext.setVisibility(View.GONE);
+            toolbar.setVisibility(View.GONE);
         }
 
         bt_fullPro.setOnClickListener(this);
