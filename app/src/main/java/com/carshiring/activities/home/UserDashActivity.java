@@ -188,12 +188,12 @@ public class UserDashActivity extends AppBaseActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            runOnUiThread(new Runnable() {
+           /* runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     Utility.showLoading(UserDashActivity.this,getResources().getString(R.string.loading));
                 }
-            });
+            });*/
         }
 
         @Override

@@ -8,16 +8,15 @@ import java.util.List;
  */
 public class Category {
 
-
     /**
      * message : success
-     * response : {"cat":[{"category_name":"Mini","category_image":"New_Ford_Fiesta__Mini.JPG","code":ab},{"category_name":"Mini","category_image":"New_Ford_Fiesta__Mini.JPG","code":33}]}
+     * response : {"cat":[{"category_id":"2","category_name":"Subcompact","category_image":"Hundai_Accent_Economy.jpg","code":3},{"category_id":"4","category_name":"Intermediate","category_image":"Toyota_corolla_Intermediate.jpg","code":6},{"category_id":"3","category_name":"Compect","category_image":"compect.png","code":4},{"category_id":"5","category_name":"Standard","category_image":"Camry_Standard.png","code":7},{"category_id":"7","category_name":"Premium","category_image":"Premier_car.jpg","code":10},{"category_id":"5","category_name":"Standard","category_image":"Camry_Standard.png","code":37},{"category_id":"7","category_name":"Premium","category_image":"Premier_car.jpg","code":9},{"category_id":"5","category_name":"Standard","category_image":"Camry_Standard.png","code":7}]}
      * status : true
      */
 
     private String message;
     private ResponseBean response;
-    private String status;
+    private boolean status;
 
     public String getMessage() {
         return message;
@@ -35,11 +34,11 @@ public class Category {
         this.response = response;
     }
 
-    public String isStatus() {
+    public boolean isStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 
@@ -56,14 +55,24 @@ public class Category {
 
         public static class CatBean {
             /**
-             * category_name : Mini
-             * category_image : New_Ford_Fiesta__Mini.JPG
-             * code : ab
+             * category_id : 2
+             * category_name : Subcompact
+             * category_image : Hundai_Accent_Economy.jpg
+             * code : 3
              */
 
+            private String category_id;
             private String category_name;
             private String category_image;
             private int code;
+
+            public String getCategory_id() {
+                return category_id;
+            }
+
+            public void setCategory_id(String category_id) {
+                this.category_id = category_id;
+            }
 
             public String getCategory_name() {
                 return category_name;

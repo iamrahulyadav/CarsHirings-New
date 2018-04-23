@@ -523,10 +523,11 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                                                 return 1;
                                             }
                                         });
+                                        Log.d("TAG", "onResponse: " + catBeanList.size());   // 116
                                         set.addAll(catBeanList);
                                         catBeanList.clear();
                                         catBeanList.addAll(set);
-
+                                        Log.d("TAG", "onResponse: " + catBeanList.size());   // 16
                                         chooseSearchAction(searchData);
 
                                         Log.d(TAG, "run: "+gson.toJson(catBeanList));
@@ -648,7 +649,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                         if (switchSameDestLocation.isChecked()){
                             dropName = pickName;
                         }
-                        Intent intent = new Intent(getActivity(), TestActivity.class);
+                        Intent intent = new Intent(getActivity(), CarsResultListActivity.class);
                         startActivity(intent);
                     }
                 }

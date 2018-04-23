@@ -930,9 +930,9 @@ live https://checkout.payfort.com
                 .addHeader("cache-control", "no-cache")
                 .build();
         okhttp3.OkHttpClient client = new okhttp3.OkHttpClient.Builder()
-                .connectTimeout(10000, TimeUnit.SECONDS)
-                .writeTimeout(10000, TimeUnit.SECONDS)
-                .readTimeout(30000, TimeUnit.SECONDS)
+                .connectTimeout(300000, TimeUnit.SECONDS)
+                .writeTimeout(300000, TimeUnit.SECONDS)
+                .readTimeout(300000, TimeUnit.SECONDS)
                 .build();
 
         client.newCall(request).enqueue(new okhttp3.Callback() {
