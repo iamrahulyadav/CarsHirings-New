@@ -57,7 +57,7 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
     public static List<ExtraAdded> extraData = new ArrayList<>();
     EditText edtflight;
     public static String flight_no,fullProtection ,protection_val;
-    TextView tvFromDate,tvPickDate,txtOneway,tvTodate,txtPlaceDrop;
+    TextView tvFromDate,tvPickDate,txtOneway,txtDriverSur,tvTodate,txtPlaceDrop;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -102,6 +102,7 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
         txtFull = findViewById(R.id.txt_full_prote);
         txtFullValue = findViewById(R.id.txt_full_prote_value);
         txtSaveLater = findViewById(R.id.activity_booking_txtSaveLater);
+        txtDriverSur = findViewById(R.id.driverSurCharge);
 
         if (tinyDB.contains("full_prot")){
             String full = String.valueOf(CarDetailActivity.fullAmtValue);
@@ -115,13 +116,20 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
             fullProtection = "no";
         }
 
-
+        if (CarDetailActivity.driverSur!=null){
+            txtDriverSur.setText(CarDetailActivity.driverSur);
+            txtDriverSur.setVisibility(View.VISIBLE);
+        } else {
+            txtDriverSur.setVisibility(View.GONE);
+        }
         if (CarDetailActivity.oneway!=null){
             txtOneway.setText(CarDetailActivity.oneway);
             txtOneway.setVisibility(View.VISIBLE);
         } else {
             txtOneway.setVisibility(View.GONE);
         }
+
+
         if (carImage!=null){
             new AsyncCaller().execute();
         }

@@ -221,17 +221,16 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                                 totalCreditPoint+= creditPoint;
                             }
                         }
-                        if (totalCreditPoint>totalDebitPoint){
+                       /* if (totalCreditPoint>totalDebitPoint){
                             totalPoint = totalCreditPoint-totalDebitPoint;
-                        }
-                      /* else {
-                           totalPoint = totalDebitPoint-totalCreditPoint;
-                       }*/
-                        if (totalPoint>0){
-                            txtPoint.setText(getResources().getString(R.string.points)+" : "+String.format("%.2f", Float.parseFloat(String.valueOf(totalPoint))));
                         } else {
-                            txtPoint.setText(getResources().getString(R.string.points)+" : "+String.valueOf("0.00"));
-                        }
+                           totalPoint = totalDebitPoint-totalCreditPoint;
+                       }
+*/
+                        totalPoint = totalCreditPoint-totalDebitPoint;
+
+                        txtPoint.setText(getResources().getString(R.string.points)+" : "+String.format("%.2f", Float.parseFloat(String.valueOf(totalPoint))));
+
                        /* Log.d("TAG", "onResponse: totalDebit"+totalCreditPoint+"\n"+totalPoint);
                         txtCreditPt.setText(getResources().getString(R.string.txtCredit)+" : "+ String.valueOf(totalCreditPoint));
                         txtdebitPt.setText(getResources().getString(R.string.txtDebit)+" : "+ String.valueOf(debitPoint));*/

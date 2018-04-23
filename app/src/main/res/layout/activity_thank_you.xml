@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_splash"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-
+    android:orientation="vertical"
     tools:context=".activities.home.ThankYou">
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:layout_marginTop="60dp"
+        android:src="@drawable/logo"
+        android:layout_above="@+id/middle_linera" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_above="@+id/middle_linera"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="15dp" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,6 +32,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             >
+
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
@@ -46,6 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:id="@+id/thank_bookingid"
                 android:text="@string/dummy"
                 android:textSize="12sp"
                 android:padding="5dp"
@@ -70,4 +73,4 @@
 
     </RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>

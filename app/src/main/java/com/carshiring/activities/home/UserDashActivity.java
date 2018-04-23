@@ -419,13 +419,17 @@ public class UserDashActivity extends AppBaseActivity {
                       /* else {
                            totalPoint = totalDebitPoint-totalCreditPoint;
                        }*/
-                        if (totalPoint>0){
+                       /* if (totalPoint>0){
                             txtPointValue.setText(getResources().getString(R.string.points)+" : "+String.format("%.2f", Float.parseFloat(String.valueOf(totalPoint))));
 
 //                           txtPointValue.setText(String.valueOf(totalPoint));
                         } else {
                             txtPointValue.setText(String.valueOf(0.0));
-                        }
+                        }*/
+                        totalPoint = totalCreditPoint-totalDebitPoint;
+
+                        txtPointValue.setText(getResources().getString(R.string.points)+" : "+String.format("%.2f", Float.parseFloat(String.valueOf(totalPoint))));
+
                         Log.d("TAG", "onResponse: totalDebit"+totalCreditPoint+"\n"+totalPoint);
                         txtCreditPt.setText(getResources().getString(R.string.txtCredit)+" : "+ String.valueOf(totalCreditPoint));
                         txtdebitPt.setText(getResources().getString(R.string.txtDebit)+" : "+ String.valueOf(totalDebitPoint));

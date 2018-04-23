@@ -169,10 +169,6 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
                             }
                         }
 
-                        for (int i=0;i<bookingData.size();i++){
-                            cancelDetail(bookingData.get(i).getBooking_id());
-                        }
-/*
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -185,7 +181,6 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
                                 bookingAdapter.notifyDataSetChanged();
                             }
                         });
-*/
                     }
                     else {
                         //  Utility.message(getContext(), response.body().message);
@@ -283,18 +278,7 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
                         cancledetailBeana = gson.fromJson(msg, CancledetailBean.class);
                     }
                 }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (bookingData.size()>0){
-                            linearLayout.setVisibility(View.GONE);
-                            setMyAdapter(bookingData);
-                        } else {
-                            linearLayout.setVisibility(View.VISIBLE);
-                        }
-                        bookingAdapter.notifyDataSetChanged();
-                    }
-                });
+
             }
         });
     }

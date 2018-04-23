@@ -99,9 +99,9 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
 
         for (SearchData.CoveragesBean bean : list.get(position).getCoverages()){
             if (bean.getCode().equalsIgnoreCase("412")){
-                holder.txtDriverSur.setText(bean.getName() +" : "+ bean.getCurrency2()+" "
+                holder.txtOneway.setText(bean.getName() +" : "+ bean.getCurrency2()+" "
                         +bean.getAmount2());
-                holder.txtDriverSur.setVisibility(View.VISIBLE);
+                holder.txtOneway.setVisibility(View.VISIBLE);
             } else if ( bean.getCode().equalsIgnoreCase("410")){
                 holder.txtDriverSur.setText(bean.getName()+" : "+bean.getCurrency2()+" "
                         + bean.getAmount2());
@@ -165,7 +165,7 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView tvCarModelName,tvCarPricing, txtAc,txtClass,txtSupplierNmae, tvBagNo,
-                txtDropCity,txtDoor,txtTrans, txtTerms,txtDriverSur,txtFuel,txtPoint, txtSeat;
+                txtDropCity,txtDoor,txtTrans, txtTerms,txtDriverSur,txtOneway,txtFuel,txtPoint, txtSeat;
         LinearLayout spec1Container ;
         private View itemView  ;
         ImageView imgCarResult,imgCarAgencyLogo ;
@@ -189,6 +189,7 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
             txtPoint = itemView.findViewById(R.id.txtpoint);
             txtSeat = itemView.findViewById(R.id.tvSeat);
             txtDriverSur = itemView.findViewById(R.id.txtDriverSurCharge);
+            txtOneway = itemView.findViewById(R.id.txtOneway);
 
             spec1Container= (LinearLayout) itemView.findViewById(R.id.spec1Container) ;
             imgCarResult= (ImageView) itemView.findViewById(R.id.imgCarResult) ;

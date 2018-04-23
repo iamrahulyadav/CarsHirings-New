@@ -83,13 +83,13 @@ new access code
 Merchant Identifier: daouwTJI
 */
 
-    final String ACCESS_TOKEN =  "NCszWushUPEjueRWnLti";
+/*    final String ACCESS_TOKEN =  "NCszWushUPEjueRWnLti";
     final String MERCHANT_IDENTIFIER = "daouwTJI";
-    final String REQUEST_PHRASE = "1985" ;
+    final String REQUEST_PHRASE = "1985" ;*/
 
-   /* final String ACCESS_TOKEN =  "qa2s6awTpBNc04Q65T8v";
+    final String ACCESS_TOKEN =  "qa2s6awTpBNc04Q65T8v";
     final String MERCHANT_IDENTIFIER =  "GjitDYjm";
-    final String REQUEST_PHRASE = "PASS" ;*/
+    final String REQUEST_PHRASE = "PASS" ;
 
     LinearLayout fullProtectionLayout;
     String name="",sarname="",number="",address="",city="",zipcode="",countrycode="",car_id="",
@@ -270,7 +270,13 @@ Merchant Identifier: daouwTJI
                         booking_payfort = String.valueOf(totalPrice);
                         booking_point="";
                         booking_wallet="";
-                        requestPurchase(booking_payfort);
+                        String s = gson.toJson(setBooking());
+                        Log.d(TAG, "onClick: booking wal"+s);
+                        if (totalPrice>0){
+                            requestPurchase(booking_payfort);
+                        } else {
+                            makeBooking(s);
+                        }
                     }
                 }
 
@@ -324,7 +330,7 @@ Merchant Identifier: daouwTJI
                     } else if (txtCheckWallet.isChecked()){
                         useWallet = walletAmt;
                         if (useWallet>=totalPrice){
-                            booking_wallet = String.valueOf(totalPrice);
+                            booking_wallet = String.valueOf(totalPrice  );
                             booking_point= "";
 
                             String s = gson.toJson(setBooking());
@@ -383,7 +389,8 @@ Merchant Identifier: daouwTJI
         bookingRequest.setBooking_payfort(String.valueOf(booking_payfort));
         bookingRequest.setExtraData(extraData);
         bookingRequest.setDiscountCoupon(coupoun);
-        bookingRequest.setOneway(CarDetailActivity.oneway);
+        bookingRequest.setBooking_one_way_fee(CarDetailActivity.oneway);
+        bookingRequest.setDriver_charge(CarDetailActivity.driverSur);
         bookingRequest.setDiscountvalue(String.valueOf(discountvalue));
         String s = gson.toJson(bookingRequest);
 
@@ -451,10 +458,10 @@ Merchant Identifier: daouwTJI
                                 txtWalletBal.setText("("+getResources().getString(R.string.txtAvailable)+ String.valueOf(df2.format(walBal)) +")");
                                 payfortAmt = s-walletAmt;
                                 d=payfortAmt;
+                                txtCheckWallet.setEnabled(false);
 //                               txtPAyAmt.setText("Total payable amount : "+ String.valueOf(df2.format(payfortAmt)));
 
                             }
-
                         }
 //                      if point not checked
                         else {
@@ -673,7 +680,7 @@ Sha request and response pharse
         fortCallback = FortCallback.Factory.create();
         boolean showLoading= true;
         try {
-            FortSdk.getInstance().registerCallback(this, fortRequest,FortSdk.ENVIRONMENT.PRODUCTION,
+            FortSdk.getInstance().registerCallback(this, fortRequest,FortSdk.ENVIRONMENT.TEST,
                     5, fortCallback,showLoading, new FortInterfaces.OnTnxProcessed() {
                         @Override
                         public void onCancel(Map<String, Object> map, Map<String, Object> map1) {
@@ -756,8 +763,8 @@ live https://checkout.payfort.com
         Request request;
         request = new Request.Builder()
 //                for test ; URL https://sbpaymentservices.payfort.com/FortAPI/paymentApi
-                .url("https://paymentservices.payfort.com/FortAPI/paymentApi")
-//                .url("https://sbpaymentservices.payfort.com/FortAPI/paymentApi")
+//                .url("https://paymentservices.payfort.com/FortAPI/paymentApi")
+                .url("https://sbpaymentservices.payfort.com/FortAPI/paymentApi")
                 .method("POST", RequestBody.create(null, new byte[0]))
                 .post(body)
                 .addHeader("Content-Type", "application/json; charset=utf8")
@@ -1103,8 +1110,11 @@ live https://checkout.payfort.com
                             txtcheckPoint.setVisibility(View.VISIBLE);
                         } else {
                             booking_point = String.valueOf(pointValue);
-                            txtPointVal.setVisibility(View.GONE);
-                            txtcheckPoint.setVisibility(View.GONE);
+                            totalPoint = totalCreditPoint-totalDebitPoint;
+
+                            txtPointVal.setText("("+String.valueOf(df2.format(totalPoint))+" Point value is : "
+                                    +String.valueOf(df2.format(pointValue))+")");
+                            txtcheckPoint.setClickable(false);
                         }
                     } else {
                         Log.d(TAG, "onResponse: "+response.body().message);
@@ -1131,7 +1141,7 @@ live https://checkout.payfort.com
                 Log.d(TAG, "onResponse: data"+gson.toJson(response.body()));
                 if (response.body()!=null){
                     if (response.body().status){
-                        Toast.makeText(PayActivity.this, ""+response.body().msg, Toast.LENGTH_SHORT).show();
+                         Toast.makeText(PayActivity.this, ""+response.body().msg, Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(PayActivity.this, ""+response.body().msg, Toast.LENGTH_SHORT).show();
                     }

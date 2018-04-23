@@ -82,7 +82,7 @@ public class CarDetailActivity extends AppCompatActivity {
     TinyDB tinyDB ;
     double markUp;
     public static double point;
-    public static String logo,oneway,carPrice,carImage,modelname,currency,suppliername,suppliercity,termsurl
+    public static String logo,oneway,driverSur,carPrice,carImage,modelname,currency,suppliername,suppliercity,termsurl
             ,fullprotectioncurrency,fullprotectionammount,fullProcted,time, driver_minage,driver_maxage,CDW,THP,carid;
     Gson gson = new Gson();
     public static double fullProAmt, fullAmtValue;
@@ -109,11 +109,20 @@ public class CarDetailActivity extends AppCompatActivity {
         refer_type = getIntent().getStringExtra("refer_type");
         day = getIntent().getStringExtra("day");
         id_context = getIntent().getStringExtra("id_context");
-        String s = getIntent().getStringExtra("point_earn");
-        point = Double.parseDouble(s);
+        if (getIntent().hasExtra("point_earn")){
+            String s = (String)getIntent().getStringExtra("point_earn");
+            if (s!=null){
+                point = Double.parseDouble(s);
+            }
+        }
+
         if (getIntent().hasExtra("one_way_fee")){
             oneway = getIntent().getStringExtra("one_way_fee");
         }
+        if (getIntent().hasExtra("driverSur")){
+            driverSur = getIntent().getStringExtra("driverSur");
+        }
+
 //        call api
 
 //        setupApi();

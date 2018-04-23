@@ -33,7 +33,7 @@ public class ExcessProtectionActivity extends AppCompatActivity implements View.
     HashMap<String,List<String>> body;
     MyExListAdapter listAdapter;
     TextView text1,text2,text3,toolbartext,txt_fullprotection;
-    LinearLayout layout1,layout2,layout3,layoutbuttons;
+    LinearLayout layout1,layout2,layoutbuttons;
     TextView extrapro;
     Toolbar toolbar;
     Button bt_standPro,bt_fullPro;
@@ -59,6 +59,7 @@ public class ExcessProtectionActivity extends AppCompatActivity implements View.
                     " " + String.valueOf(fullAmtValue) + getResources().getString(R.string.for_day));
         } else {
             txt_fullprotection.setVisibility(View.GONE);
+            toolbartext.setVisibility(View.GONE);
         }
 
         bt_fullPro.setOnClickListener(this);

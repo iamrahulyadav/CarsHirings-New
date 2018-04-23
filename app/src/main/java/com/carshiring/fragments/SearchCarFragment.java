@@ -506,7 +506,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                                         }
                                     }
                                 }
-                                Log.d(TAG, "onResponse: map value"+gson.toJson(map1));
 
                                 final List<Category.ResponseBean.CatBean> finalCatBeans = catBeans;
                                 runOnUiThread(new Runnable() {

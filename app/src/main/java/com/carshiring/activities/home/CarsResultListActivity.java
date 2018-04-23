@@ -193,7 +193,7 @@ public class CarsResultListActivity extends AppBaseActivity {
     }
 
     double pointpercent, calPoint,calPrice;
-    String oneway;
+    String oneway,driverSur;
     public void listdispaly(List<SearchData> listCarResult ) {
         CarResultsListAdapter listAdapter;
         listAdapter = new CarResultsListAdapter(this,listCarResult,catBeanList, new CarResultsListAdapter.OnItemClickListener() {
@@ -216,7 +216,7 @@ public class CarsResultListActivity extends AppBaseActivity {
                                 oneway = bean.getName() +" : "+ bean.getCurrency2()+" "
                                         +bean.getAmount2();
                             } else if ( bean.getCode().equalsIgnoreCase("410")){
-                                oneway =bean.getName()+ " : "+bean.getCurrency2()+" "
+                                driverSur =bean.getName()+ " : "+bean.getCurrency2()+" "
                                         + bean.getAmount2();
                             }
                         }
@@ -236,6 +236,7 @@ public class CarsResultListActivity extends AppBaseActivity {
                         intent.putExtra("refer_type",refertype);
                         intent.putExtra("point_earn",String.valueOf(calPoint) );
                         intent.putExtra("one_way_fee", oneway);
+                        intent.putExtra("driverSur", driverSur);
                         startActivity(intent);
                     }
                 } else {

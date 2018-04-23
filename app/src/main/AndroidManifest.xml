@@ -24,6 +24,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:largeHeap="true"
+        android:hardwareAccelerated="false"
         android:theme="@style/AppTheme.Green">
         <activity
             android:name=".splash.SplashActivity"
@@ -67,7 +69,6 @@
         <activity android:name=".activities.home.UserDashActivity" />
         <activity android:name=".activities.home.WalletView" />
         <activity android:name=".activities.home.ThankYou" />
-        <activity android:name=".activities.home.Test"></activity>
         <activity android:name=".activities.home.SearchbyMapActivity"/>
         <activity android:name=".activities.home.TestActivity"/>
         <meta-data

@@ -89,7 +89,7 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
     String userId,language, carnect_id,car_model,carnect_type,pick_city,pick_houre,pick_minute,
             pick_datetyme,drop_city,pick_date,drop_date,drop_houre,drop_minute,drop_datetyme,age,image,booking_price;
     TinyDB tinyDB ;
-    TextView tvFromDate,txtOneway,tvPickDate,tvTodate,txtPlaceDrop;
+    TextView tvFromDate,txtOneway,txtDriverSur,tvPickDate,tvTodate,txtPlaceDrop;
 
     @Nullable
     @Override
@@ -123,6 +123,7 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
         tvPickDate= (TextView) view.findViewById(R.id.txtPlaceName);
         tvTodate= (TextView) view.findViewById(R.id.tvToDT);
         txtPlaceDrop = view.findViewById(R.id.txtPlaceName_drop);
+        txtDriverSur = view.findViewById(R.id.driverSurCharge);
 
         tvFromDate.setText(SearchCarFragment.pick_date+"\n"+ SearchCarFragment.pickTime);
         tvPickDate.setText(SearchCarFragment.pickName);
@@ -134,6 +135,12 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
             txtOneway.setVisibility(View.VISIBLE);
         } else {
             txtOneway.setVisibility(View.GONE);
+        }
+        if (CarDetailActivity.driverSur!=null){
+            txtDriverSur.setText(CarDetailActivity.driverSur);
+            txtDriverSur.setVisibility(View.VISIBLE);
+        } else {
+            txtDriverSur.setVisibility(View.GONE);
         }
         if ( CarDetailActivity.extralist!=null&&CarDetailActivity.extralist.size()>0){
             for (ExtraBean extraBean: CarDetailActivity.extralist){
@@ -363,9 +370,13 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
             Log.d("TAG", "onPostExecute: "+result);
 
             //this method will be running on UI thread
+            if (pdLoading!=null){
+                pdLoading.dismiss();
 
-            pdLoading.dismiss();
+            }
+
             if (result==404){
+
                 Glide.with(getActivity()).load("").listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

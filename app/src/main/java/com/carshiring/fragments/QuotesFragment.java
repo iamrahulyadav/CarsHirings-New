@@ -167,7 +167,6 @@ public class QuotesFragment extends Fragment implements QuotesAdapter.QuoteInter
 
     @Override
     public void onRefresh() {
-        swipeRefreshLayout.setRefreshing(false);
         savelater();
         setMyAdapter(quotesModelList);
         swipeRefreshLayout.setRefreshing(false);

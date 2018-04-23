@@ -11,15 +11,24 @@ public class BookingRequest {
     private String name="",sarname="",number="",email="",address="",city="",zipcode="",countrycode="",car_id="",
             type="",rtype="",fullprotection="",flight_no="",dob="",user_id="",pick_date="",
             drop_date="", pick_city="",drop_city="",protection_val="",booking_point="",booking_wallet="",
-            booking_payfort="", transaction_id="",discountCoupon="",discountvalue="",merchant_reference="",oneway="";
+            booking_payfort="", transaction_id="",discountCoupon="",discountvalue="",merchant_reference="",
+            booking_one_way_fee="", driver_charge="";
     List<ExtraAdded> extraData = new ArrayList<>();
 
-    public String getOneway() {
-        return oneway;
+    public String getBooking_one_way_fee() {
+        return booking_one_way_fee;
     }
 
-    public void setOneway(String oneway) {
-        this.oneway = oneway;
+    public void setBooking_one_way_fee(String booking_one_way_fee) {
+        this.booking_one_way_fee = booking_one_way_fee;
+    }
+
+    public String getDriver_charge() {
+        return driver_charge;
+    }
+
+    public void setDriver_charge(String driver_charge) {
+        this.driver_charge = driver_charge;
     }
 
     public String getMerchant_reference() {

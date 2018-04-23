@@ -7,13 +7,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.carshiring.R;
 
 
 public class ThankYou extends AppCompatActivity implements View.OnClickListener {
     Button bt_viewquotes;
-
+    TextView txtBookingid;
+    String bookingId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,10 +23,18 @@ public class ThankYou extends AppCompatActivity implements View.OnClickListener 
         bt_viewquotes= (Button) findViewById(R.id.bt_viewquotes);
         bt_viewquotes.setOnClickListener(this);
         ActionBar actionBar=getSupportActionBar();
+
+
         if(actionBar!=null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.back);
             actionBar.setTitle("Thank You");
+        }
+        txtBookingid = findViewById(R.id.thank_bookingid);
+        if (getIntent().hasExtra("bookingid")){
+            bookingId = getIntent().getStringExtra("bookingid");
+            txtBookingid.setText(getResources().getString(R.string.dummy)+ " : "+ bookingId);
+
         }
     }
 
