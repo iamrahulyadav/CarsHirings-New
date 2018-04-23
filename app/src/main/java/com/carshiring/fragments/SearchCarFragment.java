@@ -648,7 +648,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                         if (switchSameDestLocation.isChecked()){
                             dropName = pickName;
                         }
-                        Intent intent = new Intent(getActivity(), CarsResultListActivity.class);
+                        Intent intent = new Intent(getActivity(), TestActivity.class);
                         startActivity(intent);
                     }
                 }

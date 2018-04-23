@@ -81,7 +81,6 @@ public class ExcessProtectionActivity extends AppCompatActivity implements View.
             if(val.equalsIgnoreCase("ForProtec"))
             {
                 layoutbuttons.setVisibility(View.GONE);
-
             }
             else if(val.equalsIgnoreCase("FromActi"))
             {

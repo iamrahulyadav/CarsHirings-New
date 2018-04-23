@@ -20,6 +20,7 @@
            android:layout_margin="10dp"
            android:gravity="center"
            android:textSize="@dimen/large_size"
+           android:id="@+id/price_detail_title"
            android:textColor="@color/black"
            android:textStyle="bold"
            android:padding="@dimen/pf_5dp_space"/>
@@ -69,7 +70,7 @@
                android:layout_height="wrap_content"
                android:id="@+id/txtCuoponValue"
                android:text="Coupon value "
-               android:textColor="@color/white"
+               android:textColor="@color/black"
                android:padding="5dp"/>
            <TextView
                android:layout_width="wrap_content"
