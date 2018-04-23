@@ -268,15 +268,29 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
                 }
             });
 
-            if (bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_cancel_charge()
-                    !=null) {
+            if (bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_wallet_amount()
+                    !=null&&!bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_wallet_amount().equalsIgnoreCase("0.00")) {
                 txtWallet.setVisibility(View.VISIBLE);
                 txtWallet.setText("Wallet : SAR " +bookinglist.get(position)
                         .getBooking_canceldetail().getBooking_cancel_wallet_amount());
+            } else {
+                txtWallet.setVisibility(View.GONE);
             }
-            txtPoint.setVisibility(View.VISIBLE);
-            txtPoint.setText("Refundable Points Value : SAR " +String.valueOf(bookinglist.get(position)
-                    .getBooking_canceldetail().getBooking_cancel_point_amount()));
+
+            if (bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_credit_amount() != null &&
+                    !bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_credit_amount().equalsIgnoreCase("0.00")) {
+                txtFullProt.setVisibility(View.VISIBLE);
+                txtFullProt.setText("Refundable amount to Bank : SAR "+bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_credit_amount());
+            }
+            if (bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_point_amount()!=null
+                           &&!bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_point_amount().equalsIgnoreCase("0.00")){
+
+                txtPoint.setVisibility(View.VISIBLE);
+                txtPoint.setText("Refundable Points Value : SAR " +String.valueOf(bookinglist.get(position)
+                        .getBooking_canceldetail().getBooking_cancel_point_amount()));
+            } else {
+                txtPoint.setVisibility(View.GONE);
+            }
 
 
         }
