@@ -168,7 +168,7 @@ public class UserDashActivity extends AppBaseActivity {
                         }
 
                     } else {
-                      //  Toast.makeText(UserDashActivity.this, ""+response.body().message, Toast.LENGTH_SHORT).show();
+                        //  Toast.makeText(UserDashActivity.this, ""+response.body().message, Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -177,7 +177,7 @@ public class UserDashActivity extends AppBaseActivity {
             public void onFailure(Call<ApiResponse> call, Throwable t) {
                 Toast.makeText(UserDashActivity.this, ""+ getResources().getString(R.string.check_internet), Toast.LENGTH_SHORT).show();
 
-             //   Utility.message(getApplicationContext(), getResources().getString(R.string.check_internet));
+                //   Utility.message(getApplicationContext(), getResources().getString(R.string.check_internet));
                 Log.d("TAG", "onFailure: "+t.getMessage());
             }
         });
@@ -294,6 +294,12 @@ public class UserDashActivity extends AppBaseActivity {
                             // Execute the task
                             task.execute(new String[] { url });
                         }
+                        if (userDetails.getUser_image()!=null&&userDetails.getUser_image().length()>1){
+                            String url = RetrofitApiBuilder.IMG_BASE_URL+userDetails.getUser_cover();
+                            GetImageWall task = new GetImageWall();
+                            // Execute the task
+                            task.execute(new String[] { url });
+                        }
 
                     }
                     else{
@@ -312,6 +318,70 @@ public class UserDashActivity extends AppBaseActivity {
         });
     }
 
+    public class GetImageWall extends AsyncTask<String, Void, Bitmap> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Utility.showLoading(UserDashActivity.this,getResources().getString(R.string.loading));
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... urls) {
+            Bitmap map = null;
+            for (String url : urls) {
+                map = downloadImage(url);
+            }
+            return map;
+        }
+
+        // Sets the Bitmap returned by doInBackground
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            Utility.hidepopup();
+            imgUserWall.setImageBitmap(result);
+        }
+
+        // Creates Bitmap from InputStream and returns it
+        private Bitmap downloadImage(String url) {
+            Bitmap bitmap = null;
+            InputStream stream = null;
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            bmOptions.inSampleSize = 1;
+
+            try {
+                stream = getHttpConnection(url);
+                bitmap = BitmapFactory.
+                        decodeStream(stream, null, bmOptions);
+                stream.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            return bitmap;
+        }
+
+        // Makes HttpURLConnection and returns InputStream
+        private InputStream getHttpConnection(String urlString)
+                throws IOException {
+            InputStream stream = null;
+            URL url = new URL(urlString);
+            URLConnection connection = url.openConnection();
+
+            try {
+                HttpURLConnection httpConnection = (HttpURLConnection) connection;
+                httpConnection.setRequestMethod("GET");
+                httpConnection.connect();
+
+                if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    stream = httpConnection.getInputStream();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return stream;
+        }
+    }
+
+
     private static DecimalFormat df2 = new DecimalFormat(".##");
     public void getPoint(){
         if (pointHistoryData!=null){
@@ -326,40 +396,46 @@ public class UserDashActivity extends AppBaseActivity {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 if (response!=null){
-                   if (response.body().status){
-                       pointHistoryData = response.body().response.points;
-                       Log.d("TAG", "onResponse: "+gson.toJson(pointHistoryData));
-                       for (PointHistoryData walletHistoryData1 : pointHistoryData){
+                    if (response.body().status){
+                        pointHistoryData = response.body().response.points;
+                        Log.d("TAG", "onResponse: "+gson.toJson(pointHistoryData));
+                        for (PointHistoryData walletHistoryData1 : pointHistoryData){
 
-                           if (walletHistoryData1.get_$BookingPointType184().equals("debit")){
-                               String debit = walletHistoryData1.get_$BookingPoint18();
-                               debitPoint = Double.parseDouble(debit);
-                               totalDebitPoint += debitPoint;
+                            if (walletHistoryData1.get_$BookingPointType184().equals("debit")){
+                                String debit = walletHistoryData1.get_$BookingPoint18();
+                                debitPoint = Double.parseDouble(debit);
+                                totalDebitPoint += debitPoint;
 //                            Log.d("TAG", "onResponse: "+debit);
-                           }
-                           if (walletHistoryData1.get_$BookingPointType184().equals("credit")){
-                               String debit = walletHistoryData1.get_$BookingPoint18();
-                               creditPoint = Double.parseDouble(debit);
-                               totalCreditPoint+= creditPoint;
-                           }
-                       }
-                       if (totalCreditPoint>totalDebitPoint){
-                           totalPoint = totalCreditPoint-totalDebitPoint;
-                       }
+                            }
+                            if (walletHistoryData1.get_$BookingPointType184().equals("credit")){
+                                String debit = walletHistoryData1.get_$BookingPoint18();
+                                creditPoint = Double.parseDouble(debit);
+                                totalCreditPoint+= creditPoint;
+                            }
+                        }
+                        if (totalCreditPoint>totalDebitPoint){
+                            totalPoint = totalCreditPoint-totalDebitPoint;
+                        }
                       /* else {
                            totalPoint = totalDebitPoint-totalCreditPoint;
                        }*/
-                       if (totalPoint>0){
-                           txtPointValue.setText(String.valueOf(totalPoint));
-                       } else {
-                           txtPointValue.setText(String.valueOf(0.0));
-                       }
-                       Log.d("TAG", "onResponse: totalDebit"+totalCreditPoint+"\n"+totalPoint);
-                       txtCreditPt.setText(getResources().getString(R.string.txtCredit)+" : "+ String.valueOf(totalCreditPoint));
-                       txtdebitPt.setText(getResources().getString(R.string.txtDebit)+" : "+ String.valueOf(debitPoint));
-                   } else {
-                     //  Toast.makeText(UserDashActivity.this, ""+response.body().message, Toast.LENGTH_SHORT).show();
-                   }
+                       /* if (totalPoint>0){
+                            txtPointValue.setText(getResources().getString(R.string.points)+" : "+String.format("%.2f", Float.parseFloat(String.valueOf(totalPoint))));
+
+//                           txtPointValue.setText(String.valueOf(totalPoint));
+                        } else {
+                            txtPointValue.setText(String.valueOf(0.0));
+                        }*/
+                        totalPoint = totalCreditPoint-totalDebitPoint;
+
+                        txtPointValue.setText(getResources().getString(R.string.points)+" : "+String.format("%.2f", Float.parseFloat(String.valueOf(totalPoint))));
+
+                        Log.d("TAG", "onResponse: totalDebit"+totalCreditPoint+"\n"+totalPoint);
+                        txtCreditPt.setText(getResources().getString(R.string.txtCredit)+" : "+ String.valueOf(totalCreditPoint));
+                        txtdebitPt.setText(getResources().getString(R.string.txtDebit)+" : "+ String.valueOf(totalDebitPoint));
+                    } else {
+                        //  Toast.makeText(UserDashActivity.this, ""+response.body().message, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 

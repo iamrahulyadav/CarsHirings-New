@@ -40,7 +40,6 @@ import com.carshiring.fragments.MyAccountsFragment;
 import com.carshiring.fragments.MyBookingsFragment;
 import com.carshiring.fragments.SearchCarFragment;
 import com.carshiring.interfaces.ISubViewSetupHandler;
-import com.carshiring.models.DiscountData;
 import com.carshiring.models.UserDetails;
 import com.carshiring.splash.SplashActivity;
 import com.carshiring.utilities.AppGlobal;
@@ -93,7 +92,7 @@ public class MainActivity extends AppCompatActivity
     UserDetails userDetails = new UserDetails();
     Gson gson = new Gson();
 
-//    ////
+    //    ////
 //chnage by vaibhav
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +121,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.title_home);
 
-       // language_code = tinyDB.getString("language_code") ;
+        // language_code = tinyDB.getString("language_code") ;
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -142,7 +141,7 @@ public class MainActivity extends AppCompatActivity
 
 //        updateResources(this,language_code);
         Intent it = getIntent();
-       if (it != null) {
+        if (it != null) {
             qu = it.getStringExtra("From Quotes");
            /* if (qu != null) {
                 if (qu.equalsIgnoreCase("Quotes")) {
@@ -153,11 +152,11 @@ public class MainActivity extends AppCompatActivity
             }*/
 //for test
 //           setupSubView(R.id.action_search_car);
-       }
+        }
 
         SearchCarFragment searchCarFragment = new SearchCarFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, searchCarFragment)
-               .commit();
+                .commit();
 
         if (tinyDB.contains("login_data")){
             String data = tinyDB.getString("login_data");
@@ -220,8 +219,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-      /*  if (drawer.isDrawerOpen(GravityCompat.START)) {
+
+        //   super.onBackPressed();
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }
         else {
@@ -243,7 +243,8 @@ public class MainActivity extends AppCompatActivity
             builder.create();
             builder.show();
 
-        }*/
+        }
+
     }
 
     @Override
@@ -313,7 +314,7 @@ public class MainActivity extends AppCompatActivity
                     getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, new MyBookingsFragment())
                             .addToBackStack("null").commit();
                     toolbar.setTitle(getResources().getString(R.string.mybooking));
-                 //   startActivity(new Intent(MainActivity.this,MyBookingActivity.class));
+                    //   startActivity(new Intent(MainActivity.this,MyBookingActivity.class));
                 }
                 break;
 
@@ -438,7 +439,7 @@ public class MainActivity extends AppCompatActivity
                     String item = adapterView.getItemAtPosition(i).toString();
                     licenseorigin = (String) getKeyFromValue(SplashActivity.country,item);
 
-                 //   Toast.makeText(MainActivity.this, ""+licenseorigin, Toast.LENGTH_SHORT).show();
+                    //   Toast.makeText(MainActivity.this, ""+licenseorigin, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -490,14 +491,14 @@ public class MainActivity extends AppCompatActivity
                             } else {
                                 Utility.message(getApplication(), getResources().getString(R.string.please_enter_valid_email));
                             }
+                        } else {
+                            Utility.message(getApplication(),getResources().getString(R.string.please_enter_last_name));
+                        }
                     } else {
-                        Utility.message(getApplication(),getResources().getString(R.string.please_enter_last_name));
+                        Utility.message(getApplication(),getResources().getString(R.string.please_enter_first_name));
                     }
-                } else {
-                    Utility.message(getApplication(),getResources().getString(R.string.please_enter_first_name));
                 }
-            }
-        });
+            });
         }
 
         btnCancel.setOnClickListener(new View.OnClickListener() {

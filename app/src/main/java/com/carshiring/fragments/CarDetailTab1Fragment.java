@@ -36,6 +36,7 @@ import com.carshiring.activities.home.Extras;
 import com.carshiring.adapters.CarResultsListAdapter;
 import com.carshiring.models.BookingHistory;
 import com.carshiring.models.CarDetailBean;
+import com.carshiring.models.ExtraBean;
 import com.carshiring.models.UserDetails;
 import com.carshiring.utilities.Utility;
 import com.carshiring.webservices.ApiResponse;
@@ -67,6 +68,7 @@ import static com.carshiring.activities.home.CarDetailActivity.day;
 import static com.carshiring.activities.home.CarDetailActivity.point;
 import static com.carshiring.activities.home.CarDetailActivity.refer_type;
 import static com.carshiring.activities.home.CarDetailActivity.termsurl;
+import static com.carshiring.activities.home.CarDetailActivity.time;
 import static com.carshiring.activities.home.CarDetailActivity.type;
 import static com.carshiring.splash.SplashActivity.TAG;
 
@@ -79,14 +81,15 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
     LinearLayout ll_extra,ll_protection;
     TextView terms,quotes,carname,carprice, txtPoint;
     ImageView carImg,imglogo;
-  //  List<CarSpecification> carSpecificationList;
+    //  List<CarSpecification> carSpecificationList;
     ProgressBar bar,bar1;
     LinearLayout ll,gl;
     UserDetails userDetails  = new UserDetails();
     Gson gson = new Gson();
     String userId,language, carnect_id,car_model,carnect_type,pick_city,pick_houre,pick_minute,
-    pick_datetyme,drop_city,pick_date,drop_date,drop_houre,drop_minute,drop_datetyme,age,image,booking_price;
+            pick_datetyme,drop_city,pick_date,drop_date,drop_houre,drop_minute,drop_datetyme,age,image,booking_price;
     TinyDB tinyDB ;
+    TextView tvFromDate,txtOneway,txtDriverSur,tvPickDate,tvTodate,txtPlaceDrop;
 
     @Nullable
     @Override
@@ -103,6 +106,7 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
         bar= (ProgressBar) view.findViewById(R.id.progressbar);
         bar1= (ProgressBar) view.findViewById(R.id.progressbar1);
         txtPoint = view.findViewById(R.id.point_get);
+        txtOneway = view.findViewById(R.id.oneway);
        /* SingleCarDetails singleCarDetails = new SingleCarDetails();
         singleCarDetails = CarDetail.singleCarDetails;
         carSpecificationList=CarDetail.spec;*/
@@ -114,9 +118,43 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
         language = tinyDB.getString("language_code");
         carnect_id = CarDetailActivity.id_context;
         car_model = CarDetailActivity.modelname;
-        /*  String userId,language, carnect_id,car_model,carnect_type,pick_city,pick_houre,pick_minute,
-    pick_datetyme,drop_city,pick_date,drop_date,drop_houre,drop_minute,drop_datetyme,age,image,booking_price;
-    */
+
+        tvFromDate= (TextView) view.findViewById(R.id.tvFromDT);
+        tvPickDate= (TextView) view.findViewById(R.id.txtPlaceName);
+        tvTodate= (TextView) view.findViewById(R.id.tvToDT);
+        txtPlaceDrop = view.findViewById(R.id.txtPlaceName_drop);
+        txtDriverSur = view.findViewById(R.id.driverSurCharge);
+
+        tvFromDate.setText(SearchCarFragment.pick_date+"\n"+ SearchCarFragment.pickTime);
+        tvPickDate.setText(SearchCarFragment.pickName);
+        tvTodate.setText(SearchCarFragment.drop_date+"\n"+SearchCarFragment.dropTime);
+        txtPlaceDrop.setText(SearchCarFragment.dropName);
+
+        if (CarDetailActivity.oneway!=null){
+            txtOneway.setText(CarDetailActivity.oneway);
+            txtOneway.setVisibility(View.VISIBLE);
+        } else {
+            txtOneway.setVisibility(View.GONE);
+        }
+        if (CarDetailActivity.driverSur!=null){
+            txtDriverSur.setText(CarDetailActivity.driverSur);
+            txtDriverSur.setVisibility(View.VISIBLE);
+        } else {
+            txtDriverSur.setVisibility(View.GONE);
+        }
+        if ( CarDetailActivity.extralist!=null&&CarDetailActivity.extralist.size()>0){
+            for (ExtraBean extraBean: CarDetailActivity.extralist){
+                if (extraBean.getName()!=null&&!extraBean.getName().equalsIgnoreCase("null")){
+                    ll_extra.setVisibility(View.VISIBLE);
+                } else {
+                    ll_extra.setVisibility(View.GONE);
+                }
+            }
+
+        } else {
+            ll_extra.setVisibility(View.GONE);
+        }
+
         carnect_type = CarDetailActivity.type;
         pick_city = SearchCarFragment.pickName;
         pick_houre = SearchCarFragment.pick_hour;
@@ -159,10 +197,10 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
                 return false;
             }
         }).into(carImg);*/
-       if (carImage!=null){
-           new AsyncCaller().execute();
+        if (carImage!=null){
+            new AsyncCaller().execute();
 
-       }
+        }
 
         Glide.with(getContext()).load(CarDetailActivity.logo).listener(new RequestListener<Drawable>() {
             @Override
@@ -180,7 +218,7 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
         carname.setText(CarDetailActivity.modelname + getResources().getString(R.string.or_similar));
         txtPoint.setText(getResources().getString(R.string.points_collected )+String.valueOf( CarDetailActivity.point));
         carprice.setText(CarDetailActivity.currency + "  " + CarDetailActivity.carPrice+ "/ "
-                + CarDetailActivity.time + " "+ CarDetailActivity.day);
+                + time + " "+ CarDetailActivity.day);
         LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
@@ -234,7 +272,7 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
 
                     if (!carSpecification.aircondition.equalsIgnoreCase("false")) {
                         View viw = getActivity().getLayoutInflater().inflate(R.layout.gridcustomstyle, null);
-                       // TextView tt = (TextView) viw.findViewById(R.id.txt_spec);
+                        // TextView tt = (TextView) viw.findViewById(R.id.txt_spec);
                         TextView tt1 = new TextView(getContext());
                         tt1.setLayoutParams(lparams);
                         tt1.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.ic_ac,0,0);
@@ -278,7 +316,7 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
                 }
             }
         }
-   }
+    }
 
     private class AsyncCaller extends AsyncTask<Integer, Void, Integer> {
         ProgressDialog pdLoading = new ProgressDialog(getActivity());
@@ -332,9 +370,13 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
             Log.d("TAG", "onPostExecute: "+result);
 
             //this method will be running on UI thread
+            if (pdLoading!=null){
+                pdLoading.dismiss();
 
-            pdLoading.dismiss();
+            }
+
             if (result==404){
+
                 Glide.with(getActivity()).load("").listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -403,7 +445,7 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
 
         final Call<ApiResponse> bookingDataCall = fitApis.savelater(language,carnect_id,car_model,carnect_type,
                 userId, pick_city, pick_date, pick_houre, pick_minute, pick_datetyme,drop_city,
-                drop_date,drop_houre, drop_minute, drop_datetyme, age, image, booking_price,day,refer_type,type,point);
+                drop_date,drop_houre, drop_minute, drop_datetyme, age, image, booking_price,time,refer_type,type,point);
 
         bookingDataCall.enqueue(new Callback<ApiResponse>() {
             @Override

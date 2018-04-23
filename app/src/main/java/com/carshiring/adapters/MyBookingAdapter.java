@@ -113,12 +113,14 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
 
         btnCancelationCharge.setTag(position);
         btnBookingCharge.setText("Booking Charges: SAR "+bookinglist.get(position).getBooking_total_price());
-        if (type.equalsIgnoreCase("p")){
+        if (bookinglist.get(position).getBooking_status().equals("2")){
             btnCancelationCharge.setVisibility(View.VISIBLE);
+            btnCancelationCharge.setText("Cancellation Charges : SAR "+ bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_cancel_charge());
+
         } else {
             btnCancelationCharge.setVisibility(View.GONE);
         }
-        btnBookingCharge.setOnClickListener(new View.OnClickListener() {
+        holder.txtPricedetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setBookingPop(position);
@@ -143,8 +145,8 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
         btnCancelationCharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                setCancelationPop(position);
-                setCancelationPop((Integer) btnCancelationCharge.getTag());
+                setCancelationPop(position);
+//                setCancelationPop((Integer) btnCancelationCharge.getTag());
             }
         });
 
@@ -239,33 +241,39 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
         txtPoint = dialog.findViewById(R.id.txtPointValueAmt);
         txtFullProt = (TextView) dialog.findViewById(R.id.txtFullProtection);
         btnCancel = dialog.findViewById(R.id.txtCancel);
-        for (CancledetailBean bean : cancledetailBeans){
-            if (bean.getResponse().getCancel_detail().getBooking_cancel_booking_id()
-                    .equalsIgnoreCase(bookinglist.get(position).getBooking_id())){
-                 if (bean.getResponse().getCancel_detail().getBooking_cancel_booking_amount()!=null&&
-                        !bean.getResponse().getCancel_detail().getBooking_cancel_booking_amount().equals("0.00")) {
-                    txtCreditValue.setVisibility(View.VISIBLE);
-                    txtCreditValue.setText("Booking Amount : SAR " +bean.getResponse()
-                            .getCancel_detail().getBooking_cancel_booking_amount());
-                }
-
-                btnCancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dialog.dismiss();
-                    }
-                });
-
-                if (bean.getResponse().getCancel_detail().getBooking_cancel_cancel_charge()
-                        !=null) {
-                    txtWallet.setVisibility(View.VISIBLE);
-                    txtWallet.setText("Cancellation Charges : SAR " + bean.getResponse().getCancel_detail().getBooking_cancel_cancel_charge());
-                }
-                txtPoint.setVisibility(View.VISIBLE);
-                txtPoint.setText("Refundable Amount : SAR " +String.valueOf(bean.getResponse().getCancel_detail().getBooking_cancel_cancel_charge()));
-
+        txtBookingDate = dialog.findViewById(R.id.txt_bookingdate);
+        rate = (TextView) dialog.findViewById(R.id.txt_rate);
+        txtBookingDate.setVisibility(View.GONE);
+        rate.setVisibility(View.GONE);
+        if (bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_booking_id()
+                .equalsIgnoreCase(bookinglist.get(position).getBooking_id())){
+            if (bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_booking_amount()!=null&&
+                    !bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_booking_amount().equals("0.00")) {
+                txtCreditValue.setVisibility(View.VISIBLE);
+                txtCreditValue.setText("Booking Amount : SAR " +
+                        bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_booking_amount());
             }
+
+            btnCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+
+            if (bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_cancel_charge()
+                    !=null) {
+                txtWallet.setVisibility(View.VISIBLE);
+                txtWallet.setText("Cancellation Charges : SAR " +bookinglist.get(position)
+                        .getBooking_canceldetail().getBooking_cancel_cancel_charge());
+            }
+            txtPoint.setVisibility(View.VISIBLE);
+            txtPoint.setText("Refundable Amount : SAR " +String.valueOf(bookinglist.get(position)
+                    .getBooking_canceldetail().getBooking_cancel_cancel_charge()));
+
+
         }
+
         dialog.show();
     }
 
@@ -280,7 +288,7 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView refnumb, date_time, rate, txtjourneyToDate, txtStatus, txtPickUp, txtBookingDate,
-                txtDropUp, txtCancel, txtCarName, txtFullProt,txtPaymentBy, txtCreditValue, txtWallet, txtPoint, txtCoupon;
+                txtDropUp, txtCancel, txtCarName,txtPricedetails, txtFullProt,txtPaymentBy, txtCreditValue, txtWallet, txtPoint, txtCoupon;
         ImageView imgLogo, car_image;
 
         public MyViewHolder(final View itemView) {
@@ -295,6 +303,7 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
             txtPaymentBy = (TextView) itemView.findViewById(R.id.previous_booking_txtCarName);
             txtFullProt = (TextView) itemView.findViewById(R.id.txtFullProtection);
             txtCarName = (TextView) itemView.findViewById(R.id.previous_booking_txtPaymentBy);
+            txtPricedetails = itemView.findViewById(R.id.previous_booking_txtPricedetails);
             imgLogo = (ImageView) itemView.findViewById(R.id.previous_booking_imgCarLogo);
             car_image = (ImageView) itemView.findViewById(R.id.my_booking_image);
             txtCancel = itemView.findViewById(R.id.previous_booking_txtcancel);

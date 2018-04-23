@@ -1,290 +1,144 @@
 package com.carshiring.adapters;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.carshiring.R;
-import com.carshiring.models.BookingHistory;
-import com.carshiring.models.CancledetailBean;
-import com.carshiring.models.TestClass;
-import com.carshiring.utilities.Utility;
+import com.carshiring.fragments.SearchCarFragment;
+import com.carshiring.models.Category;
+import com.carshiring.models.SearchData;
+import com.carshiring.webservices.RetrofitApiBuilder;
+import com.google.gson.Gson;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by Rakhi
- *
+ * Created by Muhib.
+ * Contact Number : +91 9796173066
  */
-
 public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> {
-    TestClass bookinglist;
-    Context context;
 
-    String type;
+    OnItemClickListenerCategory listener;
+    double markUp;
+    //private List<String> horizontalList;
+    private Context context;
+    HashMap<String, String> listCarCode = new HashMap<>();
+    private List<Category.ResponseBean.CatBean>catBeanList = new ArrayList<>();
+    private List<SearchData>listCarResult = new ArrayList<>();
 
-    public TestAdapter(TestClass bookinglist,
-                       Context context, String type) {
-        this.bookinglist = bookinglist;
+
+    public TestAdapter(Context context, List<SearchData> listCarResult,
+                       List<Category.ResponseBean.CatBean> catBeanList
+    ) {
         this.context = context;
-        this.type = type;
-        this.dialog = new Dialog(context);
+        this.catBeanList = catBeanList;
+        this.listCarResult = listCarResult;
     }
 
-    ClickItem item;
 
-    public interface ClickItem {
-        public void click(View view, int Position);
+
+    public interface  OnItemClickListenerCategory {
+        void onItemClickCategory(int position);
     }
+
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        public TextView txtName;
+        LinearLayout catLayout;
+        public TextView txtCode;
+        ImageView image;
+
+        public MyViewHolder(View view) {
+            super(view);
+
+            txtName = (TextView) view.findViewById(R.id.car_cat_name);
+            txtCode = (TextView) view.findViewById(R.id.car_cat_code);
+            catLayout = view.findViewById(R.id.cat_layout);
+            image = (ImageView) view.findViewById(R.id.car_cat_image);
+
+        }
+        void bindListener(final int position, final OnItemClickListenerCategory listener) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                  /*  row_index=position;
+                    notifyDataSetChanged();
+                    listener.onItemClickCategory(position);*/
+
+                }
+            });
+
+        }
+    }
+
+    int row_index=-1;
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View row = LayoutInflater.from(parent.getContext()).inflate(R.layout.previous_booking_row, parent, false);
-        return new MyViewHolder(row);
-    }
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.car_list_category, parent, false);
 
+        return new MyViewHolder(itemView);
+    }
+    private static DecimalFormat df2 = new DecimalFormat(".##");
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
-        //BookingData bookingModel=bookinglist.get(position);
-        holder.refnumb.setText(bookinglist.getBookingHistories().get(position).getBooking_id());
-        holder.date_time.setText(Utility.convertdate(bookinglist.getBookingHistories().get(position).getBooking_from_date()));
+        holder.txtName.setText(/*"name"*/catBeanList.get(position).getCategory_name());
 
-        holder.txtjourneyToDate.setText(Utility.convertdate(bookinglist.getBookingHistories().get(position).getBooking_to_date()));
-        holder.rate.setText("Car Price : " + bookinglist.getBookingHistories().get(position).getBooking_currency()
-                + " " + bookinglist.getBookingHistories().get(position).getBooking_actual_price());
-
-        if (bookinglist.getBookingHistories().get(position).getBooking_status().equals("0")) {
-            holder.txtStatus.setText(context.getResources().getString(R.string.failed));
-        } else if (bookinglist.getBookingHistories().get(position).getBooking_status().equals("1")) {
-            holder.txtStatus.setText(context.getResources().getString(R.string.completed));
-        } else if (bookinglist.getBookingHistories().get(position).getBooking_status().equals("2")) {
-            holder.txtStatus.setText(context.getResources().getString(R.string.canceled));
-        } else {
-            holder.txtStatus.setText(context.getResources().getString(R.string.failed));
+        Glide.with(context)
+                .load(RetrofitApiBuilder.IMG_BASE_URL + catBeanList.get(position).getCategory_image())
+                .into(holder.image);
+        //holder.txtCode.setText(/*"code"*/catBeanList.get(position).getCode() +"");
+        markUp = Double.parseDouble(SearchCarFragment.markup);
+        for (SearchData searchData: listCarResult){
+            listCarCode.put(searchData.getCategory(),searchData.getPrice());
         }
-        holder.txtDropUp.setText(bookinglist.getBookingHistories().get(position).getBooking_to_location());
-        holder.txtPickUp.setText(bookinglist.getBookingHistories().get(position).getBooking_from_location());
-        holder.txtCarName.setText(bookinglist.getBookingHistories().get(position).getBooking_car_model());
-        holder.txtPaymentBy.setText(bookinglist.getBookingHistories().get(position).getBooking_company_name());
+        ArrayList<Double>doublPrice = new ArrayList<>();
+        for (SearchData searchData: listCarResult){
+            if (catBeanList.get(position).getCode()==Integer.parseInt(searchData.getCategory())){
+                doublPrice.add(Double.parseDouble(searchData.getPrice()));
 
-        holder.txtBookingDate.setText(context.getResources().getString(R.string.txtTransactionDate)+" : "
-                + Utility.convertSimpleDate(bookinglist.getBookingHistories().get(position).getBokking_date()));
-        Glide.with(context).load(bookinglist.getBookingHistories().get(position).getBooking_supllier_log()).into(holder.imgLogo);
-        Glide.with(context).load(bookinglist.getBookingHistories().get(position).getBooking_car_image()).into(holder.car_image);
-
-//        btnCancelationCharge.setTag(position);
-        btnBookingCharge.setText("Booking Charges: SAR " +
-                bookinglist.getBookingHistories().get(position).getBooking_total_price());
-        if (type.equalsIgnoreCase("p")){
-            btnCancelationCharge.setVisibility(View.VISIBLE);
-            btnCancelationCharge.setText("Cancellation Charges: SAR "+
-                    bookinglist.getCancledetailBeans().get(position).getResponse().getCancel_detail().
-                            getBooking_cancel_cancel_charge()+
-
-            "\n"+bookinglist.getCancledetailBeans().get(position).getResponse().getCancel_detail().getBooking_cancel_booking_id());
-        } else {
-            btnCancelationCharge.setVisibility(View.GONE);
+            }
         }
-        btnBookingCharge.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setBookingPop(position);
-            }
-        });
-        btnCancelationCharge.setTag(position);
-        btnCancelationCharge.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setCancelationPop(position);
-            }
-        });
+        Log.d("TAG", "onBindViewHolder: ca postition"+position +": "
+                +catBeanList.get(position).getCategory_name()+": "+new Gson().toJson(doublPrice));
+        double minIndex = Collections.min(doublPrice);
+        Log.d("TAG", "onBindViewHolder: mini"+minIndex);
+        String price = listCarResult.get(position).getPrice();
+        double d = minIndex;
+        double priceNew  = d+(d*markUp)/100;
 
-     /*   holder.btnCancelationCharge.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });*/
-        /* if(position>lastPosition)
-        {
-            Animation animation= AnimationUtils.loadAnimation(context,R.anim.up_from_bottom);
-            holder.itemView.startAnimation(animation);
-            lastPosition=position;
-        }*/
-      /*  Animation animation= AnimationUtils.loadAnimation(context,(position>lastPosition)? R.anim.bottom_from_up :R.anim.up_from_bottom);
-        holder.itemView.startAnimation(animation);
-        lastPosition=position;*/
-       /* if (position>lastpositon) {
-            AnimatioonUtils.animate(holder,true);
+        holder.txtCode.setText(/*"code"*/listCarResult.get(position).getCurrency() + " " +
+                " "+String.valueOf(df2.format(priceNew)));
+
+        holder.bindListener(position, listener);
+        if(row_index==position){
+            holder.catLayout.setBackgroundColor(Color.parseColor("#079607"));
         }
         else
         {
-            AnimatioonUtils.animate(holder,false);
+           holder.catLayout.setBackgroundResource(R.drawable.buttoncurve_caategory);
         }
-        lastpositon=position;*/
     }
-
-
-    public void submit(ClickItem item) {
-        this.item = item;
-    }
-    TextView txtCoupon, txtCreditValue, txtWallet,txtPoint,txtFullProt;
-    Button btnCancel;
-    Dialog dialog;
-    @SuppressLint("SetTextI18n")
-    private void setBookingPop(int position){
-        dialog.setContentView(R.layout.price_details_view);
-        txtCoupon = dialog.findViewById(R.id.txtCuoponValue);
-        txtCreditValue = dialog.findViewById(R.id.txtCreditValueAmt);
-        txtWallet = dialog.findViewById(R.id.txtWalletValueAmt);
-        txtPoint = dialog.findViewById(R.id.txtPointValueAmt);
-        txtFullProt = (TextView) dialog.findViewById(R.id.txtFullProtection);
-        btnCancel = dialog.findViewById(R.id.txtCancel);
-        if (bookinglist.getBookingHistories().get(position).getBooking_payfort_value()!=null&&
-                !bookinglist.getBookingHistories().get(position).getBooking_payfort_value().equals("0.00")) {
-            txtCreditValue.setVisibility(View.VISIBLE);
-            txtCreditValue.setText("Payfort : SAR " + bookinglist.getBookingHistories().get(position).getBooking_payfort_value());
-        }
-
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-
-        if (bookinglist.getBookingHistories().get(position).getBooking_coupon_value()!=null&&!bookinglist.getBookingHistories().get(position).getBooking_coupon_value().equals("0.00")) {
-            txtCoupon.setVisibility(View.VISIBLE);
-            txtCoupon.setText("Discount : SAR " + bookinglist.getBookingHistories().get(position).getBooking_coupon_value());
-        }
-        if (bookinglist.getBookingHistories().get(position).getBooking_wallet_value()!=null&&!bookinglist.getBookingHistories().get(position).getBooking_wallet_value().equals("0.00")) {
-            txtWallet.setVisibility(View.VISIBLE);
-            txtWallet.setText("Wallet : SAR " + bookinglist.getBookingHistories().get(position).getBooking_wallet_value());
-        }
-        if (bookinglist.getBookingHistories().get(position).getBooking_pont_value()!=null&&!bookinglist.getBookingHistories().get(position).getBooking_pont_value().equals("0.00")) {
-            txtPoint.setVisibility(View.VISIBLE);
-            txtPoint.setText(context.getResources().getString(R.string.points) + " : SAR " + bookinglist.getBookingHistories().get(position).getBooking_pont_value());
-        }
-        if (bookinglist.getBookingHistories().get(position).getBooking_fullprotection_value() != null
-                && !bookinglist.getBookingHistories().get(position).getBooking_fullprotection_value().equalsIgnoreCase("0.00")) {
-            txtFullProt.setVisibility(View.VISIBLE);
-            txtFullProt.setText(context.getResources().getString(R.string.full_protection) +" : SAR "+ bookinglist.getBookingHistories().get(position).getBooking_fullprotection_value());
-        }
-        dialog.show();
-    }
-
-    @SuppressLint("SetTextI18n")
-    private void setCancelationPop(int position){
-        dialog.setContentView(R.layout.price_details_view);
-        txtCoupon = dialog.findViewById(R.id.txtCuoponValue);
-        txtCreditValue = dialog.findViewById(R.id.txtCreditValueAmt);
-        txtWallet = dialog.findViewById(R.id.txtWalletValueAmt);
-        txtPoint = dialog.findViewById(R.id.txtPointValueAmt);
-        txtFullProt = (TextView) dialog.findViewById(R.id.txtFullProtection);
-        btnCancel = dialog.findViewById(R.id.txtCancel);
-        if (bookinglist.getCancledetailBeans().get(position).getResponse().getCancel_detail().getBooking_cancel_booking_amount()!=null&&
-                !bookinglist.getCancledetailBeans().get(position).getResponse().getCancel_detail().getBooking_cancel_booking_amount().equals("0.00")) {
-            txtCreditValue.setVisibility(View.VISIBLE);
-            txtCreditValue.setText("Booking Amount : SAR " +bookinglist.getCancledetailBeans().get(position).getResponse()
-                    .getCancel_detail().getBooking_cancel_booking_amount());
-        }
-
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-
-        if (bookinglist.getCancledetailBeans().get(position).getResponse().getCancel_detail().getBooking_cancel_cancel_charge()
-                !=null) {
-            txtWallet.setVisibility(View.VISIBLE);
-            txtWallet.setText("Cancellation Charges : SAR " + bookinglist.getCancledetailBeans().get(position).getResponse().getCancel_detail().getBooking_cancel_cancel_charge());
-        }
-        txtPoint.setVisibility(View.VISIBLE);
-        txtPoint.setText("Refundable Amount : SAR " +String.valueOf(bookinglist.getCancledetailBeans().get(position).getResponse().getCancel_detail().getBooking_cancel_cancel_charge()));
-
-        dialog.show();
-    }
-
-
 
     @Override
     public int getItemCount() {
-        return bookinglist.getBookingHistories().size();
+        return catBeanList.size();
     }
-    Button btnBookingCharge, btnCancelationCharge;
-
-    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        TextView refnumb, date_time, rate, txtjourneyToDate, txtStatus, txtPickUp, txtBookingDate,
-                txtDropUp, txtCancel, txtCarName, txtFullProt,txtPaymentBy, txtCreditValue, txtWallet, txtPoint, txtCoupon;
-        ImageView imgLogo, car_image;
-
-        public MyViewHolder(final View itemView) {
-            super(itemView);
-
-            refnumb = (TextView) itemView.findViewById(R.id.txt_bookingInvoicenumber);
-            date_time = (TextView) itemView.findViewById(R.id.txt_date_time);
-            rate = (TextView) itemView.findViewById(R.id.txt_rate);
-            txtStatus = (TextView) itemView.findViewById(R.id.previous_booking_txtStatus);
-            txtPickUp = (TextView) itemView.findViewById(R.id.previous_booking_pickUp);
-            txtDropUp = (TextView) itemView.findViewById(R.id.previous_booking_dropUp);
-            txtPaymentBy = (TextView) itemView.findViewById(R.id.previous_booking_txtCarName);
-            txtFullProt = (TextView) itemView.findViewById(R.id.txtFullProtection);
-            txtCarName = (TextView) itemView.findViewById(R.id.previous_booking_txtPaymentBy);
-            imgLogo = (ImageView) itemView.findViewById(R.id.previous_booking_imgCarLogo);
-            car_image = (ImageView) itemView.findViewById(R.id.my_booking_image);
-            txtCancel = itemView.findViewById(R.id.previous_booking_txtcancel);
-            txtBookingDate = itemView.findViewById(R.id.txt_bookingdate);
-            txtjourneyToDate = itemView.findViewById(R.id.txt_date_totime);
-            txtCoupon = itemView.findViewById(R.id.txtCuoponValue);
-            txtCreditValue = itemView.findViewById(R.id.txtCreditValueAmt);
-            txtWallet = itemView.findViewById(R.id.txtWalletValueAmt);
-            txtPoint = itemView.findViewById(R.id.txtPointValueAmt);
-            btnBookingCharge = itemView.findViewById(R.id.btnBookingCharge);
-            btnCancelationCharge = itemView.findViewById(R.id.btn_cancelCharge);
-          /*  txtCancel.setOnClickListener(new View.OnClickListener() {`
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
-                }
-            });*/
-
-            if (type.equals("p")) {
-                txtCancel.setVisibility(View.GONE);
-            }
-            txtCancel.setOnClickListener(this);/*
-            btnCancelationCharge.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    btnCancelationCharge.findViewWithTag(getAdapterPosition()))
-
-                    cancelDetail(bookinglist.get(position).getBooking_id());
-
-                }
-            });*/
-
-        }
-
-        @Override
-        public void onClick(View v) {
-            if (item != null) {
-                item.click(v, getPosition());
-
-            }
-        }
-    }
-
-
 }

@@ -162,100 +162,100 @@
                 </LinearLayout>
 
 
-               <LinearLayout
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:layout_below="@+id/coupon_layout"
-                   android:orientation="vertical">
-                   <CheckBox
-                       android:visibility="gone"
-                       android:textSize="@dimen/extra_small_size"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-                       android:text="@string/txtUsepoint"
-                       android:layout_marginTop="10dp"
-                       android:onClick="onCheckboxClicked"
-                       android:id="@+id/check_points"
-                       android:gravity="center_vertical"/>
-                   <LinearLayout
-                       android:layout_width="match_parent"
-                       android:layout_height="wrap_content"
-                       android:orientation="horizontal">
-                       <TextView
-                           android:visibility="gone"
-                           android:paddingLeft="5dp"
-                           android:layout_below="@+id/check_points"
-                           android:id="@+id/txtPointValue"
-                           android:textSize="@dimen/extra_small_size"
-                           android:layout_width="wrap_content"
-                           android:layout_height="wrap_content"
-                           android:text="(Available balance is 50)" />
-                       <TextView
-                           android:visibility="gone"
-                           android:paddingLeft="5dp"
-                           android:gravity="right"
-                           android:textAllCaps="true"
-                           android:textColor="@color/colorPrimaryDark"
-                           android:layout_below="@+id/check_points"
-                           android:id="@+id/txtPointValueAmt"
-                           android:textSize="@dimen/extra_small_size"
-                           android:layout_width="match_parent"
-                           android:layout_height="wrap_content"
-                           android:text="(Available balance is 50)" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/coupon_layout"
+                    android:orientation="vertical">
+                    <CheckBox
+                        android:visibility="gone"
+                        android:textSize="@dimen/extra_small_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+                        android:text="@string/txtUsepoint"
+                        android:layout_marginTop="10dp"
+                        android:onClick="onCheckboxClicked"
+                        android:id="@+id/check_points"
+                        android:gravity="center_vertical"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:visibility="gone"
+                            android:paddingLeft="5dp"
+                            android:layout_below="@+id/check_points"
+                            android:id="@+id/txtPointValue"
+                            android:textSize="@dimen/extra_small_size"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="(Available balance is 50)" />
+                        <TextView
+                            android:visibility="gone"
+                            android:paddingLeft="5dp"
+                            android:gravity="right"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:layout_below="@+id/check_points"
+                            android:id="@+id/txtPointValueAmt"
+                            android:textSize="@dimen/extra_small_size"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="(Available balance is 50)" />
 
-                   </LinearLayout>
-                   <CheckBox
-                       android:layout_below="@+id/coupon_layout"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-                       android:text="@string/txtUseWallet"
-                       android:textSize="@dimen/extra_small_size"
-                       android:onClick="onCheckboxClicked"
-                       android:layout_marginTop="10dp"
-                       android:visibility="gone"
-                       android:id="@+id/check_wallet"
-                       android:gravity="center_vertical"/>
-                   <LinearLayout
-                       android:layout_width="match_parent"
-                       android:layout_height="wrap_content"
-                       android:orientation="horizontal">
-                       <TextView
-                           android:paddingLeft="5dp"
-                           android:layout_below="@+id/check_wallet"
-                           android:id="@+id/txtWaletValue"
-                           android:textSize="@dimen/extra_small_size"
-                           android:visibility="gone"
-                           android:layout_width="wrap_content"
-                           android:layout_height="wrap_content"
-                           android:text="(Available balance is 50)" />
-                       <TextView
-                           android:textAllCaps="true"
-                           android:id="@+id/txtWaletValueAmt"
-                           android:textSize="@dimen/extra_small_size"
-                           android:visibility="gone"
-                           android:layout_width="match_parent"
-                           android:gravity="right"
-                           android:textColor="@color/colorPrimaryDark"
-                           android:layout_height="wrap_content"
-                           android:text="(Available balance is 50)" />
+                    </LinearLayout>
+                    <CheckBox
+                        android:layout_below="@+id/coupon_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+                        android:text="@string/txtUseWallet"
+                        android:textSize="@dimen/extra_small_size"
+                        android:onClick="onCheckboxClicked"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:id="@+id/check_wallet"
+                        android:gravity="center_vertical"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:paddingLeft="5dp"
+                            android:layout_below="@+id/check_wallet"
+                            android:id="@+id/txtWaletValue"
+                            android:textSize="@dimen/extra_small_size"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="(Available balance is 50)" />
+                        <TextView
+                            android:textAllCaps="true"
+                            android:id="@+id/txtWaletValueAmt"
+                            android:textSize="@dimen/extra_small_size"
+                            android:visibility="gone"
+                            android:layout_width="match_parent"
+                            android:gravity="right"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:layout_height="wrap_content"
+                            android:text="(Available balance is 50)" />
 
-                   </LinearLayout>
-                   <CheckBox
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-                       android:text="@string/txtPayOnline"
-                       android:onClick="onCheckboxClicked"
-                       android:textSize="@dimen/extra_small_size"
-                       android:layout_marginTop="10dp"
-                       android:visibility="gone"
-                       android:id="@+id/check_pay_online"
-                       android:gravity="center_vertical"/>
+                    </LinearLayout>
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+                        android:text="@string/txtPayOnline"
+                        android:onClick="onCheckboxClicked"
+                        android:textSize="@dimen/extra_small_size"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:id="@+id/check_pay_online"
+                        android:gravity="center_vertical"/>
 
 
-               </LinearLayout>
+                </LinearLayout>
             </RelativeLayout>
 
             <TextView

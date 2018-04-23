@@ -78,7 +78,7 @@ public class ContactUsActivity extends AppBaseActivity {
                         address.setText(res.getSitesetting_address());
                         phone.setText(res.getSitesetting_phone());
                         email.setText(res.getSitesetting_email());
-                      } else {
+                    } else {
                     }
                 } else {
 

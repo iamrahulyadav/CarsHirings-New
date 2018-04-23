@@ -1,13 +1,10 @@
 package com.carshiring.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -19,17 +16,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carshiring.R;
-import com.carshiring.activities.home.MyBookingActivity;
 import com.carshiring.adapters.BookingAdapter;
 import com.carshiring.adapters.MyBookingAdapter;
-import com.carshiring.adapters.TestAdapter;
-import com.carshiring.models.BookingData;
 import com.carshiring.models.BookingHistory;
 import com.carshiring.models.CancledetailBean;
-import com.carshiring.models.TestClass;
 import com.carshiring.models.UserDetails;
 import com.carshiring.utilities.Utility;
 import com.carshiring.webservices.ApiResponse;
@@ -42,7 +34,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -55,15 +46,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.carshiring.activities.home.MyBookingActivity.adapter;
-import static com.carshiring.activities.home.MyBookingActivity.bookingHistoryList1;
+import static com.carshiring.splash.SplashActivity.TAG;
 import static com.google.android.gms.internal.zzahg.runOnUiThread;
 
 /**
  * Created by sony on 01-05-2017.
  */
 
-public class PreviousBookingFragment extends Fragment implements BookingAdapter.ClickItem, SwipeRefreshLayout.OnRefreshListener{
+public class PreviousBookingFragment extends Fragment implements BookingAdapter.ClickItem,
+        SwipeRefreshLayout.OnRefreshListener{
 
     View view;
     Button bt_search;
@@ -111,7 +102,7 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
 
         return view;
     }
-    TestClass testClass = new TestClass();
+
     private void setMyAdapter(List<BookingHistory> bookingHistory){
         bookingAdapter = new MyBookingAdapter(bookingData,cancledetailBean, getContext(),"p");
         if (bookingHistory.size()>0){
@@ -143,6 +134,8 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
 
                 if (response.body()!=null){
                     if (response.body().status){
+                        Log.d(TAG, "onResponse: booking"+gson.toJson(response.body().response.booking));
+
                         @SuppressLint("SimpleDateFormat")
                         String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
                         List<BookingHistory>booking_detail = new ArrayList<>();
@@ -163,23 +156,19 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
                             }
                             if (date1.compareTo(date2) >0 || bookingData1.getBooking_status().equals("3")
                                     || bookingData1.getBooking_status().equals("2")||bookingData1.getBooking_status().equals("0")) {
-                                    bookingData.add(bookingData1);
+                                bookingData.add(bookingData1);
 
-                                    Collections.sort(bookingData, new Comparator<BookingHistory>() {
-                                        @Override
-                                        public int compare(BookingHistory o1, BookingHistory o2) {
-                                            if (o1.getBooking_from_date() == null || o2.getBooking_from_date() == null)
-                                                return 0;
-                                            return o2.getBooking_from_date().compareTo(o1.getBooking_from_date());
-                                        }
-                                    });
+                                Collections.sort(bookingData, new Comparator<BookingHistory>() {
+                                    @Override
+                                    public int compare(BookingHistory o1, BookingHistory o2) {
+                                        if (o1.getBooking_from_date() == null || o2.getBooking_from_date() == null)
+                                            return 0;
+                                        return o2.getBooking_from_date().compareTo(o1.getBooking_from_date());
+                                    }
+                                });
                             }
                         }
 
-                        for (int i=0;i<bookingData.size();i++){
-                            cancelDetail(bookingData.get(i).getBooking_id());
-                        }
-/*
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -192,10 +181,9 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
                                 bookingAdapter.notifyDataSetChanged();
                             }
                         });
-*/
                     }
                     else {
-                      //  Utility.message(getContext(), response.body().message);
+                        //  Utility.message(getContext(), response.body().message);
                     }
                 } else {
                     Utility.message(getContext(), response.body().message);
@@ -290,18 +278,7 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
                         cancledetailBeana = gson.fromJson(msg, CancledetailBean.class);
                     }
                 }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (bookingData.size()>0){
-                            linearLayout.setVisibility(View.GONE);
-                            setMyAdapter(bookingData);
-                        } else {
-                            linearLayout.setVisibility(View.VISIBLE);
-                        }
-                        bookingAdapter.notifyDataSetChanged();
-                    }
-                });
+
             }
         });
     }

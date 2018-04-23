@@ -315,7 +315,7 @@ public class SplashActivity extends AppBaseActivity {
         sharedpref=new TinyDB(getApplicationContext());
         layout = findViewById(R.id.language_layout);
         txtChoose = findViewById(R.id.textView);
-         String language_code = sharedpref.getString("language_code") ;
+        String language_code = sharedpref.getString("language_code") ;
         boolean isSkipLogin = sharedpref.getBoolean("isSkipLogin");
         spinner_language = (Spinner) findViewById(R.id.spinner_language);
         txten = findViewById(R.id.splashtxtEn);

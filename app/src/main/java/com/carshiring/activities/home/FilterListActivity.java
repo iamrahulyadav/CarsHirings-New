@@ -1,7 +1,6 @@
 package com.carshiring.activities.home;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -76,12 +75,14 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
             featuresMultipleListModelsSelected.addAll(featuresMultipleListModels);
         }
 
-        filterValAdapterSupl=new FilterValRecyclerAdapter(this,R.layout.filter_list_val_item_layout,supplierMultipleListModels);
+        filterValAdapterSupl=new FilterValRecyclerAdapter(this, R.layout.filter_list_val_item_layout,
+                supplierMultipleListModels, SelectedSupplier);
         rec_supplier.setAdapter(filterValAdapterSupl);
         rec_supplier.setLayoutManager(new LinearLayoutManager(this));
         rec_supplier.setHasFixedSize(true);
 
-        filterValAdapterpackFeature=new FilterValRecyclerAdapter(this,R.layout.filter_list_val_item_layout,featuresMultipleListModels);
+        filterValAdapterpackFeature=new FilterValRecyclerAdapter(this, R.layout.filter_list_val_item_layout,
+                featuresMultipleListModels,SelectedFeatures);
         recy_carfeatures.setAdapter(filterValAdapterpackFeature);
         recy_carfeatures.setLayoutManager(new LinearLayoutManager(this));
         recy_carfeatures.setHasFixedSize(true);
@@ -163,11 +164,11 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
                 filterValAdapterpackFeature.notifyDataSetChanged();
                 break;
             case R.id.apply_filter:
-                if(SelectedFeatures!=null || SelectedSupplier!=null)
+              /*  if(SelectedFeatures!=null || SelectedSupplier!=null)
                 {
                     SelectedSupplier.clear();
                     SelectedFeatures.clear();
-                }
+                }*/
                 for(FilterDefaultMultipleListModel model:supplierMultipleListModels)
                 {
                     if (model.isChecked())

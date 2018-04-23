@@ -106,7 +106,6 @@ public class QuotesFragment extends Fragment implements QuotesAdapter.QuoteInter
     }
     @Override
     public void QuoteInterfaceMethod(View view, int position) {
-        Toast.makeText(getContext(),""+position,Toast.LENGTH_LONG).show();
         Intent intent=new Intent(getActivity(),CarDetailActivity.class);
         intent.putExtra("day", (String) quotesModelList.get(position).getSavelater_day());
         intent.putExtra("refer_type", (String) quotesModelList.get(position).getSavelater_refer_type());
@@ -115,7 +114,6 @@ public class QuotesFragment extends Fragment implements QuotesAdapter.QuoteInter
         intent.putExtra("type", (String) quotesModelList.get(position).getSavelater_type());
         startActivity(intent);
     }
-
 
     @Override
     public void onResume() {
@@ -169,7 +167,6 @@ public class QuotesFragment extends Fragment implements QuotesAdapter.QuoteInter
 
     @Override
     public void onRefresh() {
-        swipeRefreshLayout.setRefreshing(false);
         savelater();
         setMyAdapter(quotesModelList);
         swipeRefreshLayout.setRefreshing(false);

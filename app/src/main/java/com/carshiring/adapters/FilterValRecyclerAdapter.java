@@ -24,17 +24,19 @@ public class FilterValRecyclerAdapter extends RecyclerView.Adapter<FilterValRecy
     ArrayList<FilterDefaultMultipleListModel> filterModels;
     ArrayList<FilterDefaultMultipleListModel> selected=new ArrayList<>();
     OnClickItem clickItem;
+    ArrayList<String>selecteds;
 
     public interface OnClickItem
     {
-         void itemclick(View v, int i);
+        void itemclick(View v, int i);
     }
 
     public FilterValRecyclerAdapter(Context context, int resource,
-                                    ArrayList<FilterDefaultMultipleListModel> filterModels) {
+                                    ArrayList<FilterDefaultMultipleListModel> filterModels, ArrayList<String>selected) {
         this.context = context;
         this.resource = resource;
         this.filterModels = filterModels;
+        this.selecteds = selected;
     }
 
     @Override
@@ -43,9 +45,20 @@ public class FilterValRecyclerAdapter extends RecyclerView.Adapter<FilterValRecy
         return new ViewHolder(view);
     }
 
+    String c,s;
     @Override
     public void onBindViewHolder(ViewHolder holder, int i) {
         holder.subCategoryName.setText(filterModels.get(i).getName());
+        for (int j=0;j<selecteds.size();j++){
+            c = selecteds.get(j);
+            for (int k=0;k<filterModels.size();k++){
+                s = filterModels.get(k).getName();
+                if (c.equalsIgnoreCase(s)){
+                    holder.cbSelected.setChecked(true);
+
+                }
+            }
+        }
         holder.cbSelected.setChecked(filterModels.get(i).isChecked());
 
     }

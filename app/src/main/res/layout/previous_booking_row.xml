@@ -27,12 +27,12 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="10dp">
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="50dp"
-                android:id="@+id/my_booking_image"
-                android:src="@drawable/ic_my_bookings"
-                android:scaleType="fitXY"/>
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/my_booking_image"
+                    android:src="@drawable/ic_my_bookings"
+                    android:scaleType="fitXY"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="0dp"
@@ -127,7 +127,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="20/5/2017 at 10:00PM"
-                android:textSize="@dimen/small_size"
+                android:textSize="@dimen/extra_small_size"
                 android:textStyle="bold"
                 android:textColor="@color/white"
                 android:layout_weight="1"
@@ -137,7 +137,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="20/5/2017 at 10:00PM"
-                android:textSize="@dimen/small_size"
+                android:textSize="@dimen/extra_small_size"
                 android:gravity="right"
                 android:textStyle="bold"
                 android:textColor="@color/white"
@@ -154,17 +154,36 @@
             android:layout_height="wrap_content"
             android:background="@color/redStrong"
             android:orientation="vertical">
-            <Button
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:background="@color/white"
-                android:paddingLeft="10dp"
-                android:textSize="@dimen/extra_small_size"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:gravity="center_vertical|center_horizontal"
-                android:text="Booking Charges : SAR 600.60"
-                android:id="@+id/btnBookingCharge"/>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:background="@android:color/transparent"
+                    android:paddingLeft="5dp"
+                    android:textSize="@dimen/extra_small_size"
+                    android:layout_marginRight="5dp"
+                    android:paddingRight="5dp"
+                    android:textColor="@color/white"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="Booking Charges : SAR 600.60"
+                    android:id="@+id/btnBookingCharge"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="35dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="13dp"
+                    android:gravity="right"
+                    android:id="@+id/previous_booking_txtStatus"
+                    android:textColor="@color/white"
+                    android:background="@color/redStrong"
+                    android:text="Success" />
+
+
+            </LinearLayout>
             <Button
                 android:background="@color/white"
                 android:paddingLeft="10dp"
@@ -264,8 +283,12 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginRight="5dp"
+            android:background="@color/redStrong"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
             android:layout_marginLeft="5dp">
             <TextView
+                android:layout_marginLeft="5dp"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="45dp"
@@ -276,16 +299,18 @@
                 android:background="@color/colorYellow"
                 android:text="Cancel your Booking" />
             <TextView
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="35dp"
+                android:layout_height="45dp"
                 android:paddingRight="10dp"
                 android:paddingTop="13dp"
                 android:gravity="right"
-                android:id="@+id/previous_booking_txtStatus"
                 android:textColor="@color/white"
-                android:background="@color/redStrong"
-                android:text="Success" />
+                android:background="@color/colorYellow"
+                android:id="@+id/previous_booking_txtPricedetails"
+                android:text="Show price details" />
 
         </LinearLayout>
         <LinearLayout

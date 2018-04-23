@@ -77,7 +77,7 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_my_booking_current,container,false);
-         dialog=new Dialog(getContext());
+        dialog=new Dialog(getContext());
         tinyDB = new TinyDB(getContext());
         currentBookingData = new ArrayList<>();
         String  login = tinyDB.getString("login_data");
@@ -96,8 +96,9 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
         btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               getActivity().onBackPressed();
-            }
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.subview_container,
+                        new SearchCarFragment())
+                        .commit();            }
         });
 
         recyclerView= (RecyclerView) view.findViewById(R.id.rec_prev_booki_list);
@@ -215,7 +216,6 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
                         List<BookingHistory>booking_detail =new ArrayList<>();
                         booking_detail = response.body().response.booking;
 
-
                         for (BookingHistory bookingData1 : booking_detail){
                             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             Date date1 = null;
@@ -255,7 +255,7 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
                         bookingAdapter.notifyDataSetChanged();
                     }
                     else {
-                       // Utility.message(getContext(), response.body().message);
+                        // Utility.message(getContext(), response.body().message);
                     }
                 } else {
                     Utility.message(getContext(), response.body().message);
@@ -301,7 +301,6 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
                 dialog.dismiss();
                 Log.d(TAG, "onFailure: "+t.getMessage());
                 Toast.makeText(getContext(), ""+getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "onFailure: "+t.getMessage());
             }
         });
 

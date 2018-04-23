@@ -1,6 +1,5 @@
 package com.carshiring.models;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -138,6 +137,247 @@ public class CarDetailBean {
         public void setDoor(String door) {
             this.door = door;
         }
+    }
+
+
+    public FeatureBean getFeature() {
+        return feature;
+    }
+
+    public void setFeature(FeatureBean feature) {
+        this.feature = feature;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public String getModel_code() {
+        return model_code;
+    }
+
+    public void setModel_code(String model_code) {
+        this.model_code = model_code;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public String getTime_unit() {
+        return time_unit;
+    }
+
+    public void setTime_unit(String time_unit) {
+        this.time_unit = time_unit;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getDriver_min_age() {
+        return driver_min_age;
+    }
+
+    public void setDriver_min_age(String driver_min_age) {
+        this.driver_min_age = driver_min_age;
+    }
+
+    public String getDriver_max_age() {
+        return driver_max_age;
+    }
+
+    public void setDriver_max_age(String driver_max_age) {
+        this.driver_max_age = driver_max_age;
+    }
+
+    public String getOpening_hours_start() {
+        return opening_hours_start;
+    }
+
+    public void setOpening_hours_start(String opening_hours_start) {
+        this.opening_hours_start = opening_hours_start;
+    }
+
+    public String getOpening_hours_end() {
+        return opening_hours_end;
+    }
+
+    public void setOpening_hours_end(String opening_hours_end) {
+        this.opening_hours_end = opening_hours_end;
+    }
+
+    public String getDeposit_currency() {
+        return deposit_currency;
+    }
+
+    public void setDeposit_currency(String deposit_currency) {
+        this.deposit_currency = deposit_currency;
+    }
+
+    public String getDeposit_price() {
+        return deposit_price;
+    }
+
+    public void setDeposit_price(String deposit_price) {
+        this.deposit_price = deposit_price;
+    }
+
+    public String getDeposit_desc() {
+        return deposit_desc;
+    }
+
+    public void setDeposit_desc(String deposit_desc) {
+        this.deposit_desc = deposit_desc;
+    }
+
+    public String getDeposit_name() {
+        return deposit_name;
+    }
+
+    public void setDeposit_name(String deposit_name) {
+        this.deposit_name = deposit_name;
+    }
+
+    public String getFullprotection_currency() {
+        return fullprotection_currency;
+    }
+
+    public void setFullprotection_currency(String fullprotection_currency) {
+        this.fullprotection_currency = fullprotection_currency;
+    }
+
+    public String getFullprotection_amount() {
+        return fullprotection_amount;
+    }
+
+    public void setFullprotection_amount(String fullprotection_amount) {
+        this.fullprotection_amount = fullprotection_amount;
+    }
+
+    public String getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(String supplier) {
+        this.supplier = supplier;
+    }
+
+    public String getSupplier_city() {
+        return supplier_city;
+    }
+
+    public void setSupplier_city(String supplier_city) {
+        this.supplier_city = supplier_city;
+    }
+
+    public String getSupplier_logo() {
+        return supplier_logo;
+    }
+
+    public void setSupplier_logo(String supplier_logo) {
+        this.supplier_logo = supplier_logo;
+    }
+
+    public Object getDrop_city() {
+        return drop_city;
+    }
+
+    public void setDrop_city(Object drop_city) {
+        this.drop_city = drop_city;
+    }
+
+    public String getTc() {
+        return tc;
+    }
+
+    public void setTc(String tc) {
+        this.tc = tc;
+    }
+
+    public CancledetailBean getCancledetail() {
+        return cancledetail;
+    }
+
+    public void setCancledetail(CancledetailBean cancledetail) {
+        this.cancledetail = cancledetail;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public List<String> getCollision_damage_waiver() {
+        return collision_damage_waiver;
+    }
+
+    public void setCollision_damage_waiver(List<String> collision_damage_waiver) {
+        this.collision_damage_waiver = collision_damage_waiver;
+    }
+
+    public List<String> getTheft_protection() {
+        return theft_protection;
+    }
+
+    public void setTheft_protection(List<String> theft_protection) {
+        this.theft_protection = theft_protection;
+    }
+
+    public List<ExtraBean> getExtra() {
+        return extra;
+    }
+
+    public void setExtra(List<ExtraBean> extra) {
+        this.extra = extra;
+    }
+
+    public List<CoveragesBean> getCoverages() {
+        return coverages;
+    }
+
+    public void setCoverages(List<CoveragesBean> coverages) {
+        this.coverages = coverages;
     }
 }
 

@@ -78,7 +78,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
             str_city, str_address, str_image;
 
     UserDetails userDetails = new UserDetails();
-//    UserImage userImage = new UserImage();
+    //    UserImage userImage = new UserImage();
     Gson gson = new Gson();
     AppGlobal appGlobal = AppGlobal.getInstancess();
     private static final int SELECT_PICTURE = 100;
@@ -182,7 +182,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
                         UserDetails userDetails = new UserDetails();
                         userDetails = response.body().response.user_detail;
                         String logindata=gson.toJson(userDetails);
-                        Log.d("TAG", "onResponse: "+logindata);
+                        Log.d("TAG", "onResponse: "+response.body().response.user_detail);
                         appGlobal.setLoginData(logindata);
                         String st =  appGlobal.getUser_id();
                         edt_email.setText(userDetails.getUser_email());
@@ -195,7 +195,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
                         }
                         str_licence_origin = (String)userDetails.getUser_country();
                         edt_zipcode.setText(userDetails.getUser_zipcode());
-                       // edt_licence_origin.setText(userDetails.getUser_license_no());
+                        // edt_licence_origin.setText(userDetails.getUser_license_no());
                         edt_city.setText((String)userDetails.getUser_city());
                         edt_address.setText(userDetails.getUser_address());
                         if (userDetails.getUser_lname()!=null){
@@ -204,6 +204,13 @@ public class AccountDetailsActivity extends AppBaseActivity {
                         if (userDetails.getUser_image()!=null&&userDetails.getUser_image().length()>1){
                             String url = RetrofitApiBuilder.IMG_BASE_URL+userDetails.getUser_image();
                             GetImage task = new GetImage();
+                            // Execute the task
+                            task.execute(new String[] { url });
+                        }
+
+                        if (userDetails.getUser_cover()!=null&&userDetails.getUser_cover().length()>0){
+                            String url = RetrofitApiBuilder.IMG_BASE_URL+userDetails.getUser_cover();
+                            GetImageWall task = new GetImageWall();
                             // Execute the task
                             task.execute(new String[] { url });
                         }
@@ -227,6 +234,72 @@ public class AccountDetailsActivity extends AppBaseActivity {
     }
 
     String img;
+
+    public class GetImageWall extends AsyncTask<String, Void, Bitmap> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Utility.showLoading(AccountDetailsActivity.this,getResources().getString(R.string.loading));
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... urls) {
+            Bitmap map = null;
+            for (String url : urls) {
+                map = downloadImage(url);
+            }
+            return map;
+        }
+
+        // Sets the Bitmap returned by doInBackground
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            Utility.hidepopup();
+            imgUserWall.setImageBitmap(result);
+            encodedImage = Utility.BitMapToString(result);
+        }
+
+        // Creates Bitmap from InputStream and returns it
+        private Bitmap downloadImage(String url) {
+            Bitmap bitmap = null;
+            InputStream stream = null;
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            bmOptions.inSampleSize = 1;
+
+            try {
+                stream = getHttpConnection(url);
+                bitmap = BitmapFactory.
+                        decodeStream(stream, null, bmOptions);
+                stream.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            return bitmap;
+        }
+
+        // Makes HttpURLConnection and returns InputStream
+        private InputStream getHttpConnection(String urlString)
+                throws IOException {
+            InputStream stream = null;
+            URL url = new URL(urlString);
+            URLConnection connection = url.openConnection();
+
+            try {
+                HttpURLConnection httpConnection = (HttpURLConnection) connection;
+                httpConnection.setRequestMethod("GET");
+                httpConnection.connect();
+
+                if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    stream = httpConnection.getInputStream();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return stream;
+        }
+    }
+
+
     public class GetImage extends AsyncTask<String, Void, Bitmap> {
         @Override
         protected void onPreExecute() {
@@ -302,7 +375,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
         str_phone = edt_phone.getText().toString().trim();
         str_zipcode = edt_zipcode.getText().toString().trim();
         str_licence_no = edt_licence_no.getText().toString().trim();
-      //  str_licence_origin = edt_licence_origin.getText().toString().trim();
+        //  str_licence_origin = edt_licence_origin.getText().toString().trim();
         str_city = edt_city.getText().toString().trim();
         str_address = edt_address.getText().toString().trim();
         str_dob = edt_dob.getText().toString().trim();
@@ -359,7 +432,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
         Utility.showloadingPopup(this);
         RetroFitApis retroFitApis= RetrofitApiBuilder.getCargHiresapis();
         Call<ApiResponse> responseCall=retroFitApis.updateprofile(userid, str_fname, str_lname, str_email, str_phone,
-                                str_zipcode, str_licence_no, str_licence_origin, str_dob, str_city, str_address);
+                str_zipcode, str_licence_no, str_licence_origin, str_dob, str_city, str_address);
         responseCall.enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
@@ -474,16 +547,17 @@ public class AccountDetailsActivity extends AppBaseActivity {
                         e.printStackTrace();
                     }
                     final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                    String encodedImage = encodeImage(selectedImage);
+                    encodedImage = encodeImage(selectedImage);
                     Log.d("Image123", encodedImage);
-                    update_user_wall(encodedImage);
                     imgUserWall.setImageURI(selectedImageUri);
-                }
+                    update_user_wall(encodedImage);
 
+                }
             }
         }
     }
 
+    String encodedImage;
     private String encodeImage(Bitmap bm) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bm.compress(Bitmap.CompressFormat.JPEG,100,baos);
@@ -507,21 +581,23 @@ public class AccountDetailsActivity extends AppBaseActivity {
         responseCall.enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                Log.d("TAG", "onResponse: data" + gson.toJson(response.body()));
+
                 if(response.body().status==true)
                 {
-                    Log.d("TAG", "onResponse: " + response.body().message);
                     Utility.hidepopup();
-                    Toast.makeText(getApplicationContext(), response.body().message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), response.body().msg, Toast.LENGTH_SHORT).show();
                     getProfile();
                 }
                 else{
-                    Utility.message(getApplicationContext(), response.body().message);
+                    Utility.message(getApplicationContext(), response.body().msg);
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
                 Utility.hidepopup();
+                Log.d("TAG", "onFailure: "+t.getMessage());
                 Utility.message(getApplicationContext(),getResources().getString(R.string.no_internet_connection));
             }
         });
@@ -636,67 +712,67 @@ public class AccountDetailsActivity extends AppBaseActivity {
     }
 
     private Toolbar toolbar ;
-/*
-    private void setUptoolbar() {
+    /*
+        private void setUptoolbar() {
 
-        toolbar= (Toolbar) findViewById(R.id.bottomToolBar);
-        TextView textView= (TextView) toolbar.findViewById(R.id.txt_bot);
-        textView.setText("Save & Exit");
+            toolbar= (Toolbar) findViewById(R.id.bottomToolBar);
+            TextView textView= (TextView) toolbar.findViewById(R.id.txt_bot);
+            textView.setText("Save & Exit");
 
-        toolbar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                title= (String) spTitle.getSelectedItem();
-                fname = etUserFirstName.getText().toString().trim();
-                lname = etUserLastName.getText().toString().trim();
-                phone = etUserPhoneNo.getText().toString().trim();
-                ages = etUserAge.getText().toString().trim();
-                age = (!ages.equals("") || !ages.isEmpty()) ? Integer.parseInt(ages) : 0;
-                RetroFitApis fitApis= RetrofitApiBuilder.getRetrofitGlobal();
-                if(age>10 && age<=99)
-                {
-                    if(isValidMobile(phone))
+            toolbar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    title= (String) spTitle.getSelectedItem();
+                    fname = etUserFirstName.getText().toString().trim();
+                    lname = etUserLastName.getText().toString().trim();
+                    phone = etUserPhoneNo.getText().toString().trim();
+                    ages = etUserAge.getText().toString().trim();
+                    age = (!ages.equals("") || !ages.isEmpty()) ? Integer.parseInt(ages) : 0;
+                    RetroFitApis fitApis= RetrofitApiBuilder.getRetrofitGlobal();
+                    if(age>10 && age<=99)
                     {
-                        Call<ApiResponse> call = fitApis.update_profile(token, title, fname, lname, phone, age, userId);
-                        call.enqueue(new Callback<ApiResponse>() {
-                            @Override
-                            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                                if (response.body() != null) {
-                                    if (response.body().status == true) {
-                                        Utility.message(AccountDetailsActivity.this, response.body().msg);
-                                        sharedpref.putString("usertitle",title);
-                                        sharedpref.putString("user_name", fname);
-                                        sharedpref.putString("user_lname", lname);
-                                        sharedpref.putString("user_phone", phone);
-                                        sharedpref.putInt("userage", age);
-                                        finish();
+                        if(isValidMobile(phone))
+                        {
+                            Call<ApiResponse> call = fitApis.update_profile(token, title, fname, lname, phone, age, userId);
+                            call.enqueue(new Callback<ApiResponse>() {
+                                @Override
+                                public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                                    if (response.body() != null) {
+                                        if (response.body().status == true) {
+                                            Utility.message(AccountDetailsActivity.this, response.body().msg);
+                                            sharedpref.putString("usertitle",title);
+                                            sharedpref.putString("user_name", fname);
+                                            sharedpref.putString("user_lname", lname);
+                                            sharedpref.putString("user_phone", phone);
+                                            sharedpref.putInt("userage", age);
+                                            finish();
+                                        } else {
+                                            Utility.message(AccountDetailsActivity.this, response.body().msg);
+                                        }
                                     } else {
-                                        Utility.message(AccountDetailsActivity.this, response.body().msg);
+                                        Utility.message(AccountDetailsActivity.this, "Getting Some Error");
                                     }
-                                } else {
-                                    Utility.message(AccountDetailsActivity.this, "Getting Some Error");
                                 }
-                            }
-                            @Override
-                            public void onFailure(Call<ApiResponse> call, Throwable t) {
-                                Utility.message(AccountDetailsActivity.this, "Connection Error");
-                            }
-                        });
+                                @Override
+                                public void onFailure(Call<ApiResponse> call, Throwable t) {
+                                    Utility.message(AccountDetailsActivity.this, "Connection Error");
+                                }
+                            });
+                        }
+                        else
+                        {
+                            Utility.message(AccountDetailsActivity.this, "Enter valid Phone Number");
+                        }
                     }
                     else
                     {
-                        Utility.message(AccountDetailsActivity.this, "Enter valid Phone Number");
+                        Utility.message(AccountDetailsActivity.this, "Enter Valid Age");
                     }
                 }
-                else
-                {
-                    Utility.message(AccountDetailsActivity.this, "Enter Valid Age");
-                }
-            }
-        });
+            });
 
-    }
-*/
+        }
+    */
     private boolean isValidMobile(String phone) {
         return android.util.Patterns.PHONE.matcher(phone).matches();
     }

@@ -54,7 +54,7 @@ public class CarDetailTab2Fragment extends Fragment implements View.OnClickListe
             case R.id.txt_terms:
                 Intent intent=new Intent(Intent.ACTION_VIEW,url);
                 startActivity(intent);
-               // startActivity(new Intent(getContext(), TermsandCondition.class));;
+                // startActivity(new Intent(getContext(), TermsandCondition.class));;
                 break;
             case R.id.txt_savequote:
                 Intent it=new Intent(getActivity(), ExcessProtectionActivity.class);

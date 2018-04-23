@@ -1,7 +1,6 @@
 package com.carshiring.adapters;
 
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -14,28 +13,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.carshiring.R;
 import com.carshiring.fragments.SearchCarFragment;
+import com.carshiring.models.Category;
 import com.carshiring.models.SearchData;
-import com.carshiring.utilities.AppBaseActivity;
-import com.carshiring.utilities.Utility;
-import com.carshiring.webservices.ApiResponse;
-import com.carshiring.webservices.RetroFitApis;
-import com.carshiring.webservices.RetrofitApiBuilder;
-import com.google.gson.Gson;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static com.carshiring.splash.SplashActivity.TAG;
 
@@ -49,6 +38,7 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
     final OnItemClickListener listener;
     private final Context context;
     List<SearchData> list;
+    List<Category.ResponseBean.CatBean>catBeanList;
     ProgressBar bar1;
     double pointpercent,calPrice, markUp;
     public static int calPoint;
@@ -57,9 +47,11 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
         void onItemClick(SearchData carDetail);
     }
 
-    public CarResultsListAdapter(Context context , List<SearchData> list, OnItemClickListener listener){
+    public CarResultsListAdapter(Context context , List<SearchData> list,List<Category.ResponseBean.CatBean>catBeanList,
+                                 OnItemClickListener listener){
         this.context = context ;
         this.list =  list ;
+        this.catBeanList = catBeanList;
         this.listener =  listener ;
     }
 
@@ -92,10 +84,32 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
                 +" "+model.getTime_unit());
         holder.txtDoor.setText(model.getFeature().getDoor()+" "+ context.getResources().getString(R.string.doors));
         if (model.getFeature().getAircondition().equals("true")){
-            holder.txtClass.setVisibility(View.VISIBLE);
+            holder.txtAc.setVisibility(View.VISIBLE);
         }
+        for (Category.ResponseBean.CatBean catBean: catBeanList){
+            if (catBean.getCode()==Integer.parseInt(model.getCategory())){
+                holder.txtClass.setText("Class : "+catBean.getCategory_name());
+            }
+        }
+
         holder.txtTrans.setText(model.getFeature().getTransmission());
         holder.txtFuel.setText("Full to fuel");
+        List<SearchData.CoveragesBean>coveragesBeans=new ArrayList<>();
+        coveragesBeans.addAll(model.getCoverages());
+
+        for (SearchData.CoveragesBean bean : list.get(position).getCoverages()){
+            if (bean.getCode().equalsIgnoreCase("412")){
+                holder.txtOneway.setText(bean.getName() +" : "+ bean.getCurrency2()+" "
+                        +bean.getAmount2());
+                holder.txtOneway.setVisibility(View.VISIBLE);
+            } else if ( bean.getCode().equalsIgnoreCase("410")){
+                holder.txtDriverSur.setText(bean.getName()+" : "+bean.getCurrency2()+" "
+                        + bean.getAmount2());
+                holder.txtDriverSur.setVisibility(View.VISIBLE);
+            }
+        }
+
+
         holder.txtTerms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,8 +119,6 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
                 context.startActivity(i);
             }
         });
-        Log.d(TAG, "onBindViewHolder: "+model.getSupplier_logo());
-
 
         String urla =model.getSupplier_logo();
         Glide.with(context)
@@ -123,14 +135,11 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
                         .load(urla)
                         .into(holder.imgCarAgencyLogo);
             }
-
-            System.out.println("Response Code : " + httpConn.getResponseCode());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         String m = model.getImage();
-        Log.d(TAG, "onBindViewHolder: "+m);
         Glide.with(context)
                 .load(model.getImage())
                 .into(holder.imgCarResult);
@@ -155,8 +164,8 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView tvCarModelName,tvCarPricing,txtClass,txtSupplierNmae, tvBagNo,
-                txtDropCity,txtDoor,txtTrans, txtTerms,txtFuel,txtPoint, txtSeat;
+        TextView tvCarModelName,tvCarPricing, txtAc,txtClass,txtSupplierNmae, tvBagNo,
+                txtDropCity,txtDoor,txtTrans, txtTerms,txtDriverSur,txtOneway,txtFuel,txtPoint, txtSeat;
         LinearLayout spec1Container ;
         private View itemView  ;
         ImageView imgCarResult,imgCarAgencyLogo ;
@@ -168,16 +177,19 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
             tvCarPricing= (TextView) itemView.findViewById(R.id.tvCarPricing);
 
             tvBagNo = itemView.findViewById(R.id.tvBagSp);
+            txtClass = itemView.findViewById(R.id.txtclass);
             txtSupplierNmae = itemView.findViewById(R.id.txtSupplierName);
             txtDoor = itemView.findViewById(R.id.tvDoor);
             txtDropCity = itemView.findViewById(R.id.dropCity);
             bar1.setVisibility(View.VISIBLE);
-            txtClass = itemView.findViewById(R.id.txtac);
+            txtAc = itemView.findViewById(R.id.txtac);
             txtTrans = itemView.findViewById(R.id.txttrans);
             txtTerms = itemView.findViewById(R.id.txtTermsCond);
             txtFuel = itemView.findViewById(R.id.txtFuel);
             txtPoint = itemView.findViewById(R.id.txtpoint);
             txtSeat = itemView.findViewById(R.id.tvSeat);
+            txtDriverSur = itemView.findViewById(R.id.txtDriverSurCharge);
+            txtOneway = itemView.findViewById(R.id.txtOneway);
 
             spec1Container= (LinearLayout) itemView.findViewById(R.id.spec1Container) ;
             imgCarResult= (ImageView) itemView.findViewById(R.id.imgCarResult) ;

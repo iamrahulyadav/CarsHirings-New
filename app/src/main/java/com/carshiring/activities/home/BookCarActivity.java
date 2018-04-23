@@ -26,6 +26,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.carshiring.R;
+import com.carshiring.fragments.SearchCarFragment;
 import com.carshiring.models.ExtraAdded;
 import com.carshiring.models.UserDetails;
 import com.carshiring.utilities.AppBaseActivity;
@@ -56,6 +57,7 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
     public static List<ExtraAdded> extraData = new ArrayList<>();
     EditText edtflight;
     public static String flight_no,fullProtection ,protection_val;
+    TextView tvFromDate,tvPickDate,txtOneway,txtDriverSur,tvTodate,txtPlaceDrop;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -74,12 +76,16 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
         userDetails = gson.fromJson(logindata,UserDetails.class);
         name = userDetails.getUser_name();
 
-       /* if (tinyDB.contains("extra_added")){
-            String extra = tinyDB.getString("extra_added");
-            extraData= Arrays.asList(gson.fromJson(extra,ExtraAdded[].class));
-            Log.d("TAG", "onCreate: "+extraData.size());
-        }*/
+        tvFromDate= (TextView) findViewById(R.id.tvFromDT);
+        tvPickDate= (TextView) findViewById(R.id.txtPlaceName);
+        tvTodate= (TextView) findViewById(R.id.tvToDT);
+        txtPlaceDrop = findViewById(R.id.txtPlaceName_drop);
+        txtOneway = findViewById(R.id.oneway);
 
+        tvFromDate.setText(SearchCarFragment.pick_date+"\n"+ SearchCarFragment.pickTime);
+        tvPickDate.setText(SearchCarFragment.pickName);
+        tvTodate.setText(SearchCarFragment.drop_date+"\n"+SearchCarFragment.dropTime);
+        txtPlaceDrop.setText(SearchCarFragment.dropName);
         extraData = Extras.extraData;
         terms= (TextView)findViewById(R.id.txt_terms);
         txtPoint = findViewById(R.id.txtpoint_cal);
@@ -96,6 +102,7 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
         txtFull = findViewById(R.id.txt_full_prote);
         txtFullValue = findViewById(R.id.txt_full_prote_value);
         txtSaveLater = findViewById(R.id.activity_booking_txtSaveLater);
+        txtDriverSur = findViewById(R.id.driverSurCharge);
 
         if (tinyDB.contains("full_prot")){
             String full = String.valueOf(CarDetailActivity.fullAmtValue);
@@ -108,6 +115,21 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
         } else {
             fullProtection = "no";
         }
+
+        if (CarDetailActivity.driverSur!=null){
+            txtDriverSur.setText(CarDetailActivity.driverSur);
+            txtDriverSur.setVisibility(View.VISIBLE);
+        } else {
+            txtDriverSur.setVisibility(View.GONE);
+        }
+        if (CarDetailActivity.oneway!=null){
+            txtOneway.setText(CarDetailActivity.oneway);
+            txtOneway.setVisibility(View.VISIBLE);
+        } else {
+            txtOneway.setVisibility(View.GONE);
+        }
+
+
         if (carImage!=null){
             new AsyncCaller().execute();
         }
@@ -136,13 +158,13 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
 
         if (extraData.size()>0){
             txtAddExtra.setVisibility(View.VISIBLE);
-           for (int i=0;i<extraData.size();i++){
-               price = extraData.get(i).getPrice();
-               number = extraData.get(i).getQty();
-               name = extraData.get(i).getName();
-               currency = extraData.get(i).getCurrency();
-               addLayout(name,price,number,currency,extraData.get(i).getId());
-           }
+            for (int i=0;i<extraData.size();i++){
+                price = extraData.get(i).getPrice();
+                number = extraData.get(i).getQty();
+                name = extraData.get(i).getName();
+                currency = extraData.get(i).getCurrency();
+                addLayout(name,price,number,currency,extraData.get(i).getId());
+            }
         }
         txtSaveLater.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,7 +210,7 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
                 httpConn.setRequestMethod("HEAD");
                 httpConn.connect();
 
-              s = httpConn.getResponseCode();
+                s = httpConn.getResponseCode();
 
 
 
@@ -212,7 +234,7 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
             pdLoading.dismiss();
             if (result==404){
 
-              //  String sv="https://www.raceentry.com/img/Race-Registration-Image-Not-Found.png";
+                //  String sv="https://www.raceentry.com/img/Race-Registration-Image-Not-Found.png";
                 Glide.with(getApplication()).load("").listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

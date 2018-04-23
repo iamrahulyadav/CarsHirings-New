@@ -33,7 +33,7 @@ public class ExcessProtectionActivity extends AppCompatActivity implements View.
     HashMap<String,List<String>> body;
     MyExListAdapter listAdapter;
     TextView text1,text2,text3,toolbartext,txt_fullprotection;
-    LinearLayout layout1,layout2,layout3,layoutbuttons;
+    LinearLayout layout1,layout2,layoutbuttons;
     TextView extrapro;
     Toolbar toolbar;
     Button bt_standPro,bt_fullPro;
@@ -54,9 +54,13 @@ public class ExcessProtectionActivity extends AppCompatActivity implements View.
         bt_standPro= (Button)findViewById(R.id.bt_standardPro);
         bt_fullPro=(Button) findViewById(R.id.bt_fullpro);
         txt_fullprotection=findViewById(R.id.txt_fullprotection);
-
-        txt_fullprotection.setText(getResources().getString(R.string.full_protection_only) +" "+ "SAR " +
-                " " + String.valueOf(fullAmtValue) + getResources().getString(R.string.for_day));
+        if (fullprotectionammount!=null&&!fullprotectionammount.equalsIgnoreCase("null")){
+            txt_fullprotection.setText(getResources().getString(R.string.full_protection_only) +" "+ "SAR " +
+                    " " + String.valueOf(fullAmtValue) + getResources().getString(R.string.for_day));
+        } else {
+            txt_fullprotection.setVisibility(View.GONE);
+            toolbartext.setVisibility(View.GONE);
+        }
 
         bt_fullPro.setOnClickListener(this);
         bt_standPro.setOnClickListener(this);
@@ -86,7 +90,7 @@ public class ExcessProtectionActivity extends AppCompatActivity implements View.
             }
             else if(val.equalsIgnoreCase("Forquotes"))
             {
-               toolbar.setVisibility(View.GONE);
+                toolbar.setVisibility(View.GONE);
                 bt_standPro.setText(getResources().getString(R.string.get_a_quote_1));
                 bt_fullPro.setText(getResources().getString(R.string.get_a_quote_2));
                 FromQuotes="Yes";
@@ -167,8 +171,8 @@ public class ExcessProtectionActivity extends AppCompatActivity implements View.
         {
             case android.R.id.home:
                 onBackPressed();
-                default:
-                    return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

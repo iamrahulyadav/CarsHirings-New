@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
@@ -81,13 +82,13 @@ public class CarDetailActivity extends AppCompatActivity {
     TinyDB tinyDB ;
     double markUp;
     public static double point;
-    public static String logo,carPrice,carImage,modelname,currency,suppliername,suppliercity,termsurl
+    public static String logo,oneway,driverSur,carPrice,carImage,modelname,currency,suppliername,suppliercity,termsurl
             ,fullprotectioncurrency,fullprotectionammount,fullProcted,time, driver_minage,driver_maxage,CDW,THP,carid;
     Gson gson = new Gson();
     public static double fullProAmt, fullAmtValue;
-    public static ArrayList<ExtraBean> extralist=new ArrayList<>();
+    public static ArrayList<ExtraBean>extralist;
     public static List<CarDetailBean.FeatureBean> carSpecificationList=new ArrayList<>();
-    public static List<CoveragesBean> coveragelist=new ArrayList<>();
+    public static List<CoveragesBean>coveragelist;
     public static List<String> theft_protection=new ArrayList<>();
     private String urla="https://static.carhire-solutions.com/images/car/Alamo/large/t_MCAR_AE.jpg";
 
@@ -108,32 +109,46 @@ public class CarDetailActivity extends AppCompatActivity {
         refer_type = getIntent().getStringExtra("refer_type");
         day = getIntent().getStringExtra("day");
         id_context = getIntent().getStringExtra("id_context");
-        String s = getIntent().getStringExtra("point_earn");
-        point = Double.parseDouble(s);
+        if (getIntent().hasExtra("point_earn")){
+            String s = (String)getIntent().getStringExtra("point_earn");
+            if (s!=null){
+                point = Double.parseDouble(s);
+            }
+        }
+
+        if (getIntent().hasExtra("one_way_fee")){
+            oneway = getIntent().getStringExtra("one_way_fee");
+        }
+        if (getIntent().hasExtra("driverSur")){
+            driverSur = getIntent().getStringExtra("driverSur");
+        }
 
 //        call api
 
-        setupApi();
-//        getCarDetail();
+//        setupApi();
+        getCarDetail();
     }
 
     public final okhttp3.MediaType MEDIA_TYPE = okhttp3.MediaType.parse("application/json");
 
-
+    JSONArray collision_damage_waiver;
     private void getCarDetail(){
        /* final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setMessage("Booking in processing...");
         progressDialog.show();*/
 
-
+        Utility.showloadingPopup(this);
+        extralist=new ArrayList<>();
+        coveragelist=new ArrayList<>();
         String url = "https://carsgates.com/webservices/webservice/car_detail";
-
+        final CarDetailBean carDetailBean = new CarDetailBean();
         StringRequest  stringRequest = new StringRequest(Request.Method.POST, url, new com.android.volley.Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 String s =response;
                 Log.d("TAG", "onResponse: details"+response);
+                Utility.hidepopup();
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     boolean status = jsonObject.getBoolean("status");
@@ -148,27 +163,158 @@ public class CarDetailActivity extends AppCompatActivity {
                         String passenger = featureObject.getString("passenger");
                         String door = featureObject.getString("door");
                         String category = car_detailObject.getString("category");
-                        String model= car_detailObject.getString("model");
+                        modelname = car_detailObject.getString("model");
                         String model_code = car_detailObject.getString("model_code");
-                        String image = car_detailObject.getString("image");
+                        carImage = car_detailObject.getString("image");
                         String price = car_detailObject.getString("price");
-                        String currency = car_detailObject.getString("currency");
-                        String time_unit = car_detailObject.getString("time_unit");
-                        String time = car_detailObject.getString("time");
-                        String driver_min_age = car_detailObject.getString("driver_min_age");
-                        String driver_max_age = car_detailObject.getString("driver_max_age");
+                        currency = car_detailObject.getString("currency");
+                        day = car_detailObject.getString("time_unit");
+                        time = car_detailObject.getString("time");
+                        driver_minage = car_detailObject.getString("driver_min_age");
+                        driver_maxage = car_detailObject.getString("driver_max_age");
                         String opening_hours_start = car_detailObject.getString("opening_hours_start");
                         String opening_hours_end = car_detailObject.getString("opening_hours_end");
-                        JSONArray collision_damage_waiver = car_detailObject.getJSONArray("collision_damage_waiver");
-                        if (car_detailObject.has("theft_protection")){
+                        if (car_detailObject.has("theft_protection")&&car_detailObject.getString("theft_protection").length()>0) {
+                            Object json = new JSONTokener(car_detailObject.getString("collision_damage_waiver")).nextValue();
+                            if (json instanceof String) {
+                                String collision_damage_waiver = car_detailObject.getString("collision_damage_waiver");
+                            } else if (json instanceof JSONArray) {
+                                collision_damage_waiver = car_detailObject.getJSONArray("collision_damage_waiver");
+                            }
+                        }
+                        markUp = Double.parseDouble(SearchCarFragment.markup);
+                        double d = Double.parseDouble(price);
+                        double priceNew  = d+(d*markUp)/100;
+                        carPrice=String.valueOf(df2.format(priceNew));
+
+                        CarDetailBean.FeatureBean featureBean = new CarDetailBean.FeatureBean();
+                        featureBean.setAircondition(aircondition);
+                        featureBean.setBag(bag);
+                        featureBean.setFueltype(fueltype);
+                        featureBean.setDoor(door);
+                        featureBean.setTransmission(transmission);
+                        featureBean.setPassenger(passenger);
+
+                        carSpecificationList= Arrays.asList(featureBean);
+
+                        carDetailBean.setFeature(featureBean);
+                        carDetailBean.setCategory(category);
+                        carDetailBean.setModel(modelname);
+                        carDetailBean.setModel_code(model_code);
+                        carDetailBean.setImage(carImage);
+                        carDetailBean.setPrice(price);
+                        carDetailBean.setCurrency(currency);
+                        carDetailBean.setTime(time);
+                        carDetailBean.setTime_unit(day);
+                        carDetailBean.setDriver_min_age(driver_minage);
+                        carDetailBean.setDriver_max_age(driver_maxage);
+                        carDetailBean.setOpening_hours_start(opening_hours_start);
+                        carDetailBean.setOpening_hours_end(opening_hours_end);
+                        carDetailBean.setTime(time);
+                        List<String>collosion = new ArrayList<>();
+                        List<String>theft_protectionList = new ArrayList<>();
+                        if (collision_damage_waiver!=null){
+                            for (int i=0;i<collision_damage_waiver.length();i++){
+                                CDW = collision_damage_waiver.getString(i);
+                                collosion.add(collision_damage_waiver.getString(i));
+                            }
+
+                        }
+
+                        carDetailBean.setCollision_damage_waiver(collosion);
+                        if (car_detailObject.has("theft_protection")&&car_detailObject.getString("theft_protection").length()>0){
                             Object json = new JSONTokener(car_detailObject.getString("theft_protection")).nextValue();
                             if (json instanceof String){
                                 String theft_protection = car_detailObject.getString("theft_protection");
                             }
                             else if (json instanceof JSONArray){
-                                JSONArray jsonArray = car_detailObject.getJSONArray("theft_protection");
+                                JSONArray theft_protectionjsonArray = car_detailObject.getJSONArray("theft_protection");
+                                for (int i=0;i<theft_protectionjsonArray.length();i++){
+                                    theft_protectionList.add(theft_protectionjsonArray.getString(i));
+                                    THP = theft_protectionjsonArray.getString(i);
+                                }
+                                carDetailBean.setTheft_protection(theft_protectionList);
+                                theft_protection.addAll(theft_protectionList);
                             }
                         }
+
+
+                        String deposit_currency = car_detailObject.getString("deposit_currency");
+                        String deposit_price = car_detailObject.getString("deposit_price");
+                        String deposit_desc = car_detailObject.getString("deposit_desc");
+                        String deposit_name = car_detailObject.getString("deposit_name");
+                        if (car_detailObject.has("fullprotection_amount")&& car_detailObject.getString("fullprotection_amount")!=null){
+                            fullprotectionammount="";
+                            fullprotectionammount=car_detailObject.getString("fullprotection_amount");
+                            if (fullprotectionammount!=null&&!fullprotectionammount.equalsIgnoreCase("null")){
+                                fullProAmt = Double.parseDouble(fullprotectionammount);
+                                double du = fullProAmt*3.75;
+                                fullAmtValue = Double.parseDouble(df2.format(du));
+                            }
+                        }
+
+                        if (car_detailObject.getString("fullprotection_currency")!=null){
+                            fullprotectioncurrency="";
+                            fullprotectioncurrency=car_detailObject.getString("fullprotection_currency");
+                        }
+                        suppliername = car_detailObject.getString("supplier");
+                        suppliercity = car_detailObject.getString("supplier_city");
+                        logo = car_detailObject.getString("supplier_logo");
+                        String drop_city = car_detailObject.getString("drop_city");
+                        termsurl = car_detailObject.getString("tc");
+                        JSONArray extraJsonArray = car_detailObject.getJSONArray("extra");
+                        JSONArray coveragesArray = car_detailObject.getJSONArray("coverages");
+                        JSONObject cancledetail = car_detailObject.getJSONObject("cancledetail");
+                        carDetailBean.setDeposit_currency(deposit_currency);
+                        carDetailBean.setDeposit_price(deposit_price);
+                        carDetailBean.setDeposit_desc(deposit_desc);
+                        carDetailBean.setDeposit_name(deposit_name);
+                        carDetailBean.setFullprotection_currency(fullprotectioncurrency);
+                        carDetailBean.setFullprotection_amount(fullprotectionammount);
+                        carDetailBean.setSupplier(suppliername);
+                        carDetailBean.setSupplier_city(suppliercity);
+                        carDetailBean.setSupplier_logo(logo);
+//                        carDetailBean.setd(drop_city);
+                        carDetailBean.setTc(termsurl);
+
+                        for (int i =0; i<extraJsonArray.length();i++){
+                            ExtraBean extraBean = new ExtraBean();
+                            JSONObject jsonObject1 = extraJsonArray.getJSONObject(i);
+                            if (jsonObject1.getString("name")!=null){
+                                extraBean.setName(jsonObject1.getString("name"));
+                                extraBean.setCurrency(jsonObject1.getString("currency"));
+                                extraBean.setPrice(jsonObject1.getString("price"));
+                                extraBean.setType(jsonObject1.getString("type"));
+                                extralist.add(extraBean);
+                            }
+
+                        }
+                        if (extralist!=null&&extralist.size()>0){
+                            for (int i=0; i<extralist.size();i++){
+                                if (extralist.get(i).name!=null){
+                                    if (extralist.get(i).getName().equalsIgnoreCase("Full Protection")){
+                                        extralist.remove(i);
+                                    }
+                                }
+                            }
+                        }
+                        carDetailBean.setExtra(extralist);
+                        List<CoveragesBean>coveragesBeans = new ArrayList<>();
+                        for (int i=0;i<coveragesArray.length();i++){
+                            CoveragesBean coveragesBean = new CoveragesBean();
+                            JSONObject jsonObject1 = coveragesArray.getJSONObject(i);
+                            coveragesBean.setAmount(jsonObject1.getString("amount"));
+                            coveragesBean.setCurrency(jsonObject1.getString("currency"));
+                            coveragesBean.setDesc(jsonObject1.getString("desc"));
+                            coveragesBean.setName(jsonObject1.getString("name"));
+                            coveragelist.add(coveragesBean);
+
+                        }
+
+                        handletablayout();
+                        carDetailBean.setCoverages(coveragesBeans);
+
+                        Log.d("TAG", "onResponse: carsdta"+gson.toJson(carDetailBean));
 
                     } else {
 
@@ -181,51 +327,25 @@ public class CarDetailActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("TAG", "onFailure: detail"+error);
-
+                Utility.hidepopup();
+                Utility.message(getApplicationContext(), getResources().getString(R.string.no_internet_connection));
             }
         }){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String>cateRequest = new HashMap<>();
-        /*l(token,id_context,type,day,refer_type);*/
                 cateRequest.put("access_token",token);
                 cateRequest.put("id_context",id_context);
                 cateRequest.put("type",type);
                 cateRequest.put("day",day);
                 cateRequest.put("refer_type",refer_type);
+                Log.d("TAG", "getParams: "+cateRequest);
                 return cateRequest;
             }
         };
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(30000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(stringRequest);
-
-       /*
-        okhttp3.RequestBody requestBody = okhttp3.RequestBody.create(MEDIA_TYPE, String.valueOf(cateRequest));
-
-        final okhttp3.Request request = new okhttp3.Request.Builder()
-                .url("https://carsgates.com/webservices/webservice/car_detail")
-                .post(requestBody)
-                .addHeader("Content-Type", "application/x-www-form-urlencoded")
-                .build();
-        okhttp3.OkHttpClient client = new okhttp3.OkHttpClient.Builder()
-                .connectTimeout(10000, TimeUnit.SECONDS)
-                .writeTimeout(10000, TimeUnit.SECONDS)
-                .readTimeout(30000, TimeUnit.SECONDS)
-                .build();
-
-        client.newCall(request).enqueue(new okhttp3.Callback() {
-            @Override
-            public void onFailure(okhttp3.Call call, IOException e) {
-                Log.d("TAG", "onFailure: detail"+e.getMessage());
-            }
-
-            @Override
-            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-                String s = gson.toJson(response.body());
-                Log.d("TAG", "onResponse: details"+s);
-            }
-        });
-*/
     }
 
     private void setupApi() {
@@ -238,71 +358,71 @@ public class CarDetailActivity extends AppCompatActivity {
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 Utility.hidepopup();
                 Log.d("TAG", "onResponse:cardetails "+gson.toJson(response.body()));
-               if (response.body()!=null){
-                   if (response.body().status){
-                       CarDetailBean carDetailBean = new CarDetailBean();
-                       carDetailBean = response.body().response.car_detail;
-                       carImage=response.body().response.car_detail.image;
-                       logo=response.body().response.car_detail.supplier_logo;
-                       modelname=response.body().response.car_detail.model;
-                       markUp = Double.parseDouble(SearchCarFragment.markup);
-                       time = response.body().response.car_detail.time;
-                       day = response.body().response.car_detail.time_unit;
-                       String price =response.body().response.car_detail.price;
-                       double d = Double.parseDouble(price);
-                       double priceNew  = d+(d*markUp)/100;
-                       carPrice=String.valueOf(df2.format(priceNew));
-                       currency=response.body().response.car_detail.currency;
-                       if (response.body().response.car_detail.extra!=null){
-                           extralist= (ArrayList<ExtraBean>) response.body().response.car_detail.extra;
-                           for (int i=0; i<extralist.size();i++){
-                               if (extralist.get(i).name!=null){
-                                   if (extralist.get(i).getName().equalsIgnoreCase("Full Protection")){
-                                       extralist.remove(i);
-                                   }
-                               }
-                           }
-                       }
+                if (response.body()!=null){
+                    if (response.body().status){
+                        CarDetailBean carDetailBean = new CarDetailBean();
+                        carDetailBean = response.body().response.car_detail;
+                        carImage=response.body().response.car_detail.image;
+                        logo=response.body().response.car_detail.supplier_logo;
+                        modelname=response.body().response.car_detail.model;
+                        markUp = Double.parseDouble(SearchCarFragment.markup);
+                        time = response.body().response.car_detail.time;
+                        day = response.body().response.car_detail.time_unit;
+                        String price =response.body().response.car_detail.price;
+                        double d = Double.parseDouble(price);
+                        double priceNew  = d+(d*markUp)/100;
+                        carPrice=String.valueOf(df2.format(priceNew));
+                        currency=response.body().response.car_detail.currency;
+                        if (response.body().response.car_detail.extra!=null){
+                            extralist= (ArrayList<ExtraBean>) response.body().response.car_detail.extra;
+                            for (int i=0; i<extralist.size();i++){
+                                if (extralist.get(i).name!=null){
+                                    if (extralist.get(i).getName().equalsIgnoreCase("Full Protection")){
+                                        extralist.remove(i);
+                                    }
+                                }
+                            }
+                        }
 
-                       carSpecificationList= Arrays.asList(response.body().response.car_detail.feature);
-                       suppliername=response.body().response.car_detail.supplier;
-                       suppliercity=response.body().response.car_detail.supplier_city;
-                       termsurl=response.body().response.car_detail.tc;
-                       if (response.body().response.car_detail.fullprotection_amount!=null){
-                           fullprotectionammount=response.body().response.car_detail.fullprotection_amount;
-                           fullProAmt = Float.parseFloat(fullprotectionammount);
-                           double du = fullProAmt*3.75;
-                           fullAmtValue = Double.parseDouble(df2.format(du));
+                        carSpecificationList= Arrays.asList(response.body().response.car_detail.feature);
+                        suppliername=response.body().response.car_detail.supplier;
+                        suppliercity=response.body().response.car_detail.supplier_city;
+                        termsurl=response.body().response.car_detail.tc;
+                        if (response.body().response.car_detail.fullprotection_amount!=null){
+                            fullprotectionammount=response.body().response.car_detail.fullprotection_amount;
+                            fullProAmt = Float.parseFloat(fullprotectionammount);
+                            double du = fullProAmt*3.75;
+                            fullAmtValue = Double.parseDouble(df2.format(du));
 
-                       }
-                       if (response.body().response.car_detail.fullprotection_currency!=null){
-                           fullprotectioncurrency=response.body().response.car_detail.fullprotection_currency;
-                       }
+                        }
+                        if (response.body().response.car_detail.fullprotection_currency!=null){
+                            fullprotectioncurrency=response.body().response.car_detail.fullprotection_currency;
+                        }
 
-                       coveragelist=response.body().response.car_detail.coverages;
-                       driver_minage=response.body().response.car_detail.driver_min_age;
-                       driver_maxage=response.body().response.car_detail.driver_max_age;
-                       if (response.body().response.car_detail.theft_protection!=null){
-                           theft_protection=response.body().response.car_detail.theft_protection;
-                       }
+                        coveragelist=response.body().response.car_detail.coverages;
+                        driver_minage=response.body().response.car_detail.driver_min_age;
+                        driver_maxage=response.body().response.car_detail.driver_max_age;
+                        if (response.body().response.car_detail.theft_protection!=null){
+                            theft_protection=response.body().response.car_detail.theft_protection;
+                        }
 //                   carid = response.body().response.car_detail.ca
-                       if (response.body().response.car_detail.collision_damage_waiver!=null){
-                           for (int i=0;i<1;i++) {
-                               CDW = response.body().response.car_detail.collision_damage_waiver.get(i);
-                           }
-                       }
+                        if (response.body().response.car_detail.collision_damage_waiver!=null){
+                            for (int i=0;i<1;i++) {
+                                CDW = response.body().response.car_detail.collision_damage_waiver.get(i);
+                            }
+                        }
 
-                       if (response.body().response.car_detail.theft_protection!=null){
-                           for (int i=0;i<1;i++) {
-                               THP = response.body().response.car_detail.theft_protection.get(i);
-                           }
-                       }
+                        if (response.body().response.car_detail.theft_protection!=null){
+                            for (int i=0;i<1;i++) {
+                                THP = response.body().response.car_detail.theft_protection.get(i);
+                            }
+                        }
 
-                       handletablayout();
-                   } else {
-                       Utility.message(getApplicationContext(), response.body().msg);
-                   }
-               }
+                        handletablayout();
+                    } else {
+                        Utility.message(getApplicationContext(), response.body().msg);
+                    }
+                }
 
             }
             @Override

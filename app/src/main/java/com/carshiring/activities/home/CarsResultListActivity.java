@@ -47,18 +47,25 @@ import com.carshiring.webservices.RetrofitApiBuilder;
 import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -113,7 +120,7 @@ public class CarsResultListActivity extends AppBaseActivity {
         tinyDB = new TinyDB(getApplicationContext());
         dialog=new Dialog(this);
         allView = findViewById(R.id.all_view);
-        listCarResult = SearchCarFragment.searchData;
+        listCarResult.addAll(SearchCarFragment.searchData);
         tvFromDate= (TextView) findViewById(R.id.tvFromDT);
         tvPickDate= (TextView) findViewById(R.id.txtPlaceName);
         tvTodate= (TextView) findViewById(R.id.tvToDT);
@@ -149,15 +156,15 @@ public class CarsResultListActivity extends AppBaseActivity {
         LinearLayoutManager horizontalLayoutManagaer
                 = new LinearLayoutManager(CarsResultListActivity.this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView_carlist_category.setLayoutManager(horizontalLayoutManagaer);
-
+        catBeanList = SearchCarFragment.catBeanList;
         adapter = new CarListCategory(getApplicationContext(), listCarResult, catBeanList,
                 new CarListCategory.OnItemClickListenerCategory() {
-            @Override
-            public void onItemClickCategory(int position) {
+                    @Override
+                    public void onItemClickCategory(int position) {
 
-                catgory_clicked(position);
-            }
-        });
+                        catgory_clicked(position);
+                    }
+                });
         recyclerView_carlist_category.setAdapter(adapter);
 
 
@@ -186,11 +193,10 @@ public class CarsResultListActivity extends AppBaseActivity {
     }
 
     double pointpercent, calPoint,calPrice;
-
+    String oneway,driverSur;
     public void listdispaly(List<SearchData> listCarResult ) {
-        Log.d("Search Data List", gson.toJson(listCarResult));
         CarResultsListAdapter listAdapter;
-        listAdapter = new CarResultsListAdapter(this,listCarResult, new CarResultsListAdapter.OnItemClickListener() {
+        listAdapter = new CarResultsListAdapter(this,listCarResult,catBeanList, new CarResultsListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(SearchData carDetail) {
                 if (tinyDB.contains("login_data")){
@@ -201,9 +207,19 @@ public class CarsResultListActivity extends AppBaseActivity {
                         set = "update_profile";
                         setupoverlay(set);
                     } else {
+
                         id_context = carDetail.getId_context();
                         type = carDetail.getType();
                         refertype = carDetail.getRefer_type();
+                        for (SearchData.CoveragesBean bean: carDetail.getCoverages()){
+                            if (bean.getCode().equalsIgnoreCase("412")){
+                                oneway = bean.getName() +" : "+ bean.getCurrency2()+" "
+                                        +bean.getAmount2();
+                            } else if ( bean.getCode().equalsIgnoreCase("410")){
+                                driverSur =bean.getName()+ " : "+bean.getCurrency2()+" "
+                                        + bean.getAmount2();
+                            }
+                        }
                         Intent intent = new Intent(CarsResultListActivity.this,CarDetailActivity.class);
                         intent.putExtra("id_context",id_context);
                         intent.putExtra("type",type);
@@ -219,6 +235,8 @@ public class CarsResultListActivity extends AppBaseActivity {
                         intent.putExtra("day",carDetail.getTime());
                         intent.putExtra("refer_type",refertype);
                         intent.putExtra("point_earn",String.valueOf(calPoint) );
+                        intent.putExtra("one_way_fee", oneway);
+                        intent.putExtra("driverSur", driverSur);
                         startActivity(intent);
                     }
                 } else {
@@ -274,7 +292,7 @@ public class CarsResultListActivity extends AppBaseActivity {
         isApplyFiltered = false ;
 
 //        recycler_search_cars.setAdapter(listAdapter);
-        getCat();
+//        getCat();
     }
 
     public void openSelectionSortedBy(View view) {
@@ -302,7 +320,7 @@ public class CarsResultListActivity extends AppBaseActivity {
                 String feat=multipleListModel.getFeatures();
                 if(supl!=null || feat!=null)
                 {
-                    filterlist(supl,feat);
+                    filter(supl,feat);
                 }
             }
         }
@@ -310,6 +328,150 @@ public class CarsResultListActivity extends AppBaseActivity {
 
     private boolean isApplyFiltered = false ;
     private  ArrayList<SearchData>  filteredtList ;
+
+    private void filter(String supl, String feat){
+        String[] suplier=supl.split(",");
+        String[] features=feat.split(",");
+
+        filteredtList = new ArrayList<>();
+        for(int i=0;i<listCarResult.size();i++) {
+            SearchData data = listCarResult.get(i);
+            boolean issuplierfound = false;
+            String supleir_strg = data.getSupplier();
+            Log.d("Supplier", supleir_strg);
+            if (!supleir_strg.isEmpty()) {
+                for (String suply : suplier) {
+                    if (!suply.isEmpty()) {
+                        if (supleir_strg.equalsIgnoreCase(suply)) {
+                            filteredtList.add(data);
+                            issuplierfound = true;
+                            Log.d("Filter", "Supplier Matched");
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        if (Arrays.asList(features).contains("Air Condition")&&Arrays.asList(features).contains("Automatic")
+                &&Arrays.asList(features).contains("4+ Doors")){
+            Log.d(TAG, "filter: "+true);
+            getACA("Air Condition","Automatic","4+ Doors");
+        } else  if (Arrays.asList(features).contains("Air Condition")&&Arrays.asList(features).contains("Automatic")){
+            getACA("Air Condition","Automatic","");
+        } else  if (Arrays.asList(features).contains("Air Condition")&&Arrays.asList(features).contains("4+ Doors")){
+            getACA("Automatic","","4+ Doors");
+        }  else  if (Arrays.asList(features).contains("Air Condition")&&Arrays.asList(features).contains("4+ Doors")){
+            getACA("","Automatic","4+ Doors");
+        } else  if (Arrays.asList(features).contains("Air Condition")){
+            getACA("Air Condition","","");
+        } else  if (Arrays.asList(features).contains("Automatic")){
+            getACA("","Automatic","");
+        } else  if (Arrays.asList(features).contains("4+ Doors")){
+            getACA("","","4+ Doors");
+        }
+
+/*
+        for (String featue: features){
+            String s = featue;
+            if (s.equalsIgnoreCase("Air Condition")){
+                getAC(s);
+            } else if (s.equalsIgnoreCase("Automatic")){
+                getAutomatic(s);
+            } else if (s.equalsIgnoreCase("4+ Doors")){
+                getDoor(s);
+            }
+        }
+*/
+        isApplyFiltered = true;
+    }
+
+    private void getAC(String AC){
+
+        for (SearchData searchData: listCarResult){
+
+            if (AC.equalsIgnoreCase("Air Condition")){
+                if (searchData.getFeature().getAircondition().equalsIgnoreCase("true")){
+                    filteredtList.add(searchData);
+                }
+            }
+        }
+    }
+    private void getACA(String AC, String Automatic, String Doors){
+        filteredtList = new ArrayList<>();
+
+        for (SearchData searchData: listCarResult){
+            if (AC.length()>0&&Automatic.length()>0&&Doors.length()>0){
+                if (AC.equalsIgnoreCase("Air Condition")&&Automatic.equalsIgnoreCase("Automaic")
+                        &&!searchData.getFeature().getDoor().equalsIgnoreCase("1")&&
+                        !searchData.getFeature().getDoor().equalsIgnoreCase("2")
+                        &&!searchData.getFeature().getDoor().equalsIgnoreCase("3")){
+                    if (searchData.getFeature().getAircondition().equalsIgnoreCase("true")
+                            &&searchData.getFeature().getTransmission().equalsIgnoreCase("Automatic")){
+                        filteredtList.add(searchData);
+                    }
+                }
+
+            }else if (AC.length()>0&&Automatic.length()>0){
+                if (AC.equalsIgnoreCase("Air Condition")
+                        &&Automatic.equalsIgnoreCase("Automaic")){
+                    if (searchData.getFeature().getAircondition().equalsIgnoreCase("true")
+                            &&searchData.getFeature().getTransmission().equalsIgnoreCase("Automatic")){
+                        filteredtList.add(searchData);
+                    }
+                }
+            }else if (AC.length()>0&&Doors.length()>0){
+                if (AC.equalsIgnoreCase("Air Condition")
+                        &&!searchData.getFeature().getDoor().equalsIgnoreCase("1")&&
+                        !searchData.getFeature().getDoor().equalsIgnoreCase("2")
+                        &&!searchData.getFeature().getDoor().equalsIgnoreCase("3")){
+                    if (searchData.getFeature().getAircondition().equalsIgnoreCase("true")
+                            &&searchData.getFeature().getTransmission().equalsIgnoreCase("Automatic")){
+                        filteredtList.add(searchData);
+                    }
+                }
+            }else if (Automatic.length()>0&&Doors.length()>0){
+                if (!searchData.getFeature().getDoor().equalsIgnoreCase("1")&&
+                        !searchData.getFeature().getDoor().equalsIgnoreCase("2")
+                        &&!searchData.getFeature().getDoor().equalsIgnoreCase("3")
+                        &&Automatic.equalsIgnoreCase("Automaic")){
+                    if (searchData.getFeature().getAircondition().equalsIgnoreCase("true")
+                            &&searchData.getFeature().getTransmission().equalsIgnoreCase("Automatic")){
+                        filteredtList.add(searchData);
+                    }
+                }
+            } else if (AC.length()>0){
+                getAC(AC);
+            } else if (Doors.length()>0){
+                getDoor(Doors);
+            } else if (Automatic.length()>0){
+                getAutomatic(Doors);
+            }
+        }
+    }
+
+    private void getAutomatic(String AC){
+        for (SearchData searchData: listCarResult){
+
+            if (AC.equalsIgnoreCase("Automatic")){
+                if (searchData.getFeature().getTransmission().equalsIgnoreCase("Automatic")){
+                    filteredtList.add(searchData);
+                }
+            }
+        }
+    }
+    private void getDoor(String AC){
+        for (SearchData searchData: listCarResult){
+
+            if (AC.equalsIgnoreCase("4+ Doors")){
+                if (searchData.getFeature().getDoor()!=null && !searchData.getFeature().getDoor().equalsIgnoreCase("1")&&
+                        !searchData.getFeature().getDoor().equalsIgnoreCase("2")
+                        &&!searchData.getFeature().getDoor().equalsIgnoreCase("3")){
+                    filteredtList.add(searchData);
+                }
+            }
+        }
+    }
+
 
     private void filterlist(String supl, String feat) {
 
@@ -319,84 +481,57 @@ public class CarsResultListActivity extends AppBaseActivity {
         filteredtList=new ArrayList<>();
         int listsize=listCarResult.size();
 
-        for(int i=0;i<listsize;i++)
-        {
+        for(int i=0;i<listsize;i++) {
             SearchData data = listCarResult.get(i);
 
-            boolean issuplierfound=false;
-            String supleir_strg=  data.getSupplier();
-            Log.d("Supplier",supleir_strg);
+            boolean issuplierfound = false;
+            String supleir_strg = data.getSupplier();
+            Log.d("Supplier", supleir_strg);
 
-            if(!supleir_strg.isEmpty()) {
-                for (String suply:suplier)
-                {
-                    if(!suply.isEmpty())
-                    {
-                        if(supleir_strg.equalsIgnoreCase(suply))
-                        {
+            if (!supleir_strg.isEmpty()) {
+                for (String suply : suplier) {
+                    if (!suply.isEmpty()) {
+                        if (supleir_strg.equalsIgnoreCase(suply)) {
                             filteredtList.add(data);
-                            issuplierfound=true;
-                            Log.d("Filter","Supplier Matched");
+                            issuplierfound = true;
+                            Log.d("Filter", "Supplier Matched");
                             break;
                         }
                     }
                 }
-                if(issuplierfound)
-                {
+                if (issuplierfound) {
                     continue;
                 }
-            }
 
-            boolean isAc=false;
-            String AC=  data.getFeature().getAircondition();
-            boolean isfeaturefound=false;
-            String feature_Aircondition=data.getFeature().getAircondition();
-            Log.d("feature_Aircondition",feature_Aircondition);
-/*
-            if(!AC.isEmpty() && !feature_Aircondition.isEmpty())
-            {
-                for (String suply:features)
+                boolean isAc = false;
+                String AC = data.getFeature().getAircondition();
+                boolean isfeaturefound = false;
+                String feature_Aircondition = data.getFeature().getAircondition();
+                Log.d("feature_Aircondition", feature_Aircondition);
+                if(!AC.isEmpty() && !feature_Aircondition.isEmpty())
                 {
-                    if(!suply.isEmpty())
+                    for (String suply:features)
                     {
-                        if(suply.equalsIgnoreCase("Air Condition"))
+                        if(!suply.isEmpty())
                         {
-                            filteredtList.add(data);
-                            isAc=true;
-                            Log.d("Filter","Ac Matched");
-                            break;
-                        } else if (suply.equalsIgnoreCase("Automatic")){
-                            filteredtList.add(data);
-                            isfeaturefound=true;
+                            if(suply.equalsIgnoreCase("Air Condition"))
+                            {
+                                filteredtList.add(data);
+                                isAc=true;
+                                Log.d("Filter","Ac Matched");
+                                break;
+                            } else if (suply.equalsIgnoreCase("Automatic")){
+                                filteredtList.add(data);
+                                isfeaturefound=true;
+                            }
                         }
                     }
+                    if(isAc && isfeaturefound)
+                    {
+                        continue;
+                    }
                 }
-                if(isAc && isfeaturefound)
-                {
-                    continue;
-                }
-            }
-*/
 
-            if(!feature_Aircondition.isEmpty())
-            {
-               for (String Air:features)
-               {
-                   if (!Air.isEmpty())
-                   {
-                       if(feature_Aircondition.contains("Automatic"))
-                       {
-                           filteredtList.add(data);
-                           isfeaturefound=true;
-                           Log.d("Filter","Package Matched");
-                           break;
-                       }
-                   }
-               }
-               if (isfeaturefound)
-               {
-                   continue;
-               }
             }
         }
         Log.d("Filtere list",""+ filteredtList.size());
@@ -493,7 +628,7 @@ public class CarsResultListActivity extends AppBaseActivity {
             btnCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    finish();
+                    dialog.dismiss();
                 }
             });
             txtDob.setOnClickListener(new View.OnClickListener() {
@@ -610,8 +745,10 @@ public class CarsResultListActivity extends AppBaseActivity {
     }
 
     public static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
-    public void getCat(){
-        catBeanList.clear();
+    public void getCat() {
+        if (catBeanList!=null){
+            catBeanList.clear();
+        }
         Utility.showloadingPopup(this);
         String cat = gson.toJson(cateRequest);
 
@@ -650,37 +787,91 @@ public class CarsResultListActivity extends AppBaseActivity {
                     if (request.body()!=null){
                         String msg = response.body().string();
                         category = gson.fromJson(msg,Category.class);
+                        try {
+                            JSONObject jsonObject = new JSONObject(msg);
+                            if (jsonObject.getBoolean("status")){
+                                List<Category.ResponseBean.CatBean>catBeans = new ArrayList<>();
+                                if (category.getResponse()!=null){
+                                    catBeans = category.getResponse().getCat();
+                                }
 
-                        List<Category.ResponseBean.CatBean>catBeans = new ArrayList<>();
-                        catBeans = category.getResponse().getCat();
-                        final List<Category.ResponseBean.CatBean> finalCatBeans = catBeans;
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Category.ResponseBean.CatBean catBean = new Category.ResponseBean.CatBean();
-
-                                catBeanList.addAll(finalCatBeans);
-                                TreeSet<Category.ResponseBean.CatBean> set = new TreeSet<>(new Comparator<Category.ResponseBean.CatBean>() {
+                                final List<Category.ResponseBean.CatBean> finalCatBeans = catBeans;
+                                runOnUiThread(new Runnable() {
                                     @Override
-                                    public int compare(Category.ResponseBean.CatBean o1, Category.ResponseBean.CatBean o2) {
-                                        if(o1.getCategory_name().equalsIgnoreCase(o2.getCategory_name())){
-                                            return 0;
+                                    public void run() {
+
+                                        catBeanList.addAll(finalCatBeans);
+                                      /*  HashMap<String, String>stringHashMap = new HashMap();
+                                        HashMap<String, String>imgHashMap = new HashMap();
+                                        for (Category.ResponseBean.CatBean catBeans1: catBeanList){
+                                            if (!catBeans1.getCategory_name().isEmpty()){
+                                                stringHashMap.put(catBeans1.getCategory_name(), String.valueOf(catBeans1.getCode()));
+                                                imgHashMap.put(catBeans1.getCategory_name(), String.valueOf(catBeans1.getCategory_image()));
+                                            }
                                         }
-                                        return 1;
+                                        if (catBeanList!=null){
+                                            catBeanList.clear();
+                                        }
+                                        for ( String key : stringHashMap.keySet() ) {
+                                            Category.ResponseBean.CatBean catBean = new Category.ResponseBean.CatBean();
+                                            catBean.setCategory_name(key);
+                                            catBean.setCode(Integer.parseInt(stringHashMap.get(key)));
+                                            catBean.setCategory_image(imgHashMap.get(key));
+                                            catBeanList.add(catBean);
+                                            System.out.println( key );
+                                        }*/
+
+                                           /*//List<String> al = new ArrayList<>();
+// add elements to al, including duplicates
+                                Set<Category.ResponseBean.CatBean> hs = new LinkedHashSet<>();
+                                hs.addAll(catBeanList);
+                                catBeanList.clear();
+                                catBeanList.addAll(hs);*/
+                                        TreeSet<Category.ResponseBean.CatBean> set = new TreeSet<>(new Comparator<Category.ResponseBean.CatBean>() {
+                                            @Override
+                                            public int compare(Category.ResponseBean.CatBean o1, Category.ResponseBean.CatBean o2) {
+                                                if(o1.getCategory_name().equalsIgnoreCase(o2.getCategory_name())){
+                                                    return 0;
+                                                }
+                                                return 1;
+                                            }
+                                        });
+                                        Log.d("TAG", "onResponse: " + catBeanList.size());   // 116
+                                        set.addAll(catBeanList);
+                                        catBeanList.clear();
+                                        catBeanList.addAll(set);
+                                        Log.d("TAG", "onResponse: " + catBeanList.size());   // 16
+
+
+
+/*
+                                        Set<Category.ResponseBean.CatBean>catBeans1 = new TreeSet<>(new Comparator<Category.ResponseBean.CatBean>() {
+                                            @Override
+                                            public int compare(Category.ResponseBean.CatBean catBean, Category.ResponseBean.CatBean t1) {
+                                                if(catBean.getCategory_name().equalsIgnoreCase(t1.getCategory_name())){
+                                                    return 0;
+                                                }
+                                                return 1;
+                                            }
+                                        });
+
+                                        catBeans1.addAll(catBeanList);
+                                        catBeanList.clear();
+                                        catBeanList.addAll(catBeans1);*/
+                                        adapter.notifyDataSetChanged();
                                     }
                                 });
-                                set.addAll(catBeanList);
-                                catBeanList.clear();
-                                catBeanList.addAll(set);
-                                adapter.notifyDataSetChanged();
                             }
-                        });
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
-
         });
     }
+
+
 
     private void login(String user, String pass) {
         if(!Utility.isNetworkConnected(getApplicationContext())){
@@ -752,4 +943,6 @@ public class CarsResultListActivity extends AppBaseActivity {
             }
         });
     }
+
+
 }

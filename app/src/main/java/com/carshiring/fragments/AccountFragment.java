@@ -59,7 +59,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-       view=inflater.inflate(R.layout.fragment_account,container,false);
+        view=inflater.inflate(R.layout.fragment_account,container,false);
         global.context=getContext();
         ll_mybooking= (LinearLayout) view.findViewById(R.id.ll_booking);
         ll_accountdetails= (LinearLayout) view.findViewById(R.id.ll_acccountdetails);
@@ -154,17 +154,17 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         switch (id)
         {
             case R.id.ll_booking:
-              //  startActivity(new Intent(getContext(), MyBookingActivity.class));
-               MyBookingsFragment myBookingsFragment=new MyBookingsFragment();
+                //  startActivity(new Intent(getContext(), MyBookingActivity.class));
+                MyBookingsFragment myBookingsFragment=new MyBookingsFragment();
                 MainActivity.toolbar.setTitle(getResources().getString(R.string.mybooking));
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.subview_container,myBookingsFragment).addToBackStack(null).commit();
                 break;
             case R.id.ll_acccountdetails:
-              // startActivity(new Intent(getActivity(),AccountDetailsActivity.class));
+                // startActivity(new Intent(getActivity(),AccountDetailsActivity.class));
                 break;
             case R.id.ll_change_password:
                 startActivity(new Intent(getActivity(),ChangePasswordActivity.class));
-             break;
+                break;
             case R.id.ll_profile:
                 startActivity(new Intent(getContext(), UserDashActivity.class));
                 break;
@@ -221,17 +221,16 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                                 totalCreditPoint+= creditPoint;
                             }
                         }
-                        if (totalCreditPoint>totalDebitPoint){
+                       /* if (totalCreditPoint>totalDebitPoint){
                             totalPoint = totalCreditPoint-totalDebitPoint;
-                        }
-                      /* else {
-                           totalPoint = totalDebitPoint-totalCreditPoint;
-                       }*/
-                        if (totalPoint>0){
-                            txtPoint.setText(getResources().getString(R.string.points)+" : "+String.valueOf(totalPoint));
                         } else {
-                            txtPoint.setText(getResources().getString(R.string.points)+" : "+String.valueOf("0.00"));
-                        }
+                           totalPoint = totalDebitPoint-totalCreditPoint;
+                       }
+*/
+                        totalPoint = totalCreditPoint-totalDebitPoint;
+
+                        txtPoint.setText(getResources().getString(R.string.points)+" : "+String.format("%.2f", Float.parseFloat(String.valueOf(totalPoint))));
+
                        /* Log.d("TAG", "onResponse: totalDebit"+totalCreditPoint+"\n"+totalPoint);
                         txtCreditPt.setText(getResources().getString(R.string.txtCredit)+" : "+ String.valueOf(totalCreditPoint));
                         txtdebitPt.setText(getResources().getString(R.string.txtDebit)+" : "+ String.valueOf(debitPoint));*/

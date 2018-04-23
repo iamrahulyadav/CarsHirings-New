@@ -24,6 +24,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:largeHeap="true"
+        android:hardwareAccelerated="false"
         android:theme="@style/AppTheme.Green">
         <activity
             android:name=".splash.SplashActivity"
@@ -60,19 +62,22 @@
         <activity android:name=".activities.home.AboutUsActivity" />
         <activity android:name=".activities.home.ContactUsActivity" />
         <activity android:name=".activities.home.Language" />
-        <activity
-            android:name=".activities.home.AccountDetailsActivity"
-            android:windowSoftInputMode="stateAlwaysHidden"></activity>
+        <activity android:name=".activities.home.AccountDetailsActivity" />
         <activity android:name=".activities.home.QuotedDetailsActivity" />
         <activity android:name=".activities.home.MyBookingActivity" />
-        <activity
-            android:name=".activities.home.PayActivity"
-            android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".activities.home.PayActivity" />
         <activity android:name=".activities.home.UserDashActivity" />
         <activity android:name=".activities.home.WalletView" />
         <activity android:name=".activities.home.ThankYou" />
-        <activity android:name=".activities.home.Test" />
-        <activity android:name=".activities.home.FilterListActivity"></activity>
+        <activity android:name=".activities.home.SearchbyMapActivity"/>
+        <activity android:name=".activities.home.TestActivity"/>
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAp-4py1BmVVoF7q4TdYogCkVX5vO5qPPk" />
+        <activity android:name=".activities.home.FilterListActivity"/>
     </application>
 
 </manifest>
