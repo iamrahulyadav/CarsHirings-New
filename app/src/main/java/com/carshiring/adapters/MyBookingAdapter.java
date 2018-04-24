@@ -291,8 +291,6 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
             } else {
                 txtPoint.setVisibility(View.GONE);
             }
-
-
         }
 
         dialog.show();
@@ -308,7 +306,7 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView refnumb, date_time, rate, txtjourneyToDate, txtStatus, txtPickUp, txtBookingDate,
+        TextView refnumb, date_time, rate, txtjourneyToDate, txtStatus, txtOneway, txtPickUp, txtBookingDate,
                 txtDropUp, txtCancel, txtCarName,txtPricedetails, txtFullProt,txtPaymentBy, txtCreditValue, txtWallet, txtPoint, txtCoupon;
         ImageView imgLogo, car_image;
 

@@ -107,6 +107,7 @@ Merchant Identifier: daouwTJI
     Gson gson = new Gson();
     boolean isCouponApplied;
     UserDetails userDetails = new UserDetails();
+    String TAG = PayActivity.class.getName();
     BookingRequest bookingRequest = new BookingRequest();
 
     @SuppressLint("SetTextI18n")
@@ -389,8 +390,12 @@ Merchant Identifier: daouwTJI
         bookingRequest.setBooking_payfort(String.valueOf(booking_payfort));
         bookingRequest.setExtraData(extraData);
         bookingRequest.setDiscountCoupon(coupoun);
-        bookingRequest.setBooking_one_way_fee(CarDetailActivity.oneway);
-        bookingRequest.setDriver_charge(CarDetailActivity.driverSur);
+        if (CarDetailActivity.oneway!=null){
+            bookingRequest.setBooking_one_way_fee(CarDetailActivity.oneway.replace("Oneway fee : ",""));
+        }
+        if (CarDetailActivity.driverSur!=null){
+            bookingRequest.setDriver_charge(CarDetailActivity.driverSur.replace("Young Driver Surcharge :",""));
+        }
         bookingRequest.setDiscountvalue(String.valueOf(discountvalue));
         String s = gson.toJson(bookingRequest);
 

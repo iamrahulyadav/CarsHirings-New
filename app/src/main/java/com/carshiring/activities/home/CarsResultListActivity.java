@@ -157,33 +157,31 @@ public class CarsResultListActivity extends AppBaseActivity {
                 = new LinearLayoutManager(CarsResultListActivity.this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView_carlist_category.setLayoutManager(horizontalLayoutManagaer);
         catBeanList = SearchCarFragment.catBeanList;
+
+
+
         adapter = new CarListCategory(getApplicationContext(), listCarResult, catBeanList,
                 new CarListCategory.OnItemClickListenerCategory() {
                     @Override
                     public void onItemClickCategory(int position) {
-
                         catgory_clicked(position);
                     }
                 });
         recyclerView_carlist_category.setAdapter(adapter);
-
 
     }
 
     private void catgory_clicked(int position){
         List<SearchData> listCarResult1 =  new ArrayList<>();
         listCarResult1.clear();
-        if (position==0){
-            listdispaly(listCarResult);
 
-        } else {
             for(int i=0; i<listCarResult.size(); i++) {
                 if((catBeanList.get(position).getCode()+"").equals(listCarResult.get(i).getCategory())){
                     listCarResult1.add(listCarResult.get(i));
                 }
             }
             listdispaly(listCarResult1);
-        }
+
 
     }
     int coun=0;
@@ -234,7 +232,7 @@ public class CarsResultListActivity extends AppBaseActivity {
                         time = carDetail.getTime_unit();
                         intent.putExtra("day",carDetail.getTime());
                         intent.putExtra("refer_type",refertype);
-                        intent.putExtra("point_earn",String.valueOf(calPoint) );
+                        intent.putExtra("point_earn",String.valueOf(calPoint));
                         intent.putExtra("one_way_fee", oneway);
                         intent.putExtra("driverSur", driverSur);
                         startActivity(intent);

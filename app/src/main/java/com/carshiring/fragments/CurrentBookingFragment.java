@@ -264,7 +264,7 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
-                Log.d("TAG", "onFailure: "+t.getMessage());
+                Log.d("TAG", "onFailure:cbooking "+t.getMessage());
                 Utility.hidepopup();
             }
         });
