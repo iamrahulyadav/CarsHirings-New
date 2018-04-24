@@ -1,41 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="15dp"
     android:background="@color/white"
     android:layout_marginBottom="1dp">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="10dp">
-
-        <TextView
-            android:layout_width="0dp"
+        android:elevation="5dp"
+        android:layout_margin="5dp"
+        app:cardCornerRadius="3dp">
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/layout_wallet_view_booking_id"
-            android:text="DT152091960664"
-            android:textSize="15dp"
-            android:textStyle="bold"
-            android:textColor="@color/black"/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/layout_wallet_view_booking_amount"
-            android:text="213.27"
-            android:textSize="15dp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:textAlignment="textEnd"/>
+            android:orientation="vertical"
+            android:layout_margin="10dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Booking id: DT1233133333"
+                android:textStyle="bold"
+                android:id="@+id/layout_wallet_view_booking_id"
+                android:gravity="center_horizontal"
+                android:padding="5dp"
+                android:textColor="@color/colorPrimaryDark"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Booking date: 31-03-2018"
+                    android:padding="5dp"
+                    android:id="@+id/layout_wallet_view_booking_date"
+                    android:textColor="@color/black"/>
 
-    </LinearLayout>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="213.27"
+                    android:visibility="gone"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textAlignment="textEnd"/>
+
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Booking point: 201"
+                android:paddingLeft="5dp"
+                android:id="@+id/layout_wallet_view_booking_amount"
+                android:textColor="@color/black"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Point affected: 20"
+                    android:padding="5dp"
+                    android:id="@+id/layout_wallet_view_booking_point"
+                    android:textColor="@color/colorPrimaryDark"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight=".5"
+                    android:layout_height="wrap_content"
+                    android:text="Credit"
+                    android:id="@+id/layout_wallet_view_booking_type"
+                    android:padding="5dp"
+                    android:gravity="right"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"
+                    android:textColor="#FFDA853A"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
     <LinearLayout
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -44,7 +99,6 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:id="@+id/layout_wallet_view_booking_date"
             android:text="2018-03-13"
             android:textSize="12dp"
             android:textColor="@color/black"/>
@@ -52,7 +106,6 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:id="@+id/layout_wallet_view_booking_point"
             android:text="0.0"
             android:textSize="12dp"
             android:textColor="@color/black"
@@ -62,7 +115,6 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:id="@+id/layout_wallet_view_booking_type"
             android:text="debit"
             android:textAllCaps="true"
             android:textSize="12dp"

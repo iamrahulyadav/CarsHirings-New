@@ -1,23 +1,144 @@
 package com.carshiring.models;
 
 /**
- * Created by Muhib.
- * Contact Number : +91 9796173066
+ * Created by Rakhi.
+ * Contact Number : +91 9958187463
  */
 public class CancledetailBean {
 
     /**
-     * Coverage : {"@attributes":{"CoverageType":"Cancellation fee","Code":"CF"},"Details":[{"Coverage":{"@attributes":{"CoverageType":"2018-02-16T10:08:29_2018-02-26T10:15:00"}},"Charge":{"@attributes":{"CurrencyCode":"EUR","Amount":"0.00","Description":"Up to 48 hours before pick-up, cancellation free of charge. Within 48 hours prior to pick-up a fee equal to the total rental price with a maximum amount of USD 125 will be charged. In the event of a no-show 100% of the sales price will be charged.","IncludedInRate":"true"}}},{"Coverage":{"@attributes":{"CoverageType":"2018-02-26T10:15:00_2018-02-28T10:15:00"}},"Charge":{"@attributes":{"CurrencyCode":"EUR","Amount":"158.60","Description":"Up to 48 hours before pick-up, cancellation free of charge. Within 48 hours prior to pick-up a fee equal to the total rental price with a maximum amount of USD 125 will be charged. In the event of a no-show 100% of the sales price will be charged."},"Calculation":{"@attributes":{"UnitCharge":"198.3452","UnitName":"PreferedCurrencyPrice: CurrencyCode=USD"}}}}]}
-     * Charge : {"@attributes":{"IncludedInRate":"true"}}
+     * error_code : 101
+     * response : {"cancel_detail":{"booking_cancel_booking_id":"CH1523082225355","booking_cancel_booking_amount":"426.53","booking_cancel_cancel_charge":"853.06","booking_cancel_refundable_amount":0,"booking_cancel_credit_amount":"0.00","booking_cancel_wallet_amount":"0.00","booking_cancel_point_amount":"0.00"}}
+     * status : true
+     * msg : User Profile Details successfully
      */
-    public CoverageBeanX Coverage;
-    public ChargeBeanX Charge;
 
-    public class CoverageBeanX {
+    private String error_code;
+    private ResponseBean response;
+    private boolean status;
+    private String msg;
+
+    public String getError_code() {
+        return error_code;
     }
 
-    // FIXME generate failure  field _$Attributes4
-    public class ChargeBeanX {
-        
+    public void setError_code(String error_code) {
+        this.error_code = error_code;
+    }
+
+    public ResponseBean getResponse() {
+        return response;
+    }
+
+    public void setResponse(ResponseBean response) {
+        this.response = response;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public static class ResponseBean {
+        /**
+         * cancel_detail : {"booking_cancel_booking_id":"CH1523082225355","booking_cancel_booking_amount":"426.53","booking_cancel_cancel_charge":"853.06","booking_cancel_refundable_amount":0,"booking_cancel_credit_amount":"0.00","booking_cancel_wallet_amount":"0.00","booking_cancel_point_amount":"0.00"}
+         */
+
+        private CancelDetailBean cancel_detail;
+
+        public CancelDetailBean getCancel_detail() {
+            return cancel_detail;
+        }
+
+        public void setCancel_detail(CancelDetailBean cancel_detail) {
+            this.cancel_detail = cancel_detail;
+        }
+
+        public static class CancelDetailBean {
+            /**
+             * booking_cancel_booking_id : CH1523082225355
+             * booking_cancel_booking_amount : 426.53
+             * booking_cancel_cancel_charge : 853.06
+             * booking_cancel_refundable_amount : 0
+             * booking_cancel_credit_amount : 0.00
+             * booking_cancel_wallet_amount : 0.00
+             * booking_cancel_point_amount : 0.00
+             */
+
+            private String booking_cancel_booking_id;
+            private String booking_cancel_booking_amount;
+            private String booking_cancel_cancel_charge;
+            private String booking_cancel_refundable_amount;
+            private String booking_cancel_credit_amount;
+            private String booking_cancel_wallet_amount;
+            private String booking_cancel_point_amount;
+
+            public String getBooking_cancel_booking_id() {
+                return booking_cancel_booking_id;
+            }
+
+            public void setBooking_cancel_booking_id(String booking_cancel_booking_id) {
+                this.booking_cancel_booking_id = booking_cancel_booking_id;
+            }
+
+            public String getBooking_cancel_booking_amount() {
+                return booking_cancel_booking_amount;
+            }
+
+            public void setBooking_cancel_booking_amount(String booking_cancel_booking_amount) {
+                this.booking_cancel_booking_amount = booking_cancel_booking_amount;
+            }
+
+            public String getBooking_cancel_cancel_charge() {
+                return booking_cancel_cancel_charge;
+            }
+
+            public void setBooking_cancel_cancel_charge(String booking_cancel_cancel_charge) {
+                this.booking_cancel_cancel_charge = booking_cancel_cancel_charge;
+            }
+
+            public String getBooking_cancel_refundable_amount() {
+                return booking_cancel_refundable_amount;
+            }
+
+            public void setBooking_cancel_refundable_amount(String booking_cancel_refundable_amount) {
+                this.booking_cancel_refundable_amount = booking_cancel_refundable_amount;
+            }
+
+            public String getBooking_cancel_credit_amount() {
+                return booking_cancel_credit_amount;
+            }
+
+            public void setBooking_cancel_credit_amount(String booking_cancel_credit_amount) {
+                this.booking_cancel_credit_amount = booking_cancel_credit_amount;
+            }
+
+            public String getBooking_cancel_wallet_amount() {
+                return booking_cancel_wallet_amount;
+            }
+
+            public void setBooking_cancel_wallet_amount(String booking_cancel_wallet_amount) {
+                this.booking_cancel_wallet_amount = booking_cancel_wallet_amount;
+            }
+
+            public String getBooking_cancel_point_amount() {
+                return booking_cancel_point_amount;
+            }
+
+            public void setBooking_cancel_point_amount(String booking_cancel_point_amount) {
+                this.booking_cancel_point_amount = booking_cancel_point_amount;
+            }
+        }
     }
 }

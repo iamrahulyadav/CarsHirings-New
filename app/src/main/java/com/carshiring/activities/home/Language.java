@@ -1,5 +1,6 @@
 package com.carshiring.activities.home;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -52,7 +53,7 @@ public class Language extends AppBaseActivity
         }
         sharedpref=new TinyDB(getApplicationContext());
         token=sharedpref.getString("access_token");
-        langId=sharedpref.getString("language_id");
+        language_code=sharedpref.getString("language_code");
         langlistname=new ArrayList<>();
         langlistcode=new ArrayList<>();
         langlistId=new ArrayList<>();
@@ -89,6 +90,7 @@ public class Language extends AppBaseActivity
         }
 
     }
+    @SuppressLint("ResourceType")
     public void addradio()
     {
         for(int row=0;row<1;row++)
@@ -111,7 +113,11 @@ public class Language extends AppBaseActivity
                 langgroup.addView(v);
             }
         }
-        langgroup.check(Integer.parseInt(langId));
+        if (language_code.equalsIgnoreCase("ar")){
+            langgroup.check(2);
+        } else if (language_code.equalsIgnoreCase("en")){
+            langgroup.check(1);
+        }
         //   ((RadioButton)langgroup.getChildAt(Integer.parseInt(langId))).setChecked(true);
 
         langgroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -125,7 +131,7 @@ public class Language extends AppBaseActivity
                     language_code  = langMap.get(radioButton.getText());
                     radioButton.setChecked(true);
                     sharedpref.putString("language_code",language_code);
-                    sharedpref.putString("language_id",id);
+               //     sharedpref.putString("language_id",id);
                     Intent intent = new Intent(Language.this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);

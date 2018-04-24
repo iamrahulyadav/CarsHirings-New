@@ -31,7 +31,6 @@
                     android:layout_width="80dp"
                     android:layout_height="50dp"
                     android:id="@+id/my_booking_image"
-                    android:src="@drawable/ic_my_bookings"
                     android:scaleType="fitXY"/>
             </LinearLayout>
             <LinearLayout
@@ -86,8 +85,9 @@
                     android:padding="5dp"/>
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:text="New Delhi"
+                    android:gravity="center_vertical"
                     android:id="@+id/previous_booking_pickUp"
                     android:textColor="@color/redStrong"
                     style="@style/simpleRectangle"
@@ -107,8 +107,9 @@
                     android:padding="5dp"/>
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:text="Noida"
+                    android:gravity="center_vertical"
                     android:id="@+id/previous_booking_dropUp"
                     android:textColor="@color/redStrong"
                     style="@style/simpleRectangle"
@@ -184,6 +185,22 @@
 
 
             </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:visibility="gone"
+                android:id="@+id/txtOneway"
+                android:textColor="@color/white" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:visibility="gone"
+                android:id="@+id/txtDriverSurCharge"
+                android:textColor="@color/white" />
+
+
             <Button
                 android:background="@color/white"
                 android:paddingLeft="10dp"
@@ -332,7 +349,6 @@
                 android:layout_width="72dp"
                 android:layout_height="44dp"
                 android:id="@+id/previous_booking_imgCarLogo"
-                android:src="@drawable/ic_brand_logo"
                 android:layout_gravity="center"
                 android:scaleType="fitXY"
                 />

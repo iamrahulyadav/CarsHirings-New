@@ -25,10 +25,10 @@
         <RadioButton
             android:id="@+id/radio_wallet"
             android:layout_width="0dp"
+            android:checked="true"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="Wallet"
-            android:checked="true"
             android:layout_gravity="center"
             android:onClick="onRadioButtonClicked"/>
         <RadioButton

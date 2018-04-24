@@ -60,6 +60,7 @@ public class FilterValRecyclerAdapter extends RecyclerView.Adapter<FilterValRecy
             }
         }
         holder.cbSelected.setChecked(filterModels.get(i).isChecked());
+
     }
 
     @Override

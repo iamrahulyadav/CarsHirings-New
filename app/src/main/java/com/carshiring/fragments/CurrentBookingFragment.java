@@ -236,9 +236,9 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
                                 Collections.sort(bookingData, new Comparator<BookingHistory>() {
                                     @Override
                                     public int compare(BookingHistory o1, BookingHistory o2) {
-                                        if (o1.getBooking_from_date() == null || o2.getBooking_from_date() == null)
+                                        if (o1.getBokking_date() == null || o2.getBokking_date() == null)
                                             return 0;
-                                        return o2.getBooking_from_date().compareTo(o1.getBooking_from_date());
+                                        return o2.getBokking_date().compareTo(o1.getBokking_date());
                                     }
                                 });
                             }
@@ -264,7 +264,7 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
-                Log.d("TAG", "onFailure: "+t.getMessage());
+                Log.d("TAG", "onFailure:cbooking "+t.getMessage());
                 Utility.hidepopup();
             }
         });

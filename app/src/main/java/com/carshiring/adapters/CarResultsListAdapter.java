@@ -69,7 +69,7 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
 
         holder.tvCarModelName.setText(model.getModel());
         holder.txtSupplierNmae.setText(context.getResources().getString(R.string.supplied_by) + model.getSupplier());
-        holder.txtDropCity.setText(SearchCarFragment.dropName);
+        holder.txtDropCity.setText(SearchCarFragment.pickName);
         if (model.getFeature().getBag().equals("0")){
             holder.tvBagNo.setVisibility(View.GONE);
         }

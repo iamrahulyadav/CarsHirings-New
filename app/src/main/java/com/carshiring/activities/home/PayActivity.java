@@ -107,6 +107,7 @@ Merchant Identifier: daouwTJI
     Gson gson = new Gson();
     boolean isCouponApplied;
     UserDetails userDetails = new UserDetails();
+    String TAG = PayActivity.class.getName();
     BookingRequest bookingRequest = new BookingRequest();
 
     @SuppressLint("SetTextI18n")
@@ -389,8 +390,12 @@ Merchant Identifier: daouwTJI
         bookingRequest.setBooking_payfort(String.valueOf(booking_payfort));
         bookingRequest.setExtraData(extraData);
         bookingRequest.setDiscountCoupon(coupoun);
-        bookingRequest.setBooking_one_way_fee(CarDetailActivity.oneway);
-        bookingRequest.setDriver_charge(CarDetailActivity.driverSur);
+        if (CarDetailActivity.oneway!=null){
+            bookingRequest.setBooking_one_way_fee(CarDetailActivity.oneway.replace("Oneway fee : ",""));
+        }
+        if (CarDetailActivity.driverSur!=null){
+            bookingRequest.setDriver_charge(CarDetailActivity.driverSur.replace("Young Driver Surcharge :",""));
+        }
         bookingRequest.setDiscountvalue(String.valueOf(discountvalue));
         String s = gson.toJson(bookingRequest);
 
@@ -930,9 +935,9 @@ live https://checkout.payfort.com
                 .addHeader("cache-control", "no-cache")
                 .build();
         okhttp3.OkHttpClient client = new okhttp3.OkHttpClient.Builder()
-                .connectTimeout(10000, TimeUnit.SECONDS)
-                .writeTimeout(10000, TimeUnit.SECONDS)
-                .readTimeout(30000, TimeUnit.SECONDS)
+                .connectTimeout(300000, TimeUnit.SECONDS)
+                .writeTimeout(300000, TimeUnit.SECONDS)
+                .readTimeout(300000, TimeUnit.SECONDS)
                 .build();
 
         client.newCall(request).enqueue(new okhttp3.Callback() {

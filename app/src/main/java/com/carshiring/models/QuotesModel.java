@@ -1,5 +1,7 @@
 package com.carshiring.models;
 
+import java.util.List;
+
 /**
  * Created by Rakhi.
  *

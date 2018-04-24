@@ -142,7 +142,7 @@
     <string name="txtDate">Date</string>
     <string name="txtTime">Time</string>
     <string name="txtDriveAge">Driver&#39;s Age</string>
-    <string name="switchDriverAgebw">Driver Age between 25 - 70?</string>
+    <string name="switchDriverAgebw">Driver Age between 30 - 70?</string>
     <string name="switchSearchMap">Search By map</string>
     <string name="edtDriverAge">Enter driver age</string>
     <string name="licenseno">License No</string>

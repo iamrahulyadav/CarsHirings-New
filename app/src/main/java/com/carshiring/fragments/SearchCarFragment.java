@@ -31,14 +31,12 @@ import com.carshiring.activities.home.LocationSelectionActivity;
 import com.carshiring.activities.home.MainActivity;
 import com.carshiring.activities.home.SearchQuery;
 import com.carshiring.activities.home.SearchbyMapActivity;
-import com.carshiring.activities.home.TestActivity;
 import com.carshiring.models.CatRequest;
 import com.carshiring.models.Category;
 import com.carshiring.models.MArkupdata;
 import com.carshiring.models.Point;
 import com.carshiring.models.SearchData;
 import com.carshiring.splash.SplashActivity;
-import com.carshiring.utilities.AppBaseActivity;
 import com.carshiring.utilities.Utility;
 import com.carshiring.webservices.ApiResponse;
 import com.carshiring.webservices.Location;
@@ -54,19 +52,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
@@ -79,7 +77,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.ContentValues.TAG;
 import static com.google.android.gms.internal.zzahg.runOnUiThread;
 
 
@@ -434,10 +431,12 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         }
     }
     Gson gson = new Gson();
+    String TAG = SearchCarFragment.class.getName();
 
     public static List<Category.ResponseBean.CatBean>catBeanList = new ArrayList<>();
     public static Category category = new Category();
     CatRequest cateRequest = new CatRequest();
+    HashMap<Double,String>map1;
 
     public static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
     public void getCat() {
@@ -492,20 +491,28 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                                 if (category.getResponse()!=null){
                                     catBeans = category.getResponse().getCat();
                                 }
-                                ArrayList<Double>doubles = new ArrayList<>();
                                 ArrayList<String>name = new ArrayList<>();
-                                HashMap< ArrayList<Double>,String>map1 = new HashMap<>();
+                                Set<String>set = new HashSet<>();
+                                map1 = new HashMap<>();
                                 for (Category.ResponseBean.CatBean catBean: catBeans){
-                                    name.add(catBean.getCategory_name());
+                                    name.add(String.valueOf(catBean.getCode()));
+                                    set.addAll(name);
+                                    name.clear();
+                                    name.addAll(set);
+                                    Log.d(TAG, "onResponse: name"+gson.toJson(name));
+
                                     for (SearchData searchDatas: searchData){
+                                        ArrayList<Double>doubles = new ArrayList<>();
                                         if (String.valueOf(catBean.getCode()).equalsIgnoreCase(searchDatas.getCategory())){
                                             double d = Double.parseDouble(searchDatas.getPrice());
                                             double priceNew  = d+(d*Double.parseDouble(markup))/100;
                                             doubles.add(priceNew);
-                                            map1 .put(doubles,catBean.getCategory_name());
+//                                            Collections.min(doubles);
+                                            map1 .put(priceNew,catBean.getCategory_name());
                                         }
                                     }
                                 }
+                                Log.d(TAG, "onResponse: map1"+gson.toJson(map1));
 
                                 final List<Category.ResponseBean.CatBean> finalCatBeans = catBeans;
                                 runOnUiThread(new Runnable() {
@@ -526,12 +533,16 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                                         set.addAll(catBeanList);
                                         catBeanList.clear();
                                         catBeanList.addAll(set);
-
                                         chooseSearchAction(searchData);
-
-                                        Log.d(TAG, "run: "+gson.toJson(catBeanList));
                                     }
                                 });
+                                for (int i=0;i<name.size();i++){
+                                    List<Object>d =new ArrayList<>();
+                                    d = getKeysFromValue(map1,name.get(i));
+                                    Log.d(TAG, "onResponse: data"+name.get(i));
+                                    Log.d(TAG, "onResponse: data"+d);
+                                }
+
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -540,6 +551,16 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 }
             }
         });
+    }
+
+    public static List<Object> getKeysFromValue(Map<?, ?> hm, Object value){
+        List <Object>list = new ArrayList<Object>();
+        for(Object o:hm.keySet()){
+            if(hm.get(o).equals(value)) {
+                list.add(o);
+            }
+        }
+        return list;
     }
 
     private void chooseSearchAction(List<SearchData> car_list) {

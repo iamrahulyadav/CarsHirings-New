@@ -62,7 +62,8 @@
         <activity android:name=".activities.home.AboutUsActivity" />
         <activity android:name=".activities.home.ContactUsActivity" />
         <activity android:name=".activities.home.Language" />
-        <activity android:name=".activities.home.AccountDetailsActivity" />
+        <activity android:name=".activities.home.AccountDetailsActivity"
+            android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".activities.home.QuotedDetailsActivity" />
         <activity android:name=".activities.home.MyBookingActivity" />
         <activity android:name=".activities.home.PayActivity" />

@@ -188,12 +188,12 @@ public class UserDashActivity extends AppBaseActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            runOnUiThread(new Runnable() {
+           /* runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     Utility.showLoading(UserDashActivity.this,getResources().getString(R.string.loading));
                 }
-            });
+            });*/
         }
 
         @Override
@@ -431,8 +431,8 @@ public class UserDashActivity extends AppBaseActivity {
                         txtPointValue.setText(getResources().getString(R.string.points)+" : "+String.format("%.2f", Float.parseFloat(String.valueOf(totalPoint))));
 
                         Log.d("TAG", "onResponse: totalDebit"+totalCreditPoint+"\n"+totalPoint);
-                        txtCreditPt.setText(getResources().getString(R.string.txtCredit)+" : "+ String.valueOf(totalCreditPoint));
-                        txtdebitPt.setText(getResources().getString(R.string.txtDebit)+" : "+ String.valueOf(totalDebitPoint));
+                        txtCreditPt.setText(getResources().getString(R.string.txtCredit)+" : "+ String.valueOf(df2.format(totalCreditPoint)));
+                        txtdebitPt.setText(getResources().getString(R.string.txtDebit)+" : "+ String.valueOf(df2.format(totalDebitPoint)));
                     } else {
                         //  Toast.makeText(UserDashActivity.this, ""+response.body().message, Toast.LENGTH_SHORT).show();
                     }

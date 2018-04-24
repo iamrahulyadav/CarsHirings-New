@@ -64,11 +64,11 @@ public class WalletViewAdapter extends RecyclerView.Adapter<WalletViewAdapter.My
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
       //  Toast.makeText(context, walletHistoryData.size() + "", Toast.LENGTH_SHORT).show();
 
-        holder.tv_booking_id.setText(walletHistoryData.get(position).getBooking_id());
-        holder.tv_booking_amount.setText(walletHistoryData.get(position).get_$WalletAmount169());
-        holder.tv_booking_date.setText(walletHistoryData.get(position).getBooking_date());
+        holder.tv_booking_id.setText(context.getResources().getString(R.string.booking_id)+" : " +walletHistoryData.get(position).getBooking_id());
+        holder.tv_booking_amount.setText("Wallet : "+walletHistoryData.get(position).get_$WalletAmount169());
+        holder.tv_booking_date.setText(context.getResources().getString(R.string.transaction_date)+" : "+walletHistoryData.get(position).getBooking_date());
         holder.tv_booking_type.setText(walletHistoryData.get(position).get_$WalletType204());
-        holder.tv_booking_point.setText(walletHistoryData.get(position).get_$WalletAffetctedAmount6());
+        holder.tv_booking_point.setText(context.getResources().getString(R.string.remain_wallet)+" : "+walletHistoryData.get(position).get_$WalletAffetctedAmount6());
     }
 
     @Override

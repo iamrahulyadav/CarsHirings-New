@@ -161,9 +161,9 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
                                 Collections.sort(bookingData, new Comparator<BookingHistory>() {
                                     @Override
                                     public int compare(BookingHistory o1, BookingHistory o2) {
-                                        if (o1.getBooking_from_date() == null || o2.getBooking_from_date() == null)
+                                        if (o1.getBokking_date() == null || o2.getBokking_date() == null)
                                             return 0;
-                                        return o2.getBooking_from_date().compareTo(o1.getBooking_from_date());
+                                        return o2.getBokking_date().compareTo(o1.getBokking_date());
                                     }
                                 });
                             }

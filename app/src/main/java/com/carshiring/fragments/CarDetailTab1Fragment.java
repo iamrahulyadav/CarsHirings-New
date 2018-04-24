@@ -91,6 +91,7 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
     TinyDB tinyDB ;
     TextView tvFromDate,txtOneway,txtDriverSur,tvPickDate,tvTodate,txtPlaceDrop;
 
+    @SuppressLint("SetTextI18n")
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

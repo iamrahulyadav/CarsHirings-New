@@ -141,7 +141,7 @@
     <string name="txtDate">تاريخ</string>
     <string name="txtTime">زمن</string>
     <string name="txtDriveAge">العمر السائق</string>
-    <string name="switchDriverAgebw">سائق تتراوح أعمارهم بين 25 - 70؟</string>
+    <string name="switchDriverAgebw">سائق تتراوح أعمارهم بين 30 - 70؟</string>
     <string name="switchSearchMap">البحث عن طريق الخريطة</string>
     <string name="edtDriverAge">أدخل عمر البرنامج</string>
     <string name="licenseno">رقم الرخصة</string>

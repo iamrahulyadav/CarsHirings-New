@@ -69,6 +69,7 @@ public class ExtrasAdapter extends RecyclerView.Adapter<ExtrasAdapter.ViewHolder
           @Override
           public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
               ExtraAdded extraAdded = new ExtraAdded();
+
               extraAdded.setName(holder.txt_extrasname.getText().toString().trim());
               extraAdded.setPrice(beanArrayList.get(position).getPrice());
               extraAdded.setCurrency(beanArrayList.get(position).getCurrency());
