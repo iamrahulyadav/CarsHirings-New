@@ -98,7 +98,8 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
             public void onClick(View v) {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.subview_container,
                         new SearchCarFragment())
-                        .commit();            }
+                        .commit();
+            }
         });
 
         recyclerView= (RecyclerView) view.findViewById(R.id.rec_prev_booki_list);
