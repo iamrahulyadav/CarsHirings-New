@@ -25,6 +25,12 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.carshiring.R;
 import com.carshiring.activities.home.CarsResultListActivity;
 import com.carshiring.activities.home.LocationSelectionActivity;
@@ -46,21 +52,27 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 import com.mukesh.tinydb.TinyDB;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -426,7 +438,8 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 break;
 
             case R.id.btn_search_car:
-                requestForSearchCar();
+//                requestForSearchCar();
+                requestForSearchCar1();
 
         }
     }
@@ -439,7 +452,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
     HashMap<Double,String>map1;
 
     public static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
-    public void getCat() {
+    public void getCat(CatRequest cateRequest) {
         if (catBeanList!=null){
             catBeanList.clear();
         }
@@ -578,6 +591,255 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
 
     public static List<SearchData>searchData = new ArrayList<>();
     List<Integer>cateList=new ArrayList<>();
+    private boolean status;
+    public static HashMap<String, List<String>>catPriceMap;
+    private SearchData.FeatureBean feature;
+    private String covprice;
+    private String covcurrency;
+    private String category1;                              //
+    private String model;
+    private String model_code;
+    private String image;
+    String packaged;
+    private String packageX;
+    private String price;
+    private String currency;
+    private String time_unit;
+    private String time;
+    private String id_context;
+    private String refer_type;
+    private String deposit_currency;
+    private String deposit_price;
+    private String deposit_desc;
+    private String deposit_name;
+    private String supplier;
+    private String supplier_city;
+    private String supplier_logo;
+    private String drop_city;
+    private String tc;
+    private String rule, msg ;
+
+    private String type;
+    private List<SearchData.CoveragesBean> coverages;
+
+    private void requestForSearchCar1() {
+        if(!validateData()){
+            return ;
+        }
+        if (searchData!=null){
+            searchData.clear();
+        }
+        if (catBeanList!=null){
+            catBeanList.clear();
+        }
+        feature = new SearchData.FeatureBean();
+        catPriceMap = new HashMap<>();
+        coverages = new ArrayList<>();
+        Utility.showLoading(getActivity(),getResources().getString(R.string.searching_cars));
+        final SearchCarFragment _this = SearchCarFragment.this ;
+        RetroFitApis retroFitApis = RetrofitApiBuilder.getCarGatesapi() ;
+
+        pick_hour=String.valueOf(pick_hours>9?pick_hours:"0"+pick_hours);
+        pick_minute=String.valueOf(pick_minutes>9?pick_minutes:"0"+pick_minutes);
+
+        drop_minute=String.valueOf(drop_minutes>9?drop_minutes:"0"+drop_minutes);
+        drop_hour=String.valueOf(drop_hours>9?drop_hours:"0"+drop_hours);
+        if (switchSameDestLocation.isChecked()){
+            dropName = pickName;
+            location_code_drop =location_code;
+            location_iata_drop = location_iata;
+            location_type_drop = location_type;
+        }
+
+        Log.d(TAG, "requestForSearchCar: "+token+"\n"+pickName+"\n"+
+                pick_date+"\n"+pick_hour+"\n"+
+                pick_minute+"\n"+dropName+"\n"+drop_date+"\n"+drop_hour+"\n"+drop_minute+"\n"+driver_age+"\n"+
+                useCurrentLocation+"\n"+ useSameDestLocation+"\n"+isBetweenDriverAge+"\n"+currentLat+"\n"+
+                currentLng+"\n"+location_code+"\n"+location_iata+"\n"+
+                location_type+"\n"+location_code_drop+"\n"+location_iata_drop+"\n"+location_type_drop+"\n"+languagecode);
+        final Gson gson = new Gson();
+
+
+        String url= RetrofitApiBuilder.CarGates_BASE_WEBSERVICE_URL+"webservice/search";
+
+        StringRequest  stringRequest = new StringRequest(com.android.volley.Request.Method.POST, url, new com.android.volley.Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Utility.hidepopup();
+                String d = gson.toJson(response);
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    status = jsonObject.getBoolean("status");
+                    if (jsonObject.has("msg")){
+                       msg= jsonObject.getString("msg");
+                    }
+
+                    if (status){
+                        JSONObject responseObject = jsonObject.getJSONObject("response");
+                        JSONObject car_listObject = responseObject.getJSONObject("car_list");
+                        Iterator<String> iter = car_listObject.keys();
+                        while (iter.hasNext()) {
+                            String key = iter.next();
+                            try {
+                                Object value = car_listObject.get(key);
+                                JSONObject object = car_listObject.getJSONObject(key);
+
+                                if (key.equals("category_list")){
+                                    Iterator<String> iterCatList = object.keys();
+                                    while (iterCatList.hasNext()){
+                                        String catkey = iterCatList.next();
+                                        JSONArray Catvalue = object.getJSONArray(catkey);
+
+                                        Type listType = new TypeToken<List<String>>() {}.getType();
+
+                                        List<String> yourList = new Gson().fromJson(Catvalue.toString(), listType);
+                                        catPriceMap.put(catkey, yourList);
+                                        Log.d(TAG, "onResponse: catvalue"+catPriceMap);
+                                    }
+                                } else {
+                                    if (object.has("feature")){
+                                        JSONObject featureObject = object.getJSONObject("feature");
+                                        feature.setAircondition((String) featureObject.get("aircondition"));
+                                        feature.setBag((String) featureObject.get("bag"));
+                                        feature.setFueltype(featureObject.getString("fueltype"));
+                                        feature.setTransmission(featureObject.getString("transmission"));
+                                        feature.setDoor(featureObject.getString("door"));
+                                    }
+                                    category1 = (String) object.get("category");
+                                    model = object.getString("model");
+                                    model_code = object.getString("model_code");
+                                    image = (String) object.get("image");
+                                    packaged = object.getString("package");
+                                    price = object.getString("price");
+                                    currency = (String) object.get("currency");
+                                    time_unit = object.getString("time_unit");
+                                    time = object.getString("time");
+                                    id_context = (String) object.get("id_context");
+                                    refer_type = object.getString("refer_type");
+                                    supplier = object.getString("supplier");
+                                    supplier_city = (String) object.get("supplier_city");
+                                    supplier_logo = object.getString("supplier_logo");
+                                    drop_city = object.getString("drop_city");
+                                    tc = (String) object.get("tc");
+                                    type = (String)object.get("type");
+                                    Log.d(TAG, "onResponse: time"+time+"\n"+time_unit);
+                                    JSONArray coveragesArray = object.getJSONArray("coverages");
+                                    for (int i=0;i<coveragesArray.length();i++){
+                                        SearchData.CoveragesBean bean = new SearchData.CoveragesBean();
+                                        JSONObject jsonObject1 = (JSONObject) coveragesArray.get(i);
+                                        String code = jsonObject1.getString("code");
+                                        String name = jsonObject1.getString("name");
+                                        String currency = jsonObject1.getString("currency");
+                                        String desc = jsonObject1.getString("desc");
+                                        String amount2 = jsonObject1.getString("amount2");
+                                        String currency2 = jsonObject1.getString("currency2");
+
+                                        if (code!=null){
+                                            bean.setCode(code);
+                                        }
+                                        if (name!=null){
+                                            bean.setName(name);
+                                        }
+                                        if (currency2!=null){
+                                            bean.setCurrency2(currency2);
+                                        }
+                                        if (desc!=null){
+                                            bean.setDesc(desc);
+                                        }
+                                        if (amount2!=null){
+                                            bean.setAmount2(amount2);
+                                        }
+                                        coverages.add(bean);
+                                    }
+                                    SearchData carData = new SearchData();
+
+                                    carData.setFeature(feature);
+                                    carData.setCategory(category1);
+                                    carData.setModel(model);
+                                    carData.setModel_code(model_code);
+                                    carData.setImage(image);
+                                    carData.setPackageX(packageX);
+                                    carData.setPrice(price);
+                                    carData.setCurrency(currency);
+                                    carData.setTime(time);
+                                    carData.setTime_unit(time_unit);
+                                    carData.setId_context(id_context);
+                                    carData.setRefer_type(refer_type);
+                                    carData.setSupplier(supplier);
+                                    carData.setSupplier_city(supplier_city);
+                                    carData.setSupplier_logo(supplier_logo);
+                                    carData.setDrop_city(drop_city);
+                                    carData.setTc(tc);
+                                    carData.setCoverages(coverages);
+                                    carData.setType(type);
+                                   searchData.add(carData);
+                                }
+
+                            } catch (JSONException e) {
+                                // Something went wrong!
+                            }
+                        }
+
+                        for (SearchData searchDatas : searchData){
+                            cateList.add(Integer.parseInt(searchDatas.getCategory()));
+                        }
+                        cateRequest.setCode(cateList);
+                        getCat(cateRequest);
+
+                    } else {
+
+                        Utility.message(getContext(),msg);
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.d(TAG, "onResponse: new "+response);
+            }
+        }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Utility.hidepopup();
+                Log.d(TAG, "onErrorResponse: "+error);
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String>serachRequest = new HashMap<>();
+                serachRequest.put("access_token", token);
+                serachRequest.put("pick_city", pickName);
+                serachRequest.put("pick_date", pick_date);
+                serachRequest.put("pick_houre", pick_hour);
+                serachRequest.put("pick_minute", pick_minute);
+                serachRequest.put("drop_city", dropName);
+                serachRequest.put("drop_date", drop_date);
+                serachRequest.put("drop_houre", drop_hour);
+                serachRequest.put("drop_minute", drop_minute);
+                serachRequest.put("driver_age", driver_age);
+                serachRequest.put("use_current_location", String.valueOf(useCurrentLocation));
+                serachRequest.put("sameas_pick_location", String.valueOf(useSameDestLocation));
+                serachRequest.put("between_driver_age" , String.valueOf(isBetweenDriverAge));
+                serachRequest.put("lat", String.valueOf(currentLat));
+                serachRequest.put("long", String.valueOf(currentLng));
+                serachRequest.put("location_code", location_code);
+                serachRequest.put("location_iata", location_iata);
+                serachRequest.put("location_type", location_type);
+                serachRequest.put("location_code_drop", location_code_drop);
+                serachRequest.put("location_iata_drop", location_iata_drop);
+                serachRequest.put("location_type_drop", location_type_drop);
+                serachRequest.put("language_code", languagecode);
+                return serachRequest;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(30000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        requestQueue.add(stringRequest);
+
+
+    }
+
 
 
     private void requestForSearchCar() {
@@ -631,7 +893,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                             cateList.add(Integer.parseInt(searchDatas.getCategory()));
                         }
                         cateRequest.setCode(cateList);
-                        getCat();
+                        getCat(cateRequest);
 
                     } else {
                         Toast.makeText(activity, ""+response.body().msg, Toast.LENGTH_SHORT).show();

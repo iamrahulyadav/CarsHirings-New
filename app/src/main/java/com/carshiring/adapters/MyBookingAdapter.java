@@ -283,7 +283,7 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
                 txtFullProt.setText("Refundable amount to Bank : SAR "+bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_credit_amount());
             }
             if (bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_point_amount()!=null
-                           &&!bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_point_amount().equalsIgnoreCase("0.00")){
+                    &&!bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_point_amount().equalsIgnoreCase("0.00")){
 
                 txtPoint.setVisibility(View.VISIBLE);
                 txtPoint.setText("Refundable Points Value : SAR " +String.valueOf(bookinglist.get(position)
@@ -292,11 +292,8 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
                 txtPoint.setVisibility(View.GONE);
             }
         }
-
         dialog.show();
     }
-
-
 
     @Override
     public int getItemCount() {
@@ -348,9 +345,7 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
                 @Override
                 public void onClick(View view) {
                     btnCancelationCharge.findViewWithTag(getAdapterPosition()))
-
                     cancelDetail(bookinglist.get(position).getBooking_id());
-
                 }
             });*/
 

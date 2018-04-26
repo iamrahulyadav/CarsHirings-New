@@ -49,6 +49,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Calendar;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -482,7 +483,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
         mMonth = c.get(Calendar.MONTH);
         mDay = c.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+        final DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 new DatePickerDialog.OnDateSetListener() {
 
                     @Override
@@ -493,13 +494,10 @@ public class AccountDetailsActivity extends AppBaseActivity {
 
                     }
                 }, mYear, mMonth, mDay);
+        datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis()-10000);
+
         datePickerDialog.show();
-        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                view.setMinDate(System.currentTimeMillis() - 1000);
-            }
-        };
+
     }
 
 

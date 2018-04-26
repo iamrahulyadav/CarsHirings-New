@@ -101,6 +101,7 @@ public class CarsResultListActivity extends AppBaseActivity {
     CatRequest cateRequest = new CatRequest();
     CarListCategory adapter;
     ImageView cat_image_all;
+    HashMap<String, ArrayList<String>>codePrice;
     private RecyclerView recyclerView_carlist_category;
 
     @SuppressLint("SetTextI18n")
@@ -115,7 +116,7 @@ public class CarsResultListActivity extends AppBaseActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.back);
         }
-
+        codePrice = new HashMap<>();
         appGlobal.context=getApplicationContext();
         tinyDB = new TinyDB(getApplicationContext());
         dialog=new Dialog(this);
@@ -279,8 +280,9 @@ public class CarsResultListActivity extends AppBaseActivity {
             if (filteredtList.size()>0){
                 listdispaly(filteredtList);
             } else {
+                // Old List
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_filters_applied), Toast.LENGTH_SHORT).show();
-                listdispaly(filteredtList);
+//                listdispaly(filteredtList);
             }
         }
         else
@@ -314,6 +316,7 @@ public class CarsResultListActivity extends AppBaseActivity {
             if(resultCode== SelectFilterActivity.FILTER_RESPONSE_CODE)
             {
                 FilterDefaultMultipleListModel multipleListModel= (FilterDefaultMultipleListModel) data.getSerializableExtra(SelectFilterActivity.FILTER_RESPONSE);
+                Log.d("VKK", gson.toJson(multipleListModel));
                 String supl=multipleListModel.getSupplier();
                 String feat=multipleListModel.getFeatures();
                 if(supl!=null || feat!=null)
@@ -717,6 +720,7 @@ public class CarsResultListActivity extends AppBaseActivity {
         dialog.setCancelable(true);
         dialog.show();
     }
+
     Calendar mCalendar = Calendar.getInstance();
     int year, monthOfYear, dayOfMonth;
 
@@ -743,6 +747,8 @@ public class CarsResultListActivity extends AppBaseActivity {
     }
 
     public static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
+
+
     public void getCat() {
         if (catBeanList!=null){
             catBeanList.clear();
@@ -869,8 +875,6 @@ public class CarsResultListActivity extends AppBaseActivity {
         });
     }
 
-
-
     private void login(String user, String pass) {
         if(!Utility.isNetworkConnected(getApplicationContext())){
             Toast.makeText(CarsResultListActivity.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
@@ -943,4 +947,20 @@ public class CarsResultListActivity extends AppBaseActivity {
     }
 
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        tinyDB.remove("listSup");
+        tinyDB.remove("listFet");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+//        tinyDB.remove("listSup");
+//        tinyDB.remove("listFet");
+
+    }
 }

@@ -390,12 +390,12 @@ Merchant Identifier: daouwTJI
         bookingRequest.setBooking_payfort(String.valueOf(booking_payfort));
         bookingRequest.setExtraData(extraData);
         bookingRequest.setDiscountCoupon(coupoun);
-        if (CarDetailActivity.oneway!=null){
+     /*   if (CarDetailActivity.oneway!=null){
             bookingRequest.setBooking_one_way_fee(CarDetailActivity.oneway.replace("Oneway fee : ",""));
         }
         if (CarDetailActivity.driverSur!=null){
             bookingRequest.setDriver_charge(CarDetailActivity.driverSur.replace("Young Driver Surcharge :",""));
-        }
+        }*/
         bookingRequest.setDiscountvalue(String.valueOf(discountvalue));
         String s = gson.toJson(bookingRequest);
 
@@ -981,7 +981,6 @@ live https://checkout.payfort.com
                                                 if (totalPrice>pointValue){
                                                     pointDebit = pointValue/.02;
                                                     remainingamt = totalPrice-pointValue;
-
                                                     if (remainingamt>walletAmt){
                                                         walletValue = walletAmt;
                                                     }

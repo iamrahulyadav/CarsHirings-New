@@ -107,10 +107,12 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 if (response!=null){
-                    Log.d("TAG", "onResponse: wallet"+gson.toJson(response.body().response.wallet));
+                    /*Log.d("TAG", "onResponse: wallet"+gson.toJson(response.body().response.wallet));*/
 
                     if (response.body().status){
-                        walletHistoryData = response.body().response.wallet;
+                        if ( response.body().response.wallet!=null){
+                            walletHistoryData = response.body().response.wallet;
+                        }
                         for (WalletHistoryData walletHistoryData1 : walletHistoryData){
                             if (walletHistoryData1.get_$WalletType204().equals("debit")){
                                 String debit = walletHistoryData1.get_$WalletAmount169();

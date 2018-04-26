@@ -34,7 +34,6 @@
                android:layout_height="wrap_content"
                android:text="20/5/2017 at 10:00PM"
                android:textSize="@dimen/small_size"
-               android:textStyle="bold"
                android:textColor="@color/black"
                android:padding="5dp"
                tools:ignore="InefficientWeight" />
@@ -44,7 +43,6 @@
                android:layout_height="wrap_content"
                android:text="INR167.34"
                android:textSize="@dimen/small_size"
-               android:textStyle="bold"
                android:textColor="@color/black"
                android:padding="5dp"/>
 
@@ -57,7 +55,6 @@
            android:id="@+id/txtFullProtection"
            android:visibility="gone"
            android:textColor="@color/black"
-           android:textStyle="bold"
            android:padding="@dimen/pf_5dp_space"/>
 
        <LinearLayout

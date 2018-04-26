@@ -109,7 +109,6 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
             }
         }
 
-
         holder.txtTerms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -151,9 +150,9 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
         pointpercent = Double.parseDouble(SearchCarFragment.pointper);
         calPrice = (priceNew*pointpercent)/100;
         calPoint = (int) (calPrice/0.02);
-
         holder.txtPoint.setText(context.getResources().getString(R.string.points_collected) + String.valueOf(calPoint));
         holder.bindListener(model,listener);
+
     }
 
     private static DecimalFormat df2 = new DecimalFormat(".##");
