@@ -1,17 +1,23 @@
 package com.carshiring.activities.home;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.carshiring.R;
 import com.carshiring.adapters.FilterValRecyclerAdapter;
 import com.carshiring.models.FilterDefaultMultipleListModel;
 import com.carshiring.utilities.AppBaseActivity;
+import com.google.gson.Gson;
+import com.mukesh.tinydb.TinyDB;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,27 +31,79 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
     RecyclerView rec_supplier,recy_carfeatures;
     private ArrayList<String> supplier = new ArrayList<>();
     private ArrayList<String> features = new ArrayList<>();
-
+    TinyDB tinyDB ;
     public static ArrayList<FilterDefaultMultipleListModel> supplierMultipleListModelsSelected = new ArrayList<>();
     public static ArrayList<FilterDefaultMultipleListModel> featuresMultipleListModelsSelected  = new ArrayList<>();
     private ArrayList<FilterDefaultMultipleListModel> supplierMultipleListModels = new ArrayList<>();
     private ArrayList<FilterDefaultMultipleListModel> featuresMultipleListModels = new ArrayList<>();
     private ArrayList<String> SelectedSupplier = new ArrayList<String>();
+    Gson gson =new Gson();
     private ArrayList<String> SelectedFeatures = new ArrayList<String>();
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putStringArrayList("PutSup", SelectedSupplier);
+        outState.putStringArrayList("PutFeat", SelectedFeatures);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState);
+
+
+        Log.d("VKK", "onRestoreInstanceState: " + savedInstanceState.getStringArrayList("PutSup"));
+
+        /*
+        ArrayList<String> fet = new ArrayList<>();
+        fet.addAll(savedInstanceState.getStringArrayList("PutFeat")) ;
+
+        for (int i = 0; i < fet.size(); i++) {
+
+            for (int j = 0; j < features.size(); j++) {
+
+                if (fet.get(i).equals(features.get(j))) {
+                    selectfeature(j);
+                }
+            }
+        }
+
+        ArrayList<String> sup = new ArrayList<>();
+        fet.addAll(savedInstanceState.getStringArrayList("PutSup")) ;
+
+        for (int i = 0; i < sup.size(); i++) {
+
+            for (int j = 0; j < supplier.size(); j++) {
+
+                if (sup.get(i).equals(supplier.get(j))) {
+                    selectedSupplier(j);
+                }
+            }
+        }*/
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter_list);
+
 //        find id
 
         rec_supplier=findViewById(R.id.rec_supplier);
         recy_carfeatures=findViewById(R.id.recy_carfeatures);
+
         ArrayList<String> getlist= (ArrayList<String>) CarsResultListActivity.supplierList;
         supplier .addAll(getlist);
+
         features = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.filter_features)));
 
+        tinyDB = new TinyDB(getApplicationContext());
+
         FilterDefaultMultipleListModel modelsup,modelfeat;
+
+
         if (supplierMultipleListModelsSelected!=null){
             for(FilterDefaultMultipleListModel model:supplierMultipleListModelsSelected)
             {
@@ -75,15 +133,38 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
             featuresMultipleListModelsSelected.addAll(featuresMultipleListModels);
         }
 
+
+
+
+
+        Log.d("SIZE", supplier.size()+"");
+        Toast.makeText(getApplicationContext(), supplier.size() + "", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), features.size() + "", Toast.LENGTH_SHORT).show();
+
+
+
+
+
+
+      /*  tinyDB.remove("listSup");
+        tinyDB.remove("listFet");*/
+
         filterValAdapterSupl=new FilterValRecyclerAdapter(this, R.layout.filter_list_val_item_layout,
                 supplierMultipleListModels, SelectedSupplier);
+
+        //suppliers
         rec_supplier.setAdapter(filterValAdapterSupl);
+
+
         rec_supplier.setLayoutManager(new LinearLayoutManager(this));
         rec_supplier.setHasFixedSize(true);
 
         filterValAdapterpackFeature=new FilterValRecyclerAdapter(this, R.layout.filter_list_val_item_layout,
                 featuresMultipleListModels,SelectedFeatures);
+
+        // features
         recy_carfeatures.setAdapter(filterValAdapterpackFeature);
+
         recy_carfeatures.setLayoutManager(new LinearLayoutManager(this));
         recy_carfeatures.setHasFixedSize(true);
 
@@ -100,6 +181,43 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
             }
         });
 
+//        selectedSupplier(1);
+//        myselectedfeatures(2);
+
+        if (tinyDB.contains("listFet")){
+            ArrayList<String> fet = new ArrayList<>();
+            fet.addAll(tinyDB.getListString("listFet"));
+            Log.d("TAG", "onCreate:fet " + fet);
+
+            for (int i = 0; i < fet.size(); i++) {
+
+                for (int j = 0; j < features.size(); j++) {
+
+                    if (fet.get(i).equals(features.get(j))) {
+                        selectfeature(j);
+                    }
+                }
+            }
+        } if (tinyDB.contains("listSup")) {
+            ArrayList<String> supp = new ArrayList<>();
+            supp.addAll(tinyDB.getListString("listSup"));
+            Log.d("TAG", "onCreate:sdd " + supp);
+
+
+            for (int i = 0; i < supp.size(); i++) {
+
+                for (int j = 0; j < supplier.size(); j++) {
+
+                    if (supp.get(i).equals(supplier.get(j))) {
+                        selectedSupplier(j);
+                    }
+                }
+            }
+        }
+
+        tinyDB.remove("listSup");
+        tinyDB.remove("listFet");
+
         setuptoolbar();
 
         //Buttons
@@ -110,10 +228,30 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
         applyfilter.setOnClickListener(this);
 
 
+//        createMyDialog();
+
     }
 
     private void selectfeature(int i) {
         filterValAdapterpackFeature.setitemselected(i);
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+
+        /*
+        outState.putString("myselectedsuppliers", s);
+        outState.putString("myselectedfeatures", s1);*/
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        savedInstanceState.getSerializable("myselectedsuppliers");
+        Log.d("SelectedStuffs", "onRestoreInstanceState: "
+                +savedInstanceState.getString("myselectedsuppliers") +"\n"+ savedInstanceState.getString("myselectedfeatures"));
     }
 
     private void selectedSupplier(int i) {
@@ -169,6 +307,8 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
                     SelectedSupplier.clear();
                     SelectedFeatures.clear();
                 }*/
+
+
                 for(FilterDefaultMultipleListModel model:supplierMultipleListModels)
                 {
                     if (model.isChecked())
@@ -216,12 +356,41 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
                 {
                     listModel.setFeatures("");
                 }
+                String s = new Gson().toJson(SelectedSupplier);
+                String s1 = new Gson().toJson(SelectedFeatures);
+
+//                tinyDB.clear();
+
+                tinyDB.putListString("listSup",SelectedSupplier);
+                tinyDB.putListString("listFet",SelectedFeatures);
+
+//                tinyDB.remove("listSup");
+//                tinyDB.remove("listFet");
+
                 Intent filrestintent=new Intent();
                 filrestintent.putExtra(FILTER_RESPONSE,listModel);
                 setResult(FILTER_RESPONSE_CODE,filrestintent);
+                Log.d("VKK", gson.toJson(listModel));
                 finish();
+//                moveTaskToBack(true);
                 break;
         }
+
+    }
+
+
+    private void createMyDialog(){
+
+        Dialog dialog = new Dialog(FilterListActivity.this);
+//        reques
+        dialog.setContentView(R.layout.dialog_filter_back);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
 
     }
 }

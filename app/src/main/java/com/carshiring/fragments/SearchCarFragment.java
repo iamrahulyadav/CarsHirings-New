@@ -53,6 +53,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 import com.mukesh.tinydb.TinyDB;
 
 import org.json.JSONArray;
@@ -60,6 +61,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -450,7 +452,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
     HashMap<Double,String>map1;
 
     public static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
-    public void getCat() {
+    public void getCat(CatRequest cateRequest) {
         if (catBeanList!=null){
             catBeanList.clear();
         }
@@ -590,6 +592,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
     public static List<SearchData>searchData = new ArrayList<>();
     List<Integer>cateList=new ArrayList<>();
     private boolean status;
+    public static HashMap<String, List<String>>catPriceMap;
     private SearchData.FeatureBean feature;
     private String covprice;
     private String covcurrency;
@@ -614,7 +617,8 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
     private String supplier_logo;
     private String drop_city;
     private String tc;
-    private String rule;
+    private String rule, msg ;
+
     private String type;
     private List<SearchData.CoveragesBean> coverages;
 
@@ -622,7 +626,14 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         if(!validateData()){
             return ;
         }
+        if (searchData!=null){
+            searchData.clear();
+        }
+        if (catBeanList!=null){
+            catBeanList.clear();
+        }
         feature = new SearchData.FeatureBean();
+        catPriceMap = new HashMap<>();
         coverages = new ArrayList<>();
         Utility.showLoading(getActivity(),getResources().getString(R.string.searching_cars));
         final SearchCarFragment _this = SearchCarFragment.this ;
@@ -659,6 +670,10 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     status = jsonObject.getBoolean("status");
+                    if (jsonObject.has("msg")){
+                       msg= jsonObject.getString("msg");
+                    }
+
                     if (status){
                         JSONObject responseObject = jsonObject.getJSONObject("response");
                         JSONObject car_listObject = responseObject.getJSONObject("car_list");
@@ -673,10 +688,14 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                                     Iterator<String> iterCatList = object.keys();
                                     while (iterCatList.hasNext()){
                                         String catkey = iterCatList.next();
-                                        Object Catvalue = object.get(catkey);
-                                        Log.d(TAG, "onResponse: catvalue"+Catvalue);
-                                    }
+                                        JSONArray Catvalue = object.getJSONArray(catkey);
 
+                                        Type listType = new TypeToken<List<String>>() {}.getType();
+
+                                        List<String> yourList = new Gson().fromJson(Catvalue.toString(), listType);
+                                        catPriceMap.put(catkey, yourList);
+                                        Log.d(TAG, "onResponse: catvalue"+catPriceMap);
+                                    }
                                 } else {
                                     if (object.has("feature")){
                                         JSONObject featureObject = object.getJSONObject("feature");
@@ -684,6 +703,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                                         feature.setBag((String) featureObject.get("bag"));
                                         feature.setFueltype(featureObject.getString("fueltype"));
                                         feature.setTransmission(featureObject.getString("transmission"));
+                                        feature.setDoor(featureObject.getString("door"));
                                     }
                                     category1 = (String) object.get("category");
                                     model = object.getString("model");
@@ -702,6 +722,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                                     drop_city = object.getString("drop_city");
                                     tc = (String) object.get("tc");
                                     type = (String)object.get("type");
+                                    Log.d(TAG, "onResponse: time"+time+"\n"+time_unit);
                                     JSONArray coveragesArray = object.getJSONArray("coverages");
                                     for (int i=0;i<coveragesArray.length();i++){
                                         SearchData.CoveragesBean bean = new SearchData.CoveragesBean();
@@ -742,7 +763,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                                     carData.setCurrency(currency);
                                     carData.setTime(time);
                                     carData.setTime_unit(time_unit);
-                                    carData.setTime_unit(id_context);
+                                    carData.setId_context(id_context);
                                     carData.setRefer_type(refer_type);
                                     carData.setSupplier(supplier);
                                     carData.setSupplier_city(supplier_city);
@@ -758,10 +779,16 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                                 // Something went wrong!
                             }
                         }
-                        chooseSearchAction(searchData);
+
+                        for (SearchData searchDatas : searchData){
+                            cateList.add(Integer.parseInt(searchDatas.getCategory()));
+                        }
+                        cateRequest.setCode(cateList);
+                        getCat(cateRequest);
 
                     } else {
 
+                        Utility.message(getContext(),msg);
                     }
 
 
@@ -769,7 +796,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                     e.printStackTrace();
                 }
 
-                Log.d(TAG, "onResponse: new "+d);
+                Log.d(TAG, "onResponse: new "+response);
             }
         }, new com.android.volley.Response.ErrorListener() {
             @Override
@@ -866,7 +893,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                             cateList.add(Integer.parseInt(searchDatas.getCategory()));
                         }
                         cateRequest.setCode(cateList);
-                        getCat();
+                        getCat(cateRequest);
 
                     } else {
                         Toast.makeText(activity, ""+response.body().msg, Toast.LENGTH_SHORT).show();

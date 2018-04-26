@@ -981,7 +981,6 @@ live https://checkout.payfort.com
                                                 if (totalPrice>pointValue){
                                                     pointDebit = pointValue/.02;
                                                     remainingamt = totalPrice-pointValue;
-
                                                     if (remainingamt>walletAmt){
                                                         walletValue = walletAmt;
                                                     }
