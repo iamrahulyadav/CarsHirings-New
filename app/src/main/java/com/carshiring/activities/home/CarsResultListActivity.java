@@ -142,7 +142,6 @@ public class CarsResultListActivity extends AppBaseActivity {
             supplierList.clear();
         }
         for (SearchData searchData : listCarResult){
-
             supplierList.add(searchData.getSupplier());
             cateList.add(Integer.parseInt(searchData.getCategory()));
         }
@@ -158,8 +157,6 @@ public class CarsResultListActivity extends AppBaseActivity {
                 = new LinearLayoutManager(CarsResultListActivity.this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView_carlist_category.setLayoutManager(horizontalLayoutManagaer);
         catBeanList = SearchCarFragment.catBeanList;
-
-
 
         adapter = new CarListCategory(getApplicationContext(), listCarResult, catBeanList,
                 new CarListCategory.OnItemClickListenerCategory() {
