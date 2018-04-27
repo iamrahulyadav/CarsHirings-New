@@ -22,12 +22,14 @@
             android:layout_weight="1"
             android:text="Exit"
             android:gravity="center"
+            android:onClick="dialog_filter_back_exit"
             android:layout_marginRight="10dp"/>
         <TextView
             android:layout_width="@dimen/pf_10dp_space"
             android:layout_height="40dp"
             android:layout_weight="1"
             android:text="Apply Filter"
+            android:onClick="dialog_filter_back_apply_filter"
             android:gravity="center" />
 
     </LinearLayout>

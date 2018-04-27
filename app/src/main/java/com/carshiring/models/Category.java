@@ -10,7 +10,7 @@ public class Category {
 
     /**
      * message : success
-     * response : {"cat":[{"category_id":"2","category_name":"Subcompact","category_image":"Hundai_Accent_Economy.jpg","code":3},{"category_id":"4","category_name":"Intermediate","category_image":"Toyota_corolla_Intermediate.jpg","code":6},{"category_id":"3","category_name":"Compect","category_image":"compect.png","code":4},{"category_id":"5","category_name":"Standard","category_image":"Camry_Standard.png","code":7},{"category_id":"7","category_name":"Premium","category_image":"Premier_car.jpg","code":10},{"category_id":"5","category_name":"Standard","category_image":"Camry_Standard.png","code":37},{"category_id":"7","category_name":"Premium","category_image":"Premier_car.jpg","code":9},{"category_id":"5","category_name":"Standard","category_image":"Camry_Standard.png","code":7}]}
+     * response : {"cat":[{"category_id":"3","category_name":"Compect","category_image":"compect.png","code":3},{"category_id":"6","category_name":"Full size","category_image":"full_size.png","code":6},{"category_id":"4","category_name":"Intermediate","category_image":"Toyota_corolla_Intermediate.jpg","code":4},{"category_id":"7","category_name":"Premium","category_image":"Premier_car.jpg","code":7},{"category_id":"10","category_name":"Cargo van","category_image":"carvo_van.png","code":10},{"category_id":"9","category_name":"Mediam Passenger van","category_image":"medium_passenger_van.png","code":9}]}
      * status : true
      */
 
@@ -55,9 +55,9 @@ public class Category {
 
         public static class CatBean {
             /**
-             * category_id : 2
-             * category_name : Subcompact
-             * category_image : Hundai_Accent_Economy.jpg
+             * category_id : 3
+             * category_name : Compect
+             * category_image : compect.png
              * code : 3
              */
 

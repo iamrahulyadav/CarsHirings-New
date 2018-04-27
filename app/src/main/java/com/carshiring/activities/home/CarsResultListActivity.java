@@ -302,24 +302,39 @@ public class CarsResultListActivity extends AppBaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode== 200){
+
+        // Sort
+        /*if(requestCode== 200){
             if(resultCode== RESULT_OK){
                 filter = data.getStringExtra("filter");
                 getShortedData() ;
             }
-        }
+        }*/
+
+        // Filter
         if(requestCode== 201){
             //Toast.makeText(getApplicationContext(), resultCode + "", Toast.LENGTH_SHORT).show();
             if(resultCode== SelectFilterActivity.FILTER_RESPONSE_CODE)
             {
+
+
+
                 FilterDefaultMultipleListModel multipleListModel= (FilterDefaultMultipleListModel) data.getSerializableExtra(SelectFilterActivity.FILTER_RESPONSE);
                 Log.d("VKK", gson.toJson(multipleListModel));
+
                 String supl=multipleListModel.getSupplier();
                 String feat=multipleListModel.getFeatures();
+
+                Log.d("VKK", supl);
+                Log.d("VKK", feat);
+
                 if(supl!=null || feat!=null)
                 {
                     filter(supl,feat);
                 }
+
+
+
             }
         }
     }
@@ -331,7 +346,14 @@ public class CarsResultListActivity extends AppBaseActivity {
         String[] suplier=supl.split(",");
         String[] features=feat.split(",");
 
+
+        Log.d("VKK", suplier.length + " ");
+        Log.d("VKK", features.length + " ");
+
+
         filteredtList = new ArrayList<>();
+
+
         for(int i=0;i<listCarResult.size();i++) {
             SearchData data = listCarResult.get(i);
             boolean issuplierfound = false;
