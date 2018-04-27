@@ -373,14 +373,11 @@ public class CarsResultListActivity extends AppBaseActivity {
                     filteredtList.add(data);
                 }
             }
-
         }
 
+        Log.d("VKK", filteredtList.size() + " ");
 
-
-
-
-
+/*
             for(int z=0; z<suplier.length; z++ ){
 
             String str = suplier[z];
@@ -394,14 +391,16 @@ public class CarsResultListActivity extends AppBaseActivity {
                 }
             }
         }
+*/
 
 
+/*
         for(int i=0;i<listCarResult.size();i++) {
             SearchData data = listCarResult.get(i);
 
             boolean issuplierfound = false;
             String supleir_strg = data.getSupplier();
-            Log.d("VKKK", supleir_strg);
+//            Log.d("VKKK", supleir_strg);
 
             if (!supleir_strg.isEmpty()) {
                 for (String suply : suplier) {
@@ -416,7 +415,9 @@ public class CarsResultListActivity extends AppBaseActivity {
                 }
             }
         }
+*/
 
+/*
         if (Arrays.asList(features).contains("Air Condition")&&Arrays.asList(features).contains("Automatic")
                 &&Arrays.asList(features).contains("4+ Doors")){
             Log.d(TAG, "filter: "+true);
@@ -434,6 +435,7 @@ public class CarsResultListActivity extends AppBaseActivity {
         } else  if (Arrays.asList(features).contains("4+ Doors")){
             getACA("","","4+ Doors");
         }
+*/
 
 
 /*
