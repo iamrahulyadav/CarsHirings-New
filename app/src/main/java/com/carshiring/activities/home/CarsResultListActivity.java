@@ -328,8 +328,9 @@ public class CarsResultListActivity extends AppBaseActivity {
                 Log.d("VKK", supl);
                 Log.d("VKK", feat);
 
-                if(supl!=null || feat!=null)
-                {
+                if(supl.equals("NoSuppliers") && feat.equals("NoFeatures")){
+                    Toast.makeText(getApplicationContext(), "No Filter Applied", Toast.LENGTH_SHORT).show();
+                } else{
                     filter(supl,feat);
                 }
 
@@ -343,6 +344,7 @@ public class CarsResultListActivity extends AppBaseActivity {
     private  ArrayList<SearchData>  filteredtList ;
 
     private void filter(String supl, String feat){
+
         String[] suplier=supl.split(",");
         String[] features=feat.split(",");
 
@@ -353,12 +355,54 @@ public class CarsResultListActivity extends AppBaseActivity {
 
         filteredtList = new ArrayList<>();
 
+        for(int i=0;i<listCarResult.size();i++) {
+
+            SearchData data = listCarResult.get(i);
+
+            for(int z=0; z<suplier.length; z++ ) {
+
+                String str = suplier[z];
+                if(str.equals(data.getSupplier())){
+                    filteredtList.add(data);
+                }
+            }
+            for(int z=0; z<features.length; z++ ) {
+
+                String str = features[z];
+                if(str.equals(data.getFeature())){
+                    filteredtList.add(data);
+                }
+            }
+
+        }
+
+
+
+
+
+
+            for(int z=0; z<suplier.length; z++ ){
+
+            String str = suplier[z];
+
+            for(int i=0;i<listCarResult.size();i++) {
+
+                SearchData data = listCarResult.get(i);
+
+                if(str.equals(data.getSupplier())){
+                    filteredtList.add(data);
+                }
+            }
+        }
+
 
         for(int i=0;i<listCarResult.size();i++) {
             SearchData data = listCarResult.get(i);
+
             boolean issuplierfound = false;
             String supleir_strg = data.getSupplier();
-            Log.d("Supplier", supleir_strg);
+            Log.d("VKKK", supleir_strg);
+
             if (!supleir_strg.isEmpty()) {
                 for (String suply : suplier) {
                     if (!suply.isEmpty()) {
@@ -372,6 +416,7 @@ public class CarsResultListActivity extends AppBaseActivity {
                 }
             }
         }
+
         if (Arrays.asList(features).contains("Air Condition")&&Arrays.asList(features).contains("Automatic")
                 &&Arrays.asList(features).contains("4+ Doors")){
             Log.d(TAG, "filter: "+true);
@@ -389,6 +434,7 @@ public class CarsResultListActivity extends AppBaseActivity {
         } else  if (Arrays.asList(features).contains("4+ Doors")){
             getACA("","","4+ Doors");
         }
+
 
 /*
         for (String featue: features){

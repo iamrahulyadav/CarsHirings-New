@@ -648,12 +648,13 @@ public class MainActivity extends AppCompatActivity
 
     public void checknetwork() {
         if (!Utility.isNetworkConnected(MainActivity.this)) {
-            Snackbar.make(v, getResources().getString(R.string.check_internet), Snackbar.LENGTH_INDEFINITE).setAction(getResources().getString(R.string.retry), new View.OnClickListener() {
+            Toast.makeText(appGlobal, getResources().getString(R.string.check_internet), Toast.LENGTH_SHORT).show();
+           /* Snackbar.make(v, getResources().getString(R.string.check_internet), Snackbar.LENGTH_INDEFINITE).setAction(getResources().getString(R.string.retry), new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     checknetwork();
                 }
-            }).setActionTextColor(getResources().getColor(R.color.redStrong)).show();
+            }).setActionTextColor(getResources().getColor(R.color.redStrong)).show();*/
         }
     }
 }

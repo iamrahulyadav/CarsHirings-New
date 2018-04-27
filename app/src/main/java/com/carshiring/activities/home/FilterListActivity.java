@@ -343,7 +343,7 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
                 }
                 else
                 {
-                    listModel.setSupplier("");
+                    listModel.setSupplier("NoSuppliers");
                 }
 
                 if (SelectedFeatures.size()>0)
@@ -360,7 +360,7 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
                 }
                 else
                 {
-                    listModel.setFeatures("");
+                    listModel.setFeatures("NoFeatures");
                 }
                 String s = new Gson().toJson(SelectedSupplier);
                 String s1 = new Gson().toJson(SelectedFeatures);
@@ -376,15 +376,13 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
                 Intent filrestintent=new Intent();
                 filrestintent.putExtra(FILTER_RESPONSE,listModel);
                 setResult(FILTER_RESPONSE_CODE,filrestintent);
-                Log.d("VKK", gson.toJson(listModel));
+//                Log.d("VKK", gson.toJson(listModel));
                 finish();
 //                moveTaskToBack(true);
                 break;
         }
 
     }
-
-
 
     private void createMyDialog(){
 
@@ -395,7 +393,26 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
     }
 
     public void dialog_filter_back_exit(View view){
+        FilterDefaultMultipleListModel listModel=new FilterDefaultMultipleListModel();
+        listModel.setSupplier("NoSuppliers");
+        listModel.setFeatures("NoFeatures");
+        String s = new Gson().toJson(SelectedSupplier);
+        String s1 = new Gson().toJson(SelectedFeatures);
+
+//                tinyDB.clear();
+
+        tinyDB.putListString("listSup",SelectedSupplier);
+        tinyDB.putListString("listFet",SelectedFeatures);
+
+//                tinyDB.remove("listSup");
+//                tinyDB.remove("listFet");
+
+        Intent filrestintent=new Intent();
+        filrestintent.putExtra(FILTER_RESPONSE,listModel);
+        setResult(FILTER_RESPONSE_CODE,filrestintent);
+        // Log.d("VKK", gson.toJson(listModel));
         finish();
+
     }
 
     public void dialog_filter_back_apply_filter(View view){
@@ -428,7 +445,7 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
         }
         else
         {
-            listModel.setSupplier("");
+            listModel.setSupplier("NoSuppliers");
         }
 
         if (SelectedFeatures.size()>0)
@@ -445,7 +462,7 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
         }
         else
         {
-            listModel.setFeatures("");
+            listModel.setFeatures("NoFeatures");
         }
         String s = new Gson().toJson(SelectedSupplier);
         String s1 = new Gson().toJson(SelectedFeatures);
@@ -461,7 +478,7 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
         Intent filrestintent=new Intent();
         filrestintent.putExtra(FILTER_RESPONSE,listModel);
         setResult(FILTER_RESPONSE_CODE,filrestintent);
-        Log.d("VKK", gson.toJson(listModel));
+       // Log.d("VKK", gson.toJson(listModel));
         finish();
 
     }
