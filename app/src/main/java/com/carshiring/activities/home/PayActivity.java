@@ -918,7 +918,6 @@ live https://checkout.payfort.com
     }
 
 
-
     public void makeBooking(String cateRequest){
         // Utility.showloadingPopup(this);
         final ProgressDialog progressDialog = new ProgressDialog(this);

@@ -208,12 +208,6 @@ public class UserDashActivity extends AppBaseActivity {
         // Sets the Bitmap returned by doInBackground
         @Override
         protected void onPostExecute(Bitmap result) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Utility.hidepopup();
-                }
-            });
             imgUser.setImageBitmap(result);
             img = Utility.BitMapToString(result);
 //

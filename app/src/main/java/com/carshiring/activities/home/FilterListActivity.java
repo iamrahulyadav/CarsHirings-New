@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -40,7 +41,9 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
     Gson gson =new Gson();
     private ArrayList<String> SelectedFeatures = new ArrayList<String>();
 
+    private Dialog dialog;
 
+/*
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -56,7 +59,8 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
 
         Log.d("VKK", "onRestoreInstanceState: " + savedInstanceState.getStringArrayList("PutSup"));
 
-        /*
+        */
+/*
         ArrayList<String> fet = new ArrayList<>();
         fet.addAll(savedInstanceState.getStringArrayList("PutFeat")) ;
 
@@ -81,8 +85,10 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
                     selectedSupplier(j);
                 }
             }
-        }*/
+        }*//*
+
     }
+*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -228,7 +234,7 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
         applyfilter.setOnClickListener(this);
 
 
-//        createMyDialog();
+        createMyDialog();
 
     }
 
@@ -379,18 +385,93 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
     }
 
 
+
     private void createMyDialog(){
 
-        Dialog dialog = new Dialog(FilterListActivity.this);
-//        reques
+        dialog = new Dialog(FilterListActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_filter_back);
+        dialog.setCancelable(false);
+    }
+
+    public void dialog_filter_back_exit(View view){
+        finish();
+    }
+
+    public void dialog_filter_back_apply_filter(View view){
+
+        for(FilterDefaultMultipleListModel model:supplierMultipleListModels)
+        {
+            if (model.isChecked())
+            {
+                SelectedSupplier.add(model.getName());
+            }
+        }
+        for(FilterDefaultMultipleListModel model:featuresMultipleListModels)
+        {
+            if (model.isChecked())
+            {
+                SelectedFeatures.add(model.getName());
+            }
+        }
+        FilterDefaultMultipleListModel listModel=new FilterDefaultMultipleListModel();
+
+        if (SelectedSupplier.size()>0) {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (String se : SelectedSupplier) {
+                stringBuilder.append(se);
+                stringBuilder.append(SEPARATOR);
+            }
+            String sel = stringBuilder.toString();
+            sel = sel.substring(0, sel.length() - SEPARATOR.length());
+            listModel.setSupplier(sel);
+        }
+        else
+        {
+            listModel.setSupplier("");
+        }
+
+        if (SelectedFeatures.size()>0)
+        {
+            StringBuilder stringBuilder2=new StringBuilder();
+            for(String se:SelectedFeatures)
+            {
+                stringBuilder2.append(se);
+                stringBuilder2.append(SEPARATOR);
+            }
+            String sel2=stringBuilder2.toString();
+            sel2=sel2.substring(0,sel2.length()-SEPARATOR.length());
+            listModel.setFeatures(sel2.toString());
+        }
+        else
+        {
+            listModel.setFeatures("");
+        }
+        String s = new Gson().toJson(SelectedSupplier);
+        String s1 = new Gson().toJson(SelectedFeatures);
+
+//                tinyDB.clear();
+
+        tinyDB.putListString("listSup",SelectedSupplier);
+        tinyDB.putListString("listFet",SelectedFeatures);
+
+//                tinyDB.remove("listSup");
+//                tinyDB.remove("listFet");
+
+        Intent filrestintent=new Intent();
+        filrestintent.putExtra(FILTER_RESPONSE,listModel);
+        setResult(FILTER_RESPONSE_CODE,filrestintent);
+        Log.d("VKK", gson.toJson(listModel));
+        finish();
+
     }
 
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        //super.onBackPressed();
 
+        dialog.show();
 
     }
 }
