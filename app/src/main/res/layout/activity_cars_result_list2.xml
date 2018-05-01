@@ -29,7 +29,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/header"
                     android:orientation="vertical"
-                    app:layout_scrollFlags="scroll|enterAlways">
+                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
                     <LinearLayout
                         android:id="@+id/journey_detail_view"

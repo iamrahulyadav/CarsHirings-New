@@ -45,6 +45,7 @@ import com.carshiring.webservices.ApiResponse;
 import com.carshiring.webservices.RetroFitApis;
 import com.carshiring.webservices.RetrofitApiBuilder;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.mukesh.tinydb.TinyDB;
 
 import org.json.JSONException;
@@ -121,7 +122,13 @@ public class CarsResultListActivity extends AppBaseActivity {
         tinyDB = new TinyDB(getApplicationContext());
         dialog=new Dialog(this);
         allView = findViewById(R.id.all_view);
+
+
+
+        // Complet Car List
         listCarResult.addAll(SearchCarFragment.searchData);
+
+
         tvFromDate= (TextView) findViewById(R.id.tvFromDT);
         tvPickDate= (TextView) findViewById(R.id.txtPlaceName);
         tvTodate= (TextView) findViewById(R.id.tvToDT);
@@ -156,7 +163,17 @@ public class CarsResultListActivity extends AppBaseActivity {
         LinearLayoutManager horizontalLayoutManagaer
                 = new LinearLayoutManager(CarsResultListActivity.this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView_carlist_category.setLayoutManager(horizontalLayoutManagaer);
+
+        // Category List
         catBeanList = SearchCarFragment.catBeanList;
+
+
+        Log.d("CatSize", catBeanList.size() + "\n" + listCarResult.size());
+
+
+
+
+
 
         adapter = new CarListCategory(getApplicationContext(), listCarResult, catBeanList,
                 new CarListCategory.OnItemClickListenerCategory() {
@@ -165,6 +182,7 @@ public class CarsResultListActivity extends AppBaseActivity {
                         catgory_clicked(position);
                     }
                 });
+
         recyclerView_carlist_category.setAdapter(adapter);
 
     }
@@ -278,8 +296,8 @@ public class CarsResultListActivity extends AppBaseActivity {
                 listdispaly(filteredtList);
             } else {
                 // Old List
-                Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_filters_applied), Toast.LENGTH_SHORT).show();
-//                listdispaly(filteredtList);
+//                Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_filters_applied), Toast.LENGTH_SHORT).show();
+                listdispaly(filteredtList);
             }
         }
         else
@@ -337,8 +355,10 @@ public class CarsResultListActivity extends AppBaseActivity {
         }
     }
 
-    private boolean isApplyFiltered = false, isFeatureFound = false ;
-    private  ArrayList<SearchData>  filteredtList ;
+    private boolean isApplyFiltered = false, isFeatureFound = false, isSupplierFound = false ;
+    private  ArrayList<SearchData>  filteredtList, filteredtList1, filteredtList2  ;
+
+
 
     private void filter(String supl, String feat){
 
@@ -351,10 +371,13 @@ public class CarsResultListActivity extends AppBaseActivity {
 
 
         filteredtList = new ArrayList<>();
+        filteredtList1 = new ArrayList<>();
+        filteredtList2 = new ArrayList<>();
 
+        outerloop:
         for(int i=0;i<listCarResult.size();i++) {
 
-            isFeatureFound = false;
+            isFeatureFound = false; isSupplierFound = false;
 
             SearchData data = listCarResult.get(i);
 
@@ -362,15 +385,77 @@ public class CarsResultListActivity extends AppBaseActivity {
 
                 String str = suplier[z];
                 if(str.equals(data.getSupplier())){
-                    filteredtList.add(data);
+                    filteredtList1.add(data);
+                    isSupplierFound = true;
+                } else{
+                    isSupplierFound = false;
+        //            break;
                 }
             }
+
+          /*  if (isSupplierFound){
+                filteredtList1.add(data);
+            }else{}
+*/
+
             for(int z=0; z<features.length; z++ ) {
                 String str = features[z];
                 SearchData.FeatureBean data1 = new SearchData.FeatureBean();
 
                 data1 = data.getFeature();
                 String f = gson.toJson(data1);
+
+                try {
+                    JSONObject job = new JSONObject(f);
+
+                    String aircondition = job.getString("aircondition");
+                    String bag = job.getString("bag");
+                    String door = job.getString("door");
+                    String fueltype = job.getString("fueltype");
+                    String transmission = job.getString("transmission");
+
+                    if(str.equals("Air Condition")){
+                        if (aircondition.equals("true")) {
+                            isFeatureFound = true;
+//                        filteredtList.add(data);
+                        } else{
+                            isFeatureFound = false;
+                            break;
+                        }
+                    } else if(str.equals("Automatic")){
+                        if (transmission.equals("Automatic")) {
+                            isFeatureFound = true;
+//                        filteredtList.add(data);
+                        }else{
+                            isFeatureFound = false;
+                            break;
+                        }
+                    } else if(str.equals("4+ Doors")){
+                        if (door.equals("4")) {
+                            isFeatureFound = true;
+//                        filteredtList.add(data);
+                        }else{
+                            isFeatureFound = false;
+                            break;
+                        }
+                    } else{}
+
+/*                    if (aircondition.equals("true")) {
+                        isFeatureFound = true;
+//                        filteredtList.add(data);
+                    } else if (transmission.equals("Automatic")) {
+                        isFeatureFound = true;
+//                        filteredtList.add(data);
+                    } else if (door.equals("4")) {
+                        isFeatureFound = true;
+//                        filteredtList.add(data);
+                    }*/
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+/*
                 String[] f1 = f.split(",");
 
                 for(int y =0; y<f1.length; y++){
@@ -378,20 +463,204 @@ public class CarsResultListActivity extends AppBaseActivity {
                     if(str.equals(f1[y])) {
 
 
+
                         isFeatureFound = true;
                     }
+*/
                 }
-                if(isFeatureFound){
-                    filteredtList.add(data);
+                if(isFeatureFound) {
+                    filteredtList2.add(data);
                 } else{}
-            }
         }
 
+        // FilteredList1 = 15
+        // FilteredList2 = 64
+
+        if(filteredtList1.size() != 0){
+
+            for(int f1=0; f1<filteredtList1.size(); f1++){
+                SearchData data1 = new SearchData();
+                data1 = filteredtList1.get(f1);
+
+                if(filteredtList2.size()!=0) {
+                    for (int f2 = 0; f2 < filteredtList2.size(); f2++) {
+
+                        SearchData data2 = new SearchData();
+                        data2 = filteredtList2.get(f2);
+
+                        if (data1.getId_context().equals(data2.getId_context())) {
+                            filteredtList.add(data1);
+                        } else {
+                        }
+                    }
+                } else{
+                    if(features[0].equals("NoFeatures")){
+                        // No Features selected
+                        filteredtList.addAll(filteredtList1);
+                    } else {
+                        // Features Selected but FilterLis2 Size is 0
+                        filteredtList.clear();
+                    }
+                    break;
+                }
+            }
+        }else{
+            filteredtList.addAll(filteredtList2);
+        }
+
+
+
+
+
+
+
+
+
+        Log.d("VKK", filteredtList1.size() + " ");
+        Log.d("VKK", filteredtList2.size() + " ");
         Log.d("VKK", filteredtList.size() + " ");
 
         isApplyFiltered = true;
     }
+    private void filter1(String supl, String feat){
 
+        String[] suplier=supl.split(",");
+        String[] features=feat.split(",");
+
+
+        Log.d("VKK", "Total no of Suppliers Filtered = " + suplier.length + " ");
+        Log.d("VKK", "Total no of Features Filtered = " + features.length + " ");
+
+
+        filteredtList1 = new ArrayList<>();
+
+        outerloop:
+        for(int i=0;i<listCarResult.size();i++) {
+
+            isFeatureFound = false; isSupplierFound = false;
+
+            SearchData data = listCarResult.get(i);
+
+            for(int z=0; z<suplier.length; z++ ) {
+
+                String str = suplier[z];
+                if(str.equals(data.getSupplier())){
+                    //filteredtList.add(data);
+                    isSupplierFound = true;
+                } else{
+                    isSupplierFound = false;
+                    break;
+                }
+            }
+
+
+            if (isSupplierFound){
+                filteredtList1.add(data);
+            }else{}
+
+
+            for(int z=0; z<features.length; z++ ) {
+                String str = features[z];
+                SearchData.FeatureBean data1 = new SearchData.FeatureBean();
+
+                data1 = data.getFeature();
+                String f = gson.toJson(data1);
+
+                try {
+                    JSONObject job = new JSONObject(f);
+
+                    String aircondition = job.getString("aircondition");
+                    String bag = job.getString("bag");
+                    String door = job.getString("door");
+                    String fueltype = job.getString("fueltype");
+                    String transmission = job.getString("transmission");
+
+                    if(str.equals("Air Condition")){
+                        if (aircondition.equals("true")) {
+                            isFeatureFound = true;
+//                        filteredtList.add(data);
+                        } else{
+                            isFeatureFound = false;
+                            break outerloop;
+                        }
+                    } else if(str.equals("Automatic")){
+                        if (transmission.equals("Automatic")) {
+                            isFeatureFound = true;
+//                        filteredtList.add(data);
+                        }else{
+                            isFeatureFound = false;
+                            break outerloop;
+                        }
+                    } else if(str.equals("4+ Doors")){
+                        if (door.equals("4")) {
+                            isFeatureFound = true;
+//                        filteredtList.add(data);
+                        }else{
+                            isFeatureFound = false;
+                            break outerloop;
+                        }
+                    } else{}
+
+/*                    if (aircondition.equals("true")) {
+                        isFeatureFound = true;
+//                        filteredtList.add(data);
+                    } else if (transmission.equals("Automatic")) {
+                        isFeatureFound = true;
+//                        filteredtList.add(data);
+                    } else if (door.equals("4")) {
+                        isFeatureFound = true;
+//                        filteredtList.add(data);
+                    }*/
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+/*
+                String[] f1 = f.split(",");
+
+                for(int y =0; y<f1.length; y++){
+
+                    if(str.equals(f1[y])) {
+
+
+
+                        isFeatureFound = true;
+                    }
+*/
+            }
+
+            boolean alreadyExist = false;
+            if(isFeatureFound){
+
+                if (isSupplierFound) {
+
+                    for (int x = 0; x < filteredtList1.size(); x++) {
+                        SearchData data2 = new SearchData();
+                        data2 = filteredtList1.get(x);
+                        if (!data2.getId_context().equals(data.getId_context())) {
+                            alreadyExist = false;
+                            //filteredtList.add(data);
+                        } else {
+                            alreadyExist = true;
+                            break;
+                        }
+                    }
+                    if(!alreadyExist) {
+                        filteredtList1.add(data);
+                    }else{}
+                } else{
+                    filteredtList1.add(data);
+                }
+            } else{}
+        }
+
+        Log.d("VKK", filteredtList1.size() + " ");
+
+        isApplyFiltered = true;
+    }
+
+/*
     private void getAC(String AC){
 
         for (SearchData searchData: listCarResult){
@@ -478,8 +747,10 @@ public class CarsResultListActivity extends AppBaseActivity {
             }
         }
     }
+*/
 
 
+/*
     private void filterlist(String supl, String feat) {
 
         String[] suplier=supl.split(",");
@@ -544,6 +815,7 @@ public class CarsResultListActivity extends AppBaseActivity {
         Log.d("Filtere list",""+ filteredtList.size());
         isApplyFiltered=true;
     }
+*/
 
 
 
