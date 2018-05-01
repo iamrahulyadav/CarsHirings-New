@@ -164,7 +164,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 } else {
                     et_driver_age.setVisibility(View.VISIBLE);
                 }
-
             }
         });
 
@@ -199,7 +198,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 showTimePicker("returning");
             }
         });
-
 
         chkUseCurrentLocation = (CheckBox) view.findViewById(R.id.chkUseCurrentLocation);
         chkUseCurrentLocation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -1100,7 +1098,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                     return false ;
                 }
             }
-
         }else{
             useCurrentLocation = 1 ;
             //currentLat
@@ -1145,7 +1142,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
     @Override
     public void refreshTokenCallBack() {
         token =  tinyDB.getString("access_token") ;
-        requestForSearchCar() ;
+        requestForSearchCar1() ;
     }
 
 }

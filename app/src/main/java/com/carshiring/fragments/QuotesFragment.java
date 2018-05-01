@@ -150,7 +150,7 @@ public class QuotesFragment extends Fragment implements QuotesAdapter.QuoteInter
                         }
                         quotesAdapter.notifyDataSetChanged();
                     } else {
-                        Toast.makeText(getContext(), ""+response.body().message, Toast.LENGTH_SHORT).show();
+                      //  Toast.makeText(getContext(), ""+response.body().message, Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Utility.message(getContext(), response.body().message);

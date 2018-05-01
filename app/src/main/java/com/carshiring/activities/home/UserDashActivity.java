@@ -316,7 +316,7 @@ public class UserDashActivity extends AppBaseActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Utility.showLoading(UserDashActivity.this,getResources().getString(R.string.loading));
+//            Utility.showLoading(UserDashActivity.this,getResources().getString(R.string.loading));
         }
 
         @Override
@@ -331,7 +331,7 @@ public class UserDashActivity extends AppBaseActivity {
         // Sets the Bitmap returned by doInBackground
         @Override
         protected void onPostExecute(Bitmap result) {
-            Utility.hidepopup();
+         //   Utility.hidepopup();
             imgUserWall.setImageBitmap(result);
         }
 

@@ -107,7 +107,6 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
         holder.txtCarName.setText(bookinglist.get(position).getBooking_car_model());
         holder.txtPaymentBy.setText(bookinglist.get(position).getBooking_company_name());
 
-
         Glide.with(context).load(bookinglist.get(position).getBooking_supllier_log()).into(holder.imgLogo);
         Glide.with(context).load(bookinglist.get(position).getBooking_car_image()).into(holder.car_image);
 

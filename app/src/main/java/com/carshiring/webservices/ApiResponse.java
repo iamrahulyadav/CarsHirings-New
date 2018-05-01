@@ -19,6 +19,7 @@ public class ApiResponse {
     public Data response ;
     public String msg;
     public String image;
+    public String last_insert_id;
 
    // public ContactUs contactUs;
 }
