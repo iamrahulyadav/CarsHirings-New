@@ -182,12 +182,13 @@ public class LocationSelectionActivity extends AppBaseActivity {
                                 catBeans1.addAll(listLocations);
                                 listLocations.clear();
                                 listLocations.addAll(catBeans1);
-
                                 adapter.notifyDataSetChanged();
                             } else {
                                 Utility.message(getApplicationContext(), getResources().getString(R.string.location_not_found));
                             }
 
+                        } else {
+                            Utility.message(getApplicationContext(), getResources().getString(R.string.location_not_found));
                         }
                     }else{
                         getToken(_this);
@@ -199,7 +200,7 @@ public class LocationSelectionActivity extends AppBaseActivity {
             public void onFailure(Call<ApiResponse> call, Throwable t) {
                 Utility.hidepopup();
                 Log.d(TAG, "onFailure: "+t.getMessage());
-                Toast.makeText(LocationSelectionActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LocationSelectionActivity.this, "Server error please try again", Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -1,5 +1,6 @@
 package com.carshiring.activities.home;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -101,7 +102,7 @@ Merchant Identifier: daouwTJI
     public List<WalletHistoryData> walletHistoryData = new ArrayList<>();
     public List<PointHistoryData>pointHistoryData = new ArrayList<>();
     double creditAmt, debitAmt,walletAmt, totalDebit, totalPrice,totalCredit,totalPoint,pointValue,totalDebitPoint,
-            totalCreditPoint, creditPoint, debitPoint,couponvalue, walBal,payfortAmt, discountvalue,pointBal,
+            totalCreditPoint, creditPoint,payfortAmt1, debitPoint,couponvalue, walBal,payfortAmt, discountvalue,pointBal,
             usepoint, useWallet;
     EditText edtCoupon;
     Gson gson = new Gson();
@@ -216,7 +217,8 @@ Merchant Identifier: daouwTJI
 
                             if(d > walletAmt){
                                 d = d - walletAmt;
-                                booking_payfort = String.valueOf(d);
+                                payfortAmt1 = d;
+                                booking_payfort = String.valueOf(payfortAmt1);
                                 booking_wallet = String.valueOf(walletAmt);
                                 booking_point = String.valueOf(pointValue);
                                 requestPurchase(booking_payfort);
@@ -224,6 +226,7 @@ Merchant Identifier: daouwTJI
                             }else{
                                 booking_wallet = String.valueOf(d);
                                 booking_point= String.valueOf(pointValue);
+                                booking_payfort = String.valueOf(payfortAmt1);
                                 String a = gson.toJson(setBooking());
                                 bookCar(a);
 //                                makeBooking(a);
@@ -231,7 +234,7 @@ Merchant Identifier: daouwTJI
 
                         } else {
                             booking_point=String.valueOf(totalPrice);
-                            booking_payfort="";
+                            booking_payfort = String.valueOf(payfortAmt1);
                             booking_wallet="";
                             String a = gson.toJson(setBooking());
                             bookCar(a);
@@ -242,16 +245,16 @@ Merchant Identifier: daouwTJI
                         usepoint = pointValue;
                         if (usepoint>=totalPrice){
                             booking_point=String.valueOf(totalPrice);
-                            booking_payfort="";
+                            booking_payfort = String.valueOf(payfortAmt1);
                             booking_wallet="";
                             String s = gson.toJson(setBooking());
 //                            makeBooking(s);
                             bookCar(s);
                         } else {
                             booking_wallet="";
-                            payfortAmt = totalPrice-usepoint;
+                            payfortAmt1 = totalPrice-usepoint;
                             booking_point = String.valueOf(usepoint);
-                            booking_payfort = String.valueOf(payfortAmt);
+                            booking_payfort = String.valueOf(payfortAmt1);
                             requestPurchase(booking_payfort);
                         }
                     } else if (txtCheckWallet.isChecked()){
@@ -259,7 +262,6 @@ Merchant Identifier: daouwTJI
                         if (useWallet>=totalPrice){
                             booking_wallet = String.valueOf(totalPrice);
                             booking_point= "";
-
                             String s = gson.toJson(setBooking());
                             Log.d(TAG, "onClick: booking wal"+s);
 //                            makeBooking(s);
@@ -513,10 +515,7 @@ Merchant Identifier: daouwTJI
                         txtWalletValueAmt.setVisibility(View.GONE);
                     }
                     txtPAyAmt.setText("Total payable amount : SAR "+ String.valueOf(df2.format(payfortAmt)));
-
                     break;
-
-
             }
 
         } else {
@@ -574,11 +573,10 @@ Merchant Identifier: daouwTJI
 
                                 txtWalletBal.setText("("+getResources().getString(R.string.txtAvailable)+ String.valueOf(walBal) +")");
                                 payfortAmt = s-walletAmt;
-                                d=payfortAmt;
+                                d=walletAmt;
 //                               txtPAyAmt.setText("Total payable amount : "+ String.valueOf(df2.format(payfortAmt)));
-
                             }
-
+//                            txtWalletValueAmt.setText("Wallet : SAR "+ String.valueOf(df2.format(d)));
                         }
 //                      if point not checked
                         else {
@@ -654,7 +652,6 @@ Sha request and response pharse
             default:
                 return super.onOptionsItemSelected(item);
         }
-
     }
 
     private void requestSDKToken(String language) {
@@ -702,6 +699,7 @@ Sha request and response pharse
                         @Override
                         public void onCancel(Map<String, Object> map, Map<String, Object> map1) {
                             Log.d(TAG, "onCancel: "+(String)map1.get("response_message"));
+                            payfortAmt = 0;
                             Toast.makeText(getApplicationContext(),  (String)map1.get("response_message"),
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -719,7 +717,6 @@ Sha request and response pharse
                             Log.d(TAG, "onSuccess: "+s);
 //                            makeBooking(s);
                             bookCar(s);
-
                         }
 
                         @Override
@@ -759,10 +756,6 @@ Sha request and response pharse
                 .append("service_command=").append("SDK_TOKEN")
                 .append(REQUEST_PHRASE);
 
-
-        /*test url https://sbcheckout.payfort.com
-live https://checkout.payfort.com
-*/
         String signature = Utility.getSHA256Hash(base.toString());
         final MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
         JSONObject jsonObject = new JSONObject() ;
@@ -900,6 +893,10 @@ live https://checkout.payfort.com
                                             txtCoupanValue.setText("Coupon value : "+ String.valueOf(couponvalue));
                                         } else {
                                             couponvalue = Double.parseDouble(discountcouponBean.getOffers_value());
+                                            if (couponvalue==100){
+                                                txtcheckPoint.setEnabled(false);
+                                                txtCheckWallet.setEnabled(false);
+                                            }
                                             discountvalue = (totalPrice*couponvalue)/100;
                                             discountedPrice = totalPrice-(totalPrice*couponvalue)/100;
                                             if (discountedPrice>totalPrice){
@@ -907,6 +904,7 @@ live https://checkout.payfort.com
                                             } else {
                                                 dis = discountedPrice;
                                             }
+
                                             txtCoupanValue.setVisibility(View.VISIBLE);
                                             txtCoupanValue.setText("Coupon value : SAR "+ String.valueOf(df2.format((totalPrice*couponvalue)/100))+ "("+String.valueOf(couponvalue)+"%)");
                                         }
@@ -980,6 +978,8 @@ live https://checkout.payfort.com
 //            coupon value 100% applied
             else
              {
+                 txtCheckWallet.setEnabled(false);
+                 txtcheckPoint.setEnabled(false);
                 makeBooking(cate);
             }
         }
@@ -1073,22 +1073,23 @@ live https://checkout.payfort.com
                         /*{"error_code":101,"status":true,"response":{"booking_id":"DT1521457211523"}}*/
                         try {
                             final JSONObject jsonObject = new JSONObject(msg);
-                            if (jsonObject.getBoolean("status")){
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(PayActivity.this, "Booking success", Toast.LENGTH_SHORT).show();
-                                        try {
-                                            JSONObject jsonObject1 = jsonObject.getJSONObject("response");
-                                            String booking = jsonObject1.getString("booking_id");
-                                            if (lastPointid!=null){
-                                                updatePointId(lastPointid,booking);
-                                            }
-                                            if (lastWalletId!=null){
-                                                updateWalletId(lastWalletId,booking);
-                                            }
+                            if (jsonObject.has("status")){
+                                if (jsonObject.getBoolean("status")){
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(PayActivity.this, "Booking success", Toast.LENGTH_SHORT).show();
+                                            try {
+                                                JSONObject jsonObject1 = jsonObject.getJSONObject("response");
+                                                String booking = jsonObject1.getString("booking_id");
+                                                if (lastPointid!=null){
+                                                    updatePointId(lastPointid,booking);
+                                                }
+                                                if (lastWalletId!=null){
+                                                    updateWalletId(lastWalletId,booking);
+                                                }
 
-                                            double pointDebit, walletValue = 0, remainingamt;
+                                                double pointDebit, walletValue = 0, remainingamt;
                                            /* if ((txtcheckPoint.isChecked()&&txtCheckWallet.isChecked()
                                                     ||(txtCheckWallet.isChecked()&&txtcheckPoint.isChecked()&&txtCheckPay.isChecked())))
                                             {
@@ -1123,17 +1124,24 @@ live https://checkout.payfort.com
                                                 }
                                                 debitWallet(booking,user_id,String.valueOf(walletValue));
                                             }*/
+                                                if (couponvalue==100){
+                                                    earnPoint="0.0";
+                                                    creditPoint(booking,user_id,earnPoint);
+                                                } else {
+                                                    creditPoint(booking,user_id,earnPoint);
+                                                }
 
-                                            creditPoint(booking,user_id,earnPoint);
-
-                                            startActivity(new Intent(PayActivity.this, ThankYou.class).putExtra("bookingid", booking));
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
+                                                startActivity(new Intent(PayActivity.this, ThankYou.class).putExtra("bookingid", booking));
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
                                         }
-                                    }
-                                });
-                            } else {
-                                Toast.makeText(PayActivity.this, ""+getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+                                    });
+
+                            } else{
+                                    setErrorDialog();
+                            }
+
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -1143,6 +1151,24 @@ live https://checkout.payfort.com
             }
         });
     }
+
+
+    Dialog dialog ;
+
+    private void setErrorDialog(){
+        dialog = new Dialog(PayActivity.this);
+        dialog.setContentView(R.layout.error_dialog);
+        TextView txtOk = dialog.findViewById(R.id.error_dialog_txtOk);
+        txtOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(PayActivity.this, MainActivity.class));
+                finish();
+            }
+        });
+        dialog.show();
+    }
+
 
 
     private void updatePointId(String last_id, String booking_id){

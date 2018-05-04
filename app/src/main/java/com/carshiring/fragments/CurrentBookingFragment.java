@@ -103,7 +103,6 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
         });
 
         recyclerView= (RecyclerView) view.findViewById(R.id.rec_prev_booki_list);
-
         RecyclerView.LayoutManager mlayoutManager=new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mlayoutManager);
 

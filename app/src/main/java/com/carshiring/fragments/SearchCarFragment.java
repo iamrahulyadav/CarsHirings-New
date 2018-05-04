@@ -39,6 +39,7 @@ import com.carshiring.activities.home.SearchQuery;
 import com.carshiring.activities.home.SearchbyMapActivity;
 import com.carshiring.models.CatRequest;
 import com.carshiring.models.Category;
+
 import com.carshiring.models.MArkupdata;
 import com.carshiring.models.Point;
 import com.carshiring.models.SearchData;
@@ -68,6 +69,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -164,6 +167,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 } else {
                     et_driver_age.setVisibility(View.VISIBLE);
                 }
+
             }
         });
 
@@ -198,6 +202,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 showTimePicker("returning");
             }
         });
+
 
         chkUseCurrentLocation = (CheckBox) view.findViewById(R.id.chkUseCurrentLocation);
         chkUseCurrentLocation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -446,14 +451,19 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
 
     public static List<Category.ResponseBean.CatBean>catBeanList = new ArrayList<>();
     public static Category category = new Category();
+
     CatRequest cateRequest = new CatRequest();
     HashMap<Double,String>map1;
 
     public static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
+
+
     public void getCat(CatRequest cateRequest) {
+
         if (catBeanList!=null){
             catBeanList.clear();
         }
+
         Utility.showloadingPopup(getActivity());
         String cat = gson.toJson(cateRequest);
         Log.d(TAG, "getCat: "+cat);
@@ -541,6 +551,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                                                 return 1;
                                             }
                                         });
+
                                         set.addAll(catBeanList);
                                         catBeanList.clear();
                                         catBeanList.addAll(set);
@@ -558,6 +569,157 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                    }
+                }
+            }
+        });
+    }
+
+    private ArrayList<String> list1, list2, list3, list4, list5;
+
+    public void getCat1(CatRequest cateRequest) {
+
+        catBeanList = new ArrayList<>();
+
+        list1 = new ArrayList<>();
+        list2 = new ArrayList<>();
+        list3 = new ArrayList<>();
+        list4 = new ArrayList<>();
+        list5 = new ArrayList<>();
+
+        for(int i=0; i<searchData.size(); i++){
+            String str = searchData.get(i).getPrice();
+            list5.add(str);
+        }
+
+
+        Utility.showloadingPopup(getActivity());
+        String cat = gson.toJson(cateRequest);
+        Log.d(TAG, "getCat: "+cat);
+
+        RequestBody requestBody = RequestBody.create(MEDIA_TYPE,cat);
+
+        final Request request = new Request.Builder()
+                .url(RetrofitApiBuilder.CarHires_BASE_URL+"category_list")
+                .post(requestBody)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("cache-control", "no-cache")
+                .build();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(10000, TimeUnit.SECONDS)
+                .writeTimeout(10000, TimeUnit.SECONDS)
+                .readTimeout(30000, TimeUnit.SECONDS)
+                .build();
+
+        Utility.showloadingPopup(getActivity());
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, final IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String msg = e.getMessage();
+                        category = gson.fromJson(msg, Category.class);
+                        Utility.message(getContext(), getResources().getString(R.string.no_internet_connection));
+                        Utility.hidepopup();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                Utility.hidepopup();
+                if (response!=null&&response.body().toString().length()>0){
+                    if (request.body()!=null){
+                        String msg = response.body().string();
+                        Log.d(TAG, "onResponse: msg"+msg);
+                        category = gson.fromJson(msg,Category.class);
+
+                        try {
+                            JSONObject job = new JSONObject(msg);
+                            JSONObject job1 = job.getJSONObject("response");
+                            JSONArray jar = job1.getJSONArray("cat");
+                            Log.d(TAG, "VKKK" + searchData.size() );
+                            Log.d(TAG, "VKKK" + jar.length() );
+
+                            for(int i=0; i<jar.length(); i++){
+                                JSONObject job2 = jar.getJSONObject(i);
+
+                                list1.add(job2.getString("category_id"));
+                                list2.add(job2.getString("category_name"));
+                                list3.add(job2.getString("category_image"));
+                                list4.add(job2.getString("code"));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        Log.d("MyListSize", list1.size() + "");                 // Id
+                        Log.d("MyListSize", list2.size() + "");                 // Name
+                        Log.d("MyListSize", list3.size() + "");                 // Image
+                        Log.d("MyListSize", list4.size() + "");                 // Code
+                        Log.d("MyListSize", list5.size() + "");                 // Price
+
+                        ArrayList<String> list_2 = new ArrayList<>();
+
+                        for(int i=0; i< list2.size(); i++){
+                            String str = list2.get(i);
+                            boolean alreadyAdded = false;
+                            for(int j=0; j<list_2.size(); j++){
+                                if(str.equals(list_2.get(j))){
+                                    alreadyAdded = true;
+                                } else{
+                                    alreadyAdded = false;
+                                }
+                            }
+                            if (!alreadyAdded){
+                                list_2.add(str);
+                            }
+                        }
+
+                        // New Sorted Name List (One Name)
+                        String minposition;
+                        for(int i=0; i<list_2.size(); i++){
+                            String name = list_2.get(i);
+                            ArrayList<Integer> list_5 = new ArrayList<>();
+                            ArrayList<String> position = new ArrayList<>();
+
+                            for(int j=0; j<list2.size(); j++){
+
+                                if(name.equals(list2.get(j))){
+                                    position.add(j+"");
+                                    list_5.add(Integer.parseInt(list5.get(j)));
+                                }else{}
+                            }
+                            int minprice = Collections.min(list_5);
+                            for(int j=0; j<list_5.size(); j++){
+                                if((minprice+"").equals(list_5.get(j))){
+                                    minposition = position.get(j);
+                                } else{}
+                            }
+                        }
+
+
+
+
+
+                    /*    try {
+                            JSONObject job = new JSONObject(msg);
+                            if(job.getBoolean("status")) {
+                                JSONObject job1 = job.getJSONObject("response");
+
+                                JSONArray jar = job1.getJSONArray("cat");
+
+                                CategoryNew categoryNew = new CategoryNew();
+
+                                for(int i=0; i<jar.length();i++){
+
+                                    categoryNew
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }*/
                     }
                 }
             }
@@ -675,6 +837,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                     if (status){
                         JSONObject responseObject = jsonObject.getJSONObject("response");
                         JSONObject car_listObject = responseObject.getJSONObject("car_list");
+                        Log.d(TAG, "CarList" + car_listObject);
                         Iterator<String> iter = car_listObject.keys();
                         while (iter.hasNext()) {
                             String key = iter.next();
@@ -704,6 +867,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                                         feature.setDoor(featureObject.getString("door"));
                                     }
                                     category1 = (String) object.get("category");
+                                    Log.d("MyCode", category1);
                                     model = object.getString("model");
                                     model_code = object.getString("model_code");
                                     image = (String) object.get("image");
@@ -726,6 +890,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                                         SearchData.CoveragesBean bean = new SearchData.CoveragesBean();
                                         JSONObject jsonObject1 = (JSONObject) coveragesArray.get(i);
                                         String code = jsonObject1.getString("code");
+                                        Log.d(TAG, "VKCODE" + code);
                                         String name = jsonObject1.getString("name");
                                         String currency = jsonObject1.getString("currency");
                                         String desc = jsonObject1.getString("desc");
@@ -832,13 +997,11 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             }
         };
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(30000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(40000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(stringRequest);
 
 
     }
-
-
 
     private void requestForSearchCar() {
         if(!validateData()){
@@ -1098,6 +1261,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                     return false ;
                 }
             }
+
         }else{
             useCurrentLocation = 1 ;
             //currentLat

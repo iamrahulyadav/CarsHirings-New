@@ -6,48 +6,38 @@ package com.carshiring.models;
  */
 public class ContactUs {
 
+            /**
+             * reservation_cancellation_issues_contact : For reservation & cancellation issues contact us on booking@carshiring.com
+             * inquiry : Any general inquiry info@carshiring.com
+             * addrees : Riyadh Saudi Arabia
+             */
 
-    /**
-     * sitesetting_name : كارز هيرنق
-     * sitesetting_phone : 920000593
-     * sitesetting_email : info@Carshiring.com
-     * sitesetting_address : use
-     */
+            private String reservation_cancellation_issues_contact;
+            private String inquiry;
+            private String addrees;
 
-    private String sitesetting_name;
-    private String sitesetting_phone;
-    private String sitesetting_email;
-    private String sitesetting_address;
+            public String getReservation_cancellation_issues_contact() {
+                return reservation_cancellation_issues_contact;
+            }
 
-    public String getSitesetting_name() {
-        return sitesetting_name;
-    }
+            public void setReservation_cancellation_issues_contact(String reservation_cancellation_issues_contact) {
+                this.reservation_cancellation_issues_contact = reservation_cancellation_issues_contact;
+            }
 
-    public void setSitesetting_name(String sitesetting_name) {
-        this.sitesetting_name = sitesetting_name;
-    }
+            public String getInquiry() {
+                return inquiry;
+            }
 
-    public String getSitesetting_phone() {
-        return sitesetting_phone;
-    }
+            public void setInquiry(String inquiry) {
+                this.inquiry = inquiry;
+            }
 
-    public void setSitesetting_phone(String sitesetting_phone) {
-        this.sitesetting_phone = sitesetting_phone;
-    }
+            public String getAddrees() {
+                return addrees;
+            }
 
-    public String getSitesetting_email() {
-        return sitesetting_email;
-    }
+            public void setAddrees(String addrees) {
+                this.addrees = addrees;
+            }
 
-    public void setSitesetting_email(String sitesetting_email) {
-        this.sitesetting_email = sitesetting_email;
-    }
-
-    public String getSitesetting_address() {
-        return sitesetting_address;
-    }
-
-    public void setSitesetting_address(String sitesetting_address) {
-        this.sitesetting_address = sitesetting_address;
-    }
 }

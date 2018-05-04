@@ -256,12 +256,14 @@ public class UserDashActivity extends AppBaseActivity {
 
 
     public void getProfile(){
+        Utility.showloadingPopup(UserDashActivity.this);
         RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();
         final Call<ApiResponse> walList = fitApis.profile(user_id);
         walList.enqueue(new Callback<ApiResponse>() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                Utility.hidepopup();
                 if (response!=null){
                     if(response.body().status)
                     {
@@ -294,7 +296,6 @@ public class UserDashActivity extends AppBaseActivity {
                             // Execute the task
                             task.execute(new String[] { url });
                         }
-
                     }
                     else{
                         Utility.message(getApplicationContext(), getResources().getString(R.string.something_wrong));
@@ -304,6 +305,7 @@ public class UserDashActivity extends AppBaseActivity {
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
+                Utility.hidepopup();
                 Toast.makeText(UserDashActivity.this, ""+ getResources().getString(R.string.check_internet), Toast.LENGTH_SHORT).show();
 
                 //   Utility.message(getApplicationContext(), getResources().getString(R.string.check_internet));
@@ -343,10 +345,12 @@ public class UserDashActivity extends AppBaseActivity {
             bmOptions.inSampleSize = 1;
 
             try {
-                stream = getHttpConnection(url);
-                bitmap = BitmapFactory.
-                        decodeStream(stream, null, bmOptions);
-                stream.close();
+               if (stream!=null){
+                   stream = getHttpConnection(url);
+                   bitmap = BitmapFactory.
+                           decodeStream(stream, null, bmOptions);
+                   stream.close();
+               }
             } catch (IOException e1) {
                 e1.printStackTrace();
             }

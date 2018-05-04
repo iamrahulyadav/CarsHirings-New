@@ -75,9 +75,9 @@ public class ContactUsActivity extends AppBaseActivity {
                         address = (TextView) findViewById(R.id.contact_us_address);
                         phone = (TextView) findViewById(R.id.contact_us_phone);
                         TextView email = (TextView) findViewById(R.id.contact_us_email);
-                        address.setText(res.getSitesetting_address());
-                        phone.setText(res.getSitesetting_phone());
-                        email.setText(res.getSitesetting_email());
+                        address.setText(res.getAddrees());
+                        phone.setText(res.getInquiry());
+                        email.setText(res.getReservation_cancellation_issues_contact());
                     } else {
                     }
                 } else {

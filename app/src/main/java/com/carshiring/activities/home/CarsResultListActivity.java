@@ -494,7 +494,13 @@ public class CarsResultListActivity extends AppBaseActivity {
                         }
                     }
                 } else{
-                    filteredtList.addAll(filteredtList1);
+                    if(features[0].equals("NoFeatures")){
+                        // No Features selected
+                        filteredtList.addAll(filteredtList1);
+                    } else {
+                        // Features Selected but FilterLis2 Size is 0
+                        filteredtList.clear();
+                    }
                     break;
                 }
             }
