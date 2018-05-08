@@ -161,7 +161,6 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
                     cancelBooking(accountType, bookingid);
                     dialog.dismiss();
                 }
-
             }
         });
 
@@ -176,7 +175,6 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
             @Override
             public void onClick(View view) {
                 boolean checked = ((RadioButton) view).isChecked();
-
                 if (checked){
                     accountType = "2";
                 }
@@ -208,7 +206,6 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 Utility.hidepopup();
-
                 if (response.body()!=null){
                     if (response.body().status){
                         @SuppressLint("SimpleDateFormat")

@@ -66,15 +66,14 @@ public class CarListCategory extends RecyclerView.Adapter<CarListCategory.MyView
 
                 }
             });
-
         }
     }
 
     int row_index=-1;
 
     public CarListCategory(Context context, List<SearchData> listCarResult,
-                           List<Category.ResponseBean.CatBean> catBeanList, OnItemClickListenerCategory listener
-                         ) {
+                           List<Category.ResponseBean.CatBean> catBeanList,
+                           OnItemClickListenerCategory listener) {
         this.listener = listener;
         this.context = context;
         this.catBeanList = catBeanList;

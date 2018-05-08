@@ -123,8 +123,6 @@ public class CarsResultListActivity extends AppBaseActivity {
         dialog=new Dialog(this);
         allView = findViewById(R.id.all_view);
 
-
-
         // Complet Car List
         listCarResult.addAll(SearchCarFragment.searchData);
 
@@ -169,10 +167,6 @@ public class CarsResultListActivity extends AppBaseActivity {
 
 
         Log.d("CatSize", catBeanList.size() + "\n" + listCarResult.size());
-
-
-
-
 
 
         adapter = new CarListCategory(getApplicationContext(), listCarResult, catBeanList,
