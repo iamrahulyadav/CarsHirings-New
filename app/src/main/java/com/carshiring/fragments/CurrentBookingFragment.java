@@ -118,6 +118,7 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
     }
 
     private Gson gson = new Gson();
+    String payfortValue;
     List<CancledetailBean>cancledetailBeans = new ArrayList<>();
     private void setMyAdapter(final List<BookingHistory> bookingHistory){
         bookingAdapter = new MyBookingAdapter(bookingHistory, cancledetailBeans,getContext(),"c");
@@ -127,7 +128,12 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
             @Override
             public void click(View view, int Position) {
                 bookingid=bookingHistory.get(Position).getBooking_id();
-                setCancelationPop(bookingid);
+                if (bookingHistory.get(Position).getBooking_payfort_value()!=null&&
+                        bookingHistory.get(Position).getBooking_payfort_value().equals("0.00")) {
+                    payfortValue= bookingHistory.get(Position).getBooking_payfort_value();
+
+                }
+                setCancelationPop(bookingid,payfortValue);
             }
         });
         if (bookingHistory.size()>0){
@@ -146,13 +152,18 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
 
     Dialog dialog;
 
-    private void setCancelationPop(final String bookingid){
+    private void setCancelationPop(final String bookingid, String payfortValue){
         dialog.setContentView(R.layout.account_popup_view);
         final RadioButton walletRadioButton= dialog.findViewById(R.id.radio_wallet);
         final RadioButton accountRadioButton= dialog.findViewById(R.id.radio_account);
         final TextView txtSubmit= dialog.findViewById(R.id.account_btnsubit);
         TextView txtCancel = dialog.findViewById(R.id.account_btnCancel);
         dialog.show();
+        if (payfortValue!=null){
+            if (payfortValue.equals("0.00")) {
+                accountRadioButton.setVisibility(View.GONE);
+            }
+        }
 
         txtSubmit.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1126,7 +1126,7 @@ Sha request and response pharse
                                             }*/
                                                 if (couponvalue==100){
                                                     earnPoint="0.0";
-                                                    creditPoint(booking,user_id,earnPoint);
+                                                  //  creditPoint(booking,user_id,earnPoint);
                                                 } else {
                                                     creditPoint(booking,user_id,earnPoint);
                                                 }

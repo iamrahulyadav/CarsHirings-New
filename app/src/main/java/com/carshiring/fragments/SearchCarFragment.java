@@ -699,10 +699,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                             }
                         }
 
-
-
-
-
                     /*    try {
                             JSONObject job = new JSONObject(msg);
                             if(job.getBoolean("status")) {
@@ -820,6 +816,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         final Gson gson = new Gson();
 
 
+
         String url= RetrofitApiBuilder.CarGates_BASE_WEBSERVICE_URL+"webservice/search";
 
         StringRequest  stringRequest = new StringRequest(com.android.volley.Request.Method.POST, url, new com.android.volley.Response.Listener<String>() {
@@ -860,8 +857,8 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                                 } else {
                                     if (object.has("feature")){
                                         JSONObject featureObject = object.getJSONObject("feature");
-                                        feature.setAircondition((String) featureObject.get("aircondition"));
-                                        feature.setBag((String) featureObject.get("bag"));
+                                        feature.setAircondition( featureObject.get("aircondition")+"");
+                                        feature.setBag( featureObject.get("bag")+"");
                                         feature.setFueltype(featureObject.getString("fueltype"));
                                         feature.setTransmission(featureObject.getString("transmission"));
                                         feature.setDoor(featureObject.getString("door"));
@@ -1291,7 +1288,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         // Age
         if(switchDriverAge.isChecked()) {
             isBetweenDriverAge = 1 ;
-            driver_age =  "25";
+            driver_age =  "30";
         }else{
             isBetweenDriverAge= 0 ;
             driver_age = et_driver_age.getText().toString().trim();
@@ -1299,6 +1296,12 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 Toast.makeText(activity, getResources().getString(R.string.enter_driver_age), Toast.LENGTH_SHORT).show();
                 return false ;
             }
+           /* else {
+                if (Integer.parseInt(driver_age)>70||Integer.parseInt(driver_age)<30){
+                    Toast.makeText(activity, "Please enter driver age between 30-70 ", Toast.LENGTH_SHORT).show();
+                    return false ;
+                }
+            }*/
         }
         return true ;
     }

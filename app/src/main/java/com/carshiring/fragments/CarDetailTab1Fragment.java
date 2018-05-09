@@ -216,7 +216,7 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
                 return false;
             }
         }).into(imglogo);
-        carname.setText(CarDetailActivity.modelname + getResources().getString(R.string.or_similar));
+        carname.setText(CarDetailActivity.modelname );
         txtPoint.setText(getResources().getString(R.string.points_collected )+String.valueOf( CarDetailActivity.point));
         carprice.setText(CarDetailActivity.currency + "  " + CarDetailActivity.carPrice+ "/ "
                 + time + " "+ CarDetailActivity.day);
