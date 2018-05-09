@@ -143,6 +143,7 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
 //        Toast.makeText(getApplicationContext(), supplier.size() + "", Toast.LENGTH_SHORT).show();
 //        Toast.makeText(getApplicationContext(), features.size() + "", Toast.LENGTH_SHORT).show();
 
+
       /*  tinyDB.remove("listSup");
         tinyDB.remove("listFet");*/
 

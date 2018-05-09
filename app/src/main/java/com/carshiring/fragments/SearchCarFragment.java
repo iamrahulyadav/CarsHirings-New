@@ -40,6 +40,8 @@ import com.carshiring.activities.home.SearchbyMapActivity;
 import com.carshiring.models.CatRequest;
 import com.carshiring.models.Category;
 
+import com.carshiring.models.CategoryNew;
+
 import com.carshiring.models.MArkupdata;
 import com.carshiring.models.Point;
 import com.carshiring.models.SearchData;
@@ -452,6 +454,8 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
     public static List<Category.ResponseBean.CatBean>catBeanList = new ArrayList<>();
     public static Category category = new Category();
 
+    public static CategoryNew category_new = new CategoryNew();
+
     CatRequest cateRequest = new CatRequest();
     HashMap<Double,String>map1;
 
@@ -505,6 +509,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                         String msg = response.body().string();
                         Log.d(TAG, "onResponse: msg"+msg);
                         category = gson.fromJson(msg,Category.class);
+                        category_new = gson.fromJson(msg,CategoryNew.class);
                         try {
                             JSONObject jsonObject = new JSONObject(msg);
                             if (jsonObject.getBoolean("status")){
@@ -634,6 +639,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                         String msg = response.body().string();
                         Log.d(TAG, "onResponse: msg"+msg);
                         category = gson.fromJson(msg,Category.class);
+                        category_new = gson.fromJson(msg,CategoryNew.class);
 
                         try {
                             JSONObject job = new JSONObject(msg);
@@ -659,6 +665,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                         Log.d("MyListSize", list3.size() + "");                 // Image
                         Log.d("MyListSize", list4.size() + "");                 // Code
                         Log.d("MyListSize", list5.size() + "");                 // Price
+
 
                         ArrayList<String> list_2 = new ArrayList<>();
 
@@ -698,6 +705,13 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                                 } else{}
                             }
                         }
+                        for(int i=0; i<list2.size(); i++){
+                            String name = list2.get(i);
+                        }
+
+
+
+
 
                     /*    try {
                             JSONObject job = new JSONObject(msg);
@@ -944,7 +958,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                             cateList.add(Integer.parseInt(searchDatas.getCategory()));
                         }
                         cateRequest.setCode(cateList);
-                        getCat(cateRequest);
+                        getCat1(cateRequest);
 
                     } else {
 
@@ -1051,7 +1065,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                             cateList.add(Integer.parseInt(searchDatas.getCategory()));
                         }
                         cateRequest.setCode(cateList);
-                        getCat(cateRequest);
+                        getCat1(cateRequest);
 
                     } else {
                         Toast.makeText(activity, ""+response.body().msg, Toast.LENGTH_SHORT).show();
