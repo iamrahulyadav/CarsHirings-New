@@ -107,7 +107,6 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
         holder.txtCarName.setText(bookinglist.get(position).getBooking_car_model());
         holder.txtPaymentBy.setText(bookinglist.get(position).getBooking_company_name());
 
-
         Glide.with(context).load(bookinglist.get(position).getBooking_supllier_log()).into(holder.imgLogo);
         Glide.with(context).load(bookinglist.get(position).getBooking_car_image()).into(holder.car_image);
 
@@ -257,10 +256,10 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
                         bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_booking_amount());
             }
 
-            txtCoupon.setText("Cancellation Charges : SAR "+bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_cancel_charge());
-            txtCreditValue.setVisibility(View.VISIBLE);
-            txtCreditValue.setText("Refundable Amount : SAR "+bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_refundable_amount());
+            txtFullProt.setText("Cancellation Charges : SAR "+bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_cancel_charge());
             txtCoupon.setVisibility(View.VISIBLE);
+            txtCoupon.setText("Refundable Amount : SAR "+bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_refundable_amount());
+            txtFullProt.setVisibility(View.VISIBLE);
             btnCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -276,15 +275,13 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
             } else {
                 txtWallet.setVisibility(View.GONE);
             }
-
             if (bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_credit_amount() != null &&
                     !bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_credit_amount().equalsIgnoreCase("0.00")) {
-                txtFullProt.setVisibility(View.VISIBLE);
-                txtFullProt.setText("Refundable amount to Bank : SAR "+bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_credit_amount());
+                txtCreditValue.setVisibility(View.VISIBLE);
+                txtCreditValue.setText("Refundable amount to Bank : SAR "+bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_credit_amount());
             }
             if (bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_point_amount()!=null
                     &&!bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_point_amount().equalsIgnoreCase("0.00")){
-
                 txtPoint.setVisibility(View.VISIBLE);
                 txtPoint.setText("Refundable Points Value : SAR " +String.valueOf(bookinglist.get(position)
                         .getBooking_canceldetail().getBooking_cancel_point_amount()));
@@ -299,6 +296,7 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
     public int getItemCount() {
         return bookinglist.size();
     }
+
     Button btnBookingCharge, btnCancelationCharge;
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -340,7 +338,8 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
             if (type.equals("p")) {
                 txtCancel.setVisibility(View.GONE);
             }
-            txtCancel.setOnClickListener(this);/*
+            txtCancel.setOnClickListener(this);
+            /*
             btnCancelationCharge.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

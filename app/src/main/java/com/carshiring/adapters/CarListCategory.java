@@ -66,15 +66,14 @@ public class CarListCategory extends RecyclerView.Adapter<CarListCategory.MyView
 
                 }
             });
-
         }
     }
 
     int row_index=-1;
 
     public CarListCategory(Context context, List<SearchData> listCarResult,
-                           List<Category.ResponseBean.CatBean> catBeanList, OnItemClickListenerCategory listener
-                         ) {
+                           List<Category.ResponseBean.CatBean> catBeanList,
+                           OnItemClickListenerCategory listener) {
         this.listener = listener;
         this.context = context;
         this.catBeanList = catBeanList;
@@ -100,12 +99,12 @@ public class CarListCategory extends RecyclerView.Adapter<CarListCategory.MyView
                 .into(holder.image);
         //holder.txtCode.setText(/*"code"*/catBeanList.get(position).getCode() +"");
         markUp = Double.parseDouble(SearchCarFragment.markup);
-        String price = listCarResult.get(position).getPrice();
-        double d = Double.parseDouble(price);
-        double priceNew  = d+(d*markUp)/100;
+      //  String price = listCarResult.get(position).getPrice();
+     //  double d = Double.parseDouble(price);
+      //  double priceNew  = d+(d*markUp)/100;
 
-        holder.txtCode.setText(/*"code"*/listCarResult.get(position).getCurrency() + " " +
-                " "+String.valueOf(df2.format(priceNew)));
+       /* holder.txtCode.setText(*//*"code"*//*listCarResult.get(position).getCurrency() + " " +
+                " "+String.valueOf(df2.format(priceNew)));*/
 
         holder.bindListener(position, listener);
         if(row_index==position){

@@ -133,7 +133,7 @@
     <string name="usepointvalue">Do you want to use your credit balance"</string>
 
     <!--fragment search-->
-    <string name="txtSearchACar">Search for a car</string>
+    <string name="txtSearchACar">Search for car hire</string>
     <string name="txtFindCheapCar">Find cheap car hire at 49,000 locations</string>
     <string name="txtUseMyLocation">Use My Location</string>
     <string name="edtPickUp">Pick-up Location</string>

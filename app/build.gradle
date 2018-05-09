@@ -48,6 +48,6 @@ dependencies {
     implementation 'com.google.guava:guava:16.0.1'
     implementation 'com.android.volley:volley:1.0.0'
     implementation project(':FORTSDKv1.4.2')
-    implementation 'com.nispok:snackbar:2.11.+'
+    implementation 'com.nispok:snackbar:2.11.0'
     implementation project(':gd_helper-release')
 }

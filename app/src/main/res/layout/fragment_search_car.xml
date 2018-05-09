@@ -119,11 +119,16 @@
                 android:id="@+id/fragment_search_imgarrow"
                 android:layout_height="50dp" />
         </RelativeLayout>
+
         <EditText
             android:id="@+id/et_driver_age"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
             android:padding="10dp"
+            android:inputType="number"
+            android:maxLength="2"
+            android:maxLines="1"
+            android:imeOptions="actionDone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/switchDriverAgebw"

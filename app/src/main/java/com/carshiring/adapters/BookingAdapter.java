@@ -112,8 +112,6 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.MyViewHo
             if(item!=null)
             {
                 item.click(v,getPosition());
-
-
             }
         }
     }

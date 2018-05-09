@@ -39,7 +39,9 @@ import com.carshiring.activities.home.SearchQuery;
 import com.carshiring.activities.home.SearchbyMapActivity;
 import com.carshiring.models.CatRequest;
 import com.carshiring.models.Category;
+
 import com.carshiring.models.CategoryNew;
+
 import com.carshiring.models.MArkupdata;
 import com.carshiring.models.Point;
 import com.carshiring.models.SearchData;
@@ -69,6 +71,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -449,7 +453,9 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
 
     public static List<Category.ResponseBean.CatBean>catBeanList = new ArrayList<>();
     public static Category category = new Category();
+
     public static CategoryNew category_new = new CategoryNew();
+
     CatRequest cateRequest = new CatRequest();
     HashMap<Double,String>map1;
 
@@ -660,9 +666,49 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                         Log.d("MyListSize", list4.size() + "");                 // Code
                         Log.d("MyListSize", list5.size() + "");                 // Price
 
+
+                        ArrayList<String> list_2 = new ArrayList<>();
+
+                        for(int i=0; i< list2.size(); i++){
+                            String str = list2.get(i);
+                            boolean alreadyAdded = false;
+                            for(int j=0; j<list_2.size(); j++){
+                                if(str.equals(list_2.get(j))){
+                                    alreadyAdded = true;
+                                } else{
+                                    alreadyAdded = false;
+                                }
+                            }
+                            if (!alreadyAdded){
+                                list_2.add(str);
+                            }
+                        }
+
+                        // New Sorted Name List (One Name)
+                        String minposition;
+                        for(int i=0; i<list_2.size(); i++){
+                            String name = list_2.get(i);
+                            ArrayList<Integer> list_5 = new ArrayList<>();
+                            ArrayList<String> position = new ArrayList<>();
+
+                            for(int j=0; j<list2.size(); j++){
+
+                                if(name.equals(list2.get(j))){
+                                    position.add(j+"");
+                                    list_5.add(Integer.parseInt(list5.get(j)));
+                                }else{}
+                            }
+                            int minprice = Collections.min(list_5);
+                            for(int j=0; j<list_5.size(); j++){
+                                if((minprice+"").equals(list_5.get(j))){
+                                    minposition = position.get(j);
+                                } else{}
+                            }
+                        }
                         for(int i=0; i<list2.size(); i++){
                             String name = list2.get(i);
                         }
+
 
 
 
@@ -784,6 +830,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         final Gson gson = new Gson();
 
 
+
         String url= RetrofitApiBuilder.CarGates_BASE_WEBSERVICE_URL+"webservice/search";
 
         StringRequest  stringRequest = new StringRequest(com.android.volley.Request.Method.POST, url, new com.android.volley.Response.Listener<String>() {
@@ -824,8 +871,8 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                                 } else {
                                     if (object.has("feature")){
                                         JSONObject featureObject = object.getJSONObject("feature");
-                                        feature.setAircondition((String) featureObject.get("aircondition"));
-                                        feature.setBag((String) featureObject.get("bag"));
+                                        feature.setAircondition( featureObject.get("aircondition")+"");
+                                        feature.setBag( featureObject.get("bag")+"");
                                         feature.setFueltype(featureObject.getString("fueltype"));
                                         feature.setTransmission(featureObject.getString("transmission"));
                                         feature.setDoor(featureObject.getString("door"));
@@ -961,7 +1008,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             }
         };
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(30000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(40000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(stringRequest);
 
 
@@ -1255,7 +1302,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         // Age
         if(switchDriverAge.isChecked()) {
             isBetweenDriverAge = 1 ;
-            driver_age =  "25";
+            driver_age =  "30";
         }else{
             isBetweenDriverAge= 0 ;
             driver_age = et_driver_age.getText().toString().trim();
@@ -1263,6 +1310,12 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 Toast.makeText(activity, getResources().getString(R.string.enter_driver_age), Toast.LENGTH_SHORT).show();
                 return false ;
             }
+           /* else {
+                if (Integer.parseInt(driver_age)>70||Integer.parseInt(driver_age)<30){
+                    Toast.makeText(activity, "Please enter driver age between 30-70 ", Toast.LENGTH_SHORT).show();
+                    return false ;
+                }
+            }*/
         }
         return true ;
     }
@@ -1270,7 +1323,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
     @Override
     public void refreshTokenCallBack() {
         token =  tinyDB.getString("access_token") ;
-        requestForSearchCar() ;
+        requestForSearchCar1() ;
     }
 
 }

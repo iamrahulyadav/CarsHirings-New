@@ -40,7 +40,6 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
     private ArrayList<String> SelectedSupplier = new ArrayList<String>();
     Gson gson =new Gson();
     private ArrayList<String> SelectedFeatures = new ArrayList<String>();
-
     private Dialog dialog;
 
 /*
@@ -140,16 +139,9 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
         }
 
 
-
-
-
         Log.d("SIZE", supplier.size()+"");
 //        Toast.makeText(getApplicationContext(), supplier.size() + "", Toast.LENGTH_SHORT).show();
 //        Toast.makeText(getApplicationContext(), features.size() + "", Toast.LENGTH_SHORT).show();
-
-
-
-
 
 
       /*  tinyDB.remove("listSup");
