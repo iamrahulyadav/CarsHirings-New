@@ -111,10 +111,10 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
         }
         ArrayList<Double>doublPrice = new ArrayList<>();
         for (SearchData searchData: listCarResult){
-            if (catBeanList.get(position).getCode()==Integer.parseInt(searchData.getCategory())){
+           /* if (catBeanList.get(position).getCode()==Integer.parseInt(searchData.getCategory())){
                 doublPrice.add(Double.parseDouble(searchData.getPrice()));
 
-            }
+            }*/
         }
         Log.d("TAG", "onBindViewHolder: ca postition"+position +": "
                 +catBeanList.get(position).getCategory_name()+": "+new Gson().toJson(doublPrice));

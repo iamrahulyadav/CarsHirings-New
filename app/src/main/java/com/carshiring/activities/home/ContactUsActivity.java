@@ -1,7 +1,16 @@
 package com.carshiring.activities.home;
 
+import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +31,8 @@ import com.mukesh.tinydb.TinyDB;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -78,6 +89,70 @@ public class ContactUsActivity extends AppBaseActivity {
                         address.setText(res.getAddrees());
                         phone.setText(res.getInquiry());
                         email.setText(res.getReservation_cancellation_issues_contact());
+
+
+                        SpannableString spanString = new SpannableString(res.getReservation_cancellation_issues_contact());
+                        Matcher matcher = Pattern.compile( "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+").matcher(spanString);
+
+                        while (matcher.find())
+                        {
+                            spanString.setSpan(new ForegroundColorSpan(Color.parseColor("#0000FF")), matcher.start(), matcher.end(), 0); //to highlight word havgin '@'
+                            final String tag = matcher.group(0);
+                            ClickableSpan clickableSpan = new ClickableSpan() {
+                                @Override
+                                public void onClick(View textView) {
+                                    Intent email = new Intent(Intent.ACTION_SEND);
+                                    email.putExtra(Intent.EXTRA_EMAIL, new String[]{res.getReservation_cancellation_issues_contact()
+                                            .replace("For reservation & cancellation issues contact us on ","")});
+                                    email.putExtra(Intent.EXTRA_SUBJECT, "subject");
+                                    email.putExtra(Intent.EXTRA_TEXT, "message");
+                                    email.setType("message/rfc822");
+                                    startActivity(Intent.createChooser(email, "Choose an Email client :"));
+                                }
+                                @Override
+                                public void updateDrawState(TextPaint ds) {
+                                    super.updateDrawState(ds);
+
+                                }
+                            };
+                            spanString.setSpan(clickableSpan, matcher.start(), matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        }
+
+                        email.setText(spanString);
+                        email.setMovementMethod(LinkMovementMethod.getInstance());
+
+
+
+                        final SpannableString spanString1 = new SpannableString(res.getInquiry());
+                        Matcher matcher1 = Pattern.compile( "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+").matcher(spanString1);
+
+                        while (matcher1.find())
+                        {
+                            spanString1.setSpan(new ForegroundColorSpan(Color.parseColor("#0000FF")), matcher1.start(), matcher1.end(), 0); //to highlight word havgin '@'
+                            final String tag = matcher1.group(0);
+                            ClickableSpan clickableSpan = new ClickableSpan() {
+                                @Override
+                                public void onClick(View textView) {
+                                    Log.e("click", "click " + tag);
+                                    Intent email = new Intent(Intent.ACTION_SEND);
+                                    email.putExtra(Intent.EXTRA_EMAIL, new String[]{res.getInquiry().replace("Any general inquiry ","")});
+                                    email.putExtra(Intent.EXTRA_SUBJECT, "subject");
+                                    email.putExtra(Intent.EXTRA_TEXT, "message");
+                                    email.setType("message/rfc822");
+                                    startActivity(Intent.createChooser(email, "Choose an Email client :"));
+                                }
+                                @Override
+                                public void updateDrawState(TextPaint ds) {
+                                    super.updateDrawState(ds);
+
+                                }
+                            };
+                            spanString1.setSpan(clickableSpan, matcher1.start(), matcher1.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        }
+
+                        phone.setText(spanString1);
+                        phone.setMovementMethod(LinkMovementMethod.getInstance());
+
                     } else {
                     }
                 } else {

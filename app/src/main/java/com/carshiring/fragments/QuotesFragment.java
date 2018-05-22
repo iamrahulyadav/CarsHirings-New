@@ -83,7 +83,9 @@ public class QuotesFragment extends Fragment implements QuotesAdapter.QuoteInter
         bt_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.subview_container,
+                        new SearchCarFragment())
+                        .commit();
             }
         });
 

@@ -114,7 +114,6 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
         super.onResume();
         setMyAdapter(bookingData);
         getBook();
-
     }
 
     private Gson gson = new Gson();
@@ -140,8 +139,6 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
             recyclerView.setVisibility(View.VISIBLE);
             linearLayout.setVisibility(View.GONE);
             recyclerView.setAdapter(bookingAdapter);
-
-
         } else {
             recyclerView.setVisibility(View.GONE);
             linearLayout.setVisibility(View.VISIBLE);
@@ -266,7 +263,7 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
                         // Utility.message(getContext(), response.body().message);
                     }
                 } else {
-                    Utility.message(getContext(), response.body().message);
+                   // Utility.message(getContext(), response.body().message);
                 }
             }
 

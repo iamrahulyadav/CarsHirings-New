@@ -122,6 +122,7 @@ public class CarsResultListActivity extends AppBaseActivity {
         tinyDB = new TinyDB(getApplicationContext());
         dialog=new Dialog(this);
         allView = findViewById(R.id.all_view);
+
         // Complet Car List
         listCarResult.addAll(SearchCarFragment.searchData);
 
@@ -160,13 +161,9 @@ public class CarsResultListActivity extends AppBaseActivity {
         LinearLayoutManager horizontalLayoutManagaer
                 = new LinearLayoutManager(CarsResultListActivity.this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView_carlist_category.setLayoutManager(horizontalLayoutManagaer);
-
         // Category List
         catBeanList = SearchCarFragment.catBeanList;
-
-
         Log.d("CatSize", catBeanList.size() + "\n" + listCarResult.size());
-
         adapter = new CarListCategory(getApplicationContext(), listCarResult, catBeanList,
                 new CarListCategory.OnItemClickListenerCategory() {
                     @Override
@@ -174,7 +171,6 @@ public class CarsResultListActivity extends AppBaseActivity {
                         catgory_clicked(position);
                     }
                 });
-
         recyclerView_carlist_category.setAdapter(adapter);
 
     }
@@ -183,15 +179,60 @@ public class CarsResultListActivity extends AppBaseActivity {
         List<SearchData> listCarResult1 =  new ArrayList<>();
         listCarResult1.clear();
 
+/*
             for(int i=0; i<listCarResult.size(); i++) {
                 if((catBeanList.get(position).getCode()+"").equals(listCarResult.get(i).getCategory())){
                     listCarResult1.add(listCarResult.get(i));
                 }
             }
-            listdispaly(listCarResult1);
+*/
+
+            for (int i=0;i<listCarResult.size();i++){
+                ArrayList<Integer>integers = new ArrayList<>();
+                integers.addAll(catBeanList.get(position).getCode());
+                for (int j=0; j<integers.size();j++){
+                  String k = integers.get(j)+"";
+                    if (String.valueOf(k).equals(listCarResult.get(i).getCategory())){
+                        listCarResult1.add(listCarResult.get(i));
+                    }
+                }
+            }
+
+/*
+        for (Integer s:catBean.getCode()){
+            Log.d(SplashActivity.TAG, "onBindViewHolder: cate"+s);
+            for (SearchData  searchData : listCarResult){
+                if (String.valueOf(s).equals(searchData.getCategory())){
+                    listCarResult1.addAll(listCarResult);
+                }
+            }
+
+        }
+*/
+        listdispaly(listCarResult1);
 
 
     }
+
+/*
+    private void catgory_clicked(int position){
+        List<SearchData> listCarResult1 =  new ArrayList<>();
+        listCarResult1.clear();
+
+        for(int i=0; i<listCarResult.size(); i++) {
+            for (int j= 0;j<=catBeanList.get(position).getCode().size();j++) {
+                if ((catBeanList.get(position).getCode().get(j)).equals(listCarResult.get(i).getCategory())) {
+                    listCarResult1.add(listCarResult.get(i));
+                }
+            }
+        }
+        listdispaly(listCarResult1);
+
+
+    }
+*/
+
+
     int coun=0;
     public void cat_All(View v){
 //        allView.setBackgroundColor(Color.parseColor("#079607"));
@@ -271,9 +312,6 @@ public class CarsResultListActivity extends AppBaseActivity {
     protected void onResume() {
         super.onResume();
         actionBar.setTitle(getResources().getString(R.string.car_results));
-      /*  tinyDB.remove("extra_added");
-        tinyDB.remove("full_prot");*/
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recycler_search_cars.setLayoutManager(layoutManager);
         recycler_search_cars.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL) {
@@ -282,6 +320,7 @@ public class CarsResultListActivity extends AppBaseActivity {
                 // Do not draw the divider
             }
         });
+
         if(isApplyFiltered)
         {
             if (filteredtList.size()>0){
@@ -326,15 +365,11 @@ public class CarsResultListActivity extends AppBaseActivity {
             //Toast.makeText(getApplicationContext(), resultCode + "", Toast.LENGTH_SHORT).show();
             if(resultCode== SelectFilterActivity.FILTER_RESPONSE_CODE)
             {
-
                 Log.d("VKK", "Total no of car list = " + listCarResult.size());
-
                 FilterDefaultMultipleListModel multipleListModel= (FilterDefaultMultipleListModel) data.getSerializableExtra(SelectFilterActivity.FILTER_RESPONSE);
                 Log.d("VKK", "Total Filtered List = " + gson.toJson(multipleListModel));
-
                 String supl=multipleListModel.getSupplier();
                 String feat=multipleListModel.getFeatures();
-
                 Log.d("VKK", "Total Suppliers Filtered = " + supl);
                 Log.d("VKK", "Total Features Filtered = " + feat);
 
@@ -357,11 +392,8 @@ public class CarsResultListActivity extends AppBaseActivity {
         String[] suplier=supl.split(",");
         String[] features=feat.split(",");
 
-
         Log.d("VKK", "Total no of Suppliers Filtered = " + suplier.length + " ");
         Log.d("VKK", "Total no of Features Filtered = " + features.length + " ");
-
-
         filteredtList = new ArrayList<>();
         filteredtList1 = new ArrayList<>();
         filteredtList2 = new ArrayList<>();
@@ -412,18 +444,8 @@ public class CarsResultListActivity extends AppBaseActivity {
 //                        filteredtList.add(data);
                         } else{
                             isFeatureFound = false;
-
                             break;
                         }
-                    } else if(str.equals("Automatic")){
-                        if (transmission.equals("Automatic")) {
-                            isFeatureFound = true;
-//                        filteredtList.add(data);
-                        }else{
-                            isFeatureFound = false;
-                            break;
-                        }
-                          
                     } else if(str.equals("Automatic")){
                         if (transmission.equals("Automatic")) {
                             isFeatureFound = true;
@@ -467,7 +489,6 @@ public class CarsResultListActivity extends AppBaseActivity {
 
 
                         isFeatureFound = true;
-
                     }
 */
                 }
@@ -510,147 +531,14 @@ public class CarsResultListActivity extends AppBaseActivity {
         }else{
             filteredtList.addAll(filteredtList2);
         }
-                 
-    }
-*/
-                }
-                if(isFeatureFound) {
-                    filteredtList2.add(data);
-                } else{}
-        }
-
-        // FilteredList1 = 15
-        // FilteredList2 = 64
-
-        if(filteredtList1.size() != 0){
-
-            for(int f1=0; f1<filteredtList1.size(); f1++){
-                SearchData data1 = new SearchData();
-                data1 = filteredtList1.get(f1);
-
-                if(filteredtList2.size()!=0) {
-                    for (int f2 = 0; f2 < filteredtList2.size(); f2++) {
-
-                        SearchData data2 = new SearchData();
-                        data2 = filteredtList2.get(f2);
-
-                        if (data1.getId_context().equals(data2.getId_context())) {
-                            filteredtList.add(data1);
-                        } else {
-                        }
-                    }
-                } else{
-                    if(features[0].equals("NoFeatures")){
-                        // No Features selected
-                        filteredtList.addAll(filteredtList1);
-                    } else {
-                        // Features Selected but FilterLis2 Size is 0
-                        filteredtList.clear();
-                    }
-                    break;
-                }
-            }
-        }else{
-            filteredtList.addAll(filteredtList2);
-        }
-        Log.d("VKK", filteredtList1.size() + " ");
-        Log.d("VKK", filteredtList2.size() + " ");
-        Log.d("VKK", filteredtList.size() + " ");
-
-        isApplyFiltered = true;
-    }
-    private void filter1(String supl, String feat){
-
-        String[] suplier=supl.split(",");
-        String[] features=feat.split(",");
 
 
-        Log.d("VKK", "Total no of Suppliers Filtered = " + suplier.length + " ");
-        Log.d("VKK", "Total no of Features Filtered = " + features.length + " ");
 
 
-        filteredtList1 = new ArrayList<>();
-
-        outerloop:
-        for(int i=0;i<listCarResult.size();i++) {
-
-            isFeatureFound = false; isSupplierFound = false;
-
-            SearchData data = listCarResult.get(i);
-
-            for(int z=0; z<suplier.length; z++ ) {
-
-                String str = suplier[z];
-                if(str.equals(data.getSupplier())){
-                    //filteredtList.add(data);
-                    isSupplierFound = true;
-                } else{
-                    isSupplierFound = false;
-                    break;
-                }
-            }
 
 
-            if (isSupplierFound){
-                filteredtList1.add(data);
-            }else{}
 
 
-            for(int z=0; z<features.length; z++ ) {
-                String str = features[z];
-                SearchData.FeatureBean data1 = new SearchData.FeatureBean();
-
-                data1 = data.getFeature();
-                String f = gson.toJson(data1);
-
-                try {
-                    JSONObject job = new JSONObject(f);
-
-                    String aircondition = job.getString("aircondition");
-                    String bag = job.getString("bag");
-                    String door = job.getString("door");
-                    String fueltype = job.getString("fueltype");
-                    String transmission = job.getString("transmission");
-
-                    if(str.equals("Air Condition")){
-                        if (aircondition.equals("true")) {
-                            isFeatureFound = true;
-//                        filteredtList.add(data);
-                        } else{
-                            isFeatureFound = false;
-                            break outerloop;
-                        }
-                    } else if(str.equals("Automatic")){
-                        if (transmission.equals("Automatic")) {
-                            isFeatureFound = true;
-//                        filteredtList.add(data);
-                        }else{
-                            isFeatureFound = false;
-                            break outerloop;
-                        }
-                    } else if(str.equals("4+ Doors")){
-                        if (door.equals("4")) {
-                            isFeatureFound = true;
-//                        filteredtList.add(data);
-                        }else{
-                            isFeatureFound = false;
-                            break outerloop;
-                        }
-                    } else{}
-
-/*                    if (aircondition.equals("true")) {
-                        isFeatureFound = true;
-//                        filteredtList.add(data);
-                    } else if (transmission.equals("Automatic")) {
-                        isFeatureFound = true;
-//                        filteredtList.add(data);
-                    } else if (door.equals("4")) {
-                        isFeatureFound = true;
-//                        filteredtList.add(data);
-                    }*/
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
 
         Log.d("VKK", filteredtList1.size() + " ");
         Log.d("VKK", filteredtList2.size() + " ");
@@ -658,6 +546,8 @@ public class CarsResultListActivity extends AppBaseActivity {
 
         isApplyFiltered = true;
     }
+
+
     private void filter1(String supl, String feat){
 
         String[] suplier=supl.split(",");
@@ -795,243 +685,6 @@ public class CarsResultListActivity extends AppBaseActivity {
 
         isApplyFiltered = true;
     }
-
-/*
-    private void getAC(String AC){
-
-        for (SearchData searchData: listCarResult){
-
-            if (AC.equalsIgnoreCase("Air Condition")){
-                if (searchData.getFeature().getAircondition().equalsIgnoreCase("true")){
-                    filteredtList.add(searchData);
-                }
-            }
-        }
-    }
-    private void getACA(String AC, String Automatic, String Doors){
-        filteredtList = new ArrayList<>();
-
-        for (SearchData searchData: listCarResult){
-            if (AC.length()>0&&Automatic.length()>0&&Doors.length()>0){
-                if (AC.equalsIgnoreCase("Air Condition")&&Automatic.equalsIgnoreCase("Automaic")
-                        &&!searchData.getFeature().getDoor().equalsIgnoreCase("1")&&
-                        !searchData.getFeature().getDoor().equalsIgnoreCase("2")
-                        &&!searchData.getFeature().getDoor().equalsIgnoreCase("3")){
-                    if (searchData.getFeature().getAircondition().equalsIgnoreCase("true")
-                            &&searchData.getFeature().getTransmission().equalsIgnoreCase("Automatic")){
-                        filteredtList.add(searchData);
-                    }
-                }
-
-            }else if (AC.length()>0&&Automatic.length()>0){
-                if (AC.equalsIgnoreCase("Air Condition")
-                        &&Automatic.equalsIgnoreCase("Automaic")){
-                    if (searchData.getFeature().getAircondition().equalsIgnoreCase("true")
-                            &&searchData.getFeature().getTransmission().equalsIgnoreCase("Automatic")){
-                        filteredtList.add(searchData);
-                    }
-                }
-            }else if (AC.length()>0&&Doors.length()>0){
-                if (AC.equalsIgnoreCase("Air Condition")
-                        &&!searchData.getFeature().getDoor().equalsIgnoreCase("1")&&
-                        !searchData.getFeature().getDoor().equalsIgnoreCase("2")
-                        &&!searchData.getFeature().getDoor().equalsIgnoreCase("3")){
-                    if (searchData.getFeature().getAircondition().equalsIgnoreCase("true")
-                            &&searchData.getFeature().getTransmission().equalsIgnoreCase("Automatic")){
-                        filteredtList.add(searchData);
-                    }
-                }
-            }else if (Automatic.length()>0&&Doors.length()>0){
-                if (!searchData.getFeature().getDoor().equalsIgnoreCase("1")&&
-                        !searchData.getFeature().getDoor().equalsIgnoreCase("2")
-                        &&!searchData.getFeature().getDoor().equalsIgnoreCase("3")
-                        &&Automatic.equalsIgnoreCase("Automaic")){
-                    if (searchData.getFeature().getAircondition().equalsIgnoreCase("true")
-                            &&searchData.getFeature().getTransmission().equalsIgnoreCase("Automatic")){
-                        filteredtList.add(searchData);
-                    }
-                }
-            } else if (AC.length()>0){
-                getAC(AC);
-            } else if (Doors.length()>0){
-                getDoor(Doors);
-            } else if (Automatic.length()>0){
-                getAutomatic(Doors);
-            }
-        }
-    }
-
-    private void getAutomatic(String AC){
-        for (SearchData searchData: listCarResult){
-
-            if (AC.equalsIgnoreCase("Automatic")){
-                if (searchData.getFeature().getTransmission().equalsIgnoreCase("Automatic")){
-                    filteredtList.add(searchData);
-                }
-            }
-        }
-    }
-    private void getDoor(String AC){
-        for (SearchData searchData: listCarResult){
-
-            if (AC.equalsIgnoreCase("4+ Doors")){
-                if (searchData.getFeature().getDoor()!=null && !searchData.getFeature().getDoor().equalsIgnoreCase("1")&&
-                        !searchData.getFeature().getDoor().equalsIgnoreCase("2")
-                        &&!searchData.getFeature().getDoor().equalsIgnoreCase("3")){
-                    filteredtList.add(searchData);
-                }
-            }
-        }
-    }
-*/
-
-
-/*
-    private void filterlist(String supl, String feat) {
-
-        String[] suplier=supl.split(",");
-        String[] features=feat.split(",");
-
-        filteredtList=new ArrayList<>();
-        int listsize=listCarResult.size();
-
-        for(int i=0;i<listsize;i++) {
-            SearchData data = listCarResult.get(i);
-
-            boolean issuplierfound = false;
-            String supleir_strg = data.getSupplier();
-            Log.d("Supplier", supleir_strg);
-
-            if (!supleir_strg.isEmpty()) {
-                for (String suply : suplier) {
-                    if (!suply.isEmpty()) {
-                        if (supleir_strg.equalsIgnoreCase(suply)) {
-                            filteredtList.add(data);
-                            issuplierfound = true;
-                            Log.d("Filter", "Supplier Matched");
-                            break;
-                        }
-                    }
-                }
-                if (issuplierfound) {
-                    continue;
-                }
-
-                boolean isAc = false;
-                String AC = data.getFeature().getAircondition();
-                boolean isfeaturefound = false;
-                String feature_Aircondition = data.getFeature().getAircondition();
-                Log.d("feature_Aircondition", feature_Aircondition);
-                if(!AC.isEmpty() && !feature_Aircondition.isEmpty())
-                {
-                    for (String suply:features)
-                    {
-                        if(!suply.isEmpty())
-                        {
-                            if(suply.equalsIgnoreCase("Air Condition"))
-                            {
-                                filteredtList.add(data);
-                                isAc=true;
-                                Log.d("Filter","Ac Matched");
-                                break;
-                            } else if (suply.equalsIgnoreCase("Automatic")){
-                                filteredtList.add(data);
-                                isfeaturefound=true;
-                            }
-                        }
-                    }
-                    if(isAc && isfeaturefound)
-                    {
-                        continue;
-                    }
-                }
-
-            }
-        }
-        Log.d("Filtere list",""+ filteredtList.size());
-        isApplyFiltered=true;
-    }
-*/
-
-
-
-
-    /*
-            for(int z=0; z<suplier.length; z++ ){
-
-            String str = suplier[z];
-
-            for(int i=0;i<listCarResult.size();i++) {
-
-                SearchData data = listCarResult.get(i);
-
-                if(str.equals(data.getSupplier())){
-                    filteredtList.add(data);
-                }
-            }
-        }
-*/
-
-
-/*
-        for(int i=0;i<listCarResult.size();i++) {
-            SearchData data = listCarResult.get(i);
-
-            boolean issuplierfound = false;
-            String supleir_strg = data.getSupplier();
-//            Log.d("VKKK", supleir_strg);
-
-            if (!supleir_strg.isEmpty()) {
-                for (String suply : suplier) {
-                    if (!suply.isEmpty()) {
-                        if (supleir_strg.equalsIgnoreCase(suply)) {
-                            filteredtList.add(data);
-                            issuplierfound = true;
-                            Log.d("Filter", "Supplier Matched");
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-*/
-
-/*
-        if (Arrays.asList(features).contains("Air Condition")&&Arrays.asList(features).contains("Automatic")
-                &&Arrays.asList(features).contains("4+ Doors")){
-            Log.d(TAG, "filter: "+true);
-            getACA("Air Condition","Automatic","4+ Doors");
-        } else  if (Arrays.asList(features).contains("Air Condition")&&Arrays.asList(features).contains("Automatic")){
-            getACA("Air Condition","Automatic","");
-        } else  if (Arrays.asList(features).contains("Air Condition")&&Arrays.asList(features).contains("4+ Doors")){
-            getACA("Automatic","","4+ Doors");
-        }  else  if (Arrays.asList(features).contains("Air Condition")&&Arrays.asList(features).contains("4+ Doors")){
-            getACA("","Automatic","4+ Doors");
-        } else  if (Arrays.asList(features).contains("Air Condition")){
-            getACA("Air Condition","","");
-        } else  if (Arrays.asList(features).contains("Automatic")){
-            getACA("","Automatic","");
-        } else  if (Arrays.asList(features).contains("4+ Doors")){
-            getACA("","","4+ Doors");
-        }
-*/
-
-
-    /*
-            for (String featue: features){
-                String s = featue;
-                if (s.equalsIgnoreCase("Air Condition")){
-                    getAC(s);
-                } else if (s.equalsIgnoreCase("Automatic")){
-                    getAutomatic(s);
-                } else if (s.equalsIgnoreCase("4+ Doors")){
-                    getDoor(s);
-                }
-            }
-    */
-
-
-
 
     private void getShortedData() {
         Collections.sort(listCarResult, new Comparator<SearchData>() {

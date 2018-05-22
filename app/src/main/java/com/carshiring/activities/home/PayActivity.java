@@ -21,11 +21,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.carshiring.R;
 import com.carshiring.adapters.CarResultsListAdapter;
 import com.carshiring.fragments.SearchCarFragment;
 import com.carshiring.models.BookingRequest;
 import com.carshiring.models.Category;
+import com.carshiring.models.CouponRequest;
 import com.carshiring.models.DiscountData;
 import com.carshiring.models.ExtraAdded;
 import com.carshiring.models.PointHistoryData;
@@ -191,7 +197,6 @@ Merchant Identifier: daouwTJI
             public void onClick(View view) {
                 coupoun = edtCoupon.getText().toString().trim();
                 if (!coupoun.isEmpty()){
-                    isCouponApplied = true;
                     validateCoupon(coupoun);
                     txtCheckPay.setChecked(false);
                     txtCheckWallet.setChecked(false);
@@ -206,85 +211,85 @@ Merchant Identifier: daouwTJI
             @Override
             public void onClick(View view) {
                 if (isCouponApplied){
-                    totalPrice = discountedPrice;
 
-                    if ((txtcheckPoint.isChecked()&& txtCheckWallet.isChecked())
-                            ||(txtcheckPoint.isChecked()&& txtCheckWallet.isChecked()&&txtCheckPay.isChecked())){
-                        double d ;
-                        if (totalPrice>pointValue){
+                        totalPrice = discountedPrice;
 
-                            d = totalPrice - pointValue;
+                        if ((txtcheckPoint.isChecked()&& txtCheckWallet.isChecked())
+                                ||(txtcheckPoint.isChecked()&& txtCheckWallet.isChecked()&&txtCheckPay.isChecked())){
+                            double d ;
+                            if (totalPrice>pointValue){
 
-                            if(d > walletAmt){
-                                d = d - walletAmt;
-                                payfortAmt1 = d;
+                                d = totalPrice - pointValue;
+
+                                if(d > walletAmt){
+                                    d = d - walletAmt;
+                                    payfortAmt1 = d;
+                                    booking_payfort = String.valueOf(payfortAmt1);
+                                    booking_wallet = String.valueOf(walletAmt);
+                                    booking_point = String.valueOf(pointValue);
+                                    requestPurchase(booking_payfort);
+
+                                }else{
+                                    booking_wallet = String.valueOf(d);
+                                    booking_point= String.valueOf(pointValue);
+                                    booking_payfort = String.valueOf(payfortAmt1);
+                                    String a = gson.toJson(setBooking());
+                                    bookCar(a);
+//                                makeBooking(a);
+                                }
+
+                            } else {
+                                booking_point=String.valueOf(totalPrice);
                                 booking_payfort = String.valueOf(payfortAmt1);
-                                booking_wallet = String.valueOf(walletAmt);
-                                booking_point = String.valueOf(pointValue);
-                                requestPurchase(booking_payfort);
-
-                            }else{
-                                booking_wallet = String.valueOf(d);
-                                booking_point= String.valueOf(pointValue);
-                                booking_payfort = String.valueOf(payfortAmt1);
+                                booking_wallet="";
                                 String a = gson.toJson(setBooking());
                                 bookCar(a);
-//                                makeBooking(a);
-                            }
-
-                        } else {
-                            booking_point=String.valueOf(totalPrice);
-                            booking_payfort = String.valueOf(payfortAmt1);
-                            booking_wallet="";
-                            String a = gson.toJson(setBooking());
-                            bookCar(a);
 //                            makeBooking(a);
+                            }
                         }
-                    }
-                    else if (txtcheckPoint.isChecked()){
-                        usepoint = pointValue;
-                        if (usepoint>=totalPrice){
-                            booking_point=String.valueOf(totalPrice);
-                            booking_payfort = String.valueOf(payfortAmt1);
-                            booking_wallet="";
-                            String s = gson.toJson(setBooking());
+                        else if (txtcheckPoint.isChecked()){
+                            usepoint = pointValue;
+                            if (usepoint>=totalPrice){
+                                booking_point=String.valueOf(totalPrice);
+                                booking_payfort = String.valueOf(payfortAmt1);
+                                booking_wallet="";
+                                String s = gson.toJson(setBooking());
 //                            makeBooking(s);
-                            bookCar(s);
+                                bookCar(s);
+                            } else {
+                                booking_wallet="";
+                                payfortAmt1 = totalPrice-usepoint;
+                                booking_point = String.valueOf(usepoint);
+                                booking_payfort = String.valueOf(payfortAmt1);
+                                requestPurchase(booking_payfort);
+                            }
+                        } else if (txtCheckWallet.isChecked()){
+                            useWallet = walletAmt;
+                            if (useWallet>=totalPrice){
+                                booking_wallet = String.valueOf(totalPrice);
+                                booking_point= "";
+                                String s = gson.toJson(setBooking());
+//                            makeBooking(s);
+                                bookCar(s);
+                            } else {
+                                payfortAmt = totalPrice-useWallet;
+                                booking_point="";
+                                booking_wallet = String.valueOf(useWallet);
+                                booking_payfort = String.valueOf(payfortAmt);
+                                requestPurchase(booking_payfort);
+                            }
                         } else {
+                            booking_payfort = String.valueOf(totalPrice);
+                            booking_point="";
                             booking_wallet="";
-                            payfortAmt1 = totalPrice-usepoint;
-                            booking_point = String.valueOf(usepoint);
-                            booking_payfort = String.valueOf(payfortAmt1);
-                            requestPurchase(booking_payfort);
-                        }
-                    } else if (txtCheckWallet.isChecked()){
-                        useWallet = walletAmt;
-                        if (useWallet>=totalPrice){
-                            booking_wallet = String.valueOf(totalPrice);
-                            booking_point= "";
                             String s = gson.toJson(setBooking());
                             Log.d(TAG, "onClick: booking wal"+s);
+                            if (totalPrice>0){
+                                requestPurchase(booking_payfort);
+                            } else {
 //                            makeBooking(s);
-                            bookCar(s);
-                        } else {
-                            payfortAmt = totalPrice-useWallet;
-                            booking_point="";
-                            booking_wallet = String.valueOf(useWallet);
-                            booking_payfort = String.valueOf(payfortAmt);
-                            requestPurchase(booking_payfort);
-                        }
-                    } else {
-                        booking_payfort = String.valueOf(totalPrice);
-                        booking_point="";
-                        booking_wallet="";
-                        String s = gson.toJson(setBooking());
-                        Log.d(TAG, "onClick: booking wal"+s);
-                        if (totalPrice>0){
-                            requestPurchase(booking_payfort);
-                        } else {
-//                            makeBooking(s);
-                            bookCar(s);
-                        }
+                                bookCar(s);
+                            }
                     }
                 }
 
@@ -320,7 +325,6 @@ Merchant Identifier: daouwTJI
                             String a = gson.toJson(setBooking());
 //                            makeBooking(a);
                             bookCar(a);
-
                         }
                     }
                     else if (txtcheckPoint.isChecked()){
@@ -570,7 +574,6 @@ Merchant Identifier: daouwTJI
 
                             } else {
                                 walBal = 0.0;
-
                                 txtWalletBal.setText("("+getResources().getString(R.string.txtAvailable)+ String.valueOf(walBal) +")");
                                 payfortAmt = s-walletAmt;
                                 d=walletAmt;
@@ -586,6 +589,8 @@ Merchant Identifier: daouwTJI
                                         +String.valueOf(df2.format(walBal))+")");
                                 payfortAmt =0;
                                 d=totalPrice;
+                                txtcheckPoint.setEnabled(false);
+
                             } else {
                                 walBal = 0.0;
                                 txtWalletBal.setText("("+getResources().getString(R.string.txtAvailable)+ String.valueOf(walBal) +")");
@@ -700,6 +705,7 @@ Sha request and response pharse
                         public void onCancel(Map<String, Object> map, Map<String, Object> map1) {
                             Log.d(TAG, "onCancel: "+(String)map1.get("response_message"));
                             payfortAmt = 0;
+                            booking_payfort=payfortAmt+"";
                             Toast.makeText(getApplicationContext(),  (String)map1.get("response_message"),
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -835,8 +841,11 @@ Sha request and response pharse
 
     public void validateCoupon(String coupounCode){
         Utility.showloadingPopup(this);
-        coupounCode = "{\"code\":\""+coupounCode+"\"}";
-        okhttp3.RequestBody requestBody = okhttp3.RequestBody.create(MEDIA_TYPE,coupounCode);
+        CouponRequest couponRequest = new CouponRequest();
+        couponRequest.setCode(coupounCode);
+        couponRequest.setUser_id(user_id);
+        String couponReq = new Gson().toJson(couponRequest);
+        okhttp3.RequestBody requestBody = okhttp3.RequestBody.create(MEDIA_TYPE,couponReq);
 
         final okhttp3.Request request = new okhttp3.Request.Builder()
                 .url("https://carshiring.com/webservice/discountCoupon")
@@ -868,20 +877,18 @@ Sha request and response pharse
                 Utility.hidepopup();
                 if (response!=null&&response.body().toString().length()>0){
                     if (request.body()!=null){
-
                         String msg = response.body().string();
                         discountData = gson.fromJson(msg, DiscountData.class);
                         if (discountData.isStatus()){
                             for (final DiscountData.ResponseBean.DiscountcouponBean.OfferDataBean discountcouponBean:
                                     discountData.getResponse().getDiscountcoupon().getOffer_data()){
-
+                                isCouponApplied = true;
                                 runOnUiThread(new Runnable() {
                                     @SuppressLint("SetTextI18n")
                                     @Override
                                     public void run() {
                                         if (discountcouponBean.getOffers_type().equals("1")){
                                             couponvalue = Double.parseDouble(discountcouponBean.getOffers_value());
-
                                             discountedPrice = totalPrice-couponvalue;
                                             if (discountedPrice>totalPrice){
                                                 dis = 0;
@@ -904,7 +911,6 @@ Sha request and response pharse
                                             } else {
                                                 dis = discountedPrice;
                                             }
-
                                             txtCoupanValue.setVisibility(View.VISIBLE);
                                             txtCoupanValue.setText("Coupon value : SAR "+ String.valueOf(df2.format((totalPrice*couponvalue)/100))+ "("+String.valueOf(couponvalue)+"%)");
                                         }
@@ -918,6 +924,7 @@ Sha request and response pharse
                                 @Override
                                 public void run() {
                                     Utility.message(getApplicationContext(), discountData.getMessage());
+                                    coupoun="";
                                 }
                             });
                         }
@@ -1169,8 +1176,6 @@ Sha request and response pharse
         dialog.show();
     }
 
-
-
     private void updatePointId(String last_id, String booking_id){
         HashMap<String, String>pointMap = new HashMap<>();
         pointMap.put("last_id",last_id);
@@ -1204,7 +1209,6 @@ Sha request and response pharse
 
     }
 
-
     private void updateWalletId(String last_id, String booking_id){
         HashMap<String, String>pointMap = new HashMap<>();
         pointMap.put("last_id",last_id);
@@ -1237,7 +1241,6 @@ Sha request and response pharse
         });
 
     }
-
 
     public void getWal(){
         RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();
@@ -1376,7 +1379,7 @@ Sha request and response pharse
         creditPoint.enqueue(new retrofit2.Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, retrofit2.Response<ApiResponse> response) {
-                Log.d(TAG, "onResponse: data"+gson.toJson(response.body()));
+                Log.d(TAG, "onResponse: debit point"+gson.toJson(response.body()));
                 if (response.body()!=null){
                     if (response.body().status) {
                         lastPointid = response.body().last_insert_id;
@@ -1405,7 +1408,6 @@ Sha request and response pharse
                 if (response.body()!=null){
                     if (response.body().status){
                         lastWalletId = response.body().last_insert_id;
-
                         // Toast.makeText(PayActivity.this, ""+response.body().msg, Toast.LENGTH_SHORT).show();
                     } else {
                        // Toast.makeText(PayActivity.this, ""+response.body().msg, Toast.LENGTH_SHORT).show();

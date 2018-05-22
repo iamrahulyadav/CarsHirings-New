@@ -40,8 +40,6 @@ import com.carshiring.activities.home.SearchbyMapActivity;
 import com.carshiring.models.CatRequest;
 import com.carshiring.models.Category;
 
-import com.carshiring.models.CategoryNew;
-
 import com.carshiring.models.MArkupdata;
 import com.carshiring.models.Point;
 import com.carshiring.models.SearchData;
@@ -169,7 +167,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 } else {
                     et_driver_age.setVisibility(View.VISIBLE);
                 }
-
             }
         });
 
@@ -205,7 +202,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             }
         });
 
-
         chkUseCurrentLocation = (CheckBox) view.findViewById(R.id.chkUseCurrentLocation);
         chkUseCurrentLocation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -216,7 +212,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                     et_pickup_location.setEnabled(false);
                     if (Utility.checkGooglePlayService(getActivity()))
                         setupLocation();
-                }else{
+                } else{
                     et_pickup_location.setEnabled(true);
                 }
             }
@@ -454,8 +450,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
     public static List<Category.ResponseBean.CatBean>catBeanList = new ArrayList<>();
     public static Category category = new Category();
 
-    public static CategoryNew category_new = new CategoryNew();
-
     CatRequest cateRequest = new CatRequest();
     HashMap<Double,String>map1;
 
@@ -475,7 +469,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         RequestBody requestBody = RequestBody.create(MEDIA_TYPE,cat);
 
         final Request request = new Request.Builder()
-                .url(RetrofitApiBuilder.CarHires_BASE_URL+"category_list")
+                .url(RetrofitApiBuilder.CarHires_BASE_URL+"category_list_byid")
                 .post(requestBody)
                 .addHeader("Content-Type", "application/json")
                 .addHeader("cache-control", "no-cache")
@@ -509,7 +503,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                         String msg = response.body().string();
                         Log.d(TAG, "onResponse: msg"+msg);
                         category = gson.fromJson(msg,Category.class);
-                        category_new = gson.fromJson(msg,CategoryNew.class);
                         try {
                             JSONObject jsonObject = new JSONObject(msg);
                             if (jsonObject.getBoolean("status")){
@@ -550,26 +543,18 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                                         TreeSet<Category.ResponseBean.CatBean> set = new TreeSet<>(new Comparator<Category.ResponseBean.CatBean>() {
                                             @Override
                                             public int compare(Category.ResponseBean.CatBean o1, Category.ResponseBean.CatBean o2) {
-                                                if(o1.getCategory_name().equalsIgnoreCase(o2.getCategory_name())){
+                                                if(o1.getCategory_id().equalsIgnoreCase(o2.getCategory_id())){
                                                     return 0;
                                                 }
                                                 return 1;
                                             }
                                         });
-
                                         set.addAll(catBeanList);
                                         catBeanList.clear();
                                         catBeanList.addAll(set);
                                         chooseSearchAction(searchData);
                                     }
                                 });
-                                for (int i=0;i<name.size();i++){
-                                    List<Object>d =new ArrayList<>();
-                                    d = getKeysFromValue(map1,name.get(i));
-                                    Log.d(TAG, "onResponse: data"+name.get(i));
-                                    Log.d(TAG, "onResponse: data"+d);
-                                }
-
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -639,7 +624,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                         String msg = response.body().string();
                         Log.d(TAG, "onResponse: msg"+msg);
                         category = gson.fromJson(msg,Category.class);
-                        category_new = gson.fromJson(msg,CategoryNew.class);
 
                         try {
                             JSONObject job = new JSONObject(msg);
@@ -665,7 +649,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                         Log.d("MyListSize", list3.size() + "");                 // Image
                         Log.d("MyListSize", list4.size() + "");                 // Code
                         Log.d("MyListSize", list5.size() + "");                 // Price
-
 
                         ArrayList<String> list_2 = new ArrayList<>();
 
@@ -705,13 +688,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                                 } else{}
                             }
                         }
-                        for(int i=0; i<list2.size(); i++){
-                            String name = list2.get(i);
-                        }
-
-
-
-
 
                     /*    try {
                             JSONObject job = new JSONObject(msg);
@@ -734,16 +710,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 }
             }
         });
-    }
-
-    public static List<Object> getKeysFromValue(Map<?, ?> hm, Object value){
-        List <Object>list = new ArrayList<Object>();
-        for(Object o:hm.keySet()){
-            if(hm.get(o).equals(value)) {
-                list.add(o);
-            }
-        }
-        return list;
     }
 
     private void chooseSearchAction(List<SearchData> car_list) {
@@ -828,9 +794,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 currentLng+"\n"+location_code+"\n"+location_iata+"\n"+
                 location_type+"\n"+location_code_drop+"\n"+location_iata_drop+"\n"+location_type_drop+"\n"+languagecode);
         final Gson gson = new Gson();
-
-
-
         String url= RetrofitApiBuilder.CarGates_BASE_WEBSERVICE_URL+"webservice/search";
 
         StringRequest  stringRequest = new StringRequest(com.android.volley.Request.Method.POST, url, new com.android.volley.Response.Listener<String>() {
@@ -858,12 +821,12 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
 
                                 if (key.equals("category_list")){
                                     Iterator<String> iterCatList = object.keys();
+
                                     while (iterCatList.hasNext()){
                                         String catkey = iterCatList.next();
                                         JSONArray Catvalue = object.getJSONArray(catkey);
-
                                         Type listType = new TypeToken<List<String>>() {}.getType();
-
+                                        cateList.add(Integer.parseInt(catkey));
                                         List<String> yourList = new Gson().fromJson(Catvalue.toString(), listType);
                                         catPriceMap.put(catkey, yourList);
                                         Log.d(TAG, "onResponse: catvalue"+catPriceMap);
@@ -954,12 +917,12 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                             }
                         }
 
-                        for (SearchData searchDatas : searchData){
+                       /* for (SearchData searchDatas : searchData){
                             cateList.add(Integer.parseInt(searchDatas.getCategory()));
-                        }
-                        cateRequest.setCode(cateList);
-                        getCat1(cateRequest);
+                        }*/
 
+                        cateRequest.setCode(cateList);
+                        getCat(cateRequest);
                     } else {
 
                         Utility.message(getContext(),msg);
@@ -1061,11 +1024,11 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                         String data = gson.toJson(searchData);
                         ArrayList<SearchData>searchData1 = new ArrayList<>();
                         searchData1.addAll(searchData);
-                        for (SearchData searchDatas : searchData){
-                            cateList.add(Integer.parseInt(searchDatas.getCategory()));
+                        for (String searchDatas : catPriceMap.keySet()){
+                            cateList.add(Integer.parseInt(searchDatas));
                         }
                         cateRequest.setCode(cateList);
-                        getCat1(cateRequest);
+                        getCat(cateRequest);
 
                     } else {
                         Toast.makeText(activity, ""+response.body().msg, Toast.LENGTH_SHORT).show();
@@ -1201,10 +1164,8 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                     addConnectionCallbacks(this).
                     addOnConnectionFailedListener(this).
                     addApi(LocationServices.API).build();
-
             mgoogleApiclient.connect();
         }
-
     }
 
     @Override

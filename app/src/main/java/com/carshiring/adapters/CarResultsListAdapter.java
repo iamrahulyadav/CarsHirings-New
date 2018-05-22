@@ -39,6 +39,7 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
     private final Context context;
     List<SearchData> list;
     List<Category.ResponseBean.CatBean>catBeanList;
+
     ProgressBar bar1;
     double pointpercent,calPrice, markUp;
     public static int calPoint;
@@ -86,11 +87,23 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
         if (model.getFeature().getAircondition().equals("true")){
             holder.txtAc.setVisibility(View.VISIBLE);
         }
-        for (Category.ResponseBean.CatBean catBean: catBeanList){
-            if (catBean.getCode()==Integer.parseInt(model.getCategory())){
-                holder.txtClass.setText("Class : "+catBean.getCategory_name());
+
+        for (Category.ResponseBean.CatBean  catBean: catBeanList){
+            for (Integer s:catBean.getCode()){
+                if (String.valueOf(s).equals(model.getCategory())){
+                    holder.txtClass.setText("Class : "+catBean.getCategory_name());
+                }
             }
         }
+
+/*
+        for (Category.ResponseBean.CatBean catBean: catBeanList){
+            for (String s : SearchCarFragment.catPriceMap.keySet()){
+                if (s.equals(catBean.getCategory_id())){
+                    holder.txtClass.setText("Class : "+catBean.getCategory_name());
+                }
+            }
+          */
 
         holder.txtTrans.setText(model.getFeature().getTransmission());
         holder.txtFuel.setText("Full to fuel");
@@ -142,8 +155,6 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
         Glide.with(context)
                 .load(model.getImage())
                 .into(holder.imgCarResult);
-
-
         bar1.setVisibility(View.GONE);
         double pricea = Double.parseDouble(model.getPrice());
 //        calculate point
@@ -256,7 +267,6 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
 //
 //
 //        }
-
 
     }
 

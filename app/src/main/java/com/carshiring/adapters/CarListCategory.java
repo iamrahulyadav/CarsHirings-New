@@ -18,9 +18,11 @@ import com.carshiring.fragments.SearchCarFragment;
 import com.carshiring.models.Category;
 import com.carshiring.models.SearchData;
 import com.carshiring.webservices.RetrofitApiBuilder;
+import com.google.gson.Gson;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -99,6 +101,20 @@ public class CarListCategory extends RecyclerView.Adapter<CarListCategory.MyView
                 .into(holder.image);
         //holder.txtCode.setText(/*"code"*/catBeanList.get(position).getCode() +"");
         markUp = Double.parseDouble(SearchCarFragment.markup);
+        for (String data: SearchCarFragment.catPriceMap.keySet()){
+            if (data.equals(catBeanList.get(position).getCategory_id())){
+                ArrayList<String>s1 = new ArrayList<>();
+                ArrayList<Double>d1=new ArrayList<>();
+                s1.addAll(SearchCarFragment.catPriceMap.get(data));
+                for (int i=0;i<s1.size();i++){
+                    d1.add(Double.parseDouble(s1.get(i)));
+                      double d =  Collections.min(d1);
+                      double priceNew  = d+(d*markUp)/100;
+                     holder.txtCode.setText("SAR "+ " "+String.valueOf(df2.format(priceNew)));
+                }
+            }
+        }
+
       //  String price = listCarResult.get(position).getPrice();
      //  double d = Double.parseDouble(price);
       //  double priceNew  = d+(d*markUp)/100;
