@@ -1,6 +1,7 @@
 package com.carshiring.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import com.carshiring.R;
 import com.carshiring.activities.home.MyBookingActivity;
 import com.carshiring.adapters.MyBookingAdapter;
+import com.carshiring.adapters.TestAdapter;
 import com.carshiring.models.BookingHistory;
 import com.carshiring.models.CancledetailBean;
 import com.carshiring.models.UserDetails;
@@ -63,7 +65,7 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
     UserDetails userDetails = new UserDetails();
     SwipeRefreshLayout swipeRefreshLayout;
     private List<BookingHistory> bookingData;
-    MyBookingAdapter bookingAdapter;
+    TestAdapter bookingAdapter;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,21 +122,21 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
     String payfortValue;
     List<CancledetailBean>cancledetailBeans = new ArrayList<>();
     private void setMyAdapter(final List<BookingHistory> bookingHistory){
-        bookingAdapter = new MyBookingAdapter(bookingHistory, cancledetailBeans,getContext(),"c");
+        bookingAdapter = new TestAdapter(getActivity() ,bookingHistory);
         recyclerView.setVisibility(View.VISIBLE);
 //        recyclerView.setAdapter(bookingAdapter);
-        bookingAdapter.submit(new MyBookingAdapter.ClickItem() {
-            @Override
-            public void click(View view, int Position) {
-                bookingid=bookingHistory.get(Position).getBooking_id();
-                if (bookingHistory.get(Position).getBooking_payfort_value()!=null&&
-                        bookingHistory.get(Position).getBooking_payfort_value().equals("0.00")) {
-                    payfortValue= bookingHistory.get(Position).getBooking_payfort_value();
-
-                }
-                setCancelationPop(bookingid,payfortValue);
-            }
-        });
+//        bookingAdapter.submit(new MyBookingAdapter.ClickItem() {
+//            @Override
+//            public void click(View view, int Position) {
+//                bookingid=bookingHistory.get(Position).getBooking_id();
+//                if (bookingHistory.get(Position).getBooking_payfort_value()!=null&&
+//                        bookingHistory.get(Position).getBooking_payfort_value().equals("0.00")) {
+//                    payfortValue= bookingHistory.get(Position).getBooking_payfort_value();
+//
+//                }
+//                setCancelationPop(bookingid,payfortValue);
+//            }
+//        });
         if (bookingHistory.size()>0){
             recyclerView.setVisibility(View.VISIBLE);
             linearLayout.setVisibility(View.GONE);
@@ -220,7 +222,8 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
                         String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
                         List<BookingHistory>booking_detail =new ArrayList<>();
                         booking_detail = response.body().response.booking;
-
+                        bookingData.addAll(response.body().response.booking);
+/*
                         for (BookingHistory bookingData1 : booking_detail){
                             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             Date date1 = null;
@@ -248,6 +251,7 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
                                 });
                             }
                         }
+*/
 
                         Log.d("TAG", "onResponse:book current"+gson.toJson(bookingData));
                         if (bookingData.size()>0){

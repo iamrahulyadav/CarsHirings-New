@@ -807,7 +807,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                     if (jsonObject.has("msg")){
                        msg= jsonObject.getString("msg");
                     }
-
                     if (status){
                         JSONObject responseObject = jsonObject.getJSONObject("response");
                         JSONObject car_listObject = responseObject.getJSONObject("car_list");
@@ -819,8 +818,13 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                                 Object value = car_listObject.get(key);
                                 JSONObject object = car_listObject.getJSONObject(key);
 
-                                if (key.equals("category_list")){
-                                    Iterator<String> iterCatList = object.keys();
+                                if (key.equals("size_list")) {
+                                    JSONArray jsonArray = car_listObject.getJSONArray("size_list");
+                                    Toast.makeText(activity, "" + jsonArray.length(), Toast.LENGTH_SHORT).show();
+                                } else  if (key.equals("category_list")){
+                                    JSONArray jsonArray = car_listObject.getJSONArray("category_list");
+                                    Toast.makeText(activity, ""+jsonArray.length(), Toast.LENGTH_SHORT).show();
+                                   /* Iterator<String> iterCatList = object.keys();
 
                                     while (iterCatList.hasNext()){
                                         String catkey = iterCatList.next();
@@ -830,8 +834,10 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                                         List<String> yourList = new Gson().fromJson(Catvalue.toString(), listType);
                                         catPriceMap.put(catkey, yourList);
                                         Log.d(TAG, "onResponse: catvalue"+catPriceMap);
-                                    }
-                                } else {
+                                    }*/
+                                }  else if (key.equals("price_list1")) {
+                                  //  Toast.makeText(activity, "price" , Toast.LENGTH_SHORT).show();
+                                }else {
                                     if (object.has("feature")){
                                         JSONObject featureObject = object.getJSONObject("feature");
                                         feature.setAircondition( featureObject.get("aircondition")+"");
@@ -922,7 +928,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                         }*/
 
                         cateRequest.setCode(cateList);
-                        getCat(cateRequest);
+                    //    getCat(cateRequest);
                     } else {
 
                         Utility.message(getContext(),msg);

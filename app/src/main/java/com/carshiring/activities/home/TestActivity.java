@@ -75,7 +75,7 @@ public class TestActivity extends AppCompatActivity {
         LinearLayoutManager horizontalLayoutManagaer
                 = new LinearLayoutManager(TestActivity.this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(horizontalLayoutManagaer);
-        adapter = new TestAdapter(getApplicationContext(), searchDataList, catBeanList);
-        recyclerView.setAdapter(adapter);
+      /*  adapter = new TestAdapter(getApplicationContext(), searchDataList, catBeanList);
+        recyclerView.setAdapter(adapter);*/
     }
 }

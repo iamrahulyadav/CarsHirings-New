@@ -169,7 +169,6 @@
                     android:paddingRight="5dp"
                     android:textColor="@color/white"
                     android:gravity="center_vertical|center_horizontal"
-                    android:text="Booking Charges : SAR 600.60"
                     android:id="@+id/btnBookingCharge"/>
                 <TextView
                     android:layout_width="0dp"

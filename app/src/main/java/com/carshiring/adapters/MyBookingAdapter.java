@@ -123,12 +123,12 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
             btnCancelationCharge.setVisibility(View.GONE);
         }
 
-        /*holder.txtPricedetails.setOnClickListener(new View.OnClickListener() {
+        holder.txtPricedetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setBookingPop(position);
             }
-        });*/
+        });
         if (cancledetailBeans != null && cancledetailBeans.size() > 0) {
 
             for (int i = 0; i < bookinglist.size(); i++) {
