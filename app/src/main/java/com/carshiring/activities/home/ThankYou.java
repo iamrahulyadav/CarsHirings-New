@@ -53,8 +53,8 @@ public class ThankYou extends AppCompatActivity implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        Intent intent=new Intent(ThankYou.this, MyBookingActivity.class);
-        intent.putExtra("From Quotes","Quotes");
+        Intent intent=new Intent(ThankYou.this, MainActivity.class);
+        intent.putExtra("From Payment","Payment");
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
 //        finish();

@@ -54,10 +54,12 @@ import static com.carshiring.splash.SplashActivity.TAG;
  * Created by rakhi on 13-03-2018.
  */
 
-public class CurrentBookingFragment extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class CurrentBookingFragment extends Fragment implements View.OnClickListener,
+        SwipeRefreshLayout.OnRefreshListener {
 
     public List<BookingHistory> currentBookingData;
     private TinyDB tinyDB;
+    LinearLayout layout ;
     private String token, userId, language, bookingid, accountType="1";// 1=wallet, 2 account
     private LinearLayout linearLayout;
     private RecyclerView recyclerView;
@@ -120,23 +122,10 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
 
     private Gson gson = new Gson();
     String payfortValue;
-    List<CancledetailBean>cancledetailBeans = new ArrayList<>();
     private void setMyAdapter(final List<BookingHistory> bookingHistory){
-        bookingAdapter = new TestAdapter(getActivity() ,bookingHistory);
+        bookingAdapter = new TestAdapter(getActivity(),bookingHistory,"c");
         recyclerView.setVisibility(View.VISIBLE);
-//        recyclerView.setAdapter(bookingAdapter);
-//        bookingAdapter.submit(new MyBookingAdapter.ClickItem() {
-//            @Override
-//            public void click(View view, int Position) {
-//                bookingid=bookingHistory.get(Position).getBooking_id();
-//                if (bookingHistory.get(Position).getBooking_payfort_value()!=null&&
-//                        bookingHistory.get(Position).getBooking_payfort_value().equals("0.00")) {
-//                    payfortValue= bookingHistory.get(Position).getBooking_payfort_value();
-//
-//                }
-//                setCancelationPop(bookingid,payfortValue);
-//            }
-//        });
+        recyclerView.setAdapter(bookingAdapter);
         if (bookingHistory.size()>0){
             recyclerView.setVisibility(View.VISIBLE);
             linearLayout.setVisibility(View.GONE);
@@ -145,11 +134,10 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
             recyclerView.setVisibility(View.GONE);
             linearLayout.setVisibility(View.VISIBLE);
         }
-
     }
 
-
     Dialog dialog;
+
 
     private void setCancelationPop(final String bookingid, String payfortValue){
         dialog.setContentView(R.layout.account_popup_view);
@@ -222,8 +210,7 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
                         String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
                         List<BookingHistory>booking_detail =new ArrayList<>();
                         booking_detail = response.body().response.booking;
-                        bookingData.addAll(response.body().response.booking);
-/*
+
                         for (BookingHistory bookingData1 : booking_detail){
                             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             Date date1 = null;
@@ -239,7 +226,6 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
                                 e.printStackTrace();
                             }
                             if (date2.compareTo(date1) >0 && bookingData1.getBooking_status().equals("1")) {
-
                                 bookingData.add(bookingData1);
                                 Collections.sort(bookingData, new Comparator<BookingHistory>() {
                                     @Override
@@ -251,7 +237,6 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
                                 });
                             }
                         }
-*/
 
                         Log.d("TAG", "onResponse:book current"+gson.toJson(bookingData));
                         if (bookingData.size()>0){

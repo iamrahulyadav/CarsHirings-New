@@ -149,7 +149,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:visibility="visible"
+            android:visibility="gone"
             android:textAlignment="viewStart"
             app:track="@drawable/switch_track"
             android:thumb="@drawable/switch_thumb"

@@ -7,7 +7,7 @@
     <string name="wantExit">هل تريد الخروج؟</string>
     <string name="yes">نعم فعلا</string>
     <string name="no">لا</string>
-    <string name="title_home">CarsGates</string>
+    <string name="title_home">Carshiring</string>
     <string name="permissionsetting">الرجاء تمكين جميع الأذونات.</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -17,6 +17,7 @@
     <string name="action_search_car">حجز سيارة</string>
     <string name="action_about_us">معلومات عنا</string>
     <string name="action_contact_us">اتصل بنا</string>
+    <string name="action_terms">الشروط والاحكام</string>
     <string name="action_language">لغة</string>
     <string name="action_currency">دقة</string>
     <string name="action_settings">إعدادات</string>
@@ -69,7 +70,7 @@
     <string name="interphnum">رقم الهاتف الدولي</string>
     <string name="usanumb">من الولايات المتحدة الامريكية</string>
     <string name="faq">أسئلة وأجوبة</string>
-    <string name="pick_up_location">اختر موقعا</string>
+    <string name="pick_up_location">موقع الإستلام</string>
     <string name="bookinginvoicenumber">حجز رقم الفاتورة</string>
     <string name="aboutus">في سيارة غيتس كل ما نقوم به هو عن إعطائك الحرية لاكتشاف المزيد. سنقوم بتحريك الجبال لتجد لك الحق في استئجار سيارة، وتجلب لك على نحو سلس، وخالية من المتاعب الخبرة من البداية الى النهاية. هنا يمكنك معرفة المزيد عن كيفية عملنا.</string>
     <string name="cardnumb">رقم البطاقة</string>
@@ -133,7 +134,7 @@
 
     <!--fragment search-->
     <string name="txtSearchACar">البحث عن سيارة</string>
-    <string name="txtFindCheapCar">العثور على تأجير السيارات الرخيصة في 49،000 المواقع</string>
+    <string name="txtFindCheapCar">العثور على تأجير السيارات الرخيصة في المواقع</string>
     <string name="txtUseMyLocation">استخدم موقعي</string>
     <string name="edtPickUp">اختر موقعا</string>
     <string name="edtDropUp">موقع الإرجاع</string>
@@ -141,7 +142,7 @@
     <string name="txtDate">تاريخ</string>
     <string name="txtTime">زمن</string>
     <string name="txtDriveAge">العمر السائق</string>
-    <string name="switchDriverAgebw">سائق تتراوح أعمارهم بين 30 - 70؟</string>
+    <string name="switchDriverAgebw">عمر السائق بين 25 - 70 ؟</string>
     <string name="switchSearchMap">البحث عن طريق الخريطة</string>
     <string name="edtDriverAge">أدخل عمر البرنامج</string>
     <string name="licenseno">رقم الرخصة</string>
@@ -277,7 +278,7 @@
 
     <string name="finding_location_list">العثور على قائمة الموقع ...</string>
     <string name="location_not_found">الموقع غير موجود</string>
-    <string name="check_internet">تحقق من اتصال الإنترنت الخاص بك</string>
+    <string name="check_internet">الرجاء التأكد من الانترنت</string>
 
     <string name="searching_cars">البحث عن سيارات ...</string>
 
@@ -295,7 +296,7 @@
     <string name="get_a_quote_1">احصل على عرض أسعار مع تغطية قياسية</string>
     <string name="get_a_quote_2">الحصول على عرض أسعار مع الحماية الكاملة</string>
 
-    <string name="lang_select">اختيار اللغة</string>
+    <string name="lang_select">اللغة</string>
 
     <!--MyBookingActivity-->
     <string name="current">تيار</string>

@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.carshiring.R;
 import com.carshiring.adapters.BookingAdapter;
 import com.carshiring.adapters.MyBookingAdapter;
+import com.carshiring.adapters.TestAdapter;
 import com.carshiring.models.BookingHistory;
 import com.carshiring.models.CancledetailBean;
 import com.carshiring.models.UserDetails;
@@ -59,7 +60,7 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
     View view;
     Button bt_search;
     RecyclerView recyclerView;
-    MyBookingAdapter bookingAdapter;
+    TestAdapter bookingAdapter;
     private List<BookingHistory> bookingData;
     TinyDB tinyDB;
     SwipeRefreshLayout swipeRefreshLayout;
@@ -106,7 +107,7 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
     }
 
     private void setMyAdapter(List<BookingHistory> bookingHistory){
-        bookingAdapter = new MyBookingAdapter(bookingData,cancledetailBean, getContext(),"p");
+        bookingAdapter = new TestAdapter(getActivity(),bookingHistory,"p");
         if (bookingHistory.size()>0){
             recyclerView.setVisibility(View.VISIBLE);
             linearLayout.setVisibility(View.GONE);
@@ -118,7 +119,6 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
     }
 
     Gson gson = new Gson() ;
-
 
     public void getBook() {
         if (bookingData != null) {
@@ -132,7 +132,6 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 Utility.hidepopup();
-                Log.d("TAG", "onResponse:book "+gson.toJson(response.body().response));
 
                 if (response.body()!=null){
                     if (response.body().status){
@@ -159,7 +158,6 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
                             if (date1.compareTo(date2) >0 || bookingData1.getBooking_status().equals("3")
                                     || bookingData1.getBooking_status().equals("2")||bookingData1.getBooking_status().equals("0")) {
                                 bookingData.add(bookingData1);
-
                                 Collections.sort(bookingData, new Comparator<BookingHistory>() {
                                     @Override
                                     public int compare(BookingHistory o1, BookingHistory o2) {

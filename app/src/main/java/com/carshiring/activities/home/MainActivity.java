@@ -54,10 +54,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -109,8 +111,11 @@ public class MainActivity extends AppCompatActivity
         {
             String data = tinyDB.getString("login_data");
             userDetails = gson.fromJson(data,UserDetails.class);
-            userId = userDetails.getUser_id();
-
+            if (userDetails!=null){
+                if (userDetails.getUser_id()!=null){
+                    userId = userDetails.getUser_id();
+                }
+            }
         }
 
         //  userId = tinyDB.getString("userid");
@@ -139,24 +144,21 @@ public class MainActivity extends AppCompatActivity
             target.setVisible(false);
         }
 
-//        updateResources(this,language_code);
         Intent it = getIntent();
         if (it != null) {
-            qu = it.getStringExtra("From Quotes");
-           /* if (qu != null) {
-                if (qu.equalsIgnoreCase("Quotes")) {
-                    setupSubView(R.id.action_quotes);
-                }
+            qu = it.getStringExtra("From Payment");
+            if (qu != null) {
+                if (qu.equalsIgnoreCase("Payment")) {
+                    MyBookingsFragment myBookingsFragment = new MyBookingsFragment();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, myBookingsFragment)
+                            .commit();                }
             } else {
-                setupSubView(R.id.action_search_car);
-            }*/
-//for test
-//           setupSubView(R.id.action_search_car);
+                SearchCarFragment searchCarFragment = new SearchCarFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, searchCarFragment)
+                        .commit();
+            }
         }
 
-        SearchCarFragment searchCarFragment = new SearchCarFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, searchCarFragment)
-                .commit();
 
         if (tinyDB.contains("login_data")){
             String data = tinyDB.getString("login_data");
@@ -296,10 +298,9 @@ public class MainActivity extends AppCompatActivity
 //                Toast.makeText(MainActivity.this, "Currency Change", Toast.LENGTH_SHORT).show();
                 break;
 
-           /* case R.id.action_settings:
-                startActivity(new Intent(MainActivity.this, ChangePasswordActivity.class));
-                Toast.makeText(MainActivity.this, "Settings Action", Toast.LENGTH_SHORT).show();
-                break;*/
+            case R.id.action_terms:
+                startActivity(new Intent(MainActivity.this, TermsActivity.class));
+                break;
             case R.id.action_accounts:
                 if (checkLogin()) {
                     AccountFragment myaccountFragment = new AccountFragment();
@@ -361,8 +362,9 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.action_booking:
                 if (checkLogin()) {
-                    startActivity(new Intent(MainActivity.this,MyBookingActivity.class));
-                }
+                    getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, new MyBookingsFragment())
+                            .addToBackStack("null").commit();
+                    toolbar.setTitle(getResources().getString(R.string.mybooking));                }
                 break;
 
             case R.id.action_search_car:
@@ -418,9 +420,7 @@ public class MainActivity extends AppCompatActivity
             txtDob.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    new DatePickerDialog(MainActivity.this, date, mCalendar
-                            .get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
-                            mCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                    dob_pick();
                 }
             });
             // Creating adapter for spinner
@@ -514,7 +514,31 @@ public class MainActivity extends AppCompatActivity
 
 
     Calendar mCalendar = Calendar.getInstance();
-    int year, monthOfYear, dayOfMonth;
+    long timeInMilliseconds;
+    private int mYear, mMonth, mDay;
+    public void dob_pick(){
+        // Get Current Date
+        final Calendar c = Calendar.getInstance();
+        mYear = Calendar.getInstance().get(Calendar.YEAR)-18;
+        mMonth = c.get(Calendar.MONTH);
+        mDay = c.get(Calendar.DAY_OF_MONTH);
+        timeInMilliseconds = Utility.getTimeDate(mYear+"-"+mMonth+"-"+mDay);
+        final DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+                        dob =year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+                        txtDob.setText(Utility.convertSimpleDate(dob ));
+                    }
+                }, mYear, mMonth, mDay);
+        datePickerDialog.getDatePicker().setMaxDate(timeInMilliseconds);
+        datePickerDialog.show();
+
+    }
+
+
     public static Object getKeyFromValue(Map hm, Object value) {
         for (Object o : hm.keySet()) {
             if (hm.get(o).equals(value)) {

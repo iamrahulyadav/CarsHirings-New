@@ -60,6 +60,22 @@ public class Utility {
 
         return bitmap;
     }
+    public static long timeInMilliseconds;
+    public static long getTimeDate(String s) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try
+        {
+            Date mDate = sdf.parse(s);
+            timeInMilliseconds= mDate.getTime();
+        }
+        catch (ParseException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return timeInMilliseconds;
+    }
+
     @SuppressLint("SimpleDateFormat")
     public static String convertdate(String dateString){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

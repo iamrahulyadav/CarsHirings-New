@@ -62,7 +62,13 @@ public class PointViewAdapter extends RecyclerView.Adapter<PointViewAdapter.MyVi
 
         holder.tv_booking_amount.setText(context.getResources().getString(R.string.points)+" : "+pointHistoryData.get(position).get_$BookingPoint18());
         holder.tv_booking_date.setText(context.getResources().getString(R.string.transaction_date)+" : "+pointHistoryData.get(position).getBokking_date());
-        holder.tv_booking_type.setText(pointHistoryData.get(position).get_$BookingPointType184());
+        if (pointHistoryData.get(position).get_$BookingPointType184()!=null){
+            if (pointHistoryData.get(position).get_$BookingPointType184().equalsIgnoreCase("credit")){
+                holder.tv_booking_type.setText(pointHistoryData.get(position).get_$BookingPointType184()+" For Booking");
+            } else if (pointHistoryData.get(position).get_$BookingPointType184().equalsIgnoreCase("debit")){
+                holder.tv_booking_type.setText(pointHistoryData.get(position).get_$BookingPointType184()+" For Cancellation");
+            }
+        }
         holder.tv_booking_point.setText(context.getResources().getString(R.string.remain_point)+" : "+pointHistoryData.get(position).get_$BookingAffetctedPoint183());
     }
 

@@ -19,6 +19,7 @@ import com.carshiring.R;
 import com.carshiring.fragments.SearchCarFragment;
 import com.carshiring.models.Category;
 import com.carshiring.models.SearchData;
+import com.carshiring.models.TestData;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -38,7 +39,7 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
     final OnItemClickListener listener;
     private final Context context;
     List<SearchData> list;
-    List<Category.ResponseBean.CatBean>catBeanList;
+    List<TestData>catBeanList;
 
     ProgressBar bar1;
     double pointpercent,calPrice, markUp;
@@ -48,7 +49,7 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
         void onItemClick(SearchData carDetail);
     }
 
-    public CarResultsListAdapter(Context context , List<SearchData> list,List<Category.ResponseBean.CatBean>catBeanList,
+    public CarResultsListAdapter(Context context , List<SearchData> list,List<TestData>catBeanList,
                                  OnItemClickListener listener){
         this.context = context ;
         this.list =  list ;
@@ -88,22 +89,15 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
             holder.txtAc.setVisibility(View.VISIBLE);
         }
 
-        for (Category.ResponseBean.CatBean  catBean: catBeanList){
-            for (Integer s:catBean.getCode()){
-                if (String.valueOf(s).equals(model.getCategory())){
-                    holder.txtClass.setText("Class : "+catBean.getCategory_name());
+        for (TestData catBean: catBeanList){
+            if (catBean.getCat_code()!=null){
+                for (String s:catBean.getCat_code()){
+                    if (s.equals(model.getCategory())){
+                        holder.txtClass.setText("Class : "+catBean.getCat_name());
+                    }
                 }
             }
         }
-
-/*
-        for (Category.ResponseBean.CatBean catBean: catBeanList){
-            for (String s : SearchCarFragment.catPriceMap.keySet()){
-                if (s.equals(catBean.getCategory_id())){
-                    holder.txtClass.setText("Class : "+catBean.getCategory_name());
-                }
-            }
-          */
 
         holder.txtTrans.setText(model.getFeature().getTransmission());
         holder.txtFuel.setText("Full to fuel");

@@ -48,6 +48,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -474,35 +476,30 @@ public class AccountDetailsActivity extends AppBaseActivity {
         }
 
     }
-
+    long timeInMilliseconds;
     private int mYear, mMonth, mDay;
     public void dob_pick(View view){
         // Get Current Date
         final Calendar c = Calendar.getInstance();
-        mYear = c.get(Calendar.YEAR);
+        mYear = Calendar.getInstance().get(Calendar.YEAR)-18;
         mMonth = c.get(Calendar.MONTH);
         mDay = c.get(Calendar.DAY_OF_MONTH);
-
+        timeInMilliseconds = Utility.getTimeDate(mYear+"-"+mMonth+"-"+mDay);
         final DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 new DatePickerDialog.OnDateSetListener() {
-
                     @Override
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
                         str_dob =year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
                         edt_dob.setText(Utility.convertSimpleDate(str_dob));
-
                     }
                 }, mYear, mMonth, mDay);
-        datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis()-10000);
-
+        datePickerDialog.getDatePicker().setMaxDate(timeInMilliseconds);
         datePickerDialog.show();
 
     }
 
-
     public void upload_my_image(View view){
-
         //imageInputHelper.selectImageFromGallery();
         openImageChooser(SELECT_PICTURE);
     }

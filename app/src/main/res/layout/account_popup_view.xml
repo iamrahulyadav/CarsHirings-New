@@ -12,6 +12,7 @@
         android:text="Please select one "
         android:gravity="center_horizontal"
         android:padding="15dp"
+        android:id="@+id/tctSelect"
         android:textSize="@dimen/extra_large_size"
         android:textColor="@color/black"
         android:textStyle="bold"/>

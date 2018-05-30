@@ -20,12 +20,12 @@
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:largeHeap="true"
-        android:hardwareAccelerated="false"
         android:theme="@style/AppTheme.Green">
         <activity
             android:name=".splash.SplashActivity"
@@ -62,23 +62,26 @@
         <activity android:name=".activities.home.AboutUsActivity" />
         <activity android:name=".activities.home.ContactUsActivity" />
         <activity android:name=".activities.home.Language" />
-        <activity android:name=".activities.home.AccountDetailsActivity"
-            android:windowSoftInputMode="stateHidden"/>
+        <activity
+            android:name=".activities.home.AccountDetailsActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activities.home.QuotedDetailsActivity" />
         <activity android:name=".activities.home.MyBookingActivity" />
         <activity android:name=".activities.home.PayActivity" />
         <activity android:name=".activities.home.UserDashActivity" />
         <activity android:name=".activities.home.WalletView" />
         <activity android:name=".activities.home.ThankYou" />
-        <activity android:name=".activities.home.SearchbyMapActivity"/>
-        <activity android:name=".activities.home.TestActivity"/>
+        <activity android:name=".activities.home.SearchbyMapActivity" />
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAp-4py1BmVVoF7q4TdYogCkVX5vO5qPPk" />
-        <activity android:name=".activities.home.FilterListActivity"/>
+
+        <activity android:name=".activities.home.FilterListActivity" />
+        <activity android:name=".activities.home.TermsActivity"></activity>
     </application>
 
 </manifest>

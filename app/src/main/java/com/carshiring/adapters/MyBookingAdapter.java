@@ -123,24 +123,12 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
             btnCancelationCharge.setVisibility(View.GONE);
         }
 
-        holder.txtPricedetails.setOnClickListener(new View.OnClickListener() {
+       /* holder.txtPricedetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setBookingPop(position);
             }
-        });
-        if (cancledetailBeans != null && cancledetailBeans.size() > 0) {
-
-            for (int i = 0; i < bookinglist.size(); i++) {
-                String bookingid = bookinglist.get(i).getBooking_id();
-               /* String can = cancledetailBeans.get(i).getResponse().getCancel_detail()
-                        .getBooking_cancel_booking_id();
-                btnCancelationCharge.setText( bookingid + "  "+ can);*/
-            }
-
-//            btnCancelationCharge.setText("Cancellation  charges: SAR "+cancledetailBeans.get(position)
-//                    .getResponse().getCancel_detail().getBooking_cancel_cancel_charge());
-        }
+        });*/
         btnCancelationCharge.setTag(position);
         btnCancelationCharge.setOnClickListener(new View.OnClickListener() {
             @Override

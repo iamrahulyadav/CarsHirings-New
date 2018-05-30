@@ -1,6 +1,7 @@
 package com.carshiring.adapters;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
@@ -14,11 +15,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.carshiring.R;
+import com.carshiring.activities.home.CarsResultListActivity;
 import com.carshiring.fragments.SearchCarFragment;
 import com.carshiring.models.Category;
 import com.carshiring.models.SearchData;
+import com.carshiring.models.TestData;
 import com.carshiring.webservices.RetrofitApiBuilder;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -34,8 +38,8 @@ public class CarListCategory extends RecyclerView.Adapter<CarListCategory.MyView
     OnItemClickListenerCategory listener;
     double markUp;
     //private List<String> horizontalList;
-    private Context context;
-    private List<Category.ResponseBean.CatBean>catBeanList = new ArrayList<>();
+    public Activity context;
+    private List<TestData>catBeanList = new ArrayList<>();
     private List<SearchData>listCarResult = new ArrayList<>();
 
     public interface  OnItemClickListenerCategory {
@@ -56,29 +60,39 @@ public class CarListCategory extends RecyclerView.Adapter<CarListCategory.MyView
             txtCode = (TextView) view.findViewById(R.id.car_cat_code);
             catLayout = view.findViewById(R.id.cat_layout);
             image = (ImageView) view.findViewById(R.id.car_cat_image);
-
+         /*  CarsResultListActivity. allView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    row_index=-1;
+                    notifyDataSetChanged();
+                    CarsResultListActivity. allView.setBackgroundColor(Color.parseColor("#079607"));
+                }
+            });*/
         }
         void bindListener(final int position, final OnItemClickListenerCategory listener) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    row_index=position;
+                    CarsResultListActivity.row_index=position;
                     notifyDataSetChanged();
                     listener.onItemClickCategory(position);
 
                 }
             });
+
+
         }
     }
 
-    int row_index=-1;
+    private List<Category.ResponseBean.CatBean> catListdata= new ArrayList<>();
 
-    public CarListCategory(Context context, List<SearchData> listCarResult,
-                           List<Category.ResponseBean.CatBean> catBeanList,
+    public CarListCategory(Activity context, List<SearchData> listCarResult, List<Category.ResponseBean.CatBean> catListdata,
+                           List<TestData> catBeanList,
                            OnItemClickListenerCategory listener) {
         this.listener = listener;
         this.context = context;
         this.catBeanList = catBeanList;
+        this.catListdata = catListdata;
         this.listCarResult = listCarResult;
     }
 
@@ -94,36 +108,25 @@ public class CarListCategory extends RecyclerView.Adapter<CarListCategory.MyView
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
-        holder.txtName.setText(/*"name"*/catBeanList.get(position).getCategory_name());
-
-        Glide.with(context)
-                .load(RetrofitApiBuilder.IMG_BASE_URL + catBeanList.get(position).getCategory_image())
-                .into(holder.image);
-        //holder.txtCode.setText(/*"code"*/catBeanList.get(position).getCode() +"");
-        markUp = Double.parseDouble(SearchCarFragment.markup);
-        for (String data: SearchCarFragment.catPriceMap.keySet()){
-            if (data.equals(catBeanList.get(position).getCategory_id())){
-                ArrayList<String>s1 = new ArrayList<>();
-                ArrayList<Double>d1=new ArrayList<>();
-                s1.addAll(SearchCarFragment.catPriceMap.get(data));
-                for (int i=0;i<s1.size();i++){
-                    d1.add(Double.parseDouble(s1.get(i)));
-                      double d =  Collections.min(d1);
-                      double priceNew  = d+(d*markUp)/100;
-                     holder.txtCode.setText("SAR "+ " "+String.valueOf(df2.format(priceNew)));
-                }
-            }
+        holder.txtName.setText(catBeanList.get(position).getCat_name());
+        if (catBeanList.get(position).getCat_id().equals(catListdata.get(position).getCategory_id())){
+            Glide.with(context)
+                    .load(RetrofitApiBuilder.IMG_BASE_URL + catListdata.get(position).getCategory_image())
+                    .into(holder.image);
         }
 
-      //  String price = listCarResult.get(position).getPrice();
-     //  double d = Double.parseDouble(price);
-      //  double priceNew  = d+(d*markUp)/100;
+        markUp = Double.parseDouble(SearchCarFragment.markup);
+        if (catBeanList.get(position).getCat_min_price()!=null){
+            String p = catBeanList.get(position).getCat_min_price().replace(",","");
+            double price = Double.parseDouble(p);
+            double priceNew  = price+(price*markUp)/100;
+            holder.txtCode.setText("SAR "+ " "+String.valueOf(df2.format(priceNew)));
+        }
 
-       /* holder.txtCode.setText(*//*"code"*//*listCarResult.get(position).getCurrency() + " " +
-                " "+String.valueOf(df2.format(priceNew)));*/
 
         holder.bindListener(position, listener);
-        if(row_index==position){
+        if(CarsResultListActivity.row_index==position){
+
             holder.catLayout.setBackgroundColor(Color.parseColor("#079607"));
         }
         else
