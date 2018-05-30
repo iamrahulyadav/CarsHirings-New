@@ -364,31 +364,13 @@ public class SplashActivity extends AppBaseActivity {
         }else{
             getAccessToken();
         }
-
-
-    }
-
-    private static boolean updateResources(Context context, String language) {
-        Locale locale = new Locale(language);
-        Locale.setDefault(locale);
-
-        Resources resources = context.getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
-        return true;
     }
 
     private void updateRes(String lang){
         Resources res = getApplicationContext().getResources();
-// Change locale settings in the app.
         DisplayMetrics dm = res.getDisplayMetrics();
         android.content.res.Configuration conf = res.getConfiguration();
         conf.setLocale(new Locale(lang.toLowerCase())); // API 17+ only.
-// Use conf.locale = new Locale(...) if targeting lower versions
         res.updateConfiguration(conf, dm);
     }
 

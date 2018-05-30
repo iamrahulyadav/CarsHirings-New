@@ -47,20 +47,27 @@
                 android:layout_margin="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-                <TextView
+                <LinearLayout
+                    android:id="@+id/txtTotalPayView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/txtPayTotal"
-                    android:textColor="@color/black"/>
-                <TextView
-                    android:id="@+id/txtTotalPayValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:textColor="@color/black"/>
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/txtPayTotal"
+                        android:textColor="@color/black"/>
+                    <TextView
+                        android:id="@+id/txtTotalPayValue"
+                        android:layout_width="match_parent"
+                        android:gravity="left"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:textColor="@color/black"/>
+                </LinearLayout>
                 <TextView
                     android:id="@+id/txtEarnedPoint"
-                    android:layout_below="@+id/txtTotalPayValue"
+                    android:layout_below="@+id/txtTotalPayView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Get 200 points"

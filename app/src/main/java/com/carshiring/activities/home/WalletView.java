@@ -1,27 +1,35 @@
 package com.carshiring.activities.home;
 
+import android.content.Intent;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carshiring.R;
 import com.carshiring.adapters.PointViewAdapter;
 import com.carshiring.adapters.WalletViewAdapter;
+import com.carshiring.fragments.SearchCarFragment;
 import com.carshiring.models.WalletHistoryData;
 import com.carshiring.utilities.AppBaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class WalletView extends AppBaseActivity {
+public class WalletView extends AppBaseActivity{
 
     private RecyclerView recyclerView;
     private String wallet_title;
     private TextView textView_amount, textView_affected, textView_type, textView_title;
+    LinearLayout linearLayout;
+    Button btn_search;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +56,16 @@ public class WalletView extends AppBaseActivity {
         LinearLayoutManager horizontalLayoutManagaer
                 = new LinearLayoutManager(WalletView.this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(horizontalLayoutManagaer);
-
+        linearLayout = (LinearLayout) findViewById(R.id.rec_prev_booki_no_data);
+        btn_search= (Button) findViewById(R.id.bt_previousbooking);
+        btn_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(WalletView.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
 //        setMyAdapter();
     }
 
@@ -82,11 +99,28 @@ public class WalletView extends AppBaseActivity {
             List<WalletHistoryData> walletHistoryData = new ArrayList<>();
             walletHistoryData.addAll(UserDashActivity.walletHistoryData);
             WalletViewAdapter adapter = new WalletViewAdapter(getApplicationContext(), walletHistoryData);
-            recyclerView.setAdapter(adapter);
+            if (walletHistoryData.size()>0){
+                recyclerView.setVisibility(View.VISIBLE);
+                linearLayout.setVisibility(View.GONE);
+                recyclerView.setAdapter(adapter);
+            } else {
+                recyclerView.setVisibility(View.GONE);
+                linearLayout.setVisibility(View.VISIBLE);
+            }
         } else if(wallet_title.equals("Point History Details")){
             PointViewAdapter adapter = new PointViewAdapter(getApplicationContext(), UserDashActivity.pointHistoryData);
+            if ( UserDashActivity.pointHistoryData.size()>0){
+                recyclerView.setVisibility(View.VISIBLE);
+                linearLayout.setVisibility(View.GONE);
+                recyclerView.setAdapter(adapter);
+            } else {
+                recyclerView.setVisibility(View.GONE);
+                linearLayout.setVisibility(View.VISIBLE);
+            }
             recyclerView.setAdapter(adapter);
         }
+
+
     }
 
     @Override
@@ -98,4 +132,6 @@ public class WalletView extends AppBaseActivity {
             return super.onOptionsItemSelected(item);
         }
     }
+
+
 }

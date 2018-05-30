@@ -174,14 +174,13 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:id="@+id/progressbar"/>
-
-
                     </FrameLayout>
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/txtSupplierName"
                         android:padding="5dp"
+
                         android:textColor="@color/white"
                         android:text="suppled by"/>
 

@@ -21,11 +21,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.carshiring.R;
 import com.carshiring.adapters.CarResultsListAdapter;
 import com.carshiring.fragments.SearchCarFragment;
 import com.carshiring.models.BookingRequest;
 import com.carshiring.models.Category;
+import com.carshiring.models.CouponRequest;
 import com.carshiring.models.DiscountData;
 import com.carshiring.models.ExtraAdded;
 import com.carshiring.models.PointHistoryData;
@@ -191,7 +197,6 @@ Merchant Identifier: daouwTJI
             public void onClick(View view) {
                 coupoun = edtCoupon.getText().toString().trim();
                 if (!coupoun.isEmpty()){
-                    isCouponApplied = true;
                     validateCoupon(coupoun);
                     txtCheckPay.setChecked(false);
                     txtCheckWallet.setChecked(false);
@@ -206,85 +211,81 @@ Merchant Identifier: daouwTJI
             @Override
             public void onClick(View view) {
                 if (isCouponApplied){
-                    totalPrice = discountedPrice;
+                        totalPrice = discountedPrice;
+                        if ((txtcheckPoint.isChecked()&& txtCheckWallet.isChecked())
+                                ||(txtcheckPoint.isChecked()&& txtCheckWallet.isChecked()&&txtCheckPay.isChecked())){
+                            double d ;
+                            if (totalPrice>pointValue){
+                                d = totalPrice - pointValue;
+                                if(d > walletAmt){
+                                    d = d - walletAmt;
+                                    payfortAmt1 = d;
+                                    booking_payfort = String.valueOf(payfortAmt1);
+                                    booking_wallet = String.valueOf(walletAmt);
+                                    booking_point = String.valueOf(pointValue);
+                                    requestPurchase(booking_payfort);
 
-                    if ((txtcheckPoint.isChecked()&& txtCheckWallet.isChecked())
-                            ||(txtcheckPoint.isChecked()&& txtCheckWallet.isChecked()&&txtCheckPay.isChecked())){
-                        double d ;
-                        if (totalPrice>pointValue){
+                                }else{
+                                    booking_wallet = String.valueOf(d);
+                                    booking_point= String.valueOf(pointValue);
+                                    booking_payfort = String.valueOf(payfortAmt1);
+                                    String a = gson.toJson(setBooking());
+                                    bookCar(a);
+//                                makeBooking(a);
+                                }
 
-                            d = totalPrice - pointValue;
-
-                            if(d > walletAmt){
-                                d = d - walletAmt;
-                                payfortAmt1 = d;
+                            } else {
+                                booking_point=String.valueOf(totalPrice);
                                 booking_payfort = String.valueOf(payfortAmt1);
-                                booking_wallet = String.valueOf(walletAmt);
-                                booking_point = String.valueOf(pointValue);
-                                requestPurchase(booking_payfort);
-
-                            }else{
-                                booking_wallet = String.valueOf(d);
-                                booking_point= String.valueOf(pointValue);
-                                booking_payfort = String.valueOf(payfortAmt1);
+                                booking_wallet="";
                                 String a = gson.toJson(setBooking());
                                 bookCar(a);
-//                                makeBooking(a);
-                            }
-
-                        } else {
-                            booking_point=String.valueOf(totalPrice);
-                            booking_payfort = String.valueOf(payfortAmt1);
-                            booking_wallet="";
-                            String a = gson.toJson(setBooking());
-                            bookCar(a);
 //                            makeBooking(a);
+                            }
                         }
-                    }
-                    else if (txtcheckPoint.isChecked()){
-                        usepoint = pointValue;
-                        if (usepoint>=totalPrice){
-                            booking_point=String.valueOf(totalPrice);
-                            booking_payfort = String.valueOf(payfortAmt1);
-                            booking_wallet="";
-                            String s = gson.toJson(setBooking());
+                        else if (txtcheckPoint.isChecked()){
+                            usepoint = pointValue;
+                            if (usepoint>=totalPrice){
+                                booking_point=String.valueOf(totalPrice);
+                                booking_payfort = String.valueOf(payfortAmt1);
+                                booking_wallet="";
+                                String s = gson.toJson(setBooking());
 //                            makeBooking(s);
-                            bookCar(s);
+                                bookCar(s);
+                            } else {
+                                booking_wallet="";
+                                payfortAmt1 = totalPrice-usepoint;
+                                booking_point = String.valueOf(usepoint);
+                                booking_payfort = String.valueOf(payfortAmt1);
+                                requestPurchase(booking_payfort);
+                            }
+                        } else if (txtCheckWallet.isChecked()){
+                            useWallet = walletAmt;
+                            if (useWallet>=totalPrice){
+                                booking_wallet = String.valueOf(totalPrice);
+                                booking_point= "";
+                                String s = gson.toJson(setBooking());
+//                            makeBooking(s);
+                                bookCar(s);
+                            } else {
+                                payfortAmt = totalPrice-useWallet;
+                                booking_point="";
+                                booking_wallet = String.valueOf(useWallet);
+                                booking_payfort = String.valueOf(payfortAmt);
+                                requestPurchase(booking_payfort);
+                            }
                         } else {
+                            booking_payfort = String.valueOf(totalPrice);
+                            booking_point="";
                             booking_wallet="";
-                            payfortAmt1 = totalPrice-usepoint;
-                            booking_point = String.valueOf(usepoint);
-                            booking_payfort = String.valueOf(payfortAmt1);
-                            requestPurchase(booking_payfort);
-                        }
-                    } else if (txtCheckWallet.isChecked()){
-                        useWallet = walletAmt;
-                        if (useWallet>=totalPrice){
-                            booking_wallet = String.valueOf(totalPrice);
-                            booking_point= "";
                             String s = gson.toJson(setBooking());
                             Log.d(TAG, "onClick: booking wal"+s);
+                            if (totalPrice>0){
+                                requestPurchase(booking_payfort);
+                            } else {
 //                            makeBooking(s);
-                            bookCar(s);
-                        } else {
-                            payfortAmt = totalPrice-useWallet;
-                            booking_point="";
-                            booking_wallet = String.valueOf(useWallet);
-                            booking_payfort = String.valueOf(payfortAmt);
-                            requestPurchase(booking_payfort);
-                        }
-                    } else {
-                        booking_payfort = String.valueOf(totalPrice);
-                        booking_point="";
-                        booking_wallet="";
-                        String s = gson.toJson(setBooking());
-                        Log.d(TAG, "onClick: booking wal"+s);
-                        if (totalPrice>0){
-                            requestPurchase(booking_payfort);
-                        } else {
-//                            makeBooking(s);
-                            bookCar(s);
-                        }
+                                bookCar(s);
+                            }
                     }
                 }
 
@@ -320,7 +321,6 @@ Merchant Identifier: daouwTJI
                             String a = gson.toJson(setBooking());
 //                            makeBooking(a);
                             bookCar(a);
-
                         }
                     }
                     else if (txtcheckPoint.isChecked()){
@@ -418,6 +418,9 @@ Merchant Identifier: daouwTJI
         return bookingRequest;
     }
     double d =0;
+
+
+
     @SuppressLint("SetTextI18n")
     public void onCheckboxClicked(View view) {
         // Is the view now checked?
@@ -425,27 +428,54 @@ Merchant Identifier: daouwTJI
 
         // Check which checkbox was clicked
         int id  = view.getId();
-
+        double p = 0, w;
+        double remainPOint = 0;
         if (isCouponApplied){
             totalPrice = discountedPrice;
             switch(view.getId()) {
                 case R.id.check_points:
                     if (checked){
-                        if (pointValue>=totalPrice){
-                            booking_point = String.valueOf(totalPrice);
-                            pointBal = pointValue-totalPrice;
-                            txtPointVal.setText("( Remaining point value : SAR "+String.valueOf(df2.format(pointBal))+")");
-                        } else {
-                            payfortAmt = totalPrice-pointValue;
-                            txtPointVal.setText("( Remaining point value : SAR  "+String.valueOf(df2.format(pointBal))+")");
+                        if (txtCheckWallet.isChecked()){
+                            w = totalPrice-walletAmt;
+                            if (pointValue>=w){
+                                booking_wallet=String.valueOf(walletAmt);
+                                double pointBook =pointValue-w;
+                                booking_point = String.valueOf(pointBook);
+                                pointBal = pointValue-w;
+                                txtPointVal.setText("(Remaining point value : SAR "+String.valueOf(df2.format(pointBal))+")");
+                                payfortAmt = 0;
+                                remainPOint=w;
+                            } else {
+                                remainPOint=pointValue;
+                                payfortAmt = (w-p);
+                                txtPointVal.setText("(Remaining point value : SAR "+String.valueOf(df2.format(pointBal))+")");
+                            }
+                            txtPointValueAmt.setText("Point value: SAR "+ String.valueOf(round(p,2)));
+                            txtPointValueAmt.setVisibility(View.VISIBLE);
                         }
-                        txtPointValueAmt.setText("Point value: SAR "+ String.valueOf(df2.format(pointValue)));
+//                        if wallet not checked 
+                        else {
+                            if (pointValue >= totalPrice) {
+                                booking_point = String.valueOf(totalPrice);
+                                pointBal = pointValue - totalPrice;
+                                txtCheckWallet.setEnabled(false);
+                                remainPOint = totalPrice;
+                                txtPointVal.setText("( Remaining point value : SAR " + String.valueOf(df2.format(pointBal)) + ")");
+                            } else {
+                                txtCheckWallet.setEnabled(true);
+                                payfortAmt = totalPrice - pointValue;
+                                remainPOint = pointValue;
+                                txtPointVal.setText("( Remaining point value : SAR  " + String.valueOf(df2.format(pointBal)) + ")");
+                            }
+                        }
+                        txtPointValueAmt.setText("Point value: SAR "+ String.valueOf(df2.format(remainPOint)));
                         txtPointValueAmt.setVisibility(View.VISIBLE);
                     }
                     else{
-                        txtPointValueAmt.setVisibility(View.GONE);
                         payfortAmt = totalPrice;
-                        txtPointVal.setText("("+totalPoint+" Point value is : SAR "+String.valueOf(pointValue)+")");
+                        txtCheckWallet.setEnabled(true);
+                        txtPointVal.setText("("+df2.format(totalPoint)+" Point value is : "+String.valueOf(df2.format(pointValue))+")");
+                        txtPointValueAmt.setVisibility(View.GONE);
                     }
                     txtPAyAmt.setText("Total payable amount : SAR "+ String.valueOf(df2.format(payfortAmt)));
                     break;
@@ -466,80 +496,110 @@ Merchant Identifier: daouwTJI
                             s = totalPrice-pointValue;
                             if (walletAmt>=s){
                                 walBal = walletAmt-s;
-                                txtWalletBal.setText("("+getResources().getString(R.string.txtAvailable)+" "
+                                txtWalletBal.setText("("+getResources().getString(R.string.txtAvailable)+" SAR "
                                         +String.valueOf(df2.format(walBal))+")");
                                 payfortAmt =0;
                                 d=s;
-                                //  txtPAyAmt.setText("Total payable amount : "+ String.valueOf(df2.format(payfortAmt)));
-
-                            } else {
+                            }
+                            else {
                                 walBal = 0.0;
-                                txtWalletBal.setText("("+getResources().getString(R.string.txtAvailable)+ String.valueOf(df2.format(walBal)) +")");
+                                txtWalletBal.setText("("+getResources().getString(R.string.txtAvailable)+ " SAR "+String.valueOf(df2.format(walBal)) +")");
                                 payfortAmt = s-walletAmt;
-                                d=payfortAmt;
-                                txtCheckWallet.setEnabled(false);
+                                d=walletAmt;
 //                               txtPAyAmt.setText("Total payable amount : "+ String.valueOf(df2.format(payfortAmt)));
-
                             }
                         }
 //                      if point not checked
                         else {
                             if (walletAmt>=totalPrice){
                                 walBal = walletAmt-totalPrice;
-                                txtWalletBal.setText("("+getResources().getString(R.string.txtAvailable)+" "
+                                txtWalletBal.setText("("+getResources().getString(R.string.txtAvailable)+" SAR "
                                         +String.valueOf(df2.format(walBal))+")");
                                 payfortAmt =0;
                                 d=totalPrice;
+                                txtCheckWallet.setEnabled(true);
+                                txtcheckPoint.setEnabled(false);
                             }
                             else {
                                 walBal = 0.0;
-                                txtWalletBal.setText("("+getResources().getString(R.string.txtAvailable)+ String.valueOf(df2.format(walBal)) +")");
+                                txtWalletBal.setText("("+getResources().getString(R.string.txtAvailable)+" SAR "+ String.valueOf(df2.format(walBal)) +")");
                                 payfortAmt = totalPrice-walletAmt;
                                 d=walletAmt;
+                                txtCheckWallet.setEnabled(true);
+                                txtcheckPoint.setEnabled(true);
                             }
                         }
                         txtWalletValueAmt.setText("Wallet : SAR "+ String.valueOf(df2.format(d)));
                         txtWalletValueAmt.setVisibility(View.VISIBLE);
                         txtPAyAmt.setText("Total payable amount : SAR "+ String.valueOf(df2.format(payfortAmt)));
 
-                    } else {
+                    }
+                    else {
                         booking_wallet=String.valueOf(df2.format(walletAmt));
                         txtWalletBal.setText("("+getResources().getString(R.string.txtAvailable)+" "
                                 +String.valueOf(df2.format(walletAmt))+")");
                         payfortAmt = totalPrice;
-                   /*
-                    walBal = walletAmt;
-                    booking_point = String.valueOf(pointValue);
-                    booking_wallet = String.valueOf(walletAmt);
-                    booking_payfort = String.valueOf(payfortAmt);*/
                         txtWalletValueAmt.setVisibility(View.GONE);
+                        txtCheckWallet.setEnabled(true);
+                        txtcheckPoint.setEnabled(true);
                     }
                     txtPAyAmt.setText("Total payable amount : SAR "+ String.valueOf(df2.format(payfortAmt)));
                     break;
             }
-
-        } else {
-            double p=0;
+        }
+//        if coupon not applied
+        else {
             switch(view.getId()) {
                 case R.id.check_points:
                     if (checked){
-                        if (pointValue>=totalPrice){
-                            booking_point = String.valueOf(totalPrice);
-                            pointBal = pointValue-totalPrice;
-                            txtPointVal.setText("(Remaining point value : "+String.valueOf(df2.format(pointBal))+")");
-                            payfortAmt = 0;
-                            p=totalPrice;
-                        } else {
-                            p=pointValue;
-                            payfortAmt = totalPrice-pointValue;
-                            txtPointVal.setText("(Remaining point value : SAR "+String.valueOf(df2.format(pointBal))+")");
+                        double x = 0;
+                        if (txtCheckWallet.isChecked()){
+                            if (totalPrice>walletAmt){
+                                x = totalPrice-walletAmt;
+                            }
+                            else {
+                                x= walletAmt-totalPrice;
+                            }
+                            if (pointValue>=x){
+                                booking_wallet=String.valueOf(walletAmt);
+                               double pointBook =pointValue-x;
+                                booking_point = String.valueOf(pointBook);
+                                pointBal = pointValue-x;
+                                txtPointVal.setText("(Remaining point value : "+String.valueOf(df2.format(pointBal))+")");
+                                payfortAmt = 0;
+                                p=x;
+                                txtCheckWallet.setEnabled(true);
+                            } else {
+                                p=pointValue;
+                                payfortAmt = (x-p);
+                                txtPointVal.setText("(Remaining point value : SAR "+String.valueOf(df2.format(pointBal))+")");
+                            }
+                            txtPointValueAmt.setText("Point value: SAR "+ String.valueOf(round(p,2)));
+                            txtPointValueAmt.setVisibility(View.VISIBLE);
                         }
-                        txtPointValueAmt.setText("Point value: SAR "+ String.valueOf(round(p,2)));
-                        txtPointValueAmt.setVisibility(View.VISIBLE);
+//                        if wallet not checked
+                        else {
+                            if (pointValue>=totalPrice){
+                                booking_point = String.valueOf(totalPrice);
+                                pointBal = pointValue-totalPrice;
+                                txtPointVal.setText("(Remaining point value : "+String.valueOf(df2.format(pointBal))+")");
+                                payfortAmt = 0;
+                                p=totalPrice;
+                                txtCheckWallet.setEnabled(false);
+                            } else {
+                                p=pointValue;
+                                txtCheckWallet.setEnabled(true);
+                                payfortAmt = totalPrice-pointValue;
+                                txtPointVal.setText("(Remaining point value : SAR "+String.valueOf(df2.format(pointBal))+")");
+                            }
+                            txtPointValueAmt.setText("Point value: SAR "+ String.valueOf(round(p,2)));
+                            txtPointValueAmt.setVisibility(View.VISIBLE);
+                        }
                     }
                     else{
                         payfortAmt = totalPrice;
-                        txtPointVal.setText("("+totalPoint+" Point value is : "+String.valueOf(df2.format(pointValue))+")");
+                        txtCheckWallet.setEnabled(true);
+                        txtPointVal.setText("("+df2.format(totalPoint)+" Point value is : "+String.valueOf(df2.format(pointValue))+")");
                         txtPointValueAmt.setVisibility(View.GONE);
                     }
                     txtPAyAmt.setText("Total payable amount : SAR "+ String.valueOf(df2.format(payfortAmt)));
@@ -566,17 +626,15 @@ Merchant Identifier: daouwTJI
                                         +String.valueOf(df2.format(walBal))+")");
                                 payfortAmt =0;
                                 d=s;
+                                txtCheckWallet.setEnabled(true);
                                 //  txtPAyAmt.setText("Total payable amount : "+ String.valueOf(df2.format(payfortAmt)));
-
                             } else {
                                 walBal = 0.0;
-
-                                txtWalletBal.setText("("+getResources().getString(R.string.txtAvailable)+ String.valueOf(walBal) +")");
+                                txtWalletBal.setText("("+getResources().getString(R.string.txtAvailable)+" "+ String.valueOf(walBal) +")");
                                 payfortAmt = s-walletAmt;
                                 d=walletAmt;
-//                               txtPAyAmt.setText("Total payable amount : "+ String.valueOf(df2.format(payfortAmt)));
+                                txtCheckWallet.setEnabled(true);
                             }
-//                            txtWalletValueAmt.setText("Wallet : SAR "+ String.valueOf(df2.format(d)));
                         }
 //                      if point not checked
                         else {
@@ -586,27 +644,25 @@ Merchant Identifier: daouwTJI
                                         +String.valueOf(df2.format(walBal))+")");
                                 payfortAmt =0;
                                 d=totalPrice;
+                                txtcheckPoint.setEnabled(false);
                             } else {
                                 walBal = 0.0;
                                 txtWalletBal.setText("("+getResources().getString(R.string.txtAvailable)+ String.valueOf(walBal) +")");
                                 payfortAmt = totalPrice-walletAmt;
                                 d=walletAmt;
+                                txtcheckPoint.setEnabled(true);
                             }
                         }
                         txtWalletValueAmt.setText("Wallet : SAR "+ String.valueOf(df2.format(d)));
                         txtWalletValueAmt.setVisibility(View.VISIBLE);
                         txtPAyAmt.setText("Total payable amount : SAR "+ String.valueOf(df2.format(payfortAmt)));
-
-                    } else {
+                    }
+                    else {
                         booking_wallet=String.valueOf(df2.format(walletAmt));
                         txtWalletBal.setText("("+getResources().getString(R.string.txtAvailable)+" "
                                 +String.valueOf(df2.format(walletAmt))+")");
                         payfortAmt = totalPrice;
-                   /*
-                    walBal = walletAmt;
-                    booking_point = String.valueOf(pointValue);
-                    booking_wallet = String.valueOf(walletAmt);
-                    booking_payfort = String.valueOf(payfortAmt);*/
+                        txtcheckPoint.setEnabled(true);
                         txtWalletValueAmt.setVisibility(View.GONE);
                     }
                     txtPAyAmt.setText("Total payable amount : SAR "+ String.valueOf(df2.format(payfortAmt)));
@@ -632,7 +688,6 @@ SHA -256
 for both
 Sha request and response pharse
 */
-
 
     @Override
     protected void onResume() {
@@ -700,6 +755,7 @@ Sha request and response pharse
                         public void onCancel(Map<String, Object> map, Map<String, Object> map1) {
                             Log.d(TAG, "onCancel: "+(String)map1.get("response_message"));
                             payfortAmt = 0;
+                            booking_payfort=payfortAmt+"";
                             Toast.makeText(getApplicationContext(),  (String)map1.get("response_message"),
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -726,18 +782,6 @@ Sha request and response pharse
                                     Toast.LENGTH_SHORT).show();
                         }
 
-                       /* @Override
-                        public void onCancel(Map<String, String> requestParamsMap, Map<String, String> responseMap) {
-
-                        }
-                        @Override
-                        public void onSuccess(Map<String, String> requestParamsMap, Map<String, String> fortResponseMap) {
-
-                        }
-                        @Override
-                        public void onFailure(Map<String, String> requestParamsMap, Map<String, String> fortResponseMap) {
-
-                        }*/
                     });
         } catch (Exception e) {
             e.printStackTrace();
@@ -835,8 +879,11 @@ Sha request and response pharse
 
     public void validateCoupon(String coupounCode){
         Utility.showloadingPopup(this);
-        coupounCode = "{\"code\":\""+coupounCode+"\"}";
-        okhttp3.RequestBody requestBody = okhttp3.RequestBody.create(MEDIA_TYPE,coupounCode);
+        CouponRequest couponRequest = new CouponRequest();
+        couponRequest.setCode(coupounCode);
+        couponRequest.setUser_id(user_id);
+        String couponReq = new Gson().toJson(couponRequest);
+        okhttp3.RequestBody requestBody = okhttp3.RequestBody.create(MEDIA_TYPE,couponReq);
 
         final okhttp3.Request request = new okhttp3.Request.Builder()
                 .url("https://carshiring.com/webservice/discountCoupon")
@@ -868,43 +915,46 @@ Sha request and response pharse
                 Utility.hidepopup();
                 if (response!=null&&response.body().toString().length()>0){
                     if (request.body()!=null){
-
                         String msg = response.body().string();
                         discountData = gson.fromJson(msg, DiscountData.class);
                         if (discountData.isStatus()){
                             for (final DiscountData.ResponseBean.DiscountcouponBean.OfferDataBean discountcouponBean:
                                     discountData.getResponse().getDiscountcoupon().getOffer_data()){
-
+                                isCouponApplied = true;
                                 runOnUiThread(new Runnable() {
                                     @SuppressLint("SetTextI18n")
                                     @Override
                                     public void run() {
                                         if (discountcouponBean.getOffers_type().equals("1")){
                                             couponvalue = Double.parseDouble(discountcouponBean.getOffers_value());
-
-                                            discountedPrice = totalPrice-couponvalue;
-                                            if (discountedPrice>totalPrice){
+                                            if (totalPrice<=couponvalue){
                                                 dis = 0;
-                                            } else {
+                                                txtcheckPoint.setEnabled(false);
+                                                txtCheckWallet.setEnabled(false);
+                                            } else if (totalPrice>couponvalue){
+                                                discountedPrice = totalPrice-couponvalue;
                                                 dis = discountedPrice;
                                             }
                                             discountvalue = couponvalue;
                                             txtCoupanValue.setVisibility(View.VISIBLE);
-                                            txtCoupanValue.setText("Coupon value : "+ String.valueOf(couponvalue));
+                                            txtCoupanValue.setText("Coupon value : SAR "+ String.valueOf(couponvalue));
                                         } else {
                                             couponvalue = Double.parseDouble(discountcouponBean.getOffers_value());
                                             if (couponvalue==100){
                                                 txtcheckPoint.setEnabled(false);
                                                 txtCheckWallet.setEnabled(false);
+                                            } else if (couponvalue>totalPrice){
+
                                             }
                                             discountvalue = (totalPrice*couponvalue)/100;
                                             discountedPrice = totalPrice-(totalPrice*couponvalue)/100;
                                             if (discountedPrice>totalPrice){
                                                 dis = 0;
+                                            } else if (totalPrice<discountedPrice){
+                                                dis = 0;
                                             } else {
                                                 dis = discountedPrice;
                                             }
-
                                             txtCoupanValue.setVisibility(View.VISIBLE);
                                             txtCoupanValue.setText("Coupon value : SAR "+ String.valueOf(df2.format((totalPrice*couponvalue)/100))+ "("+String.valueOf(couponvalue)+"%)");
                                         }
@@ -918,6 +968,7 @@ Sha request and response pharse
                                 @Override
                                 public void run() {
                                     Utility.message(getApplicationContext(), discountData.getMessage());
+                                    coupoun="";
                                 }
                             });
                         }
@@ -1169,8 +1220,6 @@ Sha request and response pharse
         dialog.show();
     }
 
-
-
     private void updatePointId(String last_id, String booking_id){
         HashMap<String, String>pointMap = new HashMap<>();
         pointMap.put("last_id",last_id);
@@ -1204,7 +1253,6 @@ Sha request and response pharse
 
     }
 
-
     private void updateWalletId(String last_id, String booking_id){
         HashMap<String, String>pointMap = new HashMap<>();
         pointMap.put("last_id",last_id);
@@ -1237,7 +1285,6 @@ Sha request and response pharse
         });
 
     }
-
 
     public void getWal(){
         RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();
@@ -1317,7 +1364,7 @@ Sha request and response pharse
                         Log.d("TAG", "onResponse: totalDebit"+totalCreditPoint+"\n"+pointValue);
 //                     txtPointVal.setText(String.valueOf(totalPoint));
                         if (totalPoint>0.0){
-                            txtPointVal.setText("("+String.valueOf(df2.format(totalPoint))+" Point value is : "
+                            txtPointVal.setText("("+String.valueOf(df2.format(totalPoint))+" Point value is : SAR "
                                     +String.valueOf(df2.format(pointValue))+")");
                             booking_point = String.valueOf(pointValue);
                             txtPointVal.setVisibility(View.VISIBLE);
@@ -1325,10 +1372,12 @@ Sha request and response pharse
                         } else {
                             booking_point = String.valueOf(pointValue);
                             totalPoint = totalCreditPoint-totalDebitPoint;
-
-                            txtPointVal.setText("("+String.valueOf(df2.format(totalPoint))+" Point value is : "
+                            txtcheckPoint.setVisibility(View.VISIBLE);
+                            txtPointVal.setVisibility(View.VISIBLE);
+                            txtPointVal.setText("("+String.valueOf(df2.format(totalPoint))+" Point value is : SAR "
                                     +String.valueOf(df2.format(pointValue))+")");
                             txtcheckPoint.setClickable(false);
+                            txtcheckPoint.setEnabled(false);
                         }
                     } else {
                         Log.d(TAG, "onResponse: "+response.body().message);
@@ -1376,7 +1425,7 @@ Sha request and response pharse
         creditPoint.enqueue(new retrofit2.Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, retrofit2.Response<ApiResponse> response) {
-                Log.d(TAG, "onResponse: data"+gson.toJson(response.body()));
+                Log.d(TAG, "onResponse: debit point"+gson.toJson(response.body()));
                 if (response.body()!=null){
                     if (response.body().status) {
                         lastPointid = response.body().last_insert_id;
@@ -1405,7 +1454,6 @@ Sha request and response pharse
                 if (response.body()!=null){
                     if (response.body().status){
                         lastWalletId = response.body().last_insert_id;
-
                         // Toast.makeText(PayActivity.this, ""+response.body().msg, Toast.LENGTH_SHORT).show();
                     } else {
                        // Toast.makeText(PayActivity.this, ""+response.body().msg, Toast.LENGTH_SHORT).show();

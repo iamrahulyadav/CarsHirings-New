@@ -1,6 +1,7 @@
 package com.carshiring.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import com.carshiring.R;
 import com.carshiring.activities.home.MyBookingActivity;
 import com.carshiring.adapters.MyBookingAdapter;
+import com.carshiring.adapters.TestAdapter;
 import com.carshiring.models.BookingHistory;
 import com.carshiring.models.CancledetailBean;
 import com.carshiring.models.UserDetails;
@@ -52,10 +54,12 @@ import static com.carshiring.splash.SplashActivity.TAG;
  * Created by rakhi on 13-03-2018.
  */
 
-public class CurrentBookingFragment extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class CurrentBookingFragment extends Fragment implements View.OnClickListener,
+        SwipeRefreshLayout.OnRefreshListener {
 
     public List<BookingHistory> currentBookingData;
     private TinyDB tinyDB;
+    LinearLayout layout ;
     private String token, userId, language, bookingid, accountType="1";// 1=wallet, 2 account
     private LinearLayout linearLayout;
     private RecyclerView recyclerView;
@@ -63,7 +67,7 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
     UserDetails userDetails = new UserDetails();
     SwipeRefreshLayout swipeRefreshLayout;
     private List<BookingHistory> bookingData;
-    MyBookingAdapter bookingAdapter;
+    TestAdapter bookingAdapter;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,43 +118,26 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
         super.onResume();
         setMyAdapter(bookingData);
         getBook();
-
     }
 
     private Gson gson = new Gson();
     String payfortValue;
-    List<CancledetailBean>cancledetailBeans = new ArrayList<>();
     private void setMyAdapter(final List<BookingHistory> bookingHistory){
-        bookingAdapter = new MyBookingAdapter(bookingHistory, cancledetailBeans,getContext(),"c");
+        bookingAdapter = new TestAdapter(getActivity(),bookingHistory,"c");
         recyclerView.setVisibility(View.VISIBLE);
-//        recyclerView.setAdapter(bookingAdapter);
-        bookingAdapter.submit(new MyBookingAdapter.ClickItem() {
-            @Override
-            public void click(View view, int Position) {
-                bookingid=bookingHistory.get(Position).getBooking_id();
-                if (bookingHistory.get(Position).getBooking_payfort_value()!=null&&
-                        bookingHistory.get(Position).getBooking_payfort_value().equals("0.00")) {
-                    payfortValue= bookingHistory.get(Position).getBooking_payfort_value();
-
-                }
-                setCancelationPop(bookingid,payfortValue);
-            }
-        });
+        recyclerView.setAdapter(bookingAdapter);
         if (bookingHistory.size()>0){
             recyclerView.setVisibility(View.VISIBLE);
             linearLayout.setVisibility(View.GONE);
             recyclerView.setAdapter(bookingAdapter);
-
-
         } else {
             recyclerView.setVisibility(View.GONE);
             linearLayout.setVisibility(View.VISIBLE);
         }
-
     }
 
-
     Dialog dialog;
+
 
     private void setCancelationPop(final String bookingid, String payfortValue){
         dialog.setContentView(R.layout.account_popup_view);
@@ -239,7 +226,6 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
                                 e.printStackTrace();
                             }
                             if (date2.compareTo(date1) >0 && bookingData1.getBooking_status().equals("1")) {
-
                                 bookingData.add(bookingData1);
                                 Collections.sort(bookingData, new Comparator<BookingHistory>() {
                                     @Override
@@ -266,7 +252,7 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
                         // Utility.message(getContext(), response.body().message);
                     }
                 } else {
-                    Utility.message(getContext(), response.body().message);
+                   // Utility.message(getContext(), response.body().message);
                 }
             }
 

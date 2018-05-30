@@ -74,21 +74,18 @@ public class LocationSelectionActivity extends AppBaseActivity {
                 if (keyword.length()>2){
                     getLocationList(keyword,languagecode);
                 }
-                /*else {
-                    refreshList(keyword);
-                }*/
             }
             @Override
             public void afterTextChanged(Editable editable) {}
         });
 
-        etSearchLocation.setOnTouchListener(new View.OnTouchListener() {
+       /* etSearchLocation.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 clickonDrawable(v, event);
                 return false;
             }
-        });
+        });*/
         imgBack = findViewById(R.id.loc_back);
 
         rvLocations = (RecyclerView) findViewById(R.id.rvLocations) ;
@@ -115,22 +112,8 @@ public class LocationSelectionActivity extends AppBaseActivity {
                 finish();
             }
         });
+        }
 
-//        getLocationList();
-    }
-
-/*    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(LocaleHelper.onAttach(base));
-    }
-    public void setLanguages(String language_code){
-        Locale locale = new Locale(language_code);
-        Locale.setDefault(locale);
-        Configuration config = new Configuration();
-        config.locale = locale;
-        getBaseContext().getResources().updateConfiguration(config,
-                getBaseContext().getResources().getDisplayMetrics());
-    }*/
 
     boolean clickonDrawable(View v, MotionEvent event)
     {
@@ -152,13 +135,13 @@ public class LocationSelectionActivity extends AppBaseActivity {
         }
 
         final LocationSelectionActivity _this =  this ;
-        Utility.showLoading(_this,getResources().getString(R.string.finding_location_list));
+      //  Utility.showLoading(_this,getResources().getString(R.string.finding_location_list));
         RetroFitApis retroFitApis =  RetrofitApiBuilder.getCarGatesapi() ;
         Call<ApiResponse> responseCall = retroFitApis.location(token,keyword,languagecode) ;
         responseCall.enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                Utility.hidepopup();
+              //  Utility.hidepopup();
                 Gson  gson =new Gson();
                 if(response.body()!=null){
                     Log.d(TAG, "onResponse: "+gson.toJson(response.body().response));
@@ -198,7 +181,7 @@ public class LocationSelectionActivity extends AppBaseActivity {
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
-                Utility.hidepopup();
+             //   Utility.hidepopup();
                 Log.d(TAG, "onFailure: "+t.getMessage());
                 Toast.makeText(LocationSelectionActivity.this, "Server error please try again", Toast.LENGTH_SHORT).show();
             }

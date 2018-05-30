@@ -151,11 +151,9 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
                     ll_extra.setVisibility(View.GONE);
                 }
             }
-
         } else {
             ll_extra.setVisibility(View.GONE);
         }
-
         carnect_type = CarDetailActivity.type;
         pick_city = SearchCarFragment.pickName;
         pick_houre = SearchCarFragment.pick_hour;

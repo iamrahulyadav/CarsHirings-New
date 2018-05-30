@@ -50,4 +50,5 @@ dependencies {
     implementation project(':FORTSDKv1.4.2')
     implementation 'com.nispok:snackbar:2.11.0'
     implementation project(':gd_helper-release')
+    implementation 'com.squareup.picasso:picasso:2.3.2'
 }

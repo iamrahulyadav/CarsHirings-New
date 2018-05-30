@@ -19,6 +19,7 @@ import com.carshiring.R;
 import com.carshiring.fragments.SearchCarFragment;
 import com.carshiring.models.Category;
 import com.carshiring.models.SearchData;
+import com.carshiring.models.TestData;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -38,7 +39,8 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
     final OnItemClickListener listener;
     private final Context context;
     List<SearchData> list;
-    List<Category.ResponseBean.CatBean>catBeanList;
+    List<TestData>catBeanList;
+
     ProgressBar bar1;
     double pointpercent,calPrice, markUp;
     public static int calPoint;
@@ -47,7 +49,7 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
         void onItemClick(SearchData carDetail);
     }
 
-    public CarResultsListAdapter(Context context , List<SearchData> list,List<Category.ResponseBean.CatBean>catBeanList,
+    public CarResultsListAdapter(Context context , List<SearchData> list,List<TestData>catBeanList,
                                  OnItemClickListener listener){
         this.context = context ;
         this.list =  list ;
@@ -86,9 +88,14 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
         if (model.getFeature().getAircondition().equals("true")){
             holder.txtAc.setVisibility(View.VISIBLE);
         }
-        for (Category.ResponseBean.CatBean catBean: catBeanList){
-            if (catBean.getCode()==Integer.parseInt(model.getCategory())){
-                holder.txtClass.setText("Class : "+catBean.getCategory_name());
+
+        for (TestData catBean: catBeanList){
+            if (catBean.getCat_code()!=null){
+                for (String s:catBean.getCat_code()){
+                    if (s.equals(model.getCategory())){
+                        holder.txtClass.setText("Class : "+catBean.getCat_name());
+                    }
+                }
             }
         }
 
@@ -142,8 +149,6 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
         Glide.with(context)
                 .load(model.getImage())
                 .into(holder.imgCarResult);
-
-
         bar1.setVisibility(View.GONE);
         double pricea = Double.parseDouble(model.getPrice());
 //        calculate point
@@ -256,7 +261,6 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
 //
 //
 //        }
-
 
     }
 

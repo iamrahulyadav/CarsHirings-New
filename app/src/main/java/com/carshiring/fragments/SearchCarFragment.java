@@ -5,6 +5,8 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,6 +31,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.carshiring.R;
@@ -40,11 +43,10 @@ import com.carshiring.activities.home.SearchbyMapActivity;
 import com.carshiring.models.CatRequest;
 import com.carshiring.models.Category;
 
-import com.carshiring.models.CategoryNew;
-
 import com.carshiring.models.MArkupdata;
 import com.carshiring.models.Point;
 import com.carshiring.models.SearchData;
+import com.carshiring.models.TestData;
 import com.carshiring.splash.SplashActivity;
 import com.carshiring.utilities.Utility;
 import com.carshiring.webservices.ApiResponse;
@@ -54,6 +56,7 @@ import com.carshiring.webservices.RetrofitApiBuilder;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
@@ -64,6 +67,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -169,7 +173,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 } else {
                     et_driver_age.setVisibility(View.VISIBLE);
                 }
-
             }
         });
 
@@ -205,7 +208,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             }
         });
 
-
         chkUseCurrentLocation = (CheckBox) view.findViewById(R.id.chkUseCurrentLocation);
         chkUseCurrentLocation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -216,8 +218,9 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                     et_pickup_location.setEnabled(false);
                     if (Utility.checkGooglePlayService(getActivity()))
                         setupLocation();
-                }else{
+                } else{
                     et_pickup_location.setEnabled(true);
+                    et_pickup_location.setText("");
                 }
             }
         });
@@ -411,7 +414,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-
     }
 
     @Override
@@ -451,300 +453,8 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
     Gson gson = new Gson();
     String TAG = SearchCarFragment.class.getName();
 
-    public static List<Category.ResponseBean.CatBean>catBeanList = new ArrayList<>();
+    public static List<TestData>catBeanList = new ArrayList<>();
     public static Category category = new Category();
-
-    public static CategoryNew category_new = new CategoryNew();
-
-    CatRequest cateRequest = new CatRequest();
-    HashMap<Double,String>map1;
-
-    public static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
-
-
-    public void getCat(CatRequest cateRequest) {
-
-        if (catBeanList!=null){
-            catBeanList.clear();
-        }
-
-        Utility.showloadingPopup(getActivity());
-        String cat = gson.toJson(cateRequest);
-        Log.d(TAG, "getCat: "+cat);
-
-        RequestBody requestBody = RequestBody.create(MEDIA_TYPE,cat);
-
-        final Request request = new Request.Builder()
-                .url(RetrofitApiBuilder.CarHires_BASE_URL+"category_list")
-                .post(requestBody)
-                .addHeader("Content-Type", "application/json")
-                .addHeader("cache-control", "no-cache")
-                .build();
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(10000, TimeUnit.SECONDS)
-                .writeTimeout(10000, TimeUnit.SECONDS)
-                .readTimeout(30000, TimeUnit.SECONDS)
-                .build();
-
-        Utility.showloadingPopup(getActivity());
-        client.newCall(request).enqueue(new okhttp3.Callback() {
-            @Override
-            public void onFailure(okhttp3.Call call, final IOException e) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String msg = e.getMessage();
-                        category = gson.fromJson(msg, Category.class);
-                        Utility.message(getContext(), getResources().getString(R.string.no_internet_connection));
-                        Utility.hidepopup();
-                    }
-                });
-            }
-
-            @Override
-            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-                Utility.hidepopup();
-                if (response!=null&&response.body().toString().length()>0){
-                    if (request.body()!=null){
-                        String msg = response.body().string();
-                        Log.d(TAG, "onResponse: msg"+msg);
-                        category = gson.fromJson(msg,Category.class);
-                        category_new = gson.fromJson(msg,CategoryNew.class);
-                        try {
-                            JSONObject jsonObject = new JSONObject(msg);
-                            if (jsonObject.getBoolean("status")){
-                                List<Category.ResponseBean.CatBean>catBeans = new ArrayList<>();
-                                if (category.getResponse()!=null){
-                                    catBeans = category.getResponse().getCat();
-                                }
-                                ArrayList<String>name = new ArrayList<>();
-                                Set<String>set = new HashSet<>();
-                                map1 = new HashMap<>();
-                                for (Category.ResponseBean.CatBean catBean: catBeans){
-                                    name.add(String.valueOf(catBean.getCode()));
-                                    set.addAll(name);
-                                    name.clear();
-                                    name.addAll(set);
-                                    Log.d(TAG, "onResponse: name"+gson.toJson(name));
-
-                                    for (SearchData searchDatas: searchData){
-                                        ArrayList<Double>doubles = new ArrayList<>();
-                                        if (String.valueOf(catBean.getCode()).equalsIgnoreCase(searchDatas.getCategory())){
-                                            double d = Double.parseDouble(searchDatas.getPrice());
-                                            double priceNew  = d+(d*Double.parseDouble(markup))/100;
-                                            doubles.add(priceNew);
-//                                            Collections.min(doubles);
-                                            map1 .put(priceNew,catBean.getCategory_name());
-                                        }
-                                    }
-                                }
-                                Log.d(TAG, "onResponse: map1"+gson.toJson(map1));
-
-                                final List<Category.ResponseBean.CatBean> finalCatBeans = catBeans;
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-
-                                        catBeanList.addAll(finalCatBeans);
-
-                                        TreeSet<Category.ResponseBean.CatBean> set = new TreeSet<>(new Comparator<Category.ResponseBean.CatBean>() {
-                                            @Override
-                                            public int compare(Category.ResponseBean.CatBean o1, Category.ResponseBean.CatBean o2) {
-                                                if(o1.getCategory_name().equalsIgnoreCase(o2.getCategory_name())){
-                                                    return 0;
-                                                }
-                                                return 1;
-                                            }
-                                        });
-
-                                        set.addAll(catBeanList);
-                                        catBeanList.clear();
-                                        catBeanList.addAll(set);
-                                        chooseSearchAction(searchData);
-                                    }
-                                });
-                                for (int i=0;i<name.size();i++){
-                                    List<Object>d =new ArrayList<>();
-                                    d = getKeysFromValue(map1,name.get(i));
-                                    Log.d(TAG, "onResponse: data"+name.get(i));
-                                    Log.d(TAG, "onResponse: data"+d);
-                                }
-
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    private ArrayList<String> list1, list2, list3, list4, list5;
-
-    public void getCat1(CatRequest cateRequest) {
-
-        catBeanList = new ArrayList<>();
-
-        list1 = new ArrayList<>();
-        list2 = new ArrayList<>();
-        list3 = new ArrayList<>();
-        list4 = new ArrayList<>();
-        list5 = new ArrayList<>();
-
-        for(int i=0; i<searchData.size(); i++){
-            String str = searchData.get(i).getPrice();
-            list5.add(str);
-        }
-
-
-        Utility.showloadingPopup(getActivity());
-        String cat = gson.toJson(cateRequest);
-        Log.d(TAG, "getCat: "+cat);
-
-        RequestBody requestBody = RequestBody.create(MEDIA_TYPE,cat);
-
-        final Request request = new Request.Builder()
-                .url(RetrofitApiBuilder.CarHires_BASE_URL+"category_list")
-                .post(requestBody)
-                .addHeader("Content-Type", "application/json")
-                .addHeader("cache-control", "no-cache")
-                .build();
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(10000, TimeUnit.SECONDS)
-                .writeTimeout(10000, TimeUnit.SECONDS)
-                .readTimeout(30000, TimeUnit.SECONDS)
-                .build();
-
-        Utility.showloadingPopup(getActivity());
-        client.newCall(request).enqueue(new okhttp3.Callback() {
-            @Override
-            public void onFailure(okhttp3.Call call, final IOException e) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String msg = e.getMessage();
-                        category = gson.fromJson(msg, Category.class);
-                        Utility.message(getContext(), getResources().getString(R.string.no_internet_connection));
-                        Utility.hidepopup();
-                    }
-                });
-            }
-
-            @Override
-            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-                Utility.hidepopup();
-                if (response!=null&&response.body().toString().length()>0){
-                    if (request.body()!=null){
-                        String msg = response.body().string();
-                        Log.d(TAG, "onResponse: msg"+msg);
-                        category = gson.fromJson(msg,Category.class);
-                        category_new = gson.fromJson(msg,CategoryNew.class);
-
-                        try {
-                            JSONObject job = new JSONObject(msg);
-                            JSONObject job1 = job.getJSONObject("response");
-                            JSONArray jar = job1.getJSONArray("cat");
-                            Log.d(TAG, "VKKK" + searchData.size() );
-                            Log.d(TAG, "VKKK" + jar.length() );
-
-                            for(int i=0; i<jar.length(); i++){
-                                JSONObject job2 = jar.getJSONObject(i);
-
-                                list1.add(job2.getString("category_id"));
-                                list2.add(job2.getString("category_name"));
-                                list3.add(job2.getString("category_image"));
-                                list4.add(job2.getString("code"));
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        Log.d("MyListSize", list1.size() + "");                 // Id
-                        Log.d("MyListSize", list2.size() + "");                 // Name
-                        Log.d("MyListSize", list3.size() + "");                 // Image
-                        Log.d("MyListSize", list4.size() + "");                 // Code
-                        Log.d("MyListSize", list5.size() + "");                 // Price
-
-
-                        ArrayList<String> list_2 = new ArrayList<>();
-
-                        for(int i=0; i< list2.size(); i++){
-                            String str = list2.get(i);
-                            boolean alreadyAdded = false;
-                            for(int j=0; j<list_2.size(); j++){
-                                if(str.equals(list_2.get(j))){
-                                    alreadyAdded = true;
-                                } else{
-                                    alreadyAdded = false;
-                                }
-                            }
-                            if (!alreadyAdded){
-                                list_2.add(str);
-                            }
-                        }
-
-                        // New Sorted Name List (One Name)
-                        String minposition;
-                        for(int i=0; i<list_2.size(); i++){
-                            String name = list_2.get(i);
-                            ArrayList<Integer> list_5 = new ArrayList<>();
-                            ArrayList<String> position = new ArrayList<>();
-
-                            for(int j=0; j<list2.size(); j++){
-
-                                if(name.equals(list2.get(j))){
-                                    position.add(j+"");
-                                    list_5.add(Integer.parseInt(list5.get(j)));
-                                }else{}
-                            }
-                            int minprice = Collections.min(list_5);
-                            for(int j=0; j<list_5.size(); j++){
-                                if((minprice+"").equals(list_5.get(j))){
-                                    minposition = position.get(j);
-                                } else{}
-                            }
-                        }
-                        for(int i=0; i<list2.size(); i++){
-                            String name = list2.get(i);
-                        }
-
-
-
-
-
-                    /*    try {
-                            JSONObject job = new JSONObject(msg);
-                            if(job.getBoolean("status")) {
-                                JSONObject job1 = job.getJSONObject("response");
-
-                                JSONArray jar = job1.getJSONArray("cat");
-
-                                CategoryNew categoryNew = new CategoryNew();
-
-                                for(int i=0; i<jar.length();i++){
-
-                                    categoryNew
-                                }
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }*/
-                    }
-                }
-            }
-        });
-    }
-
-    public static List<Object> getKeysFromValue(Map<?, ?> hm, Object value){
-        List <Object>list = new ArrayList<Object>();
-        for(Object o:hm.keySet()){
-            if(hm.get(o).equals(value)) {
-                list.add(o);
-            }
-        }
-        return list;
-    }
 
     private void chooseSearchAction(List<SearchData> car_list) {
 
@@ -799,9 +509,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         if (searchData!=null){
             searchData.clear();
         }
-        if (catBeanList!=null){
-            catBeanList.clear();
-        }
+
         feature = new SearchData.FeatureBean();
         catPriceMap = new HashMap<>();
         coverages = new ArrayList<>();
@@ -811,6 +519,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
 
         pick_hour=String.valueOf(pick_hours>9?pick_hours:"0"+pick_hours);
         pick_minute=String.valueOf(pick_minutes>9?pick_minutes:"0"+pick_minutes);
+
 
         drop_minute=String.valueOf(drop_minutes>9?drop_minutes:"0"+drop_minutes);
         drop_hour=String.valueOf(drop_hours>9?drop_hours:"0"+drop_hours);
@@ -827,10 +536,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 useCurrentLocation+"\n"+ useSameDestLocation+"\n"+isBetweenDriverAge+"\n"+currentLat+"\n"+
                 currentLng+"\n"+location_code+"\n"+location_iata+"\n"+
                 location_type+"\n"+location_code_drop+"\n"+location_iata_drop+"\n"+location_type_drop+"\n"+languagecode);
-        final Gson gson = new Gson();
-
-
-
         String url= RetrofitApiBuilder.CarGates_BASE_WEBSERVICE_URL+"webservice/search";
 
         StringRequest  stringRequest = new StringRequest(com.android.volley.Request.Method.POST, url, new com.android.volley.Response.Listener<String>() {
@@ -844,134 +549,134 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                     if (jsonObject.has("msg")){
                        msg= jsonObject.getString("msg");
                     }
-
                     if (status){
+                        if (catBeanList!=null){
+                            catBeanList.clear();
+                        }
                         JSONObject responseObject = jsonObject.getJSONObject("response");
                         JSONObject car_listObject = responseObject.getJSONObject("car_list");
-                        Log.d(TAG, "CarList" + car_listObject);
-                        Iterator<String> iter = car_listObject.keys();
-                        while (iter.hasNext()) {
-                            String key = iter.next();
-                            try {
-                                Object value = car_listObject.get(key);
-                                JSONObject object = car_listObject.getJSONObject(key);
-
-                                if (key.equals("category_list")){
-                                    Iterator<String> iterCatList = object.keys();
-                                    while (iterCatList.hasNext()){
-                                        String catkey = iterCatList.next();
-                                        JSONArray Catvalue = object.getJSONArray(catkey);
-
-                                        Type listType = new TypeToken<List<String>>() {}.getType();
-
-                                        List<String> yourList = new Gson().fromJson(Catvalue.toString(), listType);
-                                        catPriceMap.put(catkey, yourList);
-                                        Log.d(TAG, "onResponse: catvalue"+catPriceMap);
+                        if (car_listObject!=null&&car_listObject.length()>0){
+                            Iterator<String> iter = car_listObject.keys();
+                            while (iter.hasNext()) {
+                                String key = iter.next();
+                                try {
+                                    Object value = car_listObject.get(key);
+                                    if (value instanceof JSONArray) {
+                                        if (key.equals("category_list")){
+                                            // It's an array
+                                            JSONArray jsonArray = (JSONArray)value;
+                                            Type listType = new TypeToken<List<TestData>>(){}.getType();
+                                            List<TestData> myModelList = gson.fromJson(jsonArray.toString(), listType);
+                                            catBeanList.addAll(myModelList);
+                                            for (TestData testData: catBeanList){
+                                                cateList.add(Integer.parseInt(testData.getCat_id()));
+                                            }
+                                        }
                                     }
-                                } else {
-                                    if (object.has("feature")){
-                                        JSONObject featureObject = object.getJSONObject("feature");
-                                        feature.setAircondition( featureObject.get("aircondition")+"");
-                                        feature.setBag( featureObject.get("bag")+"");
-                                        feature.setFueltype(featureObject.getString("fueltype"));
-                                        feature.setTransmission(featureObject.getString("transmission"));
-                                        feature.setDoor(featureObject.getString("door"));
+                                    else if (value instanceof JSONObject) {
+                                        // It's an object
+                                        JSONObject g = (JSONObject)value;
                                     }
-                                    category1 = (String) object.get("category");
-                                    Log.d("MyCode", category1);
-                                    model = object.getString("model");
-                                    model_code = object.getString("model_code");
-                                    image = (String) object.get("image");
-                                    packaged = object.getString("package");
-                                    price = object.getString("price");
-                                    currency = (String) object.get("currency");
-                                    time_unit = object.getString("time_unit");
-                                    time = object.getString("time");
-                                    id_context = (String) object.get("id_context");
-                                    refer_type = object.getString("refer_type");
-                                    supplier = object.getString("supplier");
-                                    supplier_city = (String) object.get("supplier_city");
-                                    supplier_logo = object.getString("supplier_logo");
-                                    drop_city = object.getString("drop_city");
-                                    tc = (String) object.get("tc");
-                                    type = (String)object.get("type");
-                                    Log.d(TAG, "onResponse: time"+time+"\n"+time_unit);
-                                    JSONArray coveragesArray = object.getJSONArray("coverages");
-                                    for (int i=0;i<coveragesArray.length();i++){
-                                        SearchData.CoveragesBean bean = new SearchData.CoveragesBean();
-                                        JSONObject jsonObject1 = (JSONObject) coveragesArray.get(i);
-                                        String code = jsonObject1.getString("code");
-                                        Log.d(TAG, "VKCODE" + code);
-                                        String name = jsonObject1.getString("name");
-                                        String currency = jsonObject1.getString("currency");
-                                        String desc = jsonObject1.getString("desc");
-                                        String amount2 = jsonObject1.getString("amount2");
-                                        String currency2 = jsonObject1.getString("currency2");
-
-                                        if (code!=null){
-                                            bean.setCode(code);
-                                        }
-                                        if (name!=null){
-                                            bean.setName(name);
-                                        }
-                                        if (currency2!=null){
-                                            bean.setCurrency2(currency2);
-                                        }
-                                        if (desc!=null){
-                                            bean.setDesc(desc);
-                                        }
-                                        if (amount2!=null){
-                                            bean.setAmount2(amount2);
-                                        }
-                                        coverages.add(bean);
+                                    JSONObject object = car_listObject.getJSONObject(key);
+                                    if (key.equals("category_list")){
                                     }
-                                    SearchData carData = new SearchData();
+                                    else {
+                                        if (object.has("feature")){
+                                            JSONObject featureObject = object.getJSONObject("feature");
+                                            feature.setAircondition( featureObject.get("aircondition")+"");
+                                            feature.setBag( featureObject.get("bag")+"");
+                                            feature.setFueltype(featureObject.getString("fueltype"));
+                                            feature.setTransmission(featureObject.getString("transmission"));
+                                            feature.setDoor(featureObject.getString("door"));
+                                        }
+                                        category1 = (String) object.get("category");
+                                        Log.d("MyCode", category1);
+                                        model = object.getString("model");
+                                        model_code = object.getString("model_code");
+                                        image = (String) object.get("image");
+                                        packaged = object.getString("package");
+                                        price = object.getString("price");
+                                        currency = (String) object.get("currency");
+                                        time_unit = object.getString("time_unit");
+                                        time = object.getString("time");
+                                        id_context = (String) object.get("id_context");
+                                        refer_type = object.getString("refer_type");
+                                        supplier = object.getString("supplier");
+                                        supplier_city = (String) object.get("supplier_city");
+                                        supplier_logo = object.getString("supplier_logo");
+                                        drop_city = object.getString("drop_city");
+                                        tc = (String) object.get("tc");
+                                        type = (String)object.get("type");
+                                        Log.d(TAG, "onResponse: time"+time+"\n"+time_unit);
+                                        JSONArray coveragesArray = object.getJSONArray("coverages");
+                                        for (int i=0;i<coveragesArray.length();i++){
+                                            SearchData.CoveragesBean bean = new SearchData.CoveragesBean();
+                                            JSONObject jsonObject1 = (JSONObject) coveragesArray.get(i);
+                                            String code = jsonObject1.getString("code");
+                                            Log.d(TAG, "VKCODE" + code);
+                                            String name = jsonObject1.getString("name");
+                                            String currency = jsonObject1.getString("currency");
+                                            String desc = jsonObject1.getString("desc");
+                                            String amount2 = jsonObject1.getString("amount2");
+                                            String currency2 = jsonObject1.getString("currency2");
 
-                                    carData.setFeature(feature);
-                                    carData.setCategory(category1);
-                                    carData.setModel(model);
-                                    carData.setModel_code(model_code);
-                                    carData.setImage(image);
-                                    carData.setPackageX(packageX);
-                                    carData.setPrice(price);
-                                    carData.setCurrency(currency);
-                                    carData.setTime(time);
-                                    carData.setTime_unit(time_unit);
-                                    carData.setId_context(id_context);
-                                    carData.setRefer_type(refer_type);
-                                    carData.setSupplier(supplier);
-                                    carData.setSupplier_city(supplier_city);
-                                    carData.setSupplier_logo(supplier_logo);
-                                    carData.setDrop_city(drop_city);
-                                    carData.setTc(tc);
-                                    carData.setCoverages(coverages);
-                                    carData.setType(type);
-                                   searchData.add(carData);
+                                            if (code!=null){
+                                                bean.setCode(code);
+                                            }
+                                            if (name!=null){
+                                                bean.setName(name);
+                                            }
+                                            if (currency2!=null){
+                                                bean.setCurrency2(currency2);
+                                            }
+                                            if (desc!=null){
+                                                bean.setDesc(desc);
+                                            }
+                                            if (amount2!=null){
+                                                bean.setAmount2(amount2);
+                                            }
+                                            coverages.add(bean);
+                                        }
+                                        SearchData carData = new SearchData();
+
+                                        carData.setFeature(feature);
+                                        carData.setCategory(category1);
+                                        carData.setModel(model);
+                                        carData.setModel_code(model_code);
+                                        carData.setImage(image);
+                                        carData.setPackageX(packageX);
+                                        carData.setPrice(price);
+                                        carData.setCurrency(currency);
+                                        carData.setTime(time);
+                                        carData.setTime_unit(time_unit);
+                                        carData.setId_context(id_context);
+                                        carData.setRefer_type(refer_type);
+                                        carData.setSupplier(supplier);
+                                        carData.setSupplier_city(supplier_city);
+                                        carData.setSupplier_logo(supplier_logo);
+                                        carData.setDrop_city(drop_city);
+                                        carData.setTc(tc);
+                                        carData.setCoverages(coverages);
+                                        carData.setType(type);
+                                        searchData.add(carData);
+                                    }
+                                } catch (JSONException e) {
+                                    // Something went wrong!
                                 }
-
-                            } catch (JSONException e) {
-                                // Something went wrong!
+                            }
+                            if (searchData!=null&&searchData.size()>0){
+                                chooseSearchAction(searchData);
+                            }else {
+                                Utility.message(getContext(), "No record found ");
                             }
                         }
-
-                        for (SearchData searchDatas : searchData){
-                            cateList.add(Integer.parseInt(searchDatas.getCategory()));
-                        }
-                        cateRequest.setCode(cateList);
-                        getCat1(cateRequest);
-
                     } else {
-
                         Utility.message(getContext(),msg);
                     }
-
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-                Log.d(TAG, "onResponse: new "+response);
-            }
+                }
         }, new com.android.volley.Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -1007,80 +712,10 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 return serachRequest;
             }
         };
+
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(40000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(stringRequest);
-
-
-    }
-
-    private void requestForSearchCar() {
-        if(!validateData()){
-            return ;
-        }
-
-        Utility.showLoading(getActivity(),getResources().getString(R.string.searching_cars));
-        final SearchCarFragment _this = SearchCarFragment.this ;
-        RetroFitApis retroFitApis = RetrofitApiBuilder.getCarGatesapi() ;
-
-        pick_hour=String.valueOf(pick_hours>9?pick_hours:"0"+pick_hours);
-        pick_minute=String.valueOf(pick_minutes>9?pick_minutes:"0"+pick_minutes);
-
-        drop_minute=String.valueOf(drop_minutes>9?drop_minutes:"0"+drop_minutes);
-        drop_hour=String.valueOf(drop_hours>9?drop_hours:"0"+drop_hours);
-        if (switchSameDestLocation.isChecked()){
-            dropName = pickName;
-            location_code_drop =location_code;
-            location_iata_drop = location_iata;
-            location_type_drop = location_type;
-        }
-        Call<ApiResponse> responseCall = retroFitApis.search(token,pickName,
-                pick_date,pick_hour,
-                pick_minute,dropName,drop_date,drop_hour,drop_minute,driver_age,
-                useCurrentLocation, useSameDestLocation,isBetweenDriverAge,currentLat,
-                currentLng,location_code,location_iata,
-                location_type,location_code_drop,location_iata_drop,location_type_drop,languagecode) ;
-
-
-        Log.d(TAG, "requestForSearchCar: "+token+"\n"+pickName+"\n"+
-                pick_date+"\n"+pick_hour+"\n"+
-                pick_minute+"\n"+dropName+"\n"+drop_date+"\n"+drop_hour+"\n"+drop_minute+"\n"+driver_age+"\n"+
-                useCurrentLocation+"\n"+ useSameDestLocation+"\n"+isBetweenDriverAge+"\n"+currentLat+"\n"+
-                currentLng+"\n"+location_code+"\n"+location_iata+"\n"+
-                location_type+"\n"+location_code_drop+"\n"+location_iata_drop+"\n"+location_type_drop+"\n"+languagecode);
-        final Gson gson = new Gson();
-        responseCall.enqueue(new Callback<ApiResponse>() {
-            @Override
-
-            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                Utility.hidepopup();
-                Log.d(TAG, "Complete Search List: " + gson.toJson(response.body()));
-                if (response!=null){
-                    if (response.body().status){
-                        searchData=response.body().response.car_list;
-                        String data = gson.toJson(searchData);
-                        ArrayList<SearchData>searchData1 = new ArrayList<>();
-                        searchData1.addAll(searchData);
-                        for (SearchData searchDatas : searchData){
-                            cateList.add(Integer.parseInt(searchDatas.getCategory()));
-                        }
-                        cateRequest.setCode(cateList);
-                        getCat1(cateRequest);
-
-                    } else {
-                        Toast.makeText(activity, ""+response.body().msg, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ApiResponse> call, Throwable t) {
-                Utility.hidepopup();
-                Log.d(TAG, "onFailure: "+t.getMessage());
-
-                Toast.makeText(getActivity(), getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     public void getPoint(){
@@ -1161,8 +796,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         }
         else if (resultCode == LocationSelectionActivity.RESPONSE_LOCATION) {
             if (requestCode == REQUEST_PICKUP_LOCATION) {
-                pickName = location.getCity_name();
-                et_pickup_location.setText(pickName);
+                et_pickup_location.setText(location.getCity_name());
                 pickup_loc_id = location.getCity_id();
                 location_code = location.getCode();
                 location_iata = location.getIata();
@@ -1201,10 +835,8 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                     addConnectionCallbacks(this).
                     addOnConnectionFailedListener(this).
                     addApi(LocationServices.API).build();
-
             mgoogleApiclient.connect();
         }
-
     }
 
     @Override
@@ -1216,9 +848,42 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         if (mLocation != null) {
             currentLat = mLocation.getLatitude();
             currentLng = mLocation.getLongitude();
+            StringBuffer stringBuffer = new StringBuffer();
+            try {
+                stringBuffer = getAddress(new LatLng(currentLat, currentLng));
+                if (stringBuffer!=null){
+                    et_pickup_location.setText(stringBuffer.toString());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             Log.d("Current Locations",currentLat+" , "+currentLng);
         }
     }
+
+    public StringBuffer getAddress(LatLng latLng) throws IOException {
+        Geocoder geocoder;
+        List<Address> addresses;
+        StringBuffer result = new StringBuffer();
+        geocoder = new Geocoder(getContext(), Locale.getDefault());
+
+        try {
+            addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+            String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+            String city = addresses.get(0).getLocality();
+            /*String state = addresses.get(0).getAdminArea();
+            String country = addresses.get(0).getCountryName();
+            String postalCode = addresses.get(0).getPostalCode();
+            String knownName = addresses.get(0).getFeatureName();*/
+            result.append(address);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -1257,8 +922,10 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             useCurrentLocation = 0 ;
             currentLng = 0.0;
             currentLat = 0.0 ;
+            pickName = et_pickup_location.getText().toString().trim();
+            dropName = et_return_location.getText().toString().trim();
             // pickup_loc_id
-            if(pickup_loc_id==null || pickup_loc_id.trim().isEmpty()){
+            if(pickup_loc_id==null || pickup_loc_id.trim().isEmpty()||pickName.isEmpty()){
                 Toast.makeText(activity, getResources().getString(R.string.pick_up_location), Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -1266,13 +933,12 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 useSameDestLocation = 0;
                 drop_loc_id = pickup_loc_id ;
             }else {
-                if(drop_loc_id==null || drop_loc_id.trim().isEmpty()){
+                if(drop_loc_id==null || drop_loc_id.trim().isEmpty()||dropName.isEmpty()){
                     useSameDestLocation = 1;
                     Toast.makeText(activity, getResources().getString(R.string.pleae_select_drop_loc), Toast.LENGTH_SHORT).show();
                     return false ;
                 }
             }
-
         }else{
             useCurrentLocation = 1 ;
             //currentLat
@@ -1302,7 +968,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         // Age
         if(switchDriverAge.isChecked()) {
             isBetweenDriverAge = 1 ;
-            driver_age =  "30";
+            driver_age =  "25";
         }else{
             isBetweenDriverAge= 0 ;
             driver_age = et_driver_age.getText().toString().trim();

@@ -24,6 +24,11 @@
             android:icon="@drawable/ic_sb_contact_us"
             android:title="@string/action_contact_us" />
         <item
+            android:id="@+id/action_terms"
+            android:icon="@drawable/ic_about"
+            android:title="@string/action_terms" />
+
+        <item
             android:id="@+id/action_language"
             android:icon="@drawable/ic_language"
             android:title="@string/action_language" />

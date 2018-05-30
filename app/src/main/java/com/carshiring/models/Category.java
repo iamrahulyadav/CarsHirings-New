@@ -8,9 +8,11 @@ import java.util.List;
  */
 public class Category {
 
+
+
     /**
      * message : success
-     * response : {"cat":[{"category_id":"3","category_name":"Compect","category_image":"compect.png","code":3},{"category_id":"6","category_name":"Full size","category_image":"full_size.png","code":6},{"category_id":"4","category_name":"Intermediate","category_image":"Toyota_corolla_Intermediate.jpg","code":4},{"category_id":"7","category_name":"Premium","category_image":"Premier_car.jpg","code":7},{"category_id":"10","category_name":"Cargo van","category_image":"carvo_van.png","code":10},{"category_id":"9","category_name":"Mediam Passenger van","category_image":"medium_passenger_van.png","code":9}]}
+     * response : {"cat":[{"category_id":"1","category_name":"Mini","category_image":"New_Ford_Fiesta__Mini2.JPG","code":["1"]},{"category_id":"2","category_name":"Economic","category_image":"x.jpg","code":["3","34"]},{"category_id":"3","category_name":"Compect","category_image":"compect2.png","code":["2","4","35"]},{"category_id":"4","category_name":"Intermediate","category_image":"Toyota_corolla_Intermediate2.jpg","code":["5","25","36","22","6"]},{"category_id":"5","category_name":"Standard","category_image":"Camry_Standard2.png","code":["7","37"]},{"category_id":"6","category_name":"Full size","category_image":"full_size2.png","code":["8","38"]},{"category_id":"7","category_name":"Premium","category_image":"Premier_car.jpg","code":["10","23","39","40","9","32"]}]}
      * status : true
      */
 
@@ -55,16 +57,16 @@ public class Category {
 
         public static class CatBean {
             /**
-             * category_id : 3
-             * category_name : Compect
-             * category_image : compect.png
-             * code : 3
+             * category_id : 1
+             * category_name : Mini
+             * category_image : New_Ford_Fiesta__Mini2.JPG
+             * code : ["1"]
              */
 
             private String category_id;
             private String category_name;
             private String category_image;
-            private int code;
+            private List<Integer> code;
 
             public String getCategory_id() {
                 return category_id;
@@ -90,11 +92,11 @@ public class Category {
                 this.category_image = category_image;
             }
 
-            public int getCode() {
+            public List<Integer> getCode() {
                 return code;
             }
 
-            public void setCode(int code) {
+            public void setCode(List<Integer> code) {
                 this.code = code;
             }
         }

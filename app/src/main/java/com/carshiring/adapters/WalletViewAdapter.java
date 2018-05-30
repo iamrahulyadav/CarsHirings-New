@@ -67,7 +67,13 @@ public class WalletViewAdapter extends RecyclerView.Adapter<WalletViewAdapter.My
         holder.tv_booking_id.setText(context.getResources().getString(R.string.booking_id)+" : " +walletHistoryData.get(position).getBooking_id());
         holder.tv_booking_amount.setText("Wallet : "+walletHistoryData.get(position).get_$WalletAmount169());
         holder.tv_booking_date.setText(context.getResources().getString(R.string.transaction_date)+" : "+walletHistoryData.get(position).getBooking_date());
-        holder.tv_booking_type.setText(walletHistoryData.get(position).get_$WalletType204());
+        if (walletHistoryData.get(position).get_$WalletType204()!=null){
+            if (walletHistoryData.get(position).get_$WalletType204().equalsIgnoreCase("credit")){
+                holder.tv_booking_type.setText(walletHistoryData.get(position).get_$WalletType204()+" For Booking");
+            } else if (walletHistoryData.get(position).get_$WalletType204().equalsIgnoreCase("debit")){
+                holder.tv_booking_type.setText(walletHistoryData.get(position).get_$WalletType204()+" For Cancelation");
+            }
+        }
         holder.tv_booking_point.setText(context.getResources().getString(R.string.remain_wallet)+" : "+walletHistoryData.get(position).get_$WalletAffetctedAmount6());
     }
 
