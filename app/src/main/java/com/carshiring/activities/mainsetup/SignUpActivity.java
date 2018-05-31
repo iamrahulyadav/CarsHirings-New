@@ -1,9 +1,11 @@
 package com.carshiring.activities.mainsetup;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,12 +13,18 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carshiring.R;
+import com.carshiring.activities.home.BookCarActivity;
+import com.carshiring.activities.home.MainActivity;
+import com.carshiring.models.UserDetails;
 import com.carshiring.utilities.AppBaseActivity;
+import com.carshiring.utilities.AppGlobal;
 import com.carshiring.utilities.Utility;
 import com.carshiring.webservices.RetroFitApis;
 import com.carshiring.webservices.RetrofitApiBuilder;
+import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
 import com.carshiring.webservices.ApiResponse;
 
@@ -31,12 +39,14 @@ public class SignUpActivity extends AppBaseActivity implements TextView.OnEditor
     TinyDB sharedpref;
     String email,password,confirmpass;
     Toolbar toolbar;
+    AppGlobal appGlobal=AppGlobal.getInstancess();
+    String isBooking;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-
+        appGlobal.context=getApplicationContext();
         v=findViewById(android.R.id.content);
         sharedpref=new TinyDB(getApplicationContext());
 
@@ -52,6 +62,9 @@ public class SignUpActivity extends AppBaseActivity implements TextView.OnEditor
         pass.setTypeface(username.getTypeface());
         confirmpassword.setTypeface(username.getTypeface());
 
+        if (getIntent().hasExtra("booking")){
+            isBooking = getIntent().getStringExtra("booking");
+        }
         username.setOnEditorActionListener(this);
         pass.setOnEditorActionListener(this);
         confirmpassword.setOnEditorActionListener(this);
@@ -89,6 +102,7 @@ public class SignUpActivity extends AppBaseActivity implements TextView.OnEditor
             }
         });
     }
+
     public String Msg;
     private void signup() {
         InputMethodManager inputMethodManager= (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -111,7 +125,8 @@ public class SignUpActivity extends AppBaseActivity implements TextView.OnEditor
                             Msg = response.body().msg;
                             Utility.message(SignUpActivity.this,Msg);
                             Utility.hidepopup();
-                            finish();
+//                            finish();
+                            login();
                         }
 
                         @Override
@@ -146,6 +161,56 @@ public class SignUpActivity extends AppBaseActivity implements TextView.OnEditor
             }
         }
     }
+
+    private void login() {
+        InputMethodManager methodManager= (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        methodManager.hideSoftInputFromWindow(toolbar.getWindowToken(),0);
+        if (!email.isEmpty() && !password.isEmpty())
+        {
+            if(!Utility.isNetworkConnected(getApplicationContext())){
+                Toast.makeText(SignUpActivity.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Utility.showloadingPopup(this);
+            RetroFitApis retroFitApis = RetrofitApiBuilder.getCargHiresapis();
+            Call<ApiResponse> responseCall=retroFitApis.login(email,password);
+            responseCall.enqueue(new Callback<ApiResponse>() {
+                @Override
+                public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                    Utility.hidepopup();
+                    if(response.body().status)
+                    {
+                        UserDetails userDetails = new UserDetails();
+                        userDetails = response.body().response.user_detail;
+                        String logindata=new Gson().toJson(userDetails);
+                        Log.d("TAG", "onResponse: "+logindata);
+                        appGlobal.setLoginData(logindata);
+                        String st =  appGlobal.getUser_id();
+                        if (isBooking!=null && isBooking.equalsIgnoreCase("booksign")){
+                            Intent intent = new Intent(SignUpActivity.this,BookCarActivity.class);
+                            startActivity(intent);
+                        } else {
+                            Intent intent = new Intent(SignUpActivity.this,MainActivity.class);
+                            startActivity(intent);
+                        }
+                        finish();
+                    }
+                    else{
+                        Utility.message(getApplicationContext(), "Username or password invalid");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ApiResponse> call, Throwable t) {
+                    Utility.hidepopup();
+                    Utility.message(getApplicationContext(),getResources().getString(R.string.no_internet_connection));
+                }
+            });
+        }
+
+    }
+
+
     public void checknetwork() {
         if(!Utility.isNetworkConnected(this))
         {

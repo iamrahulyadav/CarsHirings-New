@@ -65,6 +65,9 @@ import retrofit2.Response;
 import static com.carshiring.activities.home.CarDetailActivity.carImage;
 import static com.carshiring.activities.home.CarDetailActivity.carSpecificationList;
 import static com.carshiring.activities.home.CarDetailActivity.day;
+import static com.carshiring.activities.home.CarDetailActivity.fullAmtValue;
+import static com.carshiring.activities.home.CarDetailActivity.fullprotectionammount;
+import static com.carshiring.activities.home.CarDetailActivity.fullprotectioncurrency;
 import static com.carshiring.activities.home.CarDetailActivity.point;
 import static com.carshiring.activities.home.CarDetailActivity.refer_type;
 import static com.carshiring.activities.home.CarDetailActivity.termsurl;
@@ -115,7 +118,12 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
 
         String s= tinyDB.getString("login_data");
         userDetails = gson.fromJson(s, UserDetails.class);
-        userId = userDetails.getUser_id();
+        if (userDetails!=null&&userDetails.getUser_id()!=null){
+            userId = userDetails.getUser_id();
+        }
+        else {
+            quotes.setVisibility(View.VISIBLE);
+        }
         language = tinyDB.getString("language_code");
         carnect_id = CarDetailActivity.id_context;
         car_model = CarDetailActivity.modelname;
@@ -167,7 +175,9 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
         drop_datetyme= drop_date +" "+SearchCarFragment.dropTime;
         booking_price = CarDetailActivity.currency + "  " + CarDetailActivity.carPrice;
         image = CarDetailActivity.carImage;
-        age = userDetails.getUser_age();
+        if (userDetails!=null&&userDetails.getUser_age()!=null){
+            age = userDetails.getUser_age();
+        }
 
         ll_extra.setOnClickListener(this);
         ll_protection.setOnClickListener(this);
@@ -220,9 +230,12 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
                 + time + " "+ CarDetailActivity.day);
         LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
+        if (fullprotectionammount!=null&&!fullprotectionammount.equalsIgnoreCase("null")){
+            tinyDB.putString("full_prot", fullprotectioncurrency+" "+String.valueOf(fullAmtValue));
+        }
         if(carSpecificationList!=null) {
             for(int i=0;i<carSpecificationList.size();i++) {
+
                 CarDetailBean.FeatureBean carSpecification =carSpecificationList.get(i);
                 if (carSpecification.aircondition != null) {
                     if(!carSpecification.passenger.isEmpty())
@@ -290,7 +303,7 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
                         TextView tt1 = new TextView(getContext());
                         tt1.setLayoutParams(lparams);
 //                        tt1.setText(carSpecification.getFueltype());
-                        tt1.setText("Full to Full");
+                        tt1.setText(getResources().getString(R.string.txtFuel));
                         tt1.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.ic_fuel,0,0);
                         tt1.setCompoundDrawablePadding(5);
                         tt1.setTextSize(10);
@@ -353,8 +366,6 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
                 httpConn.connect();
 
                 s = httpConn.getResponseCode();
-                Log.d("TAG", "doInBackground: "+httpConn.getResponseCode());
-                System.out.println("Response Code : " + httpConn.getResponseCode());
             } catch (Exception e) {
                 e.printStackTrace();
             }

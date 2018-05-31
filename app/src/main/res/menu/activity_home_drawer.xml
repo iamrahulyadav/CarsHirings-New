@@ -9,7 +9,7 @@
         <item
             android:id="@+id/action_booking"
             android:icon="@drawable/ic_sb_bookings"
-            android:title="@string/action_quotes" />
+            android:title="@string/action_my_booking" />
         <item
             android:id="@+id/action_accounts"
             android:icon="@drawable/ic_sb_accounts"
@@ -26,6 +26,7 @@
         <item
             android:id="@+id/action_terms"
             android:icon="@drawable/ic_about"
+            android:visible="false"
             android:title="@string/action_terms" />
 
         <item

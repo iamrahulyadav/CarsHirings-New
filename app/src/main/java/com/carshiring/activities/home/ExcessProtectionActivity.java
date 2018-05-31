@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.carshiring.R;
@@ -48,7 +49,7 @@ public class ExcessProtectionActivity extends AppCompatActivity implements View.
         View v=findViewById(android.R.id.content);
         toolbar=  findViewById(R.id.bottomToolBar);
         toolbartext= toolbar.findViewById(R.id.txt_bot);
-        toolbartext.setText(getResources().getString(R.string.add_full_protection));
+        toolbartext.setText(getResources().getString(R.string.saved_successfully));
         tinyDB = new TinyDB(getApplicationContext());
         layoutbuttons= (LinearLayout) findViewById(R.id.ll_buttons);
         bt_standPro= (Button)findViewById(R.id.bt_standardPro);
@@ -56,7 +57,7 @@ public class ExcessProtectionActivity extends AppCompatActivity implements View.
         txt_fullprotection=findViewById(R.id.txt_fullprotection);
         if (fullprotectionammount!=null&&!fullprotectionammount.equalsIgnoreCase("null")){
             txt_fullprotection.setText(getResources().getString(R.string.full_protection_only) +" "+ "SAR " +
-                    " " + String.valueOf(fullAmtValue) + getResources().getString(R.string.for_day));
+                    " " + String.valueOf(fullAmtValue) + " "+getResources().getString(R.string.for_day));
         } else {
             txt_fullprotection.setVisibility(View.GONE);
             toolbar.setVisibility(View.GONE);
@@ -64,19 +65,18 @@ public class ExcessProtectionActivity extends AppCompatActivity implements View.
 
         bt_fullPro.setOnClickListener(this);
         bt_standPro.setOnClickListener(this);
+        tinyDB.putString("full_prot", fullprotectioncurrency+" "+String.valueOf(fullAmtValue));
 
         toolbartext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tinyDB.putString("full_prot", fullprotectioncurrency+" "+String.valueOf(fullAmtValue));
+//                tinyDB.putString("full_prot", fullprotectioncurrency+" "+String.valueOf(fullAmtValue));
                 finish();
-                Utility.message(getApplication(), getResources().getString(R.string.full_protection_addedd));
             }
         });
 
         Intent it=getIntent();
-        if(it!=null)
-        {
+        if(it!=null) {
             String val=it.getStringExtra("get");
             if(val.equalsIgnoreCase("ForProtec"))
             {
@@ -101,6 +101,28 @@ public class ExcessProtectionActivity extends AppCompatActivity implements View.
         extrapro.setOnClickListener(this);
 
         setupActionBar();
+    }
+
+    public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.radioFullYes:
+                if (checked){
+                    tinyDB.putString("full_prot", fullprotectioncurrency+" "+String.valueOf(fullAmtValue));
+                    Utility.message(getApplication(), getResources().getString(R.string.full_protection_addedd));
+                }
+                    break;
+            case R.id.radioFullNo:
+                if (checked){
+                    tinyDB.remove("full_prot");
+                    Utility.message(getApplication(), getResources().getString(R.string.txtNoProtection));
+
+                }
+                    break;
+        }
     }
 
     private void setupActionBar() {

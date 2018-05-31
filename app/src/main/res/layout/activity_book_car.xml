@@ -109,7 +109,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="or Similar"
+                    android:text="@string/txtOrSimilar"
                     android:gravity="center"
                     android:textColor="@color/black"
                     />
@@ -367,7 +367,7 @@
                 android:id="@+id/txt_terms"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Terms and Conditions"
+                android:text="@string/action_terms"
                 android:gravity="center"
                 android:textColor="@color/bottom_color"
                 android:textStyle="bold"

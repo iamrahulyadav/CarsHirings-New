@@ -256,7 +256,7 @@ public class CarsResultListActivity extends AppBaseActivity {
         listAdapter = new CarResultsListAdapter(this, listCarResult, catBeanList, new CarResultsListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(SearchData carDetail) {
-                if (tinyDB.contains("login_data")) {
+                /*if (tinyDB.contains("login_data")) {
                     String data = tinyDB.getString("login_data");
                     userDetails = gson.fromJson(data, UserDetails.class);
                     userid = userDetails.getUser_id();
@@ -299,7 +299,38 @@ public class CarsResultListActivity extends AppBaseActivity {
                 } else {
                     set = "login";
                     setupoverlay(set);
+                }*/
+                id_context = carDetail.getId_context();
+                type = carDetail.getType();
+                refertype = carDetail.getRefer_type();
+                for (SearchData.CoveragesBean bean : carDetail.getCoverages()) {
+                    if (bean.getCode().equalsIgnoreCase("412")) {
+                        oneway = bean.getName() + " : " + bean.getCurrency2() + " "
+                                + bean.getAmount2();
+                    } else if (bean.getCode().equalsIgnoreCase("410")) {
+                        driverSur = bean.getName() + " : " + bean.getCurrency2() + " "
+                                + bean.getAmount2();
+                    }
                 }
+                Intent intent = new Intent(CarsResultListActivity.this, CarDetailActivity.class);
+                intent.putExtra("id_context", id_context);
+                intent.putExtra("type", type);
+                double pricea = Double.parseDouble(carDetail.getPrice());
+                pointpercent = Double.parseDouble(SearchCarFragment.pointper);
+                double markUp = Double.parseDouble(SearchCarFragment.markup);
+                double d = pricea;
+                double priceNew = d + (d * markUp) / 100;
+                calPrice = (priceNew * pointpercent) / 100;
+                calPoint = (int) (calPrice / 0.02);
+                day = carDetail.getTime();
+                time = carDetail.getTime_unit();
+                intent.putExtra("day", carDetail.getTime());
+                intent.putExtra("refer_type", refertype);
+                intent.putExtra("point_earn", String.valueOf(calPoint));
+                intent.putExtra("one_way_fee", oneway);
+                intent.putExtra("driverSur", driverSur);
+                startActivity(intent);
+
             }
         });
         recycler_search_cars.setAdapter(listAdapter);

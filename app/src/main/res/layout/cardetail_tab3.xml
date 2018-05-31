@@ -16,7 +16,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Collision Damage Waiver"
+        android:text="@string/txtColli"
         android:gravity="center"
         android:textSize="19sp"
         android:textColor="@color/bottom_color"
@@ -41,7 +41,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Theft Protection"
+        android:text="@string/txtTheft"
         android:gravity="center"
         android:textSize="19sp"
         android:textColor="@color/bottom_color"
@@ -66,7 +66,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Age Requirements"
+        android:text="@string/txtAgeReq"
         android:gravity="center"
         android:textSize="19sp"
         android:textColor="@color/bottom_color"
@@ -144,7 +144,7 @@
             android:id="@+id/txt_terms"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Terms and Conditions"
+            android:text="@string/action_terms"
             android:gravity="center"
             android:textColor="@color/bottom_color"
             android:textStyle="bold"
@@ -153,7 +153,6 @@
             android:layout_marginTop="12dp"/>
         <View
             android:visibility="gone"
-
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/Light_grey"

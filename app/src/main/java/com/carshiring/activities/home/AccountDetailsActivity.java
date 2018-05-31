@@ -192,7 +192,6 @@ public class AccountDetailsActivity extends AppBaseActivity {
                         edt_phone.setText(userDetails.getUser_phone());
                         edt_licence_no.setText(userDetails.getUser_license_no());
                         edt_fname.setText(userDetails.getUser_name());
-                        Log.d("TAG", "onResponse: "+userDetails.getUser_dob());
                         if (userDetails.getUser_dob()!=null&&!userDetails.getUser_dob().equalsIgnoreCase("0000-00-00")){
                             edt_dob.setText(Utility.convertSimpleDate(userDetails.getUser_dob()));
                         }
@@ -206,6 +205,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
                         }
                         if (userDetails.getUser_image()!=null&&userDetails.getUser_image().length()>1){
                             String url = RetrofitApiBuilder.IMG_BASE_URL+userDetails.getUser_image();
+                            Log.d("TAG", "onResponse: imagewall"+url);
                             GetImage task = new GetImage();
                             // Execute the task
                             task.execute(new String[] { url });

@@ -190,7 +190,7 @@ Merchant Identifier: daouwTJI
         txtTotalAmyVal = findViewById(R.id.txtTotalPayValue);
         earnPoint = String.valueOf(CarDetailActivity.point);
 
-        txtEarnedPoint.setText("Get "+ earnPoint + " Points");
+        txtEarnedPoint.setText(getResources().getString(R.string.colletcted_point )+" : "+ earnPoint );
 
         txtApply.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -202,7 +202,7 @@ Merchant Identifier: daouwTJI
                     txtCheckWallet.setChecked(false);
                     txtcheckPoint.setChecked(false);
                 } else {
-                    Utility.message(getApplication(), "Please enter coupon code");
+                    Utility.message(getApplication(), getResources().getString(R.string.colletcted_point));
                 }
             }
         });
@@ -332,7 +332,6 @@ Merchant Identifier: daouwTJI
                             String s = gson.toJson(setBooking());
 //                            makeBooking(s);
                             bookCar(s);
-
                         } else {
                             booking_wallet="";
                             payfortAmt = totalPrice-usepoint;
@@ -364,14 +363,13 @@ Merchant Identifier: daouwTJI
                         booking_wallet="";
                         requestPurchase(booking_payfort);
                     }
-
                 }
 
             }
         });
         txtTotalAmyVal.setText(CarDetailActivity.currency + "  " + CarDetailActivity.carPrice+ "/ "
                 +CarsResultListActivity.day + " "+ CarsResultListActivity.time);
-        txtPAyAmt.setText("Total payable amount : "+CarDetailActivity.currency + "  "
+        txtPAyAmt.setText(getResources().getString(R.string.txtTotalPayableAmt)+" : "+CarDetailActivity.currency + "  "
                 +String.valueOf(df2.format(totalPrice)));
 
         getPoint();
@@ -419,8 +417,6 @@ Merchant Identifier: daouwTJI
     }
     double d =0;
 
-
-
     @SuppressLint("SetTextI18n")
     public void onCheckboxClicked(View view) {
         // Is the view now checked?
@@ -442,15 +438,17 @@ Merchant Identifier: daouwTJI
                                 double pointBook =pointValue-w;
                                 booking_point = String.valueOf(pointBook);
                                 pointBal = pointValue-w;
-                                txtPointVal.setText("(Remaining point value : SAR "+String.valueOf(df2.format(pointBal))+")");
+                                txtPointVal.setText("( "+getResources().getString(R.string.txtRemainPtVa)
+                                        +" : SAR "+String.valueOf(df2.format(pointBal))+")");
                                 payfortAmt = 0;
                                 remainPOint=w;
                             } else {
                                 remainPOint=pointValue;
                                 payfortAmt = (w-p);
-                                txtPointVal.setText("(Remaining point value : SAR "+String.valueOf(df2.format(pointBal))+")");
+                                txtPointVal.setText("( " +getResources().getString(R.string.txtRemainPtVa)
+                                        +" : SAR "+String.valueOf(df2.format(pointBal))+")");
                             }
-                            txtPointValueAmt.setText("Point value: SAR "+ String.valueOf(round(p,2)));
+                            txtPointValueAmt.setText(getResources().getString(R.string.txtPointValue)+" : SAR "+ String.valueOf(round(p,2)));
                             txtPointValueAmt.setVisibility(View.VISIBLE);
                         }
 //                        if wallet not checked 
@@ -460,24 +458,26 @@ Merchant Identifier: daouwTJI
                                 pointBal = pointValue - totalPrice;
                                 txtCheckWallet.setEnabled(false);
                                 remainPOint = totalPrice;
-                                txtPointVal.setText("( Remaining point value : SAR " + String.valueOf(df2.format(pointBal)) + ")");
+                                txtPointVal.setText("( "+getResources().getString(R.string.txtRemainPtVa)
+                                        +": SAR " + String.valueOf(df2.format(pointBal)) + ")");
                             } else {
                                 txtCheckWallet.setEnabled(true);
                                 payfortAmt = totalPrice - pointValue;
                                 remainPOint = pointValue;
-                                txtPointVal.setText("( Remaining point value : SAR  " + String.valueOf(df2.format(pointBal)) + ")");
+                                txtPointVal.setText("( "+getResources().getString(R.string.txtRemainPtVa)
+                                        +" : SAR  " + String.valueOf(df2.format(pointBal)) + ")");
                             }
                         }
-                        txtPointValueAmt.setText("Point value: SAR "+ String.valueOf(df2.format(remainPOint)));
+                        txtPointValueAmt.setText( getResources().getString(R.string.txtPointValue)+" : SAR "+ String.valueOf(df2.format(remainPOint)));
                         txtPointValueAmt.setVisibility(View.VISIBLE);
                     }
                     else{
                         payfortAmt = totalPrice;
                         txtCheckWallet.setEnabled(true);
-                        txtPointVal.setText("("+df2.format(totalPoint)+" Point value is : "+String.valueOf(df2.format(pointValue))+")");
+                        txtPointVal.setText("("+df2.format(totalPoint)+getResources().getString(R.string.txtPointValue)+" is : "+String.valueOf(df2.format(pointValue))+")");
                         txtPointValueAmt.setVisibility(View.GONE);
                     }
-                    txtPAyAmt.setText("Total payable amount : SAR "+ String.valueOf(df2.format(payfortAmt)));
+                    txtPAyAmt.setText(getResources().getString(R.string.txtTotalPayableAmt)+" : SAR "+ String.valueOf(df2.format(payfortAmt)));
                     break;
                 case R.id.check_pay_online:
                     if (checked){
@@ -529,9 +529,9 @@ Merchant Identifier: daouwTJI
                                 txtcheckPoint.setEnabled(true);
                             }
                         }
-                        txtWalletValueAmt.setText("Wallet : SAR "+ String.valueOf(df2.format(d)));
+                        txtWalletValueAmt.setText(getResources().getString(R.string.txtWal)+" : SAR "+ String.valueOf(df2.format(d)));
                         txtWalletValueAmt.setVisibility(View.VISIBLE);
-                        txtPAyAmt.setText("Total payable amount : SAR "+ String.valueOf(df2.format(payfortAmt)));
+                        txtPAyAmt.setText(getResources().getString(R.string.txtTotalPayableAmt)+" : SAR "+ String.valueOf(df2.format(payfortAmt)));
 
                     }
                     else {
@@ -543,7 +543,7 @@ Merchant Identifier: daouwTJI
                         txtCheckWallet.setEnabled(true);
                         txtcheckPoint.setEnabled(true);
                     }
-                    txtPAyAmt.setText("Total payable amount : SAR "+ String.valueOf(df2.format(payfortAmt)));
+                    txtPAyAmt.setText(getResources().getString(R.string.txtTotalPayableAmt)+" : SAR "+ String.valueOf(df2.format(payfortAmt)));
                     break;
             }
         }
@@ -565,16 +565,18 @@ Merchant Identifier: daouwTJI
                                double pointBook =pointValue-x;
                                 booking_point = String.valueOf(pointBook);
                                 pointBal = pointValue-x;
-                                txtPointVal.setText("(Remaining point value : "+String.valueOf(df2.format(pointBal))+")");
+                                txtPointVal.setText("("+getResources().getString(R.string.txtRemainPtVa)
+                                        +" : "+String.valueOf(df2.format(pointBal))+")");
                                 payfortAmt = 0;
                                 p=x;
                                 txtCheckWallet.setEnabled(true);
                             } else {
                                 p=pointValue;
                                 payfortAmt = (x-p);
-                                txtPointVal.setText("(Remaining point value : SAR "+String.valueOf(df2.format(pointBal))+")");
+                                txtPointVal.setText("("+getResources().getString(R.string.txtRemainPtVa)
+                                        +" : SAR "+String.valueOf(df2.format(pointBal))+")");
                             }
-                            txtPointValueAmt.setText("Point value: SAR "+ String.valueOf(round(p,2)));
+                            txtPointValueAmt.setText(getResources().getString(R.string.txtPointValue)+" : SAR "+ String.valueOf(round(p,2)));
                             txtPointValueAmt.setVisibility(View.VISIBLE);
                         }
 //                        if wallet not checked
@@ -582,7 +584,8 @@ Merchant Identifier: daouwTJI
                             if (pointValue>=totalPrice){
                                 booking_point = String.valueOf(totalPrice);
                                 pointBal = pointValue-totalPrice;
-                                txtPointVal.setText("(Remaining point value : "+String.valueOf(df2.format(pointBal))+")");
+                                txtPointVal.setText("(" +getResources().getString(R.string.txtRemainPtVa)
+                                        +": "+String.valueOf(df2.format(pointBal))+")");
                                 payfortAmt = 0;
                                 p=totalPrice;
                                 txtCheckWallet.setEnabled(false);
@@ -590,19 +593,20 @@ Merchant Identifier: daouwTJI
                                 p=pointValue;
                                 txtCheckWallet.setEnabled(true);
                                 payfortAmt = totalPrice-pointValue;
-                                txtPointVal.setText("(Remaining point value : SAR "+String.valueOf(df2.format(pointBal))+")");
+                                txtPointVal.setText("("+getResources().getString(R.string.txtRemainPtVa)
+                                        +": SAR "+String.valueOf(df2.format(pointBal))+")");
                             }
-                            txtPointValueAmt.setText("Point value: SAR "+ String.valueOf(round(p,2)));
+                            txtPointValueAmt.setText(getResources().getString(R.string.txtPointValue)+" : SAR "+ String.valueOf(round(p,2)));
                             txtPointValueAmt.setVisibility(View.VISIBLE);
                         }
                     }
                     else{
                         payfortAmt = totalPrice;
                         txtCheckWallet.setEnabled(true);
-                        txtPointVal.setText("("+df2.format(totalPoint)+" Point value is : "+String.valueOf(df2.format(pointValue))+")");
+                        txtPointVal.setText("("+df2.format(totalPoint)+getResources().getString(R.string.txtPointValue)+" is : "+String.valueOf(df2.format(pointValue))+")");
                         txtPointValueAmt.setVisibility(View.GONE);
                     }
-                    txtPAyAmt.setText("Total payable amount : SAR "+ String.valueOf(df2.format(payfortAmt)));
+                    txtPAyAmt.setText(getResources().getString(R.string.txtTotalPayableAmt)+" : SAR "+ String.valueOf(df2.format(payfortAmt)));
 
                     break;
                 case R.id.check_pay_online:
@@ -653,9 +657,9 @@ Merchant Identifier: daouwTJI
                                 txtcheckPoint.setEnabled(true);
                             }
                         }
-                        txtWalletValueAmt.setText("Wallet : SAR "+ String.valueOf(df2.format(d)));
+                        txtWalletValueAmt.setText(getResources().getString(R.string.txtWal)+" : SAR "+ String.valueOf(df2.format(d)));
                         txtWalletValueAmt.setVisibility(View.VISIBLE);
-                        txtPAyAmt.setText("Total payable amount : SAR "+ String.valueOf(df2.format(payfortAmt)));
+                        txtPAyAmt.setText(getResources().getString(R.string.txtTotalPayableAmt)+" : SAR "+ String.valueOf(df2.format(payfortAmt)));
                     }
                     else {
                         booking_wallet=String.valueOf(df2.format(walletAmt));
@@ -665,7 +669,7 @@ Merchant Identifier: daouwTJI
                         txtcheckPoint.setEnabled(true);
                         txtWalletValueAmt.setVisibility(View.GONE);
                     }
-                    txtPAyAmt.setText("Total payable amount : SAR "+ String.valueOf(df2.format(payfortAmt)));
+                    txtPAyAmt.setText(getResources().getString(R.string.txtTotalPayableAmt)+" : SAR "+ String.valueOf(df2.format(payfortAmt)));
 
                     break;
 
@@ -1364,7 +1368,8 @@ Sha request and response pharse
                         Log.d("TAG", "onResponse: totalDebit"+totalCreditPoint+"\n"+pointValue);
 //                     txtPointVal.setText(String.valueOf(totalPoint));
                         if (totalPoint>0.0){
-                            txtPointVal.setText("("+String.valueOf(df2.format(totalPoint))+" Point value is : SAR "
+                            txtPointVal.setText("("+String.valueOf(df2.format(totalPoint))
+                                    +getResources().getString(R.string.txtPointValue)+" is : SAR "
                                     +String.valueOf(df2.format(pointValue))+")");
                             booking_point = String.valueOf(pointValue);
                             txtPointVal.setVisibility(View.VISIBLE);
@@ -1374,7 +1379,8 @@ Sha request and response pharse
                             totalPoint = totalCreditPoint-totalDebitPoint;
                             txtcheckPoint.setVisibility(View.VISIBLE);
                             txtPointVal.setVisibility(View.VISIBLE);
-                            txtPointVal.setText("("+String.valueOf(df2.format(totalPoint))+" Point value is : SAR "
+                            txtPointVal.setText("("+String.valueOf(df2.format(totalPoint))+
+                                    getResources().getString(R.string.txtPointValue)+"  is : SAR "
                                     +String.valueOf(df2.format(pointValue))+")");
                             txtcheckPoint.setClickable(false);
                             txtcheckPoint.setEnabled(false);

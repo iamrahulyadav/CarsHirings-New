@@ -163,7 +163,7 @@
                         android:layout_gravity="center"
                         android:textSize="12sp"
                         android:layout_marginLeft="5dp"
-                        android:text="Supplier Location" />
+                        android:text="@string/txtSuppLoc" />
                 </LinearLayout>
             </FrameLayout>
 
@@ -179,7 +179,7 @@
             android:id="@+id/txt_terms"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Terms and Conditions"
+            android:text="@string/action_terms"
             android:gravity="center"
             android:textColor="@color/bottom_color"
             android:textStyle="bold"

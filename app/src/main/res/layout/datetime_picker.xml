@@ -28,7 +28,6 @@
         android:padding="10dp"
         android:textColor="@color/black"
         android:textSize="60sp"
-
         android:text="27"
 
         />

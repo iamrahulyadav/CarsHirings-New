@@ -42,7 +42,7 @@ public class LoginActivity extends AppBaseActivity implements View.OnClickListen
     String token,language_code;
     Toolbar toolbar;
     Gson gson = new Gson();
-    //jj
+    //
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

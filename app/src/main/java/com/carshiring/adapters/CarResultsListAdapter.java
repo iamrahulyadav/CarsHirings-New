@@ -93,14 +93,14 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
             if (catBean.getCat_code()!=null){
                 for (String s:catBean.getCat_code()){
                     if (s.equals(model.getCategory())){
-                        holder.txtClass.setText("Class : "+catBean.getCat_name());
+                        holder.txtClass.setText(context.getResources().getString(R.string.txtClassType)+" : "+catBean.getCat_name());
                     }
                 }
             }
         }
 
         holder.txtTrans.setText(model.getFeature().getTransmission());
-        holder.txtFuel.setText("Full to fuel");
+        holder.txtFuel.setText(context.getResources().getString(R.string.txtFuel));
         List<SearchData.CoveragesBean>coveragesBeans=new ArrayList<>();
         coveragesBeans.addAll(model.getCoverages());
 

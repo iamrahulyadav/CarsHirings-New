@@ -169,7 +169,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
             if (payfortValue.equals("0.00")&&walltevalue.equals("0.00")&&pointvalue.equals("0.00")) {
                 accountRadioButton.setVisibility(View.GONE);
                 walletRadioButton.setVisibility(View.GONE);
-                txtSelect.setText("Cancel your booking ");
+                txtSelect.setText(context.getResources().getString(R.string.txtCancelBooking));
             } else {
                 if (payfortValue.equals("0.00")){
                     accountRadioButton.setVisibility(View.GONE);
@@ -230,7 +230,6 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
                 if (response!=null){
                     if (response.body().status){
                         Toast.makeText(context, ""+response.body().msg, Toast.LENGTH_SHORT).show();
-
                     } else {
                         Toast.makeText(context, ""+context.getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
                     }
@@ -263,16 +262,18 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
         btnCancel = dialog.findViewById(R.id.txtCancel);
         txtBookingDate = dialog.findViewById(R.id.txt_bookingdate);
         txtPriceTitle = dialog.findViewById(R.id.price_detail_title);
-        txtPriceTitle.setText("Booking Charges ");
+        txtPriceTitle.setText(context.getResources().getString(R.string.txtBookingCharge));
         rate = (TextView) dialog.findViewById(R.id.txt_rate);
         if (bookinglist.get(position).getBooking_payfort_value() != null &&
                 !bookinglist.get(position).getBooking_payfort_value().equals("0.00")) {
             txtCreditValue.setVisibility(View.VISIBLE);
-            txtCreditValue.setText("Paid Amount : SAR " + bookinglist.get(position).getBooking_payfort_value());
+            txtCreditValue.setText(context.getResources().getString(R.string.txtPaid)+" : SAR "
+                    + bookinglist.get(position).getBooking_payfort_value());
         }
         txtBookingDate.setText(context.getResources().getString(R.string.txtTransactionDate) + " : "
                 + Utility.convertSimpleDate(bookinglist.get(position).getBokking_date()));
-        rate.setText(context.getResources().getString(R.string.txtCarPrice) + " : " + bookinglist.get(position).getBooking_currency()
+        rate.setText(context.getResources().getString(R.string.txtCarPrice) + " : "
+                + bookinglist.get(position).getBooking_currency()
                 + " " + bookinglist.get(position).getBooking_actual_price());
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -288,7 +289,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
         }
         if (bookinglist.get(position).getBooking_wallet_value() != null && !bookinglist.get(position).getBooking_wallet_value().equals("0.00")) {
             txtWallet.setVisibility(View.VISIBLE);
-            txtWallet.setText(context.getResources().getString(R.string.txtWallet) + " : SAR " + bookinglist.get(position).getBooking_wallet_value());
+            txtWallet.setText(context.getResources().getString(R.string.txtWal) + " : SAR " + bookinglist.get(position).getBooking_wallet_value());
         }
         if (bookinglist.get(position).getBooking_pont_value() != null && !bookinglist.get(position).getBooking_pont_value().equals("0.00")) {
             txtPoint.setVisibility(View.VISIBLE);
@@ -297,7 +298,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
         if (bookinglist.get(position).getBooking_fullprotection_value() != null
                 && !bookinglist.get(position).getBooking_fullprotection_value().equalsIgnoreCase("0.00")) {
             txtFullProt.setVisibility(View.VISIBLE);
-            txtFullProt.setText(context.getResources().getString(R.string.full_protection) + " : SAR " + bookinglist.get(position).getBooking_fullprotection_value());
+            txtFullProt.setText(context.getResources().getString(R.string.txtFullPro) + " : SAR " + bookinglist.get(position).getBooking_fullprotection_value());
         }
         dialog.show();
     }
@@ -315,20 +316,20 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
         txtBookingDate = dialog.findViewById(R.id.txt_bookingdate);
         rate = (TextView) dialog.findViewById(R.id.txt_rate);
         txtPriceTitle = dialog.findViewById(R.id.price_detail_title);
-        txtPriceTitle.setText("Booking Canceled Charges ");
+        txtPriceTitle.setText(context.getResources().getString(R.string.txtBookingCancel));
         txtBookingDate.setVisibility(View.GONE);
         if (bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_booking_id()
                 .equalsIgnoreCase(bookinglist.get(position).getBooking_id())) {
             if (bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_booking_amount() != null &&
                     !bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_booking_amount().equals("0.00")) {
                 rate.setVisibility(View.VISIBLE);
-                rate.setText("Booking Amount : SAR " +
+                rate.setText(context.getResources().getString(R.string.txtBookingAmt)+" : SAR " +
                         bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_booking_amount());
             }
 
-            txtFullProt.setText("Cancellation Charges : SAR " + bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_cancel_charge());
+            txtFullProt.setText(context.getResources().getString(R.string.txtRefun)+" : SAR " + bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_cancel_charge());
             txtCoupon.setVisibility(View.VISIBLE);
-            txtCoupon.setText("Refundable Amount : SAR " + bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_refundable_amount());
+            txtCoupon.setText(context.getResources().getString(R.string.txtWal)+" : SAR " + bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_refundable_amount());
             txtFullProt.setVisibility(View.VISIBLE);
             btnCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -340,7 +341,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
             if (bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_wallet_amount()
                     != null && !bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_wallet_amount().equalsIgnoreCase("0.00")) {
                 txtWallet.setVisibility(View.VISIBLE);
-                txtWallet.setText("Wallet : SAR " + bookinglist.get(position)
+                txtWallet.setText(context.getResources().getString(R.string.txtWal)+" : SAR " + bookinglist.get(position)
                         .getBooking_canceldetail().getBooking_cancel_wallet_amount());
             } else {
                 txtWallet.setVisibility(View.GONE);
@@ -348,12 +349,13 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
             if (bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_credit_amount() != null &&
                     !bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_credit_amount().equalsIgnoreCase("0.00")) {
                 txtCreditValue.setVisibility(View.VISIBLE);
-                txtCreditValue.setText("Refundable amount to Bank : SAR " + bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_credit_amount());
+                txtCreditValue.setText(context.getResources().getString(R.string.txtRefundBank)
+                        +" : SAR " + bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_credit_amount());
             }
             if (bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_point_amount() != null
                     && !bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_point_amount().equalsIgnoreCase("0.00")) {
                 txtPoint.setVisibility(View.VISIBLE);
-                txtPoint.setText("Refundable Points Value : SAR " + String.valueOf(bookinglist.get(position)
+                txtPoint.setText(context.getResources().getString(R.string.txtRefundPoint)+" : SAR " + String.valueOf(bookinglist.get(position)
                         .getBooking_canceldetail().getBooking_cancel_point_amount()));
             } else {
                 txtPoint.setVisibility(View.GONE);

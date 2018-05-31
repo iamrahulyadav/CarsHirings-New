@@ -317,7 +317,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Car Specifications"
+                    android:text="@string/txtCarSpe"
                     android:gravity="center"
                     android:textColor="@color/bottom_color"
                     android:textSize="15sp"
@@ -494,7 +494,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Additional Extras"
+                    android:text="@string/txtCaraddExtra"
                     android:gravity="center"
                     android:textColor="@color/bottom_color"
                     android:textSize="15sp"
@@ -508,11 +508,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Do you need any extras with your Cargates?" />
+                    android:text="@string/txtCarNeed" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Choose from a selection of additional \n extras?"
+                    android:text="@string/txtChooseCarAdd"
                     android:gravity="center"/>
                 <ImageView
                     android:layout_width="wrap_content"
@@ -532,7 +532,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Full Protection"
+                    android:text="@string/txtFullPro"
                     android:gravity="center"
                     android:textColor="@color/bottom_color"
                     android:textSize="15sp"
@@ -546,11 +546,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Excellent value,Best Cover,Peace of Mind" />
+                    android:text="@string/txtExcellent" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="All about Full Protection"
+                    android:text="@string/txtAllAbot"
                     android:gravity="center"/>
                 <ImageView
                     android:layout_width="wrap_content"
@@ -563,7 +563,7 @@
                 android:id="@+id/txt_terms"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Terms and Conditions"
+                android:text="@string/action_terms"
                 android:gravity="center"
                 android:textColor="@color/bottom_color"
                 android:textStyle="bold"
@@ -580,7 +580,7 @@
                 android:id="@+id/txt_savequote"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Save and Quote"
+                android:text="@string/txtSaveQ"
                 android:gravity="center"
                 android:textColor="@color/bottom_color"
                 android:textStyle="bold"

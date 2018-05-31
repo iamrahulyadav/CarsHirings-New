@@ -30,7 +30,7 @@
                         android:padding="5dp"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:text="Supplier"
+                        android:text="@string/supplier"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
@@ -56,7 +56,7 @@
                         android:padding="5dp"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:text="Car Features"
+                        android:text="@string/car_feature"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 

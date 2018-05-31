@@ -742,7 +742,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                         startActivity(intent);
                     }
                 }
-
             }
 
             @Override

@@ -37,7 +37,7 @@
             android:imeOptions="actionDone"
             android:inputType="text"
             android:textSize="@dimen/small_size"
-            android:hint="Enter Your Location"
+            android:hint="@string/select_loc"
             tools:ignore="RtlCompat" />
 
     </LinearLayout>

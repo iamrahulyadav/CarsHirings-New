@@ -12,33 +12,56 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="welcome">مرحبا بكم في كارشيرينغ</string>
-    <string name="action_accounts">حساباتي</string>
-    <string name="action_quotes">حجزي</string>
-    <string name="action_search_car">حجز سيارة</string>
+
+    <!--activity home drawer -->
+
+    <string name="action_search_car">احجز سيارة</string>
+    <string name="action_accounts">My Accounts</string>
+    <string name="action_my_booking">حجوزاتي</string>
     <string name="action_about_us">معلومات عنا</string>
     <string name="action_contact_us">اتصل بنا</string>
     <string name="action_terms">الشروط والاحكام</string>
-    <string name="action_language">لغة</string>
+    <string name="action_language">اللغة</string>
+    <string name="logout">تسجيل الخروج</string>
+
+
+
+
+
     <string name="action_currency">دقة</string>
     <string name="action_settings">إعدادات</string>
     <string name="title_activity_about_us">AboutUsActivity</string>
     <string name="language">اختر لغتك</string>
     <string name="thankyou">شكرا</string>
-    <string name="Welcome">أهلا بك! الرجاء تسجيل الدخول...</string>
-    <string name="update_profile_txt">أهلا بك! الرجاء تحديث ملفك الشخصي ...</string>
-    <string name="enter_email">أدخل بريدك الإلكتروني</string>
-    <string name="enter_password">ادخل رقمك السري</string>
-    <string name="confirm_password">تأكيد كلمة المرور</string>
+
+    <!--login/signup activity -->
+    <string name="Welcome">Welcome! Please sign in...</string>
+    <string name="enter_email">Enter your email</string>
+    <string name="enter_password">Enter your Password</string>
+    <string name="confirm_password">Confirm Password</string>
     <string name="sign_up">سجل</string>
     <string name="skip">تخطى</string>
-    <string name="filter">منقي</string>
-    <string name="sort">فرز</string>
     <string name="sign_in">تسجيل الدخول</string>
-    <string name="login_forgetpassord">هل نسيت كلمة المرور؟</string>
-    <string name="SignUpAccount">التسجيل للحصول على حساب</string>
+    <string name="login_forgetpassord">هل نسيت كملة المرور?</string>
+    <string name="SignUpAccount">إنشاء حساب جديد</string>
+
+
+<!--pop_update profile -->
+
+    <string name="update_profile_txt">>Welcome! Please update your profile...</string>
+
+
+    <!--forgot password activity -->
+
     <string name="title_forgetpassword">كلمة سر منسية</string>
-    <string name="forgotpassword">أدخل بريدك الإلكتروني لاستعادة كلمة المرور</string>
-    <string name="recoverpassword">استعادة كلمة المرور الخاصة بي</string>
+    <string name="forgotpassword">أدخل بريدك الالكتروني لتصلك كلمة المروم</string>
+    <string name="recoverpassword">استعادة كلمة المرور</string>
+
+    <!--activity carresultlist-->
+
+    <string name="car_results">Car List</string>
+
+
     <string name="title_create_account">إصنع حساب</string>
     <string name="BookingCurrent">يمكنك إضافة حجز يدويا \ n أو البحث عن سيارة الآن.</string>
     <string name="Searchnow">ابحث الآن</string>
@@ -52,7 +75,6 @@
     <string name="accountdetails">إعدادات</string>
     <string name="changepass">تغيير كلمة السر</string>
     <string name="bookingHistory">سجل الحجز</string>
-    <string name="logout">الخروج</string>
     <string name="email">البريد الإلكتروني</string>
     <string name="phone">هاتف</string>
     <string name="age">عمر</string>
@@ -60,7 +82,7 @@
     <string name="title">عنوان</string>
     <string name="firstname">الاسم الاول</string>
     <string name="lastname">الكنية</string>
-    <string name="phnumb">رقم الهاتف</string>
+    <string name="phnumb">هاتف</string>
     <string name="currentpass">إدخل كلمة السر الحالية</string>
     <string name="newpass">أدخل كلمة مرور جديدة</string>
     <string name="confirmpass">تأكيد كلمة المرور الجديدة</string>
@@ -74,7 +96,6 @@
     <string name="bookinginvoicenumber">حجز رقم الفاتورة</string>
     <string name="aboutus">في سيارة غيتس كل ما نقوم به هو عن إعطائك الحرية لاكتشاف المزيد. سنقوم بتحريك الجبال لتجد لك الحق في استئجار سيارة، وتجلب لك على نحو سلس، وخالية من المتاعب الخبرة من البداية الى النهاية. هنا يمكنك معرفة المزيد عن كيفية عملنا.</string>
     <string name="cardnumb">رقم البطاقة</string>
-    <string name="car_results">قائمة سيارة</string>
     <string name="car_book">حجز هذه السيارة</string>
     <string name="car_details">تفاصيل السيارة</string>
     <string name="cardname">إسم صاحب البطاقة</string>
@@ -89,6 +110,11 @@
     <string name="rating">تقييم</string>
     <string name="car_group">مجموعة السيارات</string>
     <string name="dummy">حجزك هو النجاح</string>
+
+    <string name="car_feature">ميزات السيارة</string>
+
+    <string name="filter">منقي</string>
+    <string name="sort">فرز</string>
 
     <string-array name="selectlanguage">
         <item>اختار اللغة</item>
@@ -133,17 +159,17 @@
     <string name="usepointvalue">هل تريد استخدام رصيدك الائتماني؟</string>
 
     <!--fragment search-->
-    <string name="txtSearchACar">البحث عن سيارة</string>
-    <string name="txtFindCheapCar">العثور على تأجير السيارات الرخيصة في المواقع</string>
-    <string name="txtUseMyLocation">استخدم موقعي</string>
-    <string name="edtPickUp">اختر موقعا</string>
-    <string name="edtDropUp">موقع الإرجاع</string>
-    <string name="switchRetrunSameLoc">العودة إلى نفس الموقع</string>
-    <string name="txtDate">تاريخ</string>
-    <string name="txtTime">زمن</string>
+    <string name="txtSearchACar">إبحث عن سيارة</string>
+    <string name="txtFindCheapCar">Find cheap car hire at worldwide locations</string>
+    <string name="txtUseMyLocation">أستخدم موقعي الحالي</string>
+    <string name="edtPickUp">الاستلام</string>
+    <string name="edtDropUp">التسليم</string>
+    <string name="switchRetrunSameLoc">Return to same location</string>
+    <string name="txtDate">التاريخ</string>
+    <string name="txtTime">Time</string>
     <string name="txtDriveAge">العمر السائق</string>
-    <string name="switchDriverAgebw">عمر السائق بين 25 - 70 ؟</string>
-    <string name="switchSearchMap">البحث عن طريق الخريطة</string>
+    <string name="switchDriverAgebw">عمر السائق بين 25 - 65 ؟</string>
+    <string name="switchSearchMap">Search By map</string>
     <string name="edtDriverAge">أدخل عمر البرنامج</string>
     <string name="licenseno">رقم الرخصة</string>
     <string name="licenseorigion">ترخيص المنشأ</string>
@@ -159,7 +185,7 @@
     <string name="txtAccessProtectionTerm">ما يتم تغطيته</string>
 
     <!--activity extra -->
-    <string name="txtExtra">هل تحتاج إلى أي إضافات مع \ n كارشيرينغ الخاص بك</string>
+    <string name="txtExtra">Do You need any extras with\n your carshiring</string>
 
     <!--activity payment-->
     <string name="edtAmt">أدخل المبلغ</string>
@@ -176,7 +202,7 @@
     <string name="txtDropUp">إنزال</string>
     <string name="update">حفظ</string>
     <string name="surname">لقب</string>
-    <string name="dateofbirth">تاريخ الولادة</string>
+    <string name="dateofbirth">تاريخ الميلاد</string>
 
     <!--activity settings-->
     <string name="txtSettings">إعدادات البحث عن السيارات</string>
@@ -186,9 +212,9 @@
     <string name="txtViewQuotes">عرض اقتباسات</string>
 
     <!--car details tab2-->
-    <string name="txtSupplierDetails">تفاصيل المورد الخاص بك</string>
+    <string name="txtSupplierDetails">تصفايل شركة التأجير</string>
     <string name="txtOpeningTime">مواعيد العمل</string>
-    <string name="txtSupplierinfo">معلومات المورد</string>
+    <string name="txtSupplierinfo">معلومات شركة التأجير</string>
     <string name="txtSave">حفظ واقتباس</string>
     <string name="title_activity_home">HomeActivity</string>
 
@@ -213,14 +239,14 @@
 
     <!--ToolBar Titles-->
     <string name="title_account_details">تفاصيل الحساب</string>
-    <string name="excess_prot">الحماية الزائدة</string>
+    <string name="excess_prot">Excess Protection</string>
     <string name="select_extras">اختر الاضافات الخاصة بك</string>
     <string name="full_protection">حماية كاملة</string>
     <string name="select_loc">اختر موقعا</string>
     <string name="quote">اقتبس</string>
     <string name="change_your_password">غير كلمة المرور الخاصة بك</string>
     <string name="sign_out">خروج</string>
-
+    <string name="txtEnterLoc">Enter Your Location</string>
     <!--Alert Dialog-->
     <string name="gps_sett">نظام تحديد المواقع هو الإعدادات</string>
     <string name="gps_not_enabled">لم يتم تمكين GPS. هل تريد الذهاب إلى قائمة الإعدادات؟</string>
@@ -247,14 +273,14 @@
     <string name="extra_added">الإضافات المضافة</string>
 
     <!--BookCarActivity-->
-    <string name="full_protection_only">الحماية الكاملة فقط</string>
-    <string name="full_day">ليوم واحد</string>
-    <string name="colletcted_point">النقطة المجمعة:</string>
+    <string name="full_protection_only">Full Protection Only</string>
+    <string name="full_day"> For Day</string>
+    <string name="colletcted_point">الاستلام :</string>
     <string name="or_similar">أو مشابه</string>
-    <string name="price">السعر :</string>
-    <string name="sub_total">المجموع الفرعي:</string>
-    <string name="book_this_car">حجز هذه السيارة</string>
-
+    <string name="price">Price :</string>
+    <string name="sub_total">اSubtotal</string>
+    <string name="book_this_car">Book this Car</string>
+    <string name="txtOrSimilar">أو مشابه</string>
     <!--Toast-->
     <string name="error">خطأ</string>
 
@@ -290,11 +316,11 @@
     <string name="no_working">لا يعمل</string>
 
     <!--ExcessProtectionActivity-->
-    <string name="add_full_protection">إضافة الحماية الكاملة</string>
-    <string name="for_day">ليوم واحد</string>
-    <string name="full_protection_addedd">وأضاف الحماية الكاملة</string>
-    <string name="get_a_quote_1">احصل على عرض أسعار مع تغطية قياسية</string>
-    <string name="get_a_quote_2">الحصول على عرض أسعار مع الحماية الكاملة</string>
+    <string name="add_full_protection">Add Full Protection</string>
+    <string name="for_day"> For Day</string>
+    <string name="full_protection_addedd">Full protection added</string>
+    <string name="get_a_quote_1">Get a quote with Standard Coverage</string>
+    <string name="get_a_quote_2">Get a quote with Full Protection</string>
 
     <string name="lang_select">اللغة</string>
 
@@ -304,7 +330,7 @@
     <string name="quotes">يقتبس</string>
 
     <!--MyAccount-->
-    <string name="points">200 نقطة</string>
+    <string name="points">نقطة</string>
     <string name="transaction_date"> تاريخ الصفقة</string>
     <string name="remain_point">النقاط المتبقية</string>
     <string name="remain_wallet">ما تبقى من المحفظة</string>
@@ -322,11 +348,14 @@
     <string name="check_new_pass">تحقق من كلمة المرور الجديدة</string>
 
     <!--CarResultListAdapter-->
-    <string name="supplied_by">توفيره من قبل :</string>
+    <string name="supplied_by">المورد :</string>
     <string name="large_bag">حقيبة كبيرة</string>
-    <string name="doors">الأبواب</string>
-    <string name="points_collected">النقاط التي تم جمعها:</string>
+    <string name="doors">أبواب</string>
+    <string name="points_collected">النقاط المكتسبه:</string>
     <string name="all">الكل</string>
+    <string name="txtClassType">Class</string>
+    <string name="txtFuel">Fuel to fuel</string>
+
 
     <!--MyBookingAdapter-->
     <string name="processing">معالجة</string>
@@ -335,17 +364,28 @@
     <string name="failed">فشل</string>
 
     <!--CarDetailTab1Fragment-->
-    <string name="air_condition">تكييف الهواء</string>
-    <string name="bags">أكياس</string>
-    <string name="passanger">مقاعد</string>
+    <string name="air_condition">مكيف الهواء</string>
+    <string name="bags">Bags</string>
+    <string name="passanger">ألمقاعد</string>
+    <string name="txtCarSpe">مواصفات السيارة</string>
+    <string name="txtCaraddExtra">Additional Extras</string>
+    <string name="txtCarNeed">Do you need any extras with your carshiring ?</string>
+    <string name="txtChooseCarAdd">Choose from a selection of additional \n extras?</string>
+    <string name="txtFullPro">حماية كاملة</string>
+    <string name="txtNoProtection">لا حماية</string>
+    <string name="txtExcellent">Excellent value,Best Cover,Peace of Mind</string>
+    <string name="txtAllAbot">All about Full Protection</string>
+    <string name="txtSaveQ">الحفظ و الاقتباس</string>
 
     <!--CarDetailTab2Fragment-->
     <string name="your_supplier_is">المورد الخاص بك هو</string>
 
     <!--CarDetailTab3Fragment-->
-    <string name="min_age">العمر الأدنى:</string>
-    <string name="max_age">ماكس العمر:</string>
-
+    <string name="min_age">Min Age:</string>
+    <string name="max_age">Max Age:</string>
+    <string name="txtColli">تأمين ضد الغير</string>
+    <string name="txtTheft">التأمين ضد السرقة </string>
+    <string name="txtAgeReq">Age Requirements</string>
     <!--MyAccountFragment-->
     <string name="account">الحساب</string>
     <string name="drivers">السائقين</string>
@@ -354,11 +394,27 @@
     <!--PaymentFragment-->
     <string name="add">إضافة</string>
 
-    <!--PayActivity-->
-    <string name="txtPayTotal">مجموع المبلغ الواجب دفعه</string>
-    <string name="txtPayNow">دفع</string>
+    <!--pay activity-->
+    <string name="txtPayTotal">Total Car Amount to be pay</string>
+    <string name="txtPayNow">Pay Now </string>
+    <string name="txtAvailable">Available balance is</string>
+    <string name="txtPayOnline">Pay with payfort</string>
+    <string name="txtUsepoint">Use Points</string>
+    <string name="txtUseWallet">Use wallet</string>
     <string name="paymentMethod">Payment Methods</string>
     <string name="paymentWith">Pay with credit cards </string>
+    <string name="paymentSADAD">Pay with SADAD</string>
+    <string name="txtPay">Tap \'Book Now\' to complete your booking and expect carshirng</string>
+    <string name="txtRemainPtVa">Remaining point value </string>
+    <string name="txtEnterCoupon">Please enter coupon code</string>
+    <string name="txtPointValue">Point Value </string>
+    <string name="txtTotalPayableAmt">Total payable amount</string>
+    <string name="txtWal">محفظتي</string>
+
+    <!--booking adapter -->
+    <string name="txtBookingCharge">Booking Charges</string>
+    <string name="txtPaid">Paid Amount </string>
+
     <!--activity user dash-->
     <string name="drvlncno">القيادة LIC معرف</string>
     <string name="txtwallet">مبلغ المحفظة</string>
@@ -381,13 +437,16 @@
     <string name="point_hist">وجهة نظري التاريخ</string>
 
 
-    <string name="txtTotalPay">Payable Today</string>
-    <string name="paymentSADAD">Pay with SADAD</string>
-    <string name="txtPay">Tap \'Book Now\' to complete your booking and expect carshirng</string>
-
     <!--booking adapter-->
     <string name="txtTransactionDate">تاريخ الحجز</string>
     <string name="txtCarPrice">سعر السيارة</string>
-    <string name="txtDiscount">خصم</string>
+    <string name="txtDiscount">Discount</string>
     <string name="txtWallet">محفظة نقود</string>
+    <string name="txtCancelBooking">الغي حجزك</string>
+    <string name="txtBookingCancel">Booking Canceled Charges</string>
+    <string name="txtBookingAmt">Booking Amount</string>
+    <string name="txtCancelCharge">Cancellation Charges</string>
+    <string name="txtRefun">Refundable Amount </string>
+    <string name="txtRefundBank">Refundable amount to Bank</string>
+    <string name="txtRefundPoint">Refundable Points Value </string>
 </resources>

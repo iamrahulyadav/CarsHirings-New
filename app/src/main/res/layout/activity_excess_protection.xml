@@ -68,6 +68,29 @@
             </LinearLayout>
             <include layout="@layout/accordian"
                 android:visibility="gone"/>
+            
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/fullRadioGroup">
+                <RadioButton
+                    android:onClick="onRadioButtonClicked"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:id="@+id/radioFullYes"
+                    android:text="@string/txtFullPro"/>
+                <RadioButton
+                    android:onClick="onRadioButtonClicked"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/radioFullNo"
+                    android:text="@string/txtNoProtection"/>
+
+            </RadioGroup>
 
             <LinearLayout
                 android:layout_width="match_parent"

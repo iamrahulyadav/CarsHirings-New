@@ -348,32 +348,12 @@ public class CarDetailActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-
-    public static boolean isValid(String url)
-    {
-        /* Try creating a valid URL */
-        try {
-            new URL(url).toURI();
-            return true;
-        }
-
-        // If there was an Exception
-        // while creating URL object
-        catch (Exception e) {
-            return false;
-        }
-    }
-
-
-
     private static DecimalFormat df2 = new DecimalFormat(".##");
 
     @Override
     protected void onResume() {
         super.onResume();
         actionBar.setTitle(getResources().getString(R.string.car_details));
-        /*tinyDB.remove("extra_added");
-        tinyDB.remove("full_prot");*/
         setupToolbar();
     }
 
