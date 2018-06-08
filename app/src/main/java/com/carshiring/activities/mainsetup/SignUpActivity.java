@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.carshiring.R;
 import com.carshiring.activities.home.BookCarActivity;
 import com.carshiring.activities.home.MainActivity;
+import com.carshiring.activities.home.PayActivity;
 import com.carshiring.models.UserDetails;
 import com.carshiring.utilities.AppBaseActivity;
 import com.carshiring.utilities.AppGlobal;
@@ -187,7 +188,7 @@ public class SignUpActivity extends AppBaseActivity implements TextView.OnEditor
                         appGlobal.setLoginData(logindata);
                         String st =  appGlobal.getUser_id();
                         if (isBooking!=null && isBooking.equalsIgnoreCase("booksign")){
-                            Intent intent = new Intent(SignUpActivity.this,BookCarActivity.class);
+                            Intent intent = new Intent(SignUpActivity.this,PayActivity.class);
                             startActivity(intent);
                         } else {
                             Intent intent = new Intent(SignUpActivity.this,MainActivity.class);

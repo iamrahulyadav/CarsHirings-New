@@ -110,6 +110,27 @@
                     android:layout_marginLeft="3dp"
                     />
             </LinearLayout>
+            <LinearLayout
+                android:id="@+id/ll_forgetpassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5dp"
+                android:layout_marginBottom="13dp"
+                android:layout_marginTop="13dp"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_bulb"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtloginForget"
+                    android:onClick="forgotPass"
+                    android:text="@string/login_forgetpassord"
+                    android:layout_marginLeft="5dp" />
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

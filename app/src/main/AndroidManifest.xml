@@ -81,7 +81,7 @@
             android:value="AIzaSyAp-4py1BmVVoF7q4TdYogCkVX5vO5qPPk" />
 
         <activity android:name=".activities.home.FilterListActivity" />
-        <activity android:name=".activities.home.TermsActivity"></activity>
+        <activity android:name=".activities.home.TermsActivity" />
     </application>
 
 </manifest>

@@ -86,7 +86,6 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_car);
-        appGlobal.context = getApplicationContext();
         actionBar = getSupportActionBar() ;
         if(actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -95,7 +94,6 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
         setupToolbar();
         tinyDB = new TinyDB(getApplicationContext());
         String logindata= tinyDB.getString("login_data");
-        dialog = new Dialog(this);
 
         userDetails = gson.fromJson(logindata,UserDetails.class);
         if (userDetails!=null&&userDetails.getUser_name()!=null){
@@ -361,26 +359,9 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
             public void onClick(View v) {
                 flight_no = edtflight.getText().toString().trim();
 
+                Intent it=new Intent(BookCarActivity.this, PayActivity.class);
+                startActivity(it);
 
-                if (tinyDB.contains("login_data")) {
-                    String data = tinyDB.getString("login_data");
-                    userDetails = gson.fromJson(data, UserDetails.class);
-                    if (userDetails!=null&&userDetails.getUser_id()!=null){
-                        userid = userDetails.getUser_id();
-                    }
-                    if (userDetails.getUser_lname() == null || userDetails.getUser_lname().length() == 0) {
-                        set = "update_profile";
-                        setupoverlay(set);
-                    }
-                    else {
-                        Intent it=new Intent(BookCarActivity.this, PayActivity.class);
-                        startActivity(it);
-
-                    }
-                } else {
-                    set = "login";
-                    setupoverlay(set);
-                }
             }
         });
     }
@@ -397,248 +378,5 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
                 break;
         }
     }
-    Dialog dialog;
-    String fname, lname,filter ,email, phone, zip, license, licenseorigin, city, address, emaillogin,
-            pass, dob;
 
-    private void setupoverlay(String set) {
-
-        final EditText edtFname, edtLname, edtemail, edtPhone, edtZip, edtLicense, edtCity,
-                edtAddress;
-        Spinner edtLicenseOrign;
-
-        Button btupdate, btnCancel;
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        if (set.equals("login")) {
-            dialog.setContentView(R.layout.popup_login);
-            final EditText edtEmail = dialog.findViewById(R.id.et_email);
-            final EditText edtPass = dialog.findViewById(R.id.et_password);
-            final Button login = dialog.findViewById(R.id.bt_login);
-            Button signup = (Button) dialog.findViewById(R.id.bt_signup);
-            signup.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    startActivity(new Intent(BookCarActivity.this, SignUpActivity.class)
-                            .putExtra("booking","booksign"));
-                }
-            });
-            login.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    emaillogin = edtEmail.getText().toString().trim();
-                    pass = edtPass.getText().toString().trim();
-
-                    if (Utility.checkemail(emaillogin)) {
-                        if (!pass.isEmpty()) {
-                            login(emaillogin, pass);
-                        } else {
-                            Utility.message(getApplicationContext(), "Please enter your password");
-                        }
-                    } else {
-                        Utility.message(getApplicationContext(), "Please enter valid email");
-                    }
-                }
-            });
-
-        } else if (set.equals("update_profile")) {
-            dialog.setContentView(R.layout.popup_updateprofile);
-            edtFname = dialog.findViewById(R.id.etUserFirstName);
-            edtLname = dialog.findViewById(R.id.etUserLastName);
-            edtemail = dialog.findViewById(R.id.etUserEmail);
-            edtemail.setText(userDetails.getUser_email());
-            edtemail.setEnabled(false);
-            edtPhone = dialog.findViewById(R.id.etUserPhoneNo);
-            edtZip = dialog.findViewById(R.id.etUserzip);
-            edtLicense = dialog.findViewById(R.id.etlicense);
-            edtLicenseOrign = dialog.findViewById(R.id.spinnerlicenseorigion);
-            txtDob = dialog.findViewById(R.id.etUserDob);
-            edtCity = dialog.findViewById(R.id.etcity);
-            edtAddress = dialog.findViewById(R.id.etAddress);
-            btupdate = dialog.findViewById(R.id.bt_update);
-            btnCancel = dialog.findViewById(R.id.bt_cancel);
-            btnCancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                }
-            });
-            txtDob.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dob_pick();
-                }
-            });
-            // Creating adapter for spinner
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                    android.R.layout.simple_spinner_item, SplashActivity.counrtyList);
-            // Drop down layout style - list view with radio button
-            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            // attaching data adapter to spinner
-            edtLicenseOrign.setAdapter(dataAdapter);
-
-            edtLicenseOrign.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    String item = adapterView.getItemAtPosition(i).toString();
-                    licenseorigin = (String) getKeyFromValue(SplashActivity.country, item);
-
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {
-
-                }
-            });
-
-//            set onclick on update
-            btupdate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    fname = edtFname.getText().toString().trim();
-                    lname = edtLname.getText().toString().trim();
-                    email = edtemail.getText().toString().trim();
-                    phone = edtPhone.getText().toString().trim();
-                    zip = edtZip.getText().toString().trim();
-                    license = edtLicense.getText().toString().trim();
-                    city = edtCity.getText().toString().trim();
-                    address = edtAddress.getText().toString().trim();
-                    if (!fname.isEmpty()) {
-                        if (!lname.isEmpty()) {
-                            if (Utility.checkemail(email)) {
-                                if (Utility.checkphone(phone)) {
-                                    if (!zip.isEmpty()) {
-                                        if (!license.isEmpty()) {
-                                            if (!licenseorigin.isEmpty()) {
-                                                if (!city.isEmpty()) {
-                                                    if (!address.isEmpty()) {
-                                                        updateProfile(userid, fname);
-                                                    } else {
-                                                        Utility.message(getApplication(), getResources().getString(R.string.please_enter_address));
-                                                    }
-                                                } else {
-                                                    Utility.message(getApplication(), getResources().getString(R.string.please_enter_city));
-                                                }
-                                            } else {
-                                                Utility.message(getApplication(), getResources().getString(R.string.please_enter_license_origin));
-                                            }
-                                        } else {
-                                            Utility.message(getApplication(), getResources().getString(R.string.please_enter_license));
-                                        }
-                                    } else {
-                                        Utility.message(getApplication(), getResources().getString(R.string.please_enter_zipcode));
-                                    }
-                                } else {
-                                    Utility.message(getApplication(), getResources().getString(R.string.please_enter_valid_phone_number));
-                                }
-                            } else {
-                                Utility.message(getApplication(), getResources().getString(R.string.please_enter_valid_email));
-                            }
-                        } else {
-                            Utility.message(getApplication(), getResources().getString(R.string.please_enter_last_name));
-                        }
-                    } else {
-                        Utility.message(getApplication(), getResources().getString(R.string.please_enter_first_name));
-                    }
-                }
-            });
-        }
-        dialog.setCanceledOnTouchOutside(true);
-        dialog.setCancelable(true);
-        dialog.show();
-    }
-
-    private void updateProfile(String userid, String fname) {
-        if (!Utility.isNetworkConnected(getApplicationContext())) {
-            Toast.makeText(BookCarActivity.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Utility.showloadingPopup(this);
-        RetroFitApis retroFitApis = RetrofitApiBuilder.getCargHiresapis();
-        Call<ApiResponse> responseCall = retroFitApis.updateprofile(userid, fname, lname, email, phone, zip, license,
-                licenseorigin, dob, city, address);
-        responseCall.enqueue(new Callback<ApiResponse>() {
-            @Override
-            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                Utility.hidepopup();
-                if (response.body().status == true) {
-                    UserDetails userDetails = new UserDetails();
-                    userDetails = response.body().response.user_detail;
-                    String logindata = gson.toJson(response.body().response.user_detail);
-                    appGlobal.setLoginData(logindata);
-                    String st = appGlobal.getUser_id();
-                    dialog.dismiss();
-                    Utility.message(getApplicationContext(), response.body().msg);
-                } else {
-                    Utility.message(getApplicationContext(), response.body().msg);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ApiResponse> call, Throwable t) {
-                Utility.hidepopup();
-                Utility.message(getApplicationContext(), getResources().getString(R.string.no_internet_connection));
-            }
-        });
-    }
-
-    AppGlobal appGlobal = AppGlobal.getInstancess();
-    private void login(String user, String pass) {
-        if (!Utility.isNetworkConnected(getApplicationContext())) {
-            Toast.makeText(BookCarActivity.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Utility.showloadingPopup(this);
-        RetroFitApis retroFitApis = RetrofitApiBuilder.getCargHiresapis();
-        Call<ApiResponse> responseCall = retroFitApis.login(user, pass);
-        responseCall.enqueue(new Callback<ApiResponse>() {
-            @Override
-            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                Utility.hidepopup();
-                if (response.body().status == true) {
-                    UserDetails userDetails = new UserDetails();
-                    userDetails = response.body().response.user_detail;
-                    String logindata = gson.toJson(userDetails);
-                    appGlobal.setLoginData(logindata);
-                    String st = appGlobal.getUser_id();
-                    dialog.dismiss();
-
-                } else {
-                    Utility.message(getApplicationContext(), response.body().msg);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ApiResponse> call, Throwable t) {
-                Utility.hidepopup();
-                Utility.message(getApplicationContext(), getResources().getString(R.string.no_internet_connection));
-            }
-        });
-    }
-
-    Calendar mCalendar = Calendar.getInstance();
-    long timeInMilliseconds;
-    private int mYear, mMonth, mDay;
-
-    public void dob_pick() {
-        // Get Current Date
-        final Calendar c = Calendar.getInstance();
-        mYear = Calendar.getInstance().get(Calendar.YEAR) - 18;
-        mMonth = c.get(Calendar.MONTH);
-        mDay = c.get(Calendar.DAY_OF_MONTH);
-        timeInMilliseconds = Utility.getTimeDate(mYear + "-" + mMonth + "-" + mDay);
-        final DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                new DatePickerDialog.OnDateSetListener() {
-
-                    @Override
-                    public void onDateSet(DatePicker view, int year,
-                                          int monthOfYear, int dayOfMonth) {
-                        dob = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
-                        txtDob.setText(Utility.convertSimpleDate(dob));
-                    }
-                }, mYear, mMonth, mDay);
-        datePickerDialog.getDatePicker().setMaxDate(timeInMilliseconds);
-        datePickerDialog.show();
-
-    }
 }

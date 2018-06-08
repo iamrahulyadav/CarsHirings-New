@@ -163,7 +163,9 @@ public class MainActivity extends AppCompatActivity
         if (tinyDB.contains("login_data")){
             String data = tinyDB.getString("login_data");
             userDetails = gson.fromJson(data,UserDetails.class);
-            userId = userDetails.getUser_id();
+            if ( userDetails.getUser_id()!=null){
+                userId = userDetails.getUser_id();
+            }
             if (userDetails.getUser_lname()==null || userDetails.getUser_lname().length()==0){
                 set = "update_profile";
                 setupoverlay(set);
@@ -538,7 +540,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
     public static Object getKeyFromValue(Map hm, Object value) {
         for (Object o : hm.keySet()) {
             if (hm.get(o).equals(value)) {
@@ -610,69 +611,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-      /*  this.setContentView(R.layout.activity_main);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.title_home);
-        language_code = tinyDB.getString("language_code") ;
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        Intent it = getIntent();
-        final Fragment fragment;
-        if (getSupportFragmentManager().getBackStackEntryCount()>0){
-        }
-//        if(getSupportFragmentManager().getBackStackEntryCount()>ab)
-//        {
-//            getSupportFragmentManager().popBackStackImmediate();
-//
-//
-//            } else {
-//                setupSubView(R.id.action_search_car);
-//        }
-
-        qu = it.getStringExtra("From Quotes");
-        if (qu != null) {
-            if (qu.equalsIgnoreCase("Quotes")) {
-                setupSubView(R.id.action_quotes);
-            }
-        }
-//            else if (getSupportFragmentManager().getBackStackEntryCount()>ab){
-//
-//                int index = getSupportFragmentManager().getBackStackEntryCount() - ab;
-//                FragmentManager.BackStackEntry backStackEntry = getSupportFragmentManager().getBackStackEntryAt(index);
-//                String tag = backStackEntry.getName();
-//
-//                fragment = getSupportFragmentManager().findFragmentByTag(tag);
-//                if (fragment!=null){
-//                    getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, fragment).commit();
-//                }
-//            }
-        else {
-            setupSubView(R.id.action_search_car);
-        }
-
-        View view = navigationView.getHeaderView(0);
-        txtemail = (TextView) view.findViewById(R.id.tvEmail);
-        txtusername = (TextView) view.findViewById(R.id.tvUserName);
-        String username = tinyDB.getString("user_name");
-        String email = tinyDB.getString("user_email");
-        if (username != null && email != null) {
-            if (!username.isEmpty() || !email.isEmpty()) {
-                txtemail.setText(email);
-                txtusername.setText(username);
-            }
-        }*/
         checknetwork();
     }
 
     public void checknetwork() {
         if (!Utility.isNetworkConnected(MainActivity.this)) {
-            Toast.makeText(appGlobal, getResources().getString(R.string.check_internet), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.check_internet), Toast.LENGTH_SHORT).show();
            /* Snackbar.make(v, getResources().getString(R.string.check_internet), Snackbar.LENGTH_INDEFINITE).setAction(getResources().getString(R.string.retry), new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

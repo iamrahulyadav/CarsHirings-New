@@ -76,7 +76,6 @@ public class CarListCategory extends RecyclerView.Adapter<CarListCategory.MyView
                     CarsResultListActivity.row_index=position;
                     notifyDataSetChanged();
                     listener.onItemClickCategory(position);
-
                 }
             });
 
@@ -86,7 +85,8 @@ public class CarListCategory extends RecyclerView.Adapter<CarListCategory.MyView
 
     private List<Category.ResponseBean.CatBean> catListdata= new ArrayList<>();
 
-    public CarListCategory(Activity context, List<SearchData> listCarResult, List<Category.ResponseBean.CatBean> catListdata,
+    public CarListCategory(Activity context, List<SearchData> listCarResult,
+                           List<Category.ResponseBean.CatBean> catListdata,
                            List<TestData> catBeanList,
                            OnItemClickListenerCategory listener) {
         this.listener = listener;

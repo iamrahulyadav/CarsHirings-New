@@ -1,13 +1,13 @@
 <resources>
 
-    <string name="app_name">CarsHiring</string>
+    <string name="app_name">كارز هايرنق</string>
     <string name="checkInternet">تحقق من اتصالك بالإنترنت</string>
     <string name="retry">إعادة المحاولة</string>
     <string name="exit">ىخرج</string>
     <string name="wantExit">هل تريد الخروج؟</string>
     <string name="yes">نعم فعلا</string>
     <string name="no">لا</string>
-    <string name="title_home">Carshiring</string>
+    <string name="title_home">كارز هايرنق</string>
     <string name="permissionsetting">الرجاء تمكين جميع الأذونات.</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -16,7 +16,7 @@
     <!--activity home drawer -->
 
     <string name="action_search_car">احجز سيارة</string>
-    <string name="action_accounts">My Accounts</string>
+    <string name="action_accounts">حسابي</string>
     <string name="action_my_booking">حجوزاتي</string>
     <string name="action_about_us">معلومات عنا</string>
     <string name="action_contact_us">اتصل بنا</string>
@@ -35,10 +35,10 @@
     <string name="thankyou">شكرا</string>
 
     <!--login/signup activity -->
-    <string name="Welcome">Welcome! Please sign in...</string>
-    <string name="enter_email">Enter your email</string>
-    <string name="enter_password">Enter your Password</string>
-    <string name="confirm_password">Confirm Password</string>
+    <string name="Welcome">مرحبا بك !  الرجاء تسجل الدخول</string>
+    <string name="enter_email">أدخل بريدك الالكتروني </string>
+    <string name="enter_password">أدخل كلمة المرور</string>
+    <string name="confirm_password">تأكيد كلمة المرور</string>
     <string name="sign_up">سجل</string>
     <string name="skip">تخطى</string>
     <string name="sign_in">تسجيل الدخول</string>
@@ -48,7 +48,7 @@
 
 <!--pop_update profile -->
 
-    <string name="update_profile_txt">>Welcome! Please update your profile...</string>
+    <string name="update_profile_txt">>مرحبا ! الرجاء تحديث حسابك</string>
 
 
     <!--forgot password activity -->
@@ -59,7 +59,7 @@
 
     <!--activity carresultlist-->
 
-    <string name="car_results">Car List</string>
+    <string name="car_results">قائمة السيارات </string>
 
 
     <string name="title_create_account">إصنع حساب</string>
@@ -99,8 +99,10 @@
     <string name="car_book">حجز هذه السيارة</string>
     <string name="car_details">تفاصيل السيارة</string>
     <string name="cardname">إسم صاحب البطاقة</string>
+
     <string name="date">MM/YY</string>
     <string name="Cv">CVV</string>
+
     <string name="country">بلد</string>
     <string name="zipcode">الرمز البريدي</string>
     <string name="sorted_by">مرتبة حسب</string>
@@ -160,16 +162,16 @@
 
     <!--fragment search-->
     <string name="txtSearchACar">إبحث عن سيارة</string>
-    <string name="txtFindCheapCar">Find cheap car hire at worldwide locations</string>
+    <string name="txtFindCheapCar">أحصل على أرخص عروض تأجير السيارات حول العالم</string>
     <string name="txtUseMyLocation">أستخدم موقعي الحالي</string>
     <string name="edtPickUp">الاستلام</string>
     <string name="edtDropUp">التسليم</string>
-    <string name="switchRetrunSameLoc">Return to same location</string>
+    <string name="switchRetrunSameLoc">التسليم في نفس الموقع</string>
     <string name="txtDate">التاريخ</string>
-    <string name="txtTime">Time</string>
+    <string name="txtTime">الوقت</string>
     <string name="txtDriveAge">العمر السائق</string>
     <string name="switchDriverAgebw">عمر السائق بين 25 - 65 ؟</string>
-    <string name="switchSearchMap">Search By map</string>
+    <string name="switchSearchMap">البحث بالخريطة</string>
     <string name="edtDriverAge">أدخل عمر البرنامج</string>
     <string name="licenseno">رقم الرخصة</string>
     <string name="licenseorigion">ترخيص المنشأ</string>
@@ -273,13 +275,13 @@
     <string name="extra_added">الإضافات المضافة</string>
 
     <!--BookCarActivity-->
-    <string name="full_protection_only">Full Protection Only</string>
+    <string name="full_protection_only">تأمين شامل فقط</string>
     <string name="full_day"> For Day</string>
     <string name="colletcted_point">الاستلام :</string>
     <string name="or_similar">أو مشابه</string>
-    <string name="price">Price :</string>
-    <string name="sub_total">اSubtotal</string>
-    <string name="book_this_car">Book this Car</string>
+    <string name="price">السعر :</string>
+    <string name="sub_total">الاجمالي</string>
+    <string name="book_this_car">أحجز هذه السيارة</string>
     <string name="txtOrSimilar">أو مشابه</string>
     <!--Toast-->
     <string name="error">خطأ</string>
@@ -353,8 +355,8 @@
     <string name="doors">أبواب</string>
     <string name="points_collected">النقاط المكتسبه:</string>
     <string name="all">الكل</string>
-    <string name="txtClassType">Class</string>
-    <string name="txtFuel">Fuel to fuel</string>
+    <string name="txtClassType">فئة</string>
+    <string name="txtFuel">ممتلئ الي ممتلئ</string>
 
 
     <!--MyBookingAdapter-->
@@ -365,15 +367,15 @@
 
     <!--CarDetailTab1Fragment-->
     <string name="air_condition">مكيف الهواء</string>
-    <string name="bags">Bags</string>
+    <string name="bags">حقيبة</string>
     <string name="passanger">ألمقاعد</string>
     <string name="txtCarSpe">مواصفات السيارة</string>
-    <string name="txtCaraddExtra">Additional Extras</string>
+    <string name="txtCaraddExtra">أحتياجات إضافية</string>
     <string name="txtCarNeed">Do you need any extras with your carshiring ?</string>
-    <string name="txtChooseCarAdd">Choose from a selection of additional \n extras?</string>
+    <string name="txtChooseCarAdd">الرجاء أختيار الاحتياج الاضافي ؟</string>
     <string name="txtFullPro">حماية كاملة</string>
     <string name="txtNoProtection">لا حماية</string>
-    <string name="txtExcellent">Excellent value,Best Cover,Peace of Mind</string>
+    <string name="txtExcellent">سعر مناسب و حماية عالية </string>
     <string name="txtAllAbot">All about Full Protection</string>
     <string name="txtSaveQ">الحفظ و الاقتباس</string>
 
@@ -381,11 +383,11 @@
     <string name="your_supplier_is">المورد الخاص بك هو</string>
 
     <!--CarDetailTab3Fragment-->
-    <string name="min_age">Min Age:</string>
-    <string name="max_age">Max Age:</string>
+    <string name="min_age">العمر الأدنى:</string>
+    <string name="max_age">العمر الأعلى:</string>
     <string name="txtColli">تأمين ضد الغير</string>
     <string name="txtTheft">التأمين ضد السرقة </string>
-    <string name="txtAgeReq">Age Requirements</string>
+    <string name="txtAgeReq">العمر المطلوب</string>
     <!--MyAccountFragment-->
     <string name="account">الحساب</string>
     <string name="drivers">السائقين</string>
@@ -395,9 +397,9 @@
     <string name="add">إضافة</string>
 
     <!--pay activity-->
-    <string name="txtPayTotal">Total Car Amount to be pay</string>
-    <string name="txtPayNow">Pay Now </string>
-    <string name="txtAvailable">Available balance is</string>
+    <string name="txtPayTotal">إجمالي المبلغ المطلوب للدفع</string>
+    <string name="txtPayNow">أدفع الان </string>
+    <string name="txtAvailable">الرصيد المتاح </string>
     <string name="txtPayOnline">Pay with payfort</string>
     <string name="txtUsepoint">Use Points</string>
     <string name="txtUseWallet">Use wallet</string>
@@ -405,8 +407,8 @@
     <string name="paymentWith">Pay with credit cards </string>
     <string name="paymentSADAD">Pay with SADAD</string>
     <string name="txtPay">Tap \'Book Now\' to complete your booking and expect carshirng</string>
-    <string name="txtRemainPtVa">Remaining point value </string>
-    <string name="txtEnterCoupon">Please enter coupon code</string>
+    <string name="txtRemainPtVa">قيمة النقاط المتبقية </string>
+    <string name="txtEnterCoupon">أدخل رقم الكوبون</string>
     <string name="txtPointValue">Point Value </string>
     <string name="txtTotalPayableAmt">Total payable amount</string>
     <string name="txtWal">محفظتي</string>

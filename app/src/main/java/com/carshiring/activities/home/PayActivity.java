@@ -1,5 +1,6 @@
 package com.carshiring.activities.home;
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -13,11 +14,16 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +33,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.carshiring.R;
+import com.carshiring.activities.mainsetup.ForgotPasswordActivity;
+import com.carshiring.activities.mainsetup.SignUpActivity;
 import com.carshiring.adapters.CarResultsListAdapter;
 import com.carshiring.fragments.SearchCarFragment;
 import com.carshiring.models.BookingRequest;
@@ -38,7 +46,9 @@ import com.carshiring.models.PointHistoryData;
 import com.carshiring.models.TokenResponse;
 import com.carshiring.models.UserDetails;
 import com.carshiring.models.WalletHistoryData;
+import com.carshiring.splash.SplashActivity;
 import com.carshiring.utilities.AppBaseActivity;
+import com.carshiring.utilities.AppGlobal;
 import com.carshiring.utilities.Utility;
 import com.carshiring.webservices.ApiResponse;
 import com.carshiring.webservices.RetroFitApis;
@@ -65,6 +75,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -75,12 +86,13 @@ import java.util.concurrent.TimeUnit;
 import retrofit2.Call;
 
 import static android.content.ContentValues.TAG;
+import static com.carshiring.activities.home.MainActivity.getKeyFromValue;
 
 public class PayActivity extends AppBaseActivity {
     ActionBar actionBar;
     public List<ExtraAdded> extraData = new ArrayList<>();
-    TextView txtPay, txtTotalAmyVal,txtPAyAmt,txtWalletBal,txtPointValueAmt, txtWalletValueAmt,txtCoupanValue,txtPointVal,txtFullProAmt,
-            txtEarnedPoint, txtApply;
+    TextView txtPay, txtTotalAmyVal,txtDob,txtPAyAmt,txtWalletBal,txtPointValueAmt, txtWalletValueAmt,
+            txtCoupanValue,txtPointVal,txtFullProAmt, txtEarnedPoint, txtApply;
     CheckBox txtcheckPoint,txtCheckPay, txtCheckWallet;
     public String price="", email="",sdk_token="";
     public FortCallBackManager fortCallback;
@@ -99,7 +111,7 @@ Merchant Identifier: daouwTJI
     final String REQUEST_PHRASE = "PASS" ;
 
     LinearLayout fullProtectionLayout;
-    String name="",sarname="",number="",address="",city="",zipcode="",countrycode="",car_id="",
+    String name="",sarname="",set="",number="",address="",city="",zipcode="",countrycode="",car_id="",
             type="",rtype="",coupoun="",
             fullprotection="",flight_no="",extradata="",dob="",user_id="",pick_date="",
             drop_date="", pick_city="",drop_city="",protection_val="",booking_point="",booking_wallet="",
@@ -127,20 +139,11 @@ Merchant Identifier: daouwTJI
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.back);
         }
+        appGlobal.context = getApplicationContext();
+        dialog = new Dialog(PayActivity.this);
+
         tinyDB = new TinyDB(getApplicationContext());
-        String login = tinyDB.getString("login_data");
         language=tinyDB.getString("language_code");
-        userDetails = gson.fromJson(login, UserDetails.class);
-        user_id = userDetails.getUser_id();
-        name = userDetails.getUser_name();
-        sarname = (String) userDetails.getUser_lname();
-        number = userDetails.getUser_phone();
-        email   = userDetails.getUser_email();
-        address = userDetails.getUser_address();
-        city = (String) userDetails.getUser_city();
-        zipcode = userDetails.getUser_zipcode();
-        countrycode = (String) userDetails.getUser_country();
-        dob = userDetails.getUser_dob();
         flight_no = BookCarActivity.flight_no;
         car_id = CarsResultListActivity.id_context;
         type = CarsResultListActivity.type;
@@ -206,165 +209,44 @@ Merchant Identifier: daouwTJI
                 }
             }
         });
+        final TinyDB tinyDB1 = new TinyDB(getApplicationContext());
+
+        if (tinyDB1.contains("login_data")){
+            String data = tinyDB1.getString("login_data");
+            userDetails = gson.fromJson(data, UserDetails.class);
+            if (userDetails.getUser_id()!=null){
+                user_id = userDetails.getUser_id();
+            }
+        }
 
         txtPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isCouponApplied){
-                        totalPrice = discountedPrice;
-                        if ((txtcheckPoint.isChecked()&& txtCheckWallet.isChecked())
-                                ||(txtcheckPoint.isChecked()&& txtCheckWallet.isChecked()&&txtCheckPay.isChecked())){
-                            double d ;
-                            if (totalPrice>pointValue){
-                                d = totalPrice - pointValue;
-                                if(d > walletAmt){
-                                    d = d - walletAmt;
-                                    payfortAmt1 = d;
-                                    booking_payfort = String.valueOf(payfortAmt1);
-                                    booking_wallet = String.valueOf(walletAmt);
-                                    booking_point = String.valueOf(pointValue);
-                                    requestPurchase(booking_payfort);
+                if (tinyDB1.contains("login_data")) {
 
-                                }else{
-                                    booking_wallet = String.valueOf(d);
-                                    booking_point= String.valueOf(pointValue);
-                                    booking_payfort = String.valueOf(payfortAmt1);
-                                    String a = gson.toJson(setBooking());
-                                    bookCar(a);
-//                                makeBooking(a);
-                                }
-
-                            } else {
-                                booking_point=String.valueOf(totalPrice);
-                                booking_payfort = String.valueOf(payfortAmt1);
-                                booking_wallet="";
-                                String a = gson.toJson(setBooking());
-                                bookCar(a);
-//                            makeBooking(a);
-                            }
-                        }
-                        else if (txtcheckPoint.isChecked()){
-                            usepoint = pointValue;
-                            if (usepoint>=totalPrice){
-                                booking_point=String.valueOf(totalPrice);
-                                booking_payfort = String.valueOf(payfortAmt1);
-                                booking_wallet="";
-                                String s = gson.toJson(setBooking());
-//                            makeBooking(s);
-                                bookCar(s);
-                            } else {
-                                booking_wallet="";
-                                payfortAmt1 = totalPrice-usepoint;
-                                booking_point = String.valueOf(usepoint);
-                                booking_payfort = String.valueOf(payfortAmt1);
-                                requestPurchase(booking_payfort);
-                            }
-                        } else if (txtCheckWallet.isChecked()){
-                            useWallet = walletAmt;
-                            if (useWallet>=totalPrice){
-                                booking_wallet = String.valueOf(totalPrice);
-                                booking_point= "";
-                                String s = gson.toJson(setBooking());
-//                            makeBooking(s);
-                                bookCar(s);
-                            } else {
-                                payfortAmt = totalPrice-useWallet;
-                                booking_point="";
-                                booking_wallet = String.valueOf(useWallet);
-                                booking_payfort = String.valueOf(payfortAmt);
-                                requestPurchase(booking_payfort);
-                            }
-                        } else {
-                            booking_payfort = String.valueOf(totalPrice);
-                            booking_point="";
-                            booking_wallet="";
-                            String s = gson.toJson(setBooking());
-                            Log.d(TAG, "onClick: booking wal"+s);
-                            if (totalPrice>0){
-                                requestPurchase(booking_payfort);
-                            } else {
-//                            makeBooking(s);
-                                bookCar(s);
-                            }
+                    if (userDetails!=null&&userDetails.getUser_lname() == null || userDetails.getUser_lname().length() == 0) {
+                        set = "update_profile";
+                        setupoverlay(set);
                     }
+                    else {
+                        if (userDetails!=null&&userDetails.getUser_id()!=null){
+                            user_id = userDetails.getUser_id();
+                            name = userDetails.getUser_name();
+                            sarname = (String) userDetails.getUser_lname();
+                            number = userDetails.getUser_phone();
+                            email   = userDetails.getUser_email();
+                            address = userDetails.getUser_address();
+                            city = (String) userDetails.getUser_city();
+                            zipcode = userDetails.getUser_zipcode();
+                            countrycode = (String) userDetails.getUser_country();
+                            dob = userDetails.getUser_dob();
+                        }
+                        pay();
+                    }
+                } else {
+                    set = "login";
+                    setupoverlay(set);
                 }
-
-//                if coupon not applied
-
-                else {
-                    if ((txtcheckPoint.isChecked()&& txtCheckWallet.isChecked())
-                            ||(txtcheckPoint.isChecked()&& txtCheckWallet.isChecked()&&txtCheckPay.isChecked())){
-                        double d ;
-                        if (totalPrice>pointValue){
-
-                            d = totalPrice - pointValue;
-
-                            if(d > walletAmt){
-                                d = d - walletAmt;
-                                booking_payfort = String.valueOf(d);
-                                booking_wallet = String.valueOf(walletAmt);
-                                booking_point = String.valueOf(pointValue);
-                                requestPurchase(booking_payfort);
-
-                            }else{
-                                booking_wallet = String.valueOf(d);
-                                booking_point= String.valueOf(pointValue);
-                                String a = gson.toJson(setBooking());
-//                                makeBooking(a);
-                                bookCar(a);
-                            }
-
-                        } else {
-                            booking_point=String.valueOf(totalPrice);
-                            booking_payfort="";
-                            booking_wallet="";
-                            String a = gson.toJson(setBooking());
-//                            makeBooking(a);
-                            bookCar(a);
-                        }
-                    }
-                    else if (txtcheckPoint.isChecked()){
-                        usepoint = pointValue;
-                        if (usepoint>=totalPrice){
-                            booking_point=String.valueOf(totalPrice);
-                            booking_payfort="";
-                            booking_wallet="";
-                            String s = gson.toJson(setBooking());
-//                            makeBooking(s);
-                            bookCar(s);
-                        } else {
-                            booking_wallet="";
-                            payfortAmt = totalPrice-usepoint;
-                            booking_point = String.valueOf(usepoint);
-                            booking_payfort = String.valueOf(payfortAmt);
-                            requestPurchase(booking_payfort);
-                        }
-                    } else if (txtCheckWallet.isChecked()){
-                        useWallet = walletAmt;
-                        if (useWallet>=totalPrice){
-                            booking_wallet = String.valueOf(totalPrice  );
-                            booking_point= "";
-
-                            String s = gson.toJson(setBooking());
-                            Log.d(TAG, "onClick: booking wal"+s);
-//                            makeBooking(s);
-                            bookCar(s);
-
-                        } else {
-                            payfortAmt = totalPrice-useWallet;
-                            booking_point="";
-                            booking_wallet = String.valueOf(useWallet);
-                            booking_payfort = String.valueOf(payfortAmt);
-                            requestPurchase(booking_payfort);
-                        }
-                    } else {
-                        booking_payfort = String.valueOf(totalPrice);
-                        booking_point="";
-                        booking_wallet="";
-                        requestPurchase(booking_payfort);
-                    }
-                }
-
             }
         });
         txtTotalAmyVal.setText(CarDetailActivity.currency + "  " + CarDetailActivity.carPrice+ "/ "
@@ -374,6 +256,165 @@ Merchant Identifier: daouwTJI
 
         getPoint();
         getWal();
+    }
+
+    private void pay(){
+
+        if (isCouponApplied){
+            totalPrice = discountedPrice;
+            if ((txtcheckPoint.isChecked()&& txtCheckWallet.isChecked())
+                    ||(txtcheckPoint.isChecked()&& txtCheckWallet.isChecked()&&txtCheckPay.isChecked())){
+                double d ;
+                if (totalPrice>pointValue){
+                    d = totalPrice - pointValue;
+                    if(d > walletAmt){
+                        d = d - walletAmt;
+                        payfortAmt1 = d;
+                        booking_payfort = String.valueOf(payfortAmt1);
+                        booking_wallet = String.valueOf(walletAmt);
+                        booking_point = String.valueOf(pointValue);
+                        requestPurchase(booking_payfort);
+
+                    }else{
+                        booking_wallet = String.valueOf(d);
+                        booking_point= String.valueOf(pointValue);
+                        booking_payfort = String.valueOf(payfortAmt1);
+                        String a = gson.toJson(setBooking());
+                        bookCar(a);
+//                                makeBooking(a);
+                    }
+
+                } else {
+                    booking_point=String.valueOf(totalPrice);
+                    booking_payfort = String.valueOf(payfortAmt1);
+                    booking_wallet="";
+                    String a = gson.toJson(setBooking());
+                    bookCar(a);
+//                            makeBooking(a);
+                }
+            }
+            else if (txtcheckPoint.isChecked()){
+                usepoint = pointValue;
+                if (usepoint>=totalPrice){
+                    booking_point=String.valueOf(totalPrice);
+                    booking_payfort = String.valueOf(payfortAmt1);
+                    booking_wallet="";
+                    String s = gson.toJson(setBooking());
+//                            makeBooking(s);
+                    bookCar(s);
+                } else {
+                    booking_wallet="";
+                    payfortAmt1 = totalPrice-usepoint;
+                    booking_point = String.valueOf(usepoint);
+                    booking_payfort = String.valueOf(payfortAmt1);
+                    requestPurchase(booking_payfort);
+                }
+            } else if (txtCheckWallet.isChecked()){
+                useWallet = walletAmt;
+                if (useWallet>=totalPrice){
+                    booking_wallet = String.valueOf(totalPrice);
+                    booking_point= "";
+                    String s = gson.toJson(setBooking());
+//                            makeBooking(s);
+                    bookCar(s);
+                } else {
+                    payfortAmt = totalPrice-useWallet;
+                    booking_point="";
+                    booking_wallet = String.valueOf(useWallet);
+                    booking_payfort = String.valueOf(payfortAmt);
+                    requestPurchase(booking_payfort);
+                }
+            } else {
+                booking_payfort = String.valueOf(totalPrice);
+                booking_point="";
+                booking_wallet="";
+                String s = gson.toJson(setBooking());
+                Log.d(TAG, "onClick: booking wal"+s);
+                if (totalPrice>0){
+                    requestPurchase(booking_payfort);
+                } else {
+//                            makeBooking(s);
+                    bookCar(s);
+                }
+            }
+        }
+
+//                if coupon not applied
+
+        else {
+            if ((txtcheckPoint.isChecked()&& txtCheckWallet.isChecked())
+                    ||(txtcheckPoint.isChecked()&& txtCheckWallet.isChecked()&&txtCheckPay.isChecked())){
+                double d ;
+                if (totalPrice>pointValue){
+
+                    d = totalPrice - pointValue;
+
+                    if(d > walletAmt){
+                        d = d - walletAmt;
+                        booking_payfort = String.valueOf(d);
+                        booking_wallet = String.valueOf(walletAmt);
+                        booking_point = String.valueOf(pointValue);
+                        requestPurchase(booking_payfort);
+
+                    }else{
+                        booking_wallet = String.valueOf(d);
+                        booking_point= String.valueOf(pointValue);
+                        String a = gson.toJson(setBooking());
+//                                makeBooking(a);
+                        bookCar(a);
+                    }
+
+                } else {
+                    booking_point=String.valueOf(totalPrice);
+                    booking_payfort="";
+                    booking_wallet="";
+                    String a = gson.toJson(setBooking());
+//                            makeBooking(a);
+                    bookCar(a);
+                }
+            }
+            else if (txtcheckPoint.isChecked()){
+                usepoint = pointValue;
+                if (usepoint>=totalPrice){
+                    booking_point=String.valueOf(totalPrice);
+                    booking_payfort="";
+                    booking_wallet="";
+                    String s = gson.toJson(setBooking());
+//                            makeBooking(s);
+                    bookCar(s);
+                } else {
+                    booking_wallet="";
+                    payfortAmt = totalPrice-usepoint;
+                    booking_point = String.valueOf(usepoint);
+                    booking_payfort = String.valueOf(payfortAmt);
+                    requestPurchase(booking_payfort);
+                }
+            } else if (txtCheckWallet.isChecked()){
+                useWallet = walletAmt;
+                if (useWallet>=totalPrice){
+                    booking_wallet = String.valueOf(totalPrice  );
+                    booking_point= "";
+
+                    String s = gson.toJson(setBooking());
+                    Log.d(TAG, "onClick: booking wal"+s);
+//                            makeBooking(s);
+                    bookCar(s);
+
+                } else {
+                    payfortAmt = totalPrice-useWallet;
+                    booking_point="";
+                    booking_wallet = String.valueOf(useWallet);
+                    booking_payfort = String.valueOf(payfortAmt);
+                    requestPurchase(booking_payfort);
+                }
+            } else {
+                booking_payfort = String.valueOf(totalPrice);
+                booking_point="";
+                booking_wallet="";
+                requestPurchase(booking_payfort);
+            }
+        }
+
     }
 
     private BookingRequest setBooking(){
@@ -697,6 +738,7 @@ Sha request and response pharse
     protected void onResume() {
         super.onResume();
         actionBar.setTitle(getResources().getString(R.string.txtPayNow));
+
         getSDKToken(language);
     }
     private static DecimalFormat df2 = new DecimalFormat("#.##");
@@ -718,6 +760,7 @@ Sha request and response pharse
     }
 
     private void requestOperation(String command, String sdk_token, String price) {
+
         final String ECI = "ECOMMERCE";
         final String CUSTOMER_EMAIL = email;
         final String LANGUAGE = language;
@@ -879,7 +922,7 @@ Sha request and response pharse
 
     DiscountData discountData = new DiscountData();
     double discountedPrice , dis=0;
-    ;
+
 
     public void validateCoupon(String coupounCode){
         Utility.showloadingPopup(this);
@@ -1207,11 +1250,9 @@ Sha request and response pharse
         });
     }
 
-
     Dialog dialog ;
 
     private void setErrorDialog(){
-        dialog = new Dialog(PayActivity.this);
         dialog.setContentView(R.layout.error_dialog);
         TextView txtOk = dialog.findViewById(R.id.error_dialog_txtOk);
         txtOk.setOnClickListener(new View.OnClickListener() {
@@ -1325,7 +1366,7 @@ Sha request and response pharse
 
                         }
                     } else {
-                        Log.d(TAG, "onResponse: "+response.body().message);
+                        Log.d(TAG, "onResponse: "+response.body().msg);
                         // Utility.message(getApplicationContext(),response.body().message);
                     }
                 }
@@ -1386,7 +1427,7 @@ Sha request and response pharse
                             txtcheckPoint.setEnabled(false);
                         }
                     } else {
-                        Log.d(TAG, "onResponse: "+response.body().message);
+                        Log.d(TAG, "onResponse: "+response.body().msg);
                         //  Utility.message(getApplicationContext(),response.body().message);
                     }
                 }
@@ -1474,6 +1515,254 @@ Sha request and response pharse
         });
     }
 
+    public void forgotPass(View view){
+        startActivity(new Intent(PayActivity.this,ForgotPasswordActivity.class));
+    }
 
 
+    private void setupoverlay(String set) {
+
+        final EditText edtFname, edtLname, edtemail, edtPhone, edtZip, edtLicense, edtCity,
+                edtAddress;
+        Spinner edtLicenseOrign;
+
+        Button btupdate, btnCancel;
+//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        if (set.equals("login")) {
+            dialog.setContentView(R.layout.popup_login);
+            final EditText edtEmail = dialog.findViewById(R.id.et_email);
+            final EditText edtPass = dialog.findViewById(R.id.et_password);
+            final Button login = dialog.findViewById(R.id.bt_login);
+            Button signup = (Button) dialog.findViewById(R.id.bt_signup);
+            signup.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(PayActivity.this, SignUpActivity.class)
+                            .putExtra("booking","booksign"));
+                }
+            });
+            login.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    emaillogin = edtEmail.getText().toString().trim();
+                    pass = edtPass.getText().toString().trim();
+
+                    if (Utility.checkemail(emaillogin)) {
+                        if (!pass.isEmpty()) {
+                            login(emaillogin, pass);
+                        } else {
+                            Utility.message(getApplicationContext(), "Please enter your password");
+                        }
+                    } else {
+                        Utility.message(getApplicationContext(), "Please enter valid email");
+                    }
+                }
+            });
+
+        } else if (set.equals("update_profile")) {
+            dialog.setContentView(R.layout.popup_updateprofile);
+            edtFname = dialog.findViewById(R.id.etUserFirstName);
+            edtLname = dialog.findViewById(R.id.etUserLastName);
+            edtemail = dialog.findViewById(R.id.etUserEmail);
+            edtemail.setText(userDetails.getUser_email());
+            edtemail.setEnabled(false);
+            edtPhone = dialog.findViewById(R.id.etUserPhoneNo);
+            edtZip = dialog.findViewById(R.id.etUserzip);
+            edtLicense = dialog.findViewById(R.id.etlicense);
+            edtLicenseOrign = dialog.findViewById(R.id.spinnerlicenseorigion);
+            txtDob = dialog.findViewById(R.id.etUserDob);
+            edtCity = dialog.findViewById(R.id.etcity);
+            edtAddress = dialog.findViewById(R.id.etAddress);
+            btupdate = dialog.findViewById(R.id.bt_update);
+            btnCancel = dialog.findViewById(R.id.bt_cancel);
+            btnCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+            txtDob.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dob_pick();
+                }
+            });
+            // Creating adapter for spinner
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                    android.R.layout.simple_spinner_item, SplashActivity.counrtyList);
+            // Drop down layout style - list view with radio button
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            // attaching data adapter to spinner
+            edtLicenseOrign.setAdapter(dataAdapter);
+
+            edtLicenseOrign.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    String item = adapterView.getItemAtPosition(i).toString();
+                    licenseorigin = (String) getKeyFromValue(SplashActivity.country, item);
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
+
+//            set onclick on update
+            btupdate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    fname = edtFname.getText().toString().trim();
+                    lname = edtLname.getText().toString().trim();
+                    email = edtemail.getText().toString().trim();
+                    phone = edtPhone.getText().toString().trim();
+                    zip = edtZip.getText().toString().trim();
+                    license = edtLicense.getText().toString().trim();
+                    city = edtCity.getText().toString().trim();
+                    address = edtAddress.getText().toString().trim();
+                    if (!fname.isEmpty()) {
+                        if (!lname.isEmpty()) {
+                            if (Utility.checkemail(email)) {
+                                if (Utility.checkphone(phone)) {
+                                    if (!zip.isEmpty()) {
+                                        if (!license.isEmpty()) {
+                                            if (!licenseorigin.isEmpty()) {
+                                                if (!city.isEmpty()) {
+                                                    if (!address.isEmpty()) {
+                                                        updateProfile(user_id, fname);
+                                                    } else {
+                                                        Utility.message(getApplication(), getResources().getString(R.string.please_enter_address));
+                                                    }
+                                                } else {
+                                                    Utility.message(getApplication(), getResources().getString(R.string.please_enter_city));
+                                                }
+                                            } else {
+                                                Utility.message(getApplication(), getResources().getString(R.string.please_enter_license_origin));
+                                            }
+                                        } else {
+                                            Utility.message(getApplication(), getResources().getString(R.string.please_enter_license));
+                                        }
+                                    } else {
+                                        Utility.message(getApplication(), getResources().getString(R.string.please_enter_zipcode));
+                                    }
+                                } else {
+                                    Utility.message(getApplication(), getResources().getString(R.string.please_enter_valid_phone_number));
+                                }
+                            } else {
+                                Utility.message(getApplication(), getResources().getString(R.string.please_enter_valid_email));
+                            }
+                        } else {
+                            Utility.message(getApplication(), getResources().getString(R.string.please_enter_last_name));
+                        }
+                    } else {
+                        Utility.message(getApplication(), getResources().getString(R.string.please_enter_first_name));
+                    }
+                }
+            });
+        }
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(true);
+        dialog.show();
+    }
+
+
+    String fname, lname,filter , phone, zip, license, licenseorigin,  emaillogin,
+            pass;
+
+
+    private void updateProfile(String userid, String fname) {
+        if (!Utility.isNetworkConnected(getApplicationContext())) {
+            Toast.makeText(PayActivity.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Utility.showloadingPopup(this);
+        RetroFitApis retroFitApis = RetrofitApiBuilder.getCargHiresapis();
+        Call<ApiResponse> responseCall = retroFitApis.updateprofile(userid, fname, lname, email, phone, zip, license,
+                licenseorigin, dob, city, address);
+        responseCall.enqueue(new retrofit2.Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, retrofit2.Response<ApiResponse> response) {
+                Utility.hidepopup();
+                if (response.body().status == true) {
+                    UserDetails userDetails = new UserDetails();
+                    userDetails = response.body().response.user_detail;
+                    String logindata = gson.toJson(response.body().response.user_detail);
+                    appGlobal.setLoginData(logindata);
+                    String st = appGlobal.getUser_id();
+                    dialog.dismiss();
+                    Utility.message(getApplicationContext(), response.body().msg);
+                } else {
+                    Utility.message(getApplicationContext(), response.body().msg);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                Utility.hidepopup();
+                Utility.message(getApplicationContext(), getResources().getString(R.string.no_internet_connection));
+            }
+        });
+    }
+
+    AppGlobal appGlobal = AppGlobal.getInstancess();
+    private void login(String user, String pass) {
+        if (!Utility.isNetworkConnected(getApplicationContext())) {
+            Toast.makeText(PayActivity.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Utility.showloadingPopup(this);
+        RetroFitApis retroFitApis = RetrofitApiBuilder.getCargHiresapis();
+        Call<ApiResponse> responseCall = retroFitApis.login(user, pass);
+        responseCall.enqueue(new retrofit2.Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, retrofit2.Response<ApiResponse> response) {
+                Utility.hidepopup();
+                if (response.body().status == true) {
+                    UserDetails userDetails = new UserDetails();
+                    userDetails = response.body().response.user_detail;
+                    String logindata = gson.toJson(userDetails);
+                    appGlobal.setLoginData(logindata);
+                    String st = appGlobal.getUser_id();
+                    dialog.dismiss();
+
+                } else {
+                    Utility.message(getApplicationContext(), response.body().msg);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                Utility.hidepopup();
+                Utility.message(getApplicationContext(), getResources().getString(R.string.no_internet_connection));
+            }
+        });
+    }
+
+    Calendar mCalendar = Calendar.getInstance();
+    long timeInMilliseconds;
+    private int mYear, mMonth, mDay;
+
+    public void dob_pick() {
+        // Get Current Date
+        final Calendar c = Calendar.getInstance();
+        mYear = Calendar.getInstance().get(Calendar.YEAR) - 18;
+        mMonth = c.get(Calendar.MONTH);
+        mDay = c.get(Calendar.DAY_OF_MONTH);
+        timeInMilliseconds = Utility.getTimeDate(mYear + "-" + mMonth + "-" + mDay);
+        final DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+                        dob = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+                        txtDob.setText(Utility.convertSimpleDate(dob));
+                    }
+                }, mYear, mMonth, mDay);
+        datePickerDialog.getDatePicker().setMaxDate(timeInMilliseconds);
+        datePickerDialog.show();
+
+    }
 }

@@ -3,6 +3,7 @@ package com.carshiring.activities.mainsetup;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.carshiring.utilities.Utility;
 import com.carshiring.webservices.ApiResponse;
 import com.carshiring.webservices.RetroFitApis;
 import com.carshiring.webservices.RetrofitApiBuilder;
+import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
 
 import retrofit2.Call;
@@ -75,15 +77,21 @@ public class ForgotPasswordActivity extends AppBaseActivity implements TextView.
                 responseCall.enqueue(new Callback<ApiResponse>() {
                     @Override
                     public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                        Log.d("TAG", "onResponse: dataa"+new Gson().toJson(response.body()));
                         if(response.body().status) {
                             Message = response.body().msg;
                             Utility.message(ForgotPasswordActivity.this, Message);
                             Utility.hidepopup();
                             finish();
+                        } else {
+                            Message = response.body().msg;
+                            Utility.message(ForgotPasswordActivity.this, Message);
+                            Utility.hidepopup();
                         }
                     }
                     @Override
                     public void onFailure(Call<ApiResponse> call, Throwable t) {
+                        Log.d("TAG", "onFailure: "+t.getMessage());
                         Utility.message(ForgotPasswordActivity.this,getResources().getString(R.string.no_internet_connection));
                         Utility.hidepopup();
                     }

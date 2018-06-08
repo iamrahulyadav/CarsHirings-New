@@ -85,7 +85,7 @@ public class CarsResultListActivity extends AppBaseActivity {
     CarResultsListAdapter listAdapter;
     UserDetails userDetails = new UserDetails();
     TinyDB tinyDB;
-    private boolean isClicked;
+    public boolean isClicked;
     private   LinearLayout allView;
     public static String id_context, refertype, type, day, time;
     AppGlobal appGlobal = AppGlobal.getInstancess();

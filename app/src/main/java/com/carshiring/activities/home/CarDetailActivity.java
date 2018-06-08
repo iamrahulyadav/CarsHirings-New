@@ -218,7 +218,6 @@ public class CarDetailActivity extends AppCompatActivity {
                                 CDW = collision_damage_waiver.getString(i);
                                 collosion.add(collision_damage_waiver.getString(i));
                             }
-
                         }
 
                         carDetailBean.setCollision_damage_waiver(collosion);
@@ -237,7 +236,6 @@ public class CarDetailActivity extends AppCompatActivity {
                                 theft_protection.addAll(theft_protectionList);
                             }
                         }
-
 
                         String deposit_currency = car_detailObject.getString("deposit_currency");
                         String deposit_price = car_detailObject.getString("deposit_price");

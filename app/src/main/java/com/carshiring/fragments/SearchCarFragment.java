@@ -874,7 +874,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             String country = addresses.get(0).getCountryName();
             String postalCode = addresses.get(0).getPostalCode();
             String knownName = addresses.get(0).getFeatureName();*/
-            result.append(address);
+            result.append(city);
 
         } catch (IOException e) {
             e.printStackTrace();
