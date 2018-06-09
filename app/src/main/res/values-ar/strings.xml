@@ -410,12 +410,12 @@
     <string name="txtRemainPtVa">قيمة النقاط المتبقية </string>
     <string name="txtEnterCoupon">أدخل رقم الكوبون</string>
     <string name="txtPointValue">Point Value </string>
-    <string name="txtTotalPayableAmt">Total payable amount</string>
+    <string name="txtTotalPayableAmt">المبلغ الواجب دفعة</string>
     <string name="txtWal">محفظتي</string>
 
     <!--booking adapter -->
-    <string name="txtBookingCharge">Booking Charges</string>
-    <string name="txtPaid">Paid Amount </string>
+    <string name="txtBookingCharge">قيمة الحجز</string>
+    <string name="txtPaid">المبلغ المدفوع </string>
 
     <!--activity user dash-->
     <string name="drvlncno">القيادة LIC معرف</string>
@@ -445,9 +445,9 @@
     <string name="txtDiscount">Discount</string>
     <string name="txtWallet">محفظة نقود</string>
     <string name="txtCancelBooking">الغي حجزك</string>
-    <string name="txtBookingCancel">Booking Canceled Charges</string>
-    <string name="txtBookingAmt">Booking Amount</string>
-    <string name="txtCancelCharge">Cancellation Charges</string>
+    <string name="txtBookingCancel">غرامة الإلغاء</string>
+    <string name="txtBookingAmt">قيمة الحجز</string>
+    <string name="txtCancelCharge">رسوم الإلغاء</string>
     <string name="txtRefun">Refundable Amount </string>
     <string name="txtRefundBank">Refundable amount to Bank</string>
     <string name="txtRefundPoint">Refundable Points Value </string>

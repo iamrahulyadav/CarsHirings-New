@@ -1,18 +1,25 @@
 package com.carshiring.activities.home;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.Toolbar;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
@@ -26,8 +33,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.carshiring.R;
 import com.carshiring.models.UserDetails;
 import com.carshiring.splash.SplashActivity;
@@ -43,15 +48,13 @@ import com.mukesh.tinydb.TinyDB;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -84,7 +87,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
     //    UserImage userImage = new UserImage();
     Gson gson = new Gson();
     AppGlobal appGlobal = AppGlobal.getInstancess();
-    private static final int SELECT_PICTURE = 100;
+    private int SELECT_PROFILE_PICTURE = 100;
     private static final int SELECT_WALL_PICTURE = 101;
 
     @Override
@@ -120,7 +123,23 @@ public class AccountDetailsActivity extends AppBaseActivity {
         imgWallEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openImageChooser(SELECT_WALL_PICTURE);
+                if (ActivityCompat.checkSelfPermission(getApplicationContext(),
+                        Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED &&
+                        ActivityCompat.checkSelfPermission(getApplicationContext(),
+                                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(getApplicationContext(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(AccountDetailsActivity.this,
+                            new String[]{Manifest.permission.CAMERA,
+                                    Manifest.permission.READ_EXTERNAL_STORAGE},
+                            REQUEST_CAMERA);
+                } else {
+                    Log.e("DB", "PERMISSION GRANTED");
+                    result = true;
+                }
+                SELECT_PROFILE_PICTURE =200;
+                selectImage(SELECT_PROFILE_PICTURE);
+//                openImageChooser(SELECT_WALL_PICTURE);
             }
         });
     }
@@ -500,8 +519,22 @@ public class AccountDetailsActivity extends AppBaseActivity {
     }
 
     public void upload_my_image(View view){
-        //imageInputHelper.selectImageFromGallery();
-        openImageChooser(SELECT_PICTURE);
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getApplicationContext(),
+                        Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(AccountDetailsActivity.this,
+                    new String[]{Manifest.permission.CAMERA,
+                            Manifest.permission.READ_EXTERNAL_STORAGE},
+                    REQUEST_CAMERA);
+        } else {
+            Log.e("DB", "PERMISSION GRANTED");
+            result = true;
+        }
+        SELECT_PROFILE_PICTURE = 100;
+        selectImage(SELECT_PROFILE_PICTURE);
     }
 
     /* Choose an image from Gallery */
@@ -512,9 +545,9 @@ public class AccountDetailsActivity extends AppBaseActivity {
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+  /*  public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_PICTURE) {
+            if (requestCode == SELECT_PROFILE_PICTURE) {
                 // Get the url from data
                 Uri selectedImageUri = data.getData();
                 if (null != selectedImageUri) {
@@ -551,7 +584,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
             }
         }
     }
-
+*/
     String encodedImage;
     private String encodeImage(Bitmap bm) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -634,147 +667,208 @@ public class AccountDetailsActivity extends AppBaseActivity {
 
     }
 
-    public static String BitMapToString(Bitmap bitmap){
-        String temp="";
-        if(bitmap!=null) {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG,100, baos);
-            byte[] b = baos.toByteArray();
-            temp = Base64.encodeToString(b, Base64.DEFAULT);
-        }
-        return temp;
-    }
-
-    /* Get the real path from the URI */
-    public String getPathFromURI(Uri contentUri) {
-        String res = null;
-        String[] proj = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
-        if (cursor.moveToFirst()) {
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            res = cursor.getString(column_index);
-        }
-        cursor.close();
-        return res;
-    }
-
-/*
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        imageInputHelper.onActivityResult(requestCode, resultCode, data);
-    }
-*/
-
-/*
-    @Override
-    public void onImageSelectedFromGallery(Uri uri, File imageFile) {
-        imageInputHelper.requestCropImage(uri, 800, 450, 16, 9);
-    }
-
-    @Override
-    public void onImageTakenFromCamera(Uri uri, File imageFile) {
-        imageInputHelper.requestCropImage(uri, 800, 450, 16, 9);
-
-    }
-
-*/
-
-
-
-    private void updatespinner() {
-        ArrayAdapter<CharSequence> charSequenceArrayAdapter=ArrayAdapter.createFromResource(this,R.array.Titles,android.R.layout.simple_spinner_item);
-        spTitle.setAdapter(charSequenceArrayAdapter);
-        if(!Rtitle.equals(null))
-        {
-            int i=charSequenceArrayAdapter.getPosition(Rtitle);
-            spTitle.setSelection(i);
-        }
-    }
-
-    private void setupspinner() {
-        spTitle.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                title= (String) parent.getItemAtPosition(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
-
-    private Toolbar toolbar ;
-    /*
-        private void setUptoolbar() {
-
-            toolbar= (Toolbar) findViewById(R.id.bottomToolBar);
-            TextView textView= (TextView) toolbar.findViewById(R.id.txt_bot);
-            textView.setText("Save & Exit");
-
-            toolbar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    title= (String) spTitle.getSelectedItem();
-                    fname = etUserFirstName.getText().toString().trim();
-                    lname = etUserLastName.getText().toString().trim();
-                    phone = etUserPhoneNo.getText().toString().trim();
-                    ages = etUserAge.getText().toString().trim();
-                    age = (!ages.equals("") || !ages.isEmpty()) ? Integer.parseInt(ages) : 0;
-                    RetroFitApis fitApis= RetrofitApiBuilder.getRetrofitGlobal();
-                    if(age>10 && age<=99)
-                    {
-                        if(isValidMobile(phone))
-                        {
-                            Call<ApiResponse> call = fitApis.update_profile(token, title, fname, lname, phone, age, userId);
-                            call.enqueue(new Callback<ApiResponse>() {
-                                @Override
-                                public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                                    if (response.body() != null) {
-                                        if (response.body().status == true) {
-                                            Utility.message(AccountDetailsActivity.this, response.body().msg);
-                                            sharedpref.putString("usertitle",title);
-                                            sharedpref.putString("user_name", fname);
-                                            sharedpref.putString("user_lname", lname);
-                                            sharedpref.putString("user_phone", phone);
-                                            sharedpref.putInt("userage", age);
-                                            finish();
-                                        } else {
-                                            Utility.message(AccountDetailsActivity.this, response.body().msg);
-                                        }
-                                    } else {
-                                        Utility.message(AccountDetailsActivity.this, "Getting Some Error");
-                                    }
-                                }
-                                @Override
-                                public void onFailure(Call<ApiResponse> call, Throwable t) {
-                                    Utility.message(AccountDetailsActivity.this, "Connection Error");
-                                }
-                            });
-                        }
-                        else
-                        {
-                            Utility.message(AccountDetailsActivity.this, "Enter valid Phone Number");
-                        }
-                    }
-                    else
-                    {
-                        Utility.message(AccountDetailsActivity.this, "Enter Valid Age");
-                    }
-                }
-            });
-
-        }
-    */
-    private boolean isValidMobile(String phone) {
-        return android.util.Patterns.PHONE.matcher(phone).matches();
-    }
 
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
+
+    Bitmap bitmap;
+    private String bitmapString="a",userChoosenTask;
+    private boolean result;
+
+
+    private void onSelectFromGalleryResult(Intent data) {
+
+        Bitmap bm=null;
+        if (data != null) {
+            try {
+                bm = MediaStore.Images.Media.getBitmap(AccountDetailsActivity.this.getApplicationContext().getContentResolver(), data.getData());
+                Uri tempUri = getImageUri(getApplicationContext(), bm);
+
+                // CALL THIS METHOD TO GET THE ACTUAL PATH
+                File finalFile = new File(getRealPathFromURI(tempUri));
+
+                System.out.println(finalFile + "");
+
+                String filePath = finalFile + "";
+                Log.d("MyImagePath", filePath.substring(filePath.lastIndexOf("/") + 1));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        bitmap = bm;
+        bitmapString = Utility.BitMapToString(bm);
+       if (SELECT_PROFILE_PICTURE==100){
+           iv.setImageBitmap(bm);
+           update_user_pic(bitmapString);
+       } else if (SELECT_PROFILE_PICTURE==200){
+
+           imgUserWall.setImageBitmap(bm);
+           update_user_wall(bitmapString);
+       }
+
+    }
+
+    private void onCaptureImageResult(Intent data) {
+        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+
+        File destination = new File(Environment.getExternalStorageDirectory(),
+                System.currentTimeMillis() + ".jpg");
+
+        FileOutputStream fo;
+        try {
+            destination.createNewFile();
+            fo = new FileOutputStream(destination);
+            fo.write(bytes.toByteArray());
+            fo.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        bitmap = thumbnail;
+
+        Uri tempUri = getImageUri(getApplicationContext(), bitmap);
+
+        // CALL THIS METHOD TO GET THE ACTUAL PATH
+        File finalFile = new File(getRealPathFromURI(tempUri));
+
+        System.out.println(finalFile + "");
+
+        String filePath = finalFile + "";
+        Log.d("MyImagePath", filePath.substring(filePath.lastIndexOf("/") + 1));
+/*
+        bitmapString = Utility.BitMapToString(bitmap);
+        iv.setImageBitmap(bitmap) ;
+        update_user_pic(bitmapString);*/
+        bitmapString = Utility.BitMapToString(bitmap);
+        if (SELECT_PROFILE_PICTURE==100){
+            iv.setImageBitmap(bitmap);
+            update_user_pic(bitmapString);
+        } else if (SELECT_PROFILE_PICTURE==200){
+            imgUserWall.setImageBitmap(bitmap);
+            update_user_wall(bitmapString);
+        }
+
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
+    public String getRealPathFromURI(Uri uri) {
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return cursor.getString(idx);
+    }
+    private final int  REQUEST_CAMERA=0, SELECT_FILE = 1;
+
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                                     @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_CAMERA:
+                if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Toast.makeText(getApplicationContext(), "Camera Permission not granted", Toast.LENGTH_SHORT).show();
+                } else {
+                    result =true;
+                    if(result){
+//                        cameraIntent();
+                    }
+                }
+                break;
+            case SELECT_FILE:
+                if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Toast.makeText(getApplicationContext(), "file Permission not granted", Toast.LENGTH_SHORT).show();
+                } else {
+                    result =true;
+                    if(result){
+//                        galleryIntent();
+                    }
+                }
+                break;
+        }
+    }
+
+    private void selectImage(int SELECT_PROFILE_PICTURE) {
+        final CharSequence[] items = { "Take Photo", "Choose from Library",
+                "Cancel" };
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(AccountDetailsActivity.this);
+        builder.setTitle("Add Photo!");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+
+                if (items[item].equals("Take Photo")) {
+                    userChoosenTask ="Take Photo";
+                    if (ActivityCompat.checkSelfPermission(getApplicationContext(),
+                            Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                            && ActivityCompat.checkSelfPermission(getApplicationContext(),
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ) {
+                        ActivityCompat.requestPermissions(AccountDetailsActivity.this,
+                                new String[]{Manifest.permission.CAMERA},
+                                AccountDetailsActivity.this.REQUEST_CAMERA);
+                    } else {
+                        Log.e("DB", "PERMISSION GRANTED");
+                        result = true;
+                        cameraIntent();
+                    }
+
+                } else if (items[item].equals("Choose from Library")) {
+                    userChoosenTask ="Choose from Library";
+                    if (ActivityCompat.checkSelfPermission(getApplicationContext(),
+                            Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(AccountDetailsActivity.this,
+                                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                SELECT_FILE);
+                    } else {
+                        Log.e("DB", "PERMISSION GRANTED");
+                        result = true;
+                        galleryIntent();
+                    }
+
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private void galleryIntent() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);//
+        startActivityForResult(Intent.createChooser(intent, "Select File"),SELECT_FILE);
+    }
+    private void cameraIntent() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, REQUEST_CAMERA);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data != null) {
+            super.onActivityResult(requestCode, resultCode, data);
+            if (requestCode == SELECT_FILE)
+                onSelectFromGalleryResult(data);
+            else if (requestCode == REQUEST_CAMERA)
+                onCaptureImageResult(data);
+        }
+    }
+
+
 }
