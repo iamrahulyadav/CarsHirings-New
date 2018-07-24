@@ -80,7 +80,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
     Spinner edt_licence_origin;
     private  TextView edt_dob;
     private ImageView iv, imgWallEdit, imgUserWall;
-    private String str_fname, str_lname, str_dob, str_email, str_phone, str_zipcode, str_licence_no, str_licence_origin ,
+    private String str_fname, str_lname, str_dob, str_email, str_phone, str_zipcode, str_licence_no="", str_licence_origin ,
             str_city, str_address, str_image;
 
     UserDetails userDetails = new UserDetails();
@@ -95,16 +95,19 @@ public class AccountDetailsActivity extends AppBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_details);
 
+
+
+        init();
+    }
+
+    private void init(){
+
         appGlobal.context = getApplicationContext();
         tinyDB = new TinyDB(getApplicationContext());
         String data= tinyDB.getString("login_data");
         userDetails = gson.fromJson(data, UserDetails.class);
         userId = userDetails.getUser_id();
 
-        init();
-    }
-
-    private void init(){
         iv = (ImageView) findViewById(R.id.update_user_image);
 
         edt_fname = (EditText) findViewById(R.id.update_user_fname);
@@ -321,7 +324,6 @@ public class AccountDetailsActivity extends AppBaseActivity {
         }
     }
 
-
     public class GetImage extends AsyncTask<String, Void, Bitmap> {
         @Override
         protected void onPreExecute() {
@@ -401,13 +403,15 @@ public class AccountDetailsActivity extends AppBaseActivity {
         str_city = edt_city.getText().toString().trim();
         str_address = edt_address.getText().toString().trim();
         str_dob = edt_dob.getText().toString().trim();
+        if (str_licence_no.isEmpty()){
+            str_licence_no = " ";
+        }
 
         if (!str_fname.isEmpty()){
             if (!str_lname.isEmpty()){
                 if (Utility.checkemail(str_email)){
                     if (Utility.checkphone(str_phone)){
                         if (!str_zipcode.isEmpty()){
-                            if (!str_licence_no.isEmpty()){
                                 if (!str_licence_origin.isEmpty()){
                                     if (!str_city.isEmpty()){
                                         if (!str_address.isEmpty()){
@@ -425,9 +429,7 @@ public class AccountDetailsActivity extends AppBaseActivity {
                                 } else {
                                     Utility.message(getApplication(), getResources().getString(R.string.please_enter_license_origin));
                                 }
-                            } else {
-                                Utility.message(getApplication(), getResources().getString(R.string.please_enter_license));
-                            }
+
                         } else {
                             Utility.message(getApplication(), getResources().getString(R.string.please_enter_zipcode));
                         }
@@ -459,9 +461,10 @@ public class AccountDetailsActivity extends AppBaseActivity {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 Utility.hidepopup();
-                if(response.body().status==true)
+                Log.d("TAG", "onResponse: "+response.body().msg);
+                assert response.body() != null;
+                if(response.body().status)
                 {
-                    Log.d("TAG", "onResponse: "+response.body().msg);
                     Utility.message(getApplicationContext(), response.body().msg);
 //                    String logindata=gson.toJson(response.body().response.userdetail);
                     userDetails = response.body().response.user_detail;

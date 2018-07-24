@@ -79,13 +79,6 @@ public class LocationSelectionActivity extends AppBaseActivity {
             public void afterTextChanged(Editable editable) {}
         });
 
-       /* etSearchLocation.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                clickonDrawable(v, event);
-                return false;
-            }
-        });*/
         imgBack = findViewById(R.id.loc_back);
 
         rvLocations = (RecyclerView) findViewById(R.id.rvLocations) ;
@@ -112,24 +105,10 @@ public class LocationSelectionActivity extends AppBaseActivity {
                 finish();
             }
         });
-        }
-
-
-    boolean clickonDrawable(View v, MotionEvent event)
-    {
-        final int DRAWABLE_LEFT = 0;
-        final int DRAWABLE_TOP = 1;
-        final int DRAWABLE_RIGHT = 2;
-        final int DRAWABLE_BOTTOM = 3;
-        if(event.getAction() == MotionEvent.ACTION_UP) {
-            if(event.getRawX() >= (etSearchLocation.getRight() - etSearchLocation.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                getLocationList(keyword,languagecode);
-            }
-        }
-        return true;
     }
 
-    public void getLocationList(String keyword, String languagecode) {
+
+    public void getLocationList(String keyword, final String languagecode) {
         if (listLocations!=null){
             listLocations.clear();
         }
@@ -150,26 +129,16 @@ public class LocationSelectionActivity extends AppBaseActivity {
                         Data data  = response.body().response ;
                         if(data!=null){
                             if (data.location.size()>0){
-                                listLocations.addAll(data.location);
-
-                                Set<Location> catBeans1 = new TreeSet<>(new Comparator<Location>() {
-                                    @Override
-                                    public int compare(Location catBean,Location t1) {
-                                        if(catBean.getCity_name().equalsIgnoreCase(t1.getCity_name())){
-                                            return 0;
-                                        }
-                                        return 1;
+                                for (Location location : data.location){
+                                    if (location.getCountry_code()!=null&&location.getCountry_code().length()>0){
+                                        Locale loc = new Locale(languagecode,location.getCountry_code());
+                                        String s = loc.getDisplayCountry();
+                                        location.setCity_name(location.getCity_name()+" , "+ s);
                                     }
-                                });
-
-                                catBeans1.addAll(listLocations);
-                                listLocations.clear();
-                                listLocations.addAll(catBeans1);
+                                    listLocations.add(location);
+                                }
                                 adapter.notifyDataSetChanged();
-                            } else {
-                                Utility.message(getApplicationContext(), getResources().getString(R.string.location_not_found));
                             }
-
                         } else {
                             Utility.message(getApplicationContext(), getResources().getString(R.string.location_not_found));
                         }
@@ -183,7 +152,7 @@ public class LocationSelectionActivity extends AppBaseActivity {
             public void onFailure(Call<ApiResponse> call, Throwable t) {
              //   Utility.hidepopup();
                 Log.d(TAG, "onFailure: "+t.getMessage());
-                Toast.makeText(LocationSelectionActivity.this, "Server error please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LocationSelectionActivity.this, getResources().getString(R.string.error), Toast.LENGTH_SHORT).show();
             }
         });
 

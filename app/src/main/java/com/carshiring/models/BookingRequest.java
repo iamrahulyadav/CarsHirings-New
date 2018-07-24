@@ -15,8 +15,6 @@ public class BookingRequest {
             ;
     List<ExtraAdded> extraData = new ArrayList<>();
 
-
-
     public String getMerchant_reference() {
         return merchant_reference;
     }

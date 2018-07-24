@@ -197,4 +197,8 @@ public interface RetroFitApis {
     @POST("savecars")
     Call<ApiResponse> getQuotes(@Field("user_id") String user_id);
 
+    @FormUrlEncoded
+    @POST("savecar_delete")
+    Call<ApiResponse> deleteQuotes(@Field("savecar_id") String user_id);
+
 }

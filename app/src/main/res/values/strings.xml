@@ -455,5 +455,6 @@
     <string name="txtRefun">Refundable Amount </string>
     <string name="txtRefundBank">Refundable amount to Bank</string>
     <string name="txtRefundPoint">Refundable Points Value </string>
+    <string name="delete">Delete</string>
 
 </resources>

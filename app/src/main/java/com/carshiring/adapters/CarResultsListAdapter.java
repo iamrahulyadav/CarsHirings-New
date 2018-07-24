@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.carshiring.R;
 import com.carshiring.fragments.SearchCarFragment;
 import com.carshiring.models.Category;
@@ -40,8 +41,6 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
     private final Context context;
     List<SearchData> list;
     List<TestData>catBeanList;
-
-    ProgressBar bar1;
     double pointpercent,calPrice, markUp;
     public static int calPoint;
 
@@ -109,7 +108,7 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
                 holder.txtOneway.setText(bean.getName() +" : "+ bean.getCurrency2()+" "
                         +bean.getAmount2());
                 holder.txtOneway.setVisibility(View.VISIBLE);
-            } else if ( bean.getCode().equalsIgnoreCase("410")){
+            } else if (bean.getCode().equalsIgnoreCase("410")){
                 holder.txtDriverSur.setText(bean.getName()+" : "+bean.getCurrency2()+" "
                         + bean.getAmount2());
                 holder.txtDriverSur.setVisibility(View.VISIBLE);
@@ -129,7 +128,9 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
         String urla =model.getSupplier_logo();
         Glide.with(context)
                 .load(urla)
+                .apply(RequestOptions.placeholderOf(R.drawable.placeholder_car).error(R.drawable.placeholder_car))
                 .into(holder.imgCarAgencyLogo);
+/*
         try {
             URL url = new URL(urla);
             HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
@@ -137,19 +138,19 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
             httpConn.setRequestMethod("HEAD");
             httpConn.connect();
             if (httpConn.getResponseCode()!=404){
-                Glide.with(context)
-                        .load(urla)
-                        .into(holder.imgCarAgencyLogo);
+
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+*/
 
         String m = model.getImage();
         Glide.with(context)
                 .load(model.getImage())
+                .apply(RequestOptions.placeholderOf(R.drawable.placeholder_car).error(R.drawable.placeholder_car))
                 .into(holder.imgCarResult);
-        bar1.setVisibility(View.GONE);
+
         double pricea = Double.parseDouble(model.getPrice());
 //        calculate point
         pointpercent = Double.parseDouble(SearchCarFragment.pointper);
@@ -176,7 +177,6 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
         public MyViewHolder(View itemView) {
             super(itemView);
 
-            bar1= (ProgressBar) itemView.findViewById(R.id.progressbar);
             tvCarModelName= (TextView) itemView.findViewById(R.id.tvCarModelName);
             tvCarPricing= (TextView) itemView.findViewById(R.id.tvCarPricing);
 
@@ -185,7 +185,6 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
             txtSupplierNmae = itemView.findViewById(R.id.txtSupplierName);
             txtDoor = itemView.findViewById(R.id.tvDoor);
             txtDropCity = itemView.findViewById(R.id.dropCity);
-            bar1.setVisibility(View.VISIBLE);
             txtAc = itemView.findViewById(R.id.txtac);
             txtTrans = itemView.findViewById(R.id.txttrans);
             txtTerms = itemView.findViewById(R.id.txtTermsCond);
@@ -209,58 +208,11 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
                     listener.onItemClick(carDetail);
                 }
             });
-//            setCarImage(carDetail.carmanagement_carimage);
-//            setCompanyLogo(carDetail.company_logo);
-//            setupSpecification(carDetail.carmanagement_specifications);
+
         }
 
-        private void setCompanyLogo(String cmpny_logo) {
-//            Glide.with(context).load(RetrofitApiBuilder.IMG_BASE_URL+cmpny_logo).into(imgCarAgencyLogo);
 
-            Glide.with(context).load(cmpny_logo).into(imgCarAgencyLogo);
-        }
 
-        private void setCarImage(String img) {
-//            Glide.with(context).load(RetrofitApiBuilder.IMG_BASE_URL+img).into(imgCarResult);
-
-            Glide.with(context).load(img).into(imgCarResult);
-        }
-
-//        private void setupSpecification(List<CarSpecification> specs) {
-//            spec1Container.removeAllViews();
-//            StringBuilder specification  = new StringBuilder();
-//            StringBuilder spec1 =  new StringBuilder();
-//            StringBuilder spec2 =  new StringBuilder();
-//            StringBuilder spec3 =  new StringBuilder();
-//            StringBuilder spec4 =  new StringBuilder();
-//            for (int indexSpec = 0; indexSpec < specs.size(); indexSpec++) {
-//                CarSpecification spec = specs.get(indexSpec);
-//
-//                switch(spec.specification_display) {
-//                    case "ab" :
-//                        View v  = LayoutInflater.from(context).inflate(R.layout.spec1_item,spec1Container,false) ;
-//                        TextView tvCarSpec1 = (TextView) v.findViewById(R.id.tvCarSpec1) ;
-//                        tvCarSpec1.setText(spec.specification_name);
-//                        spec1Container.addView(v);
-//                        break ;
-//
-//                    case "2" :
-//                        spec2.append(spec.specification_name).append(" | ");
-//                        break ;
-//
-//                    case "3" :
-//                        spec3.append(spec.specification_name).append(" | ");
-//                        break ;
-//
-//                    case "4" :
-//                        spec4.append(spec.specification_name).append(" | ");
-//                        break ;
-//                }
-//
-//            }
-//
-//
-//        }
 
     }
 

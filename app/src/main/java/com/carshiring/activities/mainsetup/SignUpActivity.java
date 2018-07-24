@@ -123,11 +123,17 @@ public class SignUpActivity extends AppBaseActivity implements TextView.OnEditor
                     call.enqueue(new Callback<ApiResponse>() {
                         @Override
                         public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                            Msg = response.body().msg;
-                            Utility.message(SignUpActivity.this,Msg);
-                            Utility.hidepopup();
+                            if (response.body().status){
+                                Msg = response.body().msg;
+                                Utility.message(SignUpActivity.this,Msg);
+                                Utility.hidepopup();
 //                            finish();
-                            login();
+                                login();
+                            } else {
+                                Msg = response.body().msg;
+                                Utility.message(SignUpActivity.this,Msg);
+                                Utility.hidepopup();
+                            }
                         }
 
                         @Override

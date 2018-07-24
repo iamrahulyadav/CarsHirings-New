@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,16 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.carshiring.R;
 import com.carshiring.activities.home.CarDetailActivity;
-import com.carshiring.activities.home.QuotedDetailsActivity;
-import com.carshiring.adapters.MyBookingAdapter;
 import com.carshiring.adapters.QuotesAdapter;
-import com.carshiring.models.BookingHistory;
 import com.carshiring.models.QuotesModel;
 import com.carshiring.models.UserDetails;
 import com.carshiring.utilities.Utility;
@@ -31,11 +26,9 @@ import com.carshiring.webservices.ApiResponse;
 import com.carshiring.webservices.RetroFitApis;
 import com.carshiring.webservices.RetrofitApiBuilder;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.mukesh.tinydb.TinyDB;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -106,29 +99,34 @@ public class QuotesFragment extends Fragment implements QuotesAdapter.QuoteInter
             linearLayout.setVisibility(View.VISIBLE);
         }
     }
+
     @Override
-    public void QuoteInterfaceMethod(View view, int position) {
-        Intent intent=new Intent(getActivity(),CarDetailActivity.class);
-        intent.putExtra("day", (String) quotesModelList.get(position).getSavelater_day());
-        intent.putExtra("refer_type", (String) quotesModelList.get(position).getSavelater_refer_type());
-        intent.putExtra("point_earn", (String) quotesModelList.get(position).getSavelater_bookingpoint());
-        intent.putExtra("id_context",quotesModelList.get(position).getSavelater_carnect_id());
-        intent.putExtra("type", (String) quotesModelList.get(position).getSavelater_type());
-        startActivity(intent);
+    public void QuoteInterfaceMethod(int position, String tag) {
+        if (tag.equals("book")){
+            Intent intent=new Intent(getActivity(),CarDetailActivity.class);
+            intent.putExtra("day", (String) quotesModelList.get(position).getSavelater_day());
+            intent.putExtra("refer_type", (String) quotesModelList.get(position).getSavelater_refer_type());
+            intent.putExtra("point_earn", (String) quotesModelList.get(position).getSavelater_bookingpoint());
+            intent.putExtra("id_context",quotesModelList.get(position).getSavelater_carnect_id());
+            intent.putExtra("type", (String) quotesModelList.get(position).getSavelater_type());
+            startActivity(intent);
+        } else if (tag.equals("delete")){
+            Toast.makeText(getContext(), ""+quotesModelList.get(position).getSavelater_id(), Toast.LENGTH_SHORT).show();
+
+            deleteCar(position);
+        } else { }
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        setMyAdapter(quotesModelList);
         savelater();
     }
 
     private void savelater() {
         quotesModelList=new ArrayList<>();
-        if (quotesModelList!=null){
-            quotesModelList.clear();
-        }
+
         Utility.showloadingPopup(getActivity());
         RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();
 
@@ -141,6 +139,9 @@ public class QuotesFragment extends Fragment implements QuotesAdapter.QuoteInter
                 Log.d(TAG, "onResponse: savelater"+gson.toJson(response.body()));
                 if (response.body()!=null){
                     if (response.body().status){
+                        if (quotesModelList!=null){
+                            quotesModelList.clear();
+                        }
                         quotesModelList.addAll(response.body().response.save_later_list);
                         if (quotesModelList.size()>0){
                             recyclerView.setVisibility(View.VISIBLE);
@@ -167,10 +168,38 @@ public class QuotesFragment extends Fragment implements QuotesAdapter.QuoteInter
         });
     }
 
+
+    private void deleteCar(final int pos){
+        Utility.showloadingPopup(getActivity());
+        RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();
+
+        final Call<ApiResponse> deleteCarCall = fitApis.deleteQuotes(quotesModelList.get(pos).getSavelater_id());
+        deleteCarCall.enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                Utility.hidepopup();
+                if (response.body()!=null){
+                    if (response.body().status){
+                        quotesModelList.remove(pos);
+                        quotesAdapter.notifyDataSetChanged();
+                      }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                Utility.hidepopup();
+                Log.d(TAG, "onFailure: "+t.getMessage());
+            }
+        });
+
+    }
+
     @Override
     public void onRefresh() {
         savelater();
-        setMyAdapter(quotesModelList);
+//        setMyAdapter(quotesModelList);
         swipeRefreshLayout.setRefreshing(false);
     }
 }

@@ -440,8 +440,6 @@ public class MainActivity extends AppCompatActivity
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     String item = adapterView.getItemAtPosition(i).toString();
                     licenseorigin = (String) getKeyFromValue(SplashActivity.country,item);
-
-                    //   Toast.makeText(MainActivity.this, ""+licenseorigin, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -462,12 +460,16 @@ public class MainActivity extends AppCompatActivity
                     license = edtLicense.getText().toString().trim();
                     city = edtCity.getText().toString().trim();
                     address = edtAddress.getText().toString().trim();
+                    if (license.isEmpty()){
+                        license = " ";
+                    }
+
                     if (!fname.isEmpty()){
                         if (!lname.isEmpty()){
                             if (Utility.checkemail(email)){
                                 if (Utility.checkphone(phone)){
                                     if (!zip.isEmpty()){
-                                        if (!license.isEmpty()){
+
                                             if (!licenseorigin.isEmpty()){
                                                 if (!city.isEmpty()){
                                                     if (!address.isEmpty()){
@@ -481,9 +483,6 @@ public class MainActivity extends AppCompatActivity
                                             } else {
                                                 Utility.message(getApplication(), getResources().getString(R.string.please_enter_license_origin));
                                             }
-                                        } else {
-                                            Utility.message(getApplication(), getResources().getString(R.string.please_enter_license));
-                                        }
                                     } else {
                                         Utility.message(getApplication(), getResources().getString(R.string.please_enter_zipcode));
                                     }

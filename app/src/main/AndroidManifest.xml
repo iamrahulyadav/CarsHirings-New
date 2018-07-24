@@ -60,7 +60,6 @@
         <activity
             android:name=".activities.home.BookCarActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".activities.mainsetup.MyAccountActivity" />
         <activity android:name=".activities.home.AboutUsActivity" />
         <activity android:name=".activities.home.ContactUsActivity" />
         <activity android:name=".activities.home.Language" />
@@ -68,7 +67,6 @@
             android:name=".activities.home.AccountDetailsActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activities.home.QuotedDetailsActivity" />
-        <activity android:name=".activities.home.MyBookingActivity" />
         <activity android:name=".activities.home.PayActivity" />
         <activity android:name=".activities.home.UserDashActivity" />
         <activity android:name=".activities.home.WalletView" />

@@ -133,7 +133,7 @@
                 android:layout_gravity="bottom|start"
                 android:background="#b72025"
                 android:textColor="#fff"
-                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
                 android:paddingTop="5dp"
                 android:paddingBottom="3dp"
                 android:text="INR 5,540.64"
@@ -150,13 +150,17 @@
                 android:textColor="@color/white"
                 android:layout_gravity="bottom|start"
                 android:text="Points Collected: 356" />
-            <ImageView
-                android:layout_width="92dp"
-                android:layout_height="60dp"
-                android:scaleType="fitXY"
-                android:visibility="gone"
-                android:layout_gravity="bottom|end"
-                android:src="@drawable/ic_brand_logo"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:visibility="visible"
+                android:text="@string/delete"
+                android:id="@+id/quotes_cancel"
+                android:background="@color/lime_grey"
+                android:textColor="@color/white"
+                android:textSize="@dimen/small_size"
+                android:layout_gravity="left|bottom"/>
 
             <Button
                 android:layout_width="wrap_content"

@@ -97,6 +97,7 @@ public class PayActivity extends AppBaseActivity {
     public String price="", email="",sdk_token="";
     public FortCallBackManager fortCallback;
 
+
 /*NCszWushUPEjueRWnLti
 new access code
 Merchant Identifier: daouwTJI
@@ -195,11 +196,23 @@ Merchant Identifier: daouwTJI
 
         txtEarnedPoint.setText(getResources().getString(R.string.colletcted_point )+" : "+ earnPoint );
 
+
         txtApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 coupoun = edtCoupon.getText().toString().trim();
                 if (!coupoun.isEmpty()){
+                    txtWalletValueAmt.setVisibility(View.GONE);
+                    if (fullprotection.equalsIgnoreCase("yes")){
+                        if (price!=null){
+                            totalPrice = Double.parseDouble(price);
+                            totalPrice = Double.parseDouble(price)+Double.parseDouble(protection_val);
+                        }
+                    } else {
+                        if (price!=null){
+                            totalPrice = Double.parseDouble(price);
+                        }
+                    }
                     validateCoupon(coupoun);
                     txtCheckPay.setChecked(false);
                     txtCheckWallet.setChecked(false);
@@ -209,10 +222,9 @@ Merchant Identifier: daouwTJI
                 }
             }
         });
-        final TinyDB tinyDB1 = new TinyDB(getApplicationContext());
 
-        if (tinyDB1.contains("login_data")){
-            String data = tinyDB1.getString("login_data");
+        if (tinyDB.contains("login_data")){
+            String data = tinyDB.getString("login_data");
             userDetails = gson.fromJson(data, UserDetails.class);
             if (userDetails.getUser_id()!=null){
                 user_id = userDetails.getUser_id();
@@ -222,6 +234,15 @@ Merchant Identifier: daouwTJI
         txtPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final TinyDB tinyDB1 = new TinyDB(getApplicationContext());
+
+                if (tinyDB1.contains("login_data")){
+                    String data = tinyDB1.getString("login_data");
+                    userDetails = gson.fromJson(data, UserDetails.class);
+                    if (userDetails.getUser_id()!=null){
+                        user_id = userDetails.getUser_id();
+                    }
+                }
                 if (tinyDB1.contains("login_data")) {
 
                     if (userDetails!=null&&userDetails.getUser_lname() == null || userDetails.getUser_lname().length() == 0) {
@@ -559,7 +580,9 @@ Merchant Identifier: daouwTJI
                                 payfortAmt =0;
                                 d=totalPrice;
                                 txtCheckWallet.setEnabled(true);
-                                txtcheckPoint.setEnabled(false);
+                                if (pointValue>0){
+                                    txtcheckPoint.setEnabled(true);
+                                }
                             }
                             else {
                                 walBal = 0.0;
@@ -567,7 +590,9 @@ Merchant Identifier: daouwTJI
                                 payfortAmt = totalPrice-walletAmt;
                                 d=walletAmt;
                                 txtCheckWallet.setEnabled(true);
-                                txtcheckPoint.setEnabled(true);
+                                if (pointValue>0){
+                                    txtcheckPoint.setEnabled(true);
+                                }
                             }
                         }
                         txtWalletValueAmt.setText(getResources().getString(R.string.txtWal)+" : SAR "+ String.valueOf(df2.format(d)));
@@ -582,8 +607,9 @@ Merchant Identifier: daouwTJI
                         payfortAmt = totalPrice;
                         txtWalletValueAmt.setVisibility(View.GONE);
                         txtCheckWallet.setEnabled(true);
-                        txtcheckPoint.setEnabled(true);
-                    }
+                        if (pointValue>0){
+                            txtcheckPoint.setEnabled(true);
+                        }                    }
                     txtPAyAmt.setText(getResources().getString(R.string.txtTotalPayableAmt)+" : SAR "+ String.valueOf(df2.format(payfortAmt)));
                     break;
             }
@@ -695,7 +721,9 @@ Merchant Identifier: daouwTJI
                                 txtWalletBal.setText("("+getResources().getString(R.string.txtAvailable)+ String.valueOf(walBal) +")");
                                 payfortAmt = totalPrice-walletAmt;
                                 d=walletAmt;
-                                txtcheckPoint.setEnabled(true);
+                                if (pointValue>0){
+                                    txtcheckPoint.setEnabled(true);
+                                }
                             }
                         }
                         txtWalletValueAmt.setText(getResources().getString(R.string.txtWal)+" : SAR "+ String.valueOf(df2.format(d)));
@@ -707,7 +735,9 @@ Merchant Identifier: daouwTJI
                         txtWalletBal.setText("("+getResources().getString(R.string.txtAvailable)+" "
                                 +String.valueOf(df2.format(walletAmt))+")");
                         payfortAmt = totalPrice;
-                        txtcheckPoint.setEnabled(true);
+                        if (pointValue>0){
+                            txtcheckPoint.setEnabled(true);
+                        }
                         txtWalletValueAmt.setVisibility(View.GONE);
                     }
                     txtPAyAmt.setText(getResources().getString(R.string.txtTotalPayableAmt)+" : SAR "+ String.valueOf(df2.format(payfortAmt)));
@@ -923,7 +953,6 @@ Sha request and response pharse
     DiscountData discountData = new DiscountData();
     double discountedPrice , dis=0;
 
-
     public void validateCoupon(String coupounCode){
         Utility.showloadingPopup(this);
         CouponRequest couponRequest = new CouponRequest();
@@ -1065,7 +1094,6 @@ Sha request and response pharse
                     }
                     debitWallet(booking, user_id, String.valueOf(walletValue));
                     makeBooking(cate);
-
                 }
 
 //                if any checkbox not checked
@@ -1122,6 +1150,8 @@ Sha request and response pharse
             }
         }
     }
+
+
     String lastPointid, lastWalletId;
 
     public void makeBooking(String cateRequest){
@@ -1134,7 +1164,7 @@ Sha request and response pharse
         okhttp3.RequestBody requestBody = okhttp3.RequestBody.create(MEDIA_TYPE,cateRequest);
 
         final okhttp3.Request request = new okhttp3.Request.Builder()
-                .url("https://carshiring.com/webservice/make_booking")
+                .url(RetrofitApiBuilder.CarHires_BASE_URL+"make_test_buking")
                 .post(requestBody)
                 .addHeader("Content-Type", "application/json")
                 .addHeader("cache-control", "no-cache")
@@ -1273,7 +1303,7 @@ Sha request and response pharse
         okhttp3.RequestBody requestBody = okhttp3.RequestBody.create(MEDIA_TYPE,gson.toJson(pointMap));
 
         final okhttp3.Request request = new okhttp3.Request.Builder()
-                .url("https://carshiring.com/webservice/update_debit_point_bookingid")
+                .url(RetrofitApiBuilder.CarHires_BASE_URL+"update_debit_point_bookingid")
                 .post(requestBody)
                 .addHeader("Content-Type", "application/json")
                 .addHeader("cache-control", "no-cache")
@@ -1410,6 +1440,7 @@ Sha request and response pharse
 //                     txtPointVal.setText(String.valueOf(totalPoint));
                         if (totalPoint>0.0){
                             txtPointVal.setText("("+String.valueOf(df2.format(totalPoint))
+                                    +getResources().getString(R.string.txtPointValue)+" is : SAR "
                                     +getResources().getString(R.string.txtPointValue)+" is : SAR "
                                     +String.valueOf(df2.format(pointValue))+")");
                             booking_point = String.valueOf(pointValue);
@@ -1622,12 +1653,16 @@ Sha request and response pharse
                     license = edtLicense.getText().toString().trim();
                     city = edtCity.getText().toString().trim();
                     address = edtAddress.getText().toString().trim();
+                    if (license.isEmpty()){
+                        license = " ";
+                    }
+
                     if (!fname.isEmpty()) {
                         if (!lname.isEmpty()) {
                             if (Utility.checkemail(email)) {
                                 if (Utility.checkphone(phone)) {
                                     if (!zip.isEmpty()) {
-                                        if (!license.isEmpty()) {
+
                                             if (!licenseorigin.isEmpty()) {
                                                 if (!city.isEmpty()) {
                                                     if (!address.isEmpty()) {
@@ -1641,9 +1676,7 @@ Sha request and response pharse
                                             } else {
                                                 Utility.message(getApplication(), getResources().getString(R.string.please_enter_license_origin));
                                             }
-                                        } else {
-                                            Utility.message(getApplication(), getResources().getString(R.string.please_enter_license));
-                                        }
+
                                     } else {
                                         Utility.message(getApplication(), getResources().getString(R.string.please_enter_zipcode));
                                     }

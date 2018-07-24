@@ -1,13 +1,11 @@
 package com.carshiring.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,18 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carshiring.R;
-import com.carshiring.activities.home.MyBookingActivity;
 import com.carshiring.adapters.MyBookingAdapter;
-import com.carshiring.adapters.TestAdapter;
 import com.carshiring.models.BookingHistory;
-import com.carshiring.models.CancledetailBean;
 import com.carshiring.models.UserDetails;
 import com.carshiring.utilities.Utility;
 import com.carshiring.webservices.ApiResponse;
@@ -48,8 +39,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.carshiring.splash.SplashActivity.TAG;
-
 /**
  * Created by rakhi on 13-03-2018.
  */
@@ -67,7 +56,7 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
     UserDetails userDetails = new UserDetails();
     SwipeRefreshLayout swipeRefreshLayout;
     private List<BookingHistory> bookingData;
-    TestAdapter bookingAdapter;
+    MyBookingAdapter bookingAdapter;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,7 +112,7 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
     private Gson gson = new Gson();
     String payfortValue;
     private void setMyAdapter(final List<BookingHistory> bookingHistory){
-        bookingAdapter = new TestAdapter(getActivity(),bookingHistory,"c");
+        bookingAdapter = new MyBookingAdapter(getActivity(),bookingHistory,"c");
         recyclerView.setVisibility(View.VISIBLE);
         recyclerView.setAdapter(bookingAdapter);
         if (bookingHistory.size()>0){
@@ -139,57 +128,6 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
     Dialog dialog;
 
 
-    private void setCancelationPop(final String bookingid, String payfortValue){
-        dialog.setContentView(R.layout.account_popup_view);
-        final RadioButton walletRadioButton= dialog.findViewById(R.id.radio_wallet);
-        final RadioButton accountRadioButton= dialog.findViewById(R.id.radio_account);
-        final TextView txtSubmit= dialog.findViewById(R.id.account_btnsubit);
-        TextView txtCancel = dialog.findViewById(R.id.account_btnCancel);
-        dialog.show();
-        if (payfortValue!=null){
-            if (payfortValue.equals("0.00")) {
-                accountRadioButton.setVisibility(View.GONE);
-            }
-        }
-
-        txtSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (accountType!=null&&accountType.length()>0){
-                    cancelBooking(accountType, bookingid);
-                    dialog.dismiss();
-                }
-            }
-        });
-
-        txtCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-
-        accountRadioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                boolean checked = ((RadioButton) view).isChecked();
-                if (checked){
-                    accountType = "2";
-                }
-            }
-        });
-
-        walletRadioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                boolean checked = ((RadioButton) view).isChecked();
-
-                if (checked){
-                    accountType="1";
-                }
-            }
-        });
-    }
 
     private void getBook() {
         if (bookingData != null) {
@@ -269,36 +207,6 @@ public class CurrentBookingFragment extends Fragment implements View.OnClickList
 
     }
 
-    private void cancelBooking(String type,String bookingid){
-        Utility.showloadingPopup(getActivity());
-        RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();
-        final Call<ApiResponse> bookingCancel = fitApis.cancelBooking(language,type,bookingid);
-
-        bookingCancel.enqueue(new Callback<ApiResponse>() {
-            @Override
-            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                dialog.dismiss();
-                Log.d(TAG, "onResponse: cancel"+gson.toJson(response.body()));
-                if (response!=null){
-                    if (response.body().status){
-                        Toast.makeText(getContext(), ""+response.body().msg, Toast.LENGTH_SHORT).show();
-                        getBook();
-                    } else {
-                        Toast.makeText(getContext(), ""+getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ApiResponse> call, Throwable t) {
-                Utility.hidepopup();
-                dialog.dismiss();
-                Log.d(TAG, "onFailure: "+t.getMessage());
-                Toast.makeText(getContext(), ""+getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
 
     @Override
     public void onRefresh() {

@@ -20,7 +20,6 @@ import android.widget.TextView;
 import com.carshiring.R;
 import com.carshiring.adapters.BookingAdapter;
 import com.carshiring.adapters.MyBookingAdapter;
-import com.carshiring.adapters.TestAdapter;
 import com.carshiring.models.BookingHistory;
 import com.carshiring.models.CancledetailBean;
 import com.carshiring.models.UserDetails;
@@ -60,7 +59,7 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
     View view;
     Button bt_search;
     RecyclerView recyclerView;
-    TestAdapter bookingAdapter;
+    MyBookingAdapter bookingAdapter;
     private List<BookingHistory> bookingData;
     TinyDB tinyDB;
     SwipeRefreshLayout swipeRefreshLayout;
@@ -107,7 +106,7 @@ public class PreviousBookingFragment extends Fragment implements BookingAdapter.
     }
 
     private void setMyAdapter(List<BookingHistory> bookingHistory){
-        bookingAdapter = new TestAdapter(getActivity(),bookingHistory,"p");
+        bookingAdapter = new MyBookingAdapter(getActivity(),bookingHistory,"p");
         if (bookingHistory.size()>0){
             recyclerView.setVisibility(View.VISIBLE);
             linearLayout.setVisibility(View.GONE);

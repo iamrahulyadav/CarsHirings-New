@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.carshiring.R;
 import com.carshiring.models.BookingData;
 
@@ -61,7 +62,9 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.MyViewHo
         holder.txtPickUp.setText(bookingModel.getBookingdetail_from_name());
         holder.txtCarName.setText(bookingModel.getBookingdetail_model());
         holder.txtPaymentBy.setText(bookingModel.getBooking_carnectbookingid());
-        Glide.with(context).load(bookingModel.getBookingdetail_imageurl()).into(holder.imgLogo);
+        Glide.with(context).load(bookingModel.getBookingdetail_imageurl())
+                .apply(RequestOptions.placeholderOf(R.drawable.placeholder_car).error(R.drawable.placeholder_car))
+                .into(holder.imgLogo);
 
        /* if(position>lastPosition)
         {

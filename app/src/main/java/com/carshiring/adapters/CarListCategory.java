@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.carshiring.R;
 import com.carshiring.activities.home.CarsResultListActivity;
 import com.carshiring.fragments.SearchCarFragment;
@@ -112,6 +113,7 @@ public class CarListCategory extends RecyclerView.Adapter<CarListCategory.MyView
         if (catBeanList.get(position).getCat_id().equals(catListdata.get(position).getCategory_id())){
             Glide.with(context)
                     .load(RetrofitApiBuilder.IMG_BASE_URL + catListdata.get(position).getCategory_image())
+                    .apply(RequestOptions.placeholderOf(R.drawable.placeholder_car).error(R.drawable.placeholder_car))
                     .into(holder.image);
         }
 

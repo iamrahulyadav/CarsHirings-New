@@ -108,27 +108,26 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
     private static final int REQUEST_DESTINATION_LOCATION = 501;
     private static final int REQUEST_BY_MAP_LOCATION = 502;
     private static final int REQUEST_LOCATION_PERMISSION = 2;
-    Location location = new Location();
-    EditText et_return_location, et_pickup_location, et_driver_age;
+    private Location location = new Location();
+    private EditText et_return_location, et_pickup_location, et_driver_age;
 
-    MainActivity activity;
-    SearchQuery searchQuery;
-    SwitchCompat switchSameDestLocation,switchDriverAge;
+    private MainActivity activity;
+    private SearchQuery searchQuery;
+    private SwitchCompat switchSameDestLocation,switchDriverAge;
     private GoogleApiClient mgoogleApiclient;
-    CheckBox chkUseCurrentLocation;
-    TinyDB tinyDB ;
-    private String token ;
-    Calendar calendar_pick, calendar_drop;
+    private CheckBox chkUseCurrentLocation;
+    private  TinyDB tinyDB ;
+    private  Calendar calendar_pick, calendar_drop;
 
     public static String pickName ="",pickup_loc_id="",drop_loc_id="", dropName="",drop_date="",pick_date="",
             drop_hour="",drop_minute="",pick_minute="",markup="",pointper="",pick_hour="",pickTime="", dropTime="";
 
-    int useCurrentLocation = 0;
-    int useSameDestLocation = 1;
-    int isBetweenDriverAge = 1 ;
+    private  int useCurrentLocation = 0;
+    private int useSameDestLocation = 1;
+    private  int isBetweenDriverAge = 1 ;
     int pick_hours,pick_minutes,drop_hours, drop_minutes;
     private double currentLat,currentLng;
-    String driver_age="",languagecode ,
+    String driver_age="",token,languagecode ,
             location_code="",location_iata="",location_type="",location_code_drop="",location_iata_drop="",
             location_type_drop="";
 
@@ -136,6 +135,13 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_search_car, container, false);
+
+        init();
+        return view;
+    }
+
+
+    private void init(){
         tinyDB = new TinyDB(getActivity().getApplicationContext());
         token = tinyDB.getString("access_token");
         languagecode = tinyDB.getString("language_code");
@@ -224,8 +230,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 }
             }
         });
-
-        return view;
     }
 
     private void showTimePicker(final String type) {
@@ -510,12 +514,10 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             searchData.clear();
         }
 
-        feature = new SearchData.FeatureBean();
         catPriceMap = new HashMap<>();
         coverages = new ArrayList<>();
         Utility.showLoading(getActivity(),getResources().getString(R.string.searching_cars));
         final SearchCarFragment _this = SearchCarFragment.this ;
-        RetroFitApis retroFitApis = RetrofitApiBuilder.getCarGatesapi() ;
 
         pick_hour=String.valueOf(pick_hours>9?pick_hours:"0"+pick_hours);
         pick_minute=String.valueOf(pick_minutes>9?pick_minutes:"0"+pick_minutes);
@@ -582,6 +584,8 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                                     }
                                     else {
                                         if (object.has("feature")){
+                                            feature = new SearchData.FeatureBean();
+
                                             JSONObject featureObject = object.getJSONObject("feature");
                                             feature.setAircondition( featureObject.get("aircondition")+"");
                                             feature.setBag( featureObject.get("bag")+"");
@@ -590,7 +594,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                                             feature.setDoor(featureObject.getString("door"));
                                         }
                                         category1 = (String) object.get("category");
-                                        Log.d("MyCode", category1);
                                         model = object.getString("model");
                                         model_code = object.getString("model_code");
                                         image = (String) object.get("image");

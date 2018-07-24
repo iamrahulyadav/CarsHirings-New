@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.carshiring.R;
@@ -35,6 +36,7 @@ public class ExcessProtectionActivity extends AppCompatActivity implements View.
     MyExListAdapter listAdapter;
     TextView text1,text2,text3,toolbartext,txt_fullprotection;
     LinearLayout layout1,layout2,layoutbuttons;
+    RadioGroup radioGroup;
     TextView extrapro;
     Toolbar toolbar;
     Button bt_standPro,bt_fullPro;
@@ -49,6 +51,7 @@ public class ExcessProtectionActivity extends AppCompatActivity implements View.
         View v=findViewById(android.R.id.content);
         toolbar=  findViewById(R.id.bottomToolBar);
         toolbartext= toolbar.findViewById(R.id.txt_bot);
+        radioGroup = findViewById(R.id.fullRadioGroup);
         toolbartext.setText(getResources().getString(R.string.saved_successfully));
         tinyDB = new TinyDB(getApplicationContext());
         layoutbuttons= (LinearLayout) findViewById(R.id.ll_buttons);
@@ -59,6 +62,7 @@ public class ExcessProtectionActivity extends AppCompatActivity implements View.
             txt_fullprotection.setText(getResources().getString(R.string.full_protection_only) +" "+ "SAR " +
                     " " + String.valueOf(fullAmtValue) + " "+getResources().getString(R.string.for_day));
         } else {
+            radioGroup.setVisibility(View.GONE);
             txt_fullprotection.setVisibility(View.GONE);
             toolbar.setVisibility(View.GONE);
         }

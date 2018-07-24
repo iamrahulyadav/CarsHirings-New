@@ -11,8 +11,10 @@ import android.widget.TextView;
 
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.carshiring.R;
 import com.carshiring.models.QuotesModel;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -33,7 +35,7 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.Holder> {
     }
 
     public interface QuoteInterface {
-        void QuoteInterfaceMethod(View view, int position);
+        void QuoteInterfaceMethod(int position, String tag);
     }
 
     @Override
@@ -51,23 +53,11 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.Holder> {
         holder.txtPickTime.setText((String)model.getSavelater_pick_date());
         holder.txtModelName.setText(model.getSavelater_carnect_model());
         holder.txtPoint.setText(model.getSavelater_carnect_model());
+
         Glide.with(context)
                 .load(model.getSavelater_carnect_image())
+                .apply(RequestOptions.placeholderOf(R.drawable.placeholder_car).error(R.drawable.placeholder_car))
                 .into(holder.imgCar);
-        // Animation animation= AnimationUtils.loadAnimation(context,(position>lastposition? R.anim.up_from_bottom:R.anim.bottom_from_up));
-
-        /*Animation animation = AnimationUtils.loadAnimation(context, (position > lastposition) ? R.anim.up_from_bottom : R.anim.bottom_from_up);
-        holder.itemView.setAnimation(animation);
-        lastposition = position;*/
-       /* if (position>lastpositon) {
-            AnimatioonUtils.animate(holder,true);
-        }
-        else
-        {
-            AnimatioonUtils.animate(holder,false);
-        }
-        lastpositon=position;*/
-
     }
 
     @Override
@@ -82,7 +72,7 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.Holder> {
     public class Holder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView Reference, Rate,txtModelName,txtPoint, txtPickUp, txtDrop, txtPickTime, txtDropTime;
         ImageView imgCar;
-        Button btnBook;
+        Button btnBook, btnCancel;
         public Holder(View view) {
             super(view);
             Reference = (TextView) view.findViewById(R.id.txt_Quote_refnumb);
@@ -95,22 +85,25 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.Holder> {
             txtModelName = view.findViewById(R.id.txtModelNameQuote);
             txtPoint = view.findViewById(R.id.txtPointQuote);
             btnBook = view.findViewById(R.id.quotes_btn_book_now);
+            btnCancel = view.findViewById(R.id.quotes_cancel);
             btnBook.setOnClickListener(this);
+            btnCancel.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            if (quoteInterface != null) {
-                quoteInterface.QuoteInterfaceMethod(v, getPosition());
+            switch (v.getId()){
+                case R.id.quotes_cancel:
+                    if (quoteInterface != null) {
+                        quoteInterface.QuoteInterfaceMethod(getAdapterPosition(),"delete");
+                    }
+                    break;
+                case R.id.quotes_btn_book_now:
+                    if (quoteInterface != null) {
+                        quoteInterface.QuoteInterfaceMethod(getAdapterPosition(),"book");
+                    }
+                    break;
             }
-          /*  String name=Reference.getText().toString();
-           Intent intent=new Intent(context,QuotedDetailsActivity.class);
-            intent.putExtra("ref",name);
-            context.startActivity(intent);*/
-
-            // context.startActivity(new Intent(context,QuotedDetailsActivity.class));
-
-            // Toast.makeText(context,""+name,Toast.LENGTH_LONG).show();
         }
 
     }

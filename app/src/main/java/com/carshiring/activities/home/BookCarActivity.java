@@ -32,6 +32,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.carshiring.R;
 import com.carshiring.activities.mainsetup.SignUpActivity;
@@ -153,9 +154,24 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
             txtOneway.setVisibility(View.GONE);
         }
 
-
         if (carImage!=null){
-            new AsyncCaller().execute();
+//            new AsyncCaller().execute();
+
+            Glide.with(getApplication()).load(CarDetailActivity.carImage).listener(new RequestListener<Drawable>() {
+                @Override
+                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                    bar.setVisibility(View.GONE);
+                    return false;
+                }
+                @Override
+                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                    bar.setVisibility(View.GONE);
+                    return false;
+                }
+            }).apply(RequestOptions.placeholderOf(R.drawable.placeholder_car).error(R.drawable.placeholder_car))
+                    .into(carImg);
+
+
         }
         txtPoint.setText(getResources().getString(R.string.colletcted_point) + String.valueOf(CarDetailActivity.point));
         terms.setOnClickListener(this);
@@ -175,7 +191,8 @@ public class BookCarActivity extends AppBaseActivity implements View.OnClickList
                 bar1.setVisibility(View.GONE);
                 return false;
             }
-        }).into(imglogo);
+        }).apply(RequestOptions.placeholderOf(R.drawable.placeholder_car).error(R.drawable.placeholder_car))
+          .into(imglogo);
         carname.setText(CarDetailActivity.modelname + getResources().getString(R.string.or_similar));
         carprice.setText(CarDetailActivity.currency + "  " + CarDetailActivity.carPrice+ "/ "
                 +CarsResultListActivity.day + " "+ CarsResultListActivity.time);

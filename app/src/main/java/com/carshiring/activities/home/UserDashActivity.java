@@ -255,7 +255,6 @@ public class UserDashActivity extends AppBaseActivity {
         }
     }
 
-
     public void getProfile(){
         Utility.showloadingPopup(UserDashActivity.this);
         RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();
@@ -346,12 +345,10 @@ public class UserDashActivity extends AppBaseActivity {
             bmOptions.inSampleSize = 1;
 
             try {
-               if (stream!=null){
-                   stream = getHttpConnection(url);
-                   bitmap = BitmapFactory.
-                           decodeStream(stream, null, bmOptions);
-                   stream.close();
-               }
+                stream = getHttpConnection(url);
+                bitmap = BitmapFactory.
+                        decodeStream(stream, null, bmOptions);
+                stream.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
@@ -369,7 +366,6 @@ public class UserDashActivity extends AppBaseActivity {
                 HttpURLConnection httpConnection = (HttpURLConnection) connection;
                 httpConnection.setRequestMethod("GET");
                 httpConnection.connect();
-
                 if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     stream = httpConnection.getInputStream();
                 }

@@ -86,68 +86,6 @@ public class PaymentFragment extends Fragment implements SwipeRefreshLayout.OnRe
 //        composedata();
     }
 
-/*
-    private void composedata() {
-        if(paylist!=null)
-        {
-            paylist.clear();
-        }
-        Utility.showloadingPopup(getActivity());
-        RetroFitApis fitApis= RetrofitApiBuilder.getRetrofitGlobal();
-        Call<ApiResponse> responseCall=fitApis.card_list(token,userid);
-        responseCall.enqueue(new Callback<ApiResponse>() {
-            @Override
-            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                Utility.hidepopup();
-                if(response.body()!=null) {
-                    if (response.body().status == true) {
-                        List<CardList> lists=response.body().response.card_list;
-                        if(!lists.isEmpty())
-                        {
-                            for (int i=0;i<lists.size();i++)
-                            {
-                                CardListModel cardListModel=new CardListModel();
-                                CardList cardList=lists.get(i);
-                                cardListModel.setCard_type(cardList.card_type);
-                                cardListModel.setCard_name(cardList.card_name);
-                                cardListModel.setCard_number(cardList.card_number);
-                                cardListModel.setCard_date(cardList.card_date);
-                                cardListModel.setCard_country(cardList.card_country);
-                                cardListModel.setCard_cvv(cardList.card_cvv);
-                                cardListModel.setCard_id(cardList.card_id);
-                                cardListModel.setCard_zipcode(cardList.card_zipcode);
-                                cardListModel.setCard_status(cardList.card_status);
-                                cardListModel.setCard_user_id(cardList.card_user_id);
-                                paylist.add(cardListModel);
-                            }
-                            pAdapter.notifyDataSetChanged();
-                        }
-                        else
-                        {
-                            Utility.message(getContext(), response.body().message);
-                        }
-                    }
-                    else
-                    {
-                        //  Utility.message(getContext(), response.body().message);
-                    }
-                }
-                else
-                {
-                    Utility.message(getContext(), response.body().message);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ApiResponse> call, Throwable t) {
-                Utility.message(getContext(),"Connection Error");
-                Utility.hidepopup();
-            }
-        });
-    }
-*/
-
-
 
     @Override
     public void onRefresh() {
