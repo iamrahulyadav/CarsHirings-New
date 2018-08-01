@@ -413,6 +413,15 @@
     <string name="txtTotalPayableAmt">Total payable amount</string>
     <string name="txtWal">Wallet</string>
 
+    <string name="activity_pay_note_by_default_payfort_method_is_selected">Note: By default,Payfort method is selected.</string>
+    <string name="activity_pay_apply_coupon">Apply coupon</string>
+    <string name="activity_pay_code">Code</string>
+    <string name="activity_pay_apply">Apply</string>
+    <string name="activity_pay_coupon_value">Coupon value</string>
+    <string name="activity_pay_full_protection_value">FULL PROTECTION VALUE :</string>
+
+
+
     <!--booking adapter -->
     <string name="txtBookingCharge">Booking Charges</string>
     <string name="txtPaid">Paid Amount </string>
@@ -456,5 +465,10 @@
     <string name="txtRefundBank">Refundable amount to Bank</string>
     <string name="txtRefundPoint">Refundable Points Value </string>
     <string name="delete">Delete</string>
+
+    <!--filter dialog -->
+    <string name="filter_dialog_apply_filter">Apply Filter</string>
+    <string name="filter_dialog_apply_filter_changes">Apply Filter Changes?</string>
+
 
 </resources>

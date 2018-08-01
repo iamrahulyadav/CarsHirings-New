@@ -313,6 +313,7 @@ public class MainActivity extends AppCompatActivity
                 searchCarFragment.setArguments(bundle);
                 getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, searchCarFragment)
                         .commit();
+
                 toolbar.setTitle(getResources().getString(R.string.action_search_car));
                 break;
         }
@@ -323,7 +324,7 @@ public class MainActivity extends AppCompatActivity
     AppGlobal appGlobal = AppGlobal.getInstancess();
 
     private void updateRes(String lang){
-        Resources res = getApplicationContext().getResources();
+        Resources res = getResources();
 // Change locale settings in the app.
         DisplayMetrics dm = res.getDisplayMetrics();
         android.content.res.Configuration conf = res.getConfiguration();
@@ -331,6 +332,8 @@ public class MainActivity extends AppCompatActivity
 // Use conf.locale = new Locale(...) if targeting lower versions
         res.updateConfiguration(conf, dm);
     }
+
+
     @Override
     public void setupSubView(int id) {
 
@@ -419,7 +422,7 @@ public class MainActivity extends AppCompatActivity
             edtLicenseOrign.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                     String item = adapterView.getItemAtPosition(i).toString();
+                    String item = adapterView.getItemAtPosition(i).toString();
                     licenseorigin = (String) getKeyFromValue(SplashActivity.country,item);
                 }
 

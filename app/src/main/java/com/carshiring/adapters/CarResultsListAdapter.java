@@ -130,28 +130,12 @@ public class CarResultsListAdapter extends RecyclerView.Adapter<CarResultsListAd
                 .load(urla)
                 .apply(RequestOptions.placeholderOf(R.drawable.placeholder_car).error(R.drawable.placeholder_car))
                 .into(holder.imgCarAgencyLogo);
-/*
-        try {
-            URL url = new URL(urla);
-            HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
-            httpConn.setInstanceFollowRedirects(false);
-            httpConn.setRequestMethod("HEAD");
-            httpConn.connect();
-            if (httpConn.getResponseCode()!=404){
 
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-*/
-
-        String m = model.getImage();
         Glide.with(context)
                 .load(model.getImage())
                 .apply(RequestOptions.placeholderOf(R.drawable.placeholder_car).error(R.drawable.placeholder_car))
                 .into(holder.imgCarResult);
 
-        double pricea = Double.parseDouble(model.getPrice());
 //        calculate point
         pointpercent = Double.parseDouble(SearchCarFragment.pointper);
         calPrice = (priceNew*pointpercent)/100;

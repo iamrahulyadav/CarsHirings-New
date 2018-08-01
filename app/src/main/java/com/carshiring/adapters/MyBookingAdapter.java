@@ -369,7 +369,6 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
 
         holder.refnumb.setText(bookinglist.get(position).getBooking_id());
         holder.date_time.setText(Utility.convertdate(bookinglist.get(position).getBooking_from_date()));
-        Log.d("datarow", bookinglist.get(position).getBooking_actual_price());
         holder.txtjourneyToDate.setText(Utility.convertdate(bookinglist.get(position).getBooking_to_date()));
 
         if (bookinglist.get(position).getBooking_status().equals("0")) {
@@ -393,19 +392,22 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.MyVi
                 .apply(RequestOptions.placeholderOf(R.drawable.placeholder_car).error(R.drawable.placeholder_car))
                 .into(holder.car_image);
 
-        holder.btnBookingCharge.setText("Booking Charges: SAR " + bookinglist.get(position).getBooking_total_price());
+        holder.btnBookingCharge.setText(context.getResources().getString(R.string.txtBookingCharge)+
+                ": SAR " + bookinglist.get(position).getBooking_total_price());
         if (bookinglist.get(position).getBooking_status().equals("2")) {
             holder.btnCancelationCharge.setVisibility(View.VISIBLE);
-            holder.btnCancelationCharge.setText("Cancellation Charges : SAR " + bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_cancel_charge());
+            holder.btnCancelationCharge.setText(context.getResources().getString(R.string.txtCancelCharge)+" : SAR "
+                    + bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_cancel_charge());
 
         } else {
             holder.btnCancelationCharge.setVisibility(View.GONE);
         }
-        holder.btnBookingCharge.setText("Booking Charges: SAR " + bookinglist.get(position).getBooking_total_price());
+        holder.btnBookingCharge.setText(context.getResources().getString(R.string.txtBookingCharge)+
+                " : SAR " + bookinglist.get(position).getBooking_total_price());
         if (bookinglist.get(position).getBooking_status().equals("2")) {
             holder.btnCancelationCharge.setVisibility(View.VISIBLE);
-            holder.btnCancelationCharge.setText("Cancellation Charges : SAR " + bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_cancel_charge());
-
+            holder.btnCancelationCharge.setText( context.getResources().getString(R.string.txtCancelCharge)+" : SAR "
+                    + bookinglist.get(position).getBooking_canceldetail().getBooking_cancel_cancel_charge());
         } else {
             holder.btnCancelationCharge.setVisibility(View.GONE);
         }

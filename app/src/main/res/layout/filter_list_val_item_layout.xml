@@ -22,22 +22,6 @@
             />
     </LinearLayout>
 
-    <LinearLayout
-        android:visibility="visible"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:gravity="right">
-
-        <View
-            android:id="@+id/colored_bar"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginRight="70dp"
-            />
-    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -47,8 +31,7 @@
             android:id="@+id/cbSelected"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_gravity="right"
+            android:layout_alignParentEnd="true"
             android:clickable="false"
             android:padding="10dp"
             />
@@ -59,6 +42,6 @@
         android:layout_width="wrap_content"
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorAccent"
-        ></View>
+        android:background="@color/colorAccent"/>
+
 </RelativeLayout>

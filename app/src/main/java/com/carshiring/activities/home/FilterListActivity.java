@@ -214,7 +214,6 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
         }
     }
 
-
     @Override
     public void onClick(View view) {
         switch (view.getId())
@@ -386,8 +385,6 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
         {
             listModel.setFeatures("NoFeatures");
         }
-        String s = new Gson().toJson(SelectedSupplier);
-        String s1 = new Gson().toJson(SelectedFeatures);
 
 //                tinyDB.clear();
 
@@ -404,7 +401,6 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
         finish();
 
     }
-
 
     @Override
     public void onBackPressed() {

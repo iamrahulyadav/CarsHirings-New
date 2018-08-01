@@ -196,7 +196,7 @@ Merchant Identifier: daouwTJI
         txtTotalAmyVal = findViewById(R.id.txtTotalPayValue);
         earnPoint = String.valueOf(CarDetailActivity.point);
 
-        txtEarnedPoint.setText(getResources().getString(R.string.colletcted_point )+" : "+ earnPoint );
+        txtEarnedPoint.setText(getResources().getString(R.string.colletcted_point )+" "+ earnPoint );
 
         txtApply.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -143,8 +143,6 @@ public class LocationSelectionActivity extends AppBaseActivity {
                                     }
                                     listLocations.add(location);
                                 }
-                                Log.d(TAG, "rakhi: "+listLocations.size());
-
                                 adapter.notifyDataSetChanged();
                             }
                         } else {

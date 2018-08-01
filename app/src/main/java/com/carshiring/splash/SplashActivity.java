@@ -48,7 +48,6 @@ public class SplashActivity extends AppBaseActivity {
     public static HashMap<String, String> country = new HashMap<>();
     public String accessToken,languageselected;
     TinyDB sharedpref;
-    Spinner spinner_language;
     TextView txten, txtAr;
     View v;
     LinearLayout layout;
@@ -317,7 +316,6 @@ public class SplashActivity extends AppBaseActivity {
         txtChoose = findViewById(R.id.textView);
         String language_code = sharedpref.getString("language_code") ;
         boolean isSkipLogin = sharedpref.getBoolean("isSkipLogin");
-        spinner_language = (Spinner) findViewById(R.id.spinner_language);
         txten = findViewById(R.id.splashtxtEn);
         txtAr = findViewById(R.id.splashtxtAr);
 
@@ -367,7 +365,7 @@ public class SplashActivity extends AppBaseActivity {
     }
 
     private void updateRes(String lang){
-        Resources res = getApplicationContext().getResources();
+        Resources res = getResources();
         DisplayMetrics dm = res.getDisplayMetrics();
         android.content.res.Configuration conf = res.getConfiguration();
         conf.setLocale(new Locale(lang.toLowerCase())); // API 17+ only.
@@ -388,11 +386,6 @@ public class SplashActivity extends AppBaseActivity {
                     if(response.body().status) {
                         List<LanguageModel> language_list = response.body().response.language_list;
                         if (language_list != null) {
-                           /* langlistname.add("Select Language");
-                            langlistcode.add("");
-
-                            langlistId.add("");*/
-
                             for (int i = 0; i < language_list.size(); i++) {
                                 LanguageModel languages = language_list.get(i);
                                 if (languages.language_code.equalsIgnoreCase("en")){
@@ -454,8 +447,6 @@ public class SplashActivity extends AppBaseActivity {
             public void onFailure(Call<ApiResponse> call, Throwable t) {
                 Log.d(TAG, "onFailure: "+t.getMessage());
                 Toast.makeText(SplashActivity.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
-                spinner_language.setClickable(false);
-                spinner_language.setEnabled(false);
             }
         });
     }
@@ -486,28 +477,6 @@ public class SplashActivity extends AppBaseActivity {
 
         final ArrayAdapter<String> adapt=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinner_item,lan);
         adapt.setDropDownViewResource(R.layout.spinner_item);
-        spinner_language.setAdapter(adapt);
-        spinner_language.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(i>0) {
-                    languageselected = (String) adapterView.getItemAtPosition(i);
-                    String language_code  = langlistcode.get(i);
-                    String language_id=langlistId.get(i);
-                    sharedpref.putString("language_code",language_code);
-                    sharedpref.putString("language_id",language_id);
-                    updateRes(language_code);
-
-                    Toast.makeText(SplashActivity.this, language_code, Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                    finish();
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                Utility.message(getApplicationContext(),"no");
-            }
-        });
     }
 
     @Override
@@ -519,20 +488,7 @@ public class SplashActivity extends AppBaseActivity {
     public void checknetwork() {
         if(!Utility.isNetworkConnected(this))
         {
-            spinner_language.setClickable(false);
-            spinner_language.setEnabled(false);
-            Toast.makeText(this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
-           /* Snackbar.make(v,getResources().getString(R.string.check_internet),Snackbar.LENGTH_INDEFINITE)
-                    .setAction(getResources().getString(R.string.retry), new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    checknetwork();
-                }
-            }).setActionTextColor(getResources().getColor(R.color.redStrong)).show();*/
-        }
-        else
-        {
-
+            Utility.message(this, getResources().getString(R.string.no_internet_connection));
         }
     }
 }

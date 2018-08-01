@@ -539,154 +539,146 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             @Override
             public void onResponse(String response) {
                 Utility.hidepopup();
-                Object response1 = response;
-                if (response1 instanceof JSONArray){
-
-                } else if (response1 instanceof JSONObject){
-                    try {
-
-                        JSONObject jsonObject = new JSONObject(response);
-                        status = jsonObject.getBoolean("status");
-                        if (jsonObject.has("msg")){
-                            msg= jsonObject.getString("msg");
-                        }
-                        if (status){
-                            if (catBeanList!=null){
-                                catBeanList.clear();
-                            }
-                            JSONObject responseObject = jsonObject.getJSONObject("response");
-                            JSONObject car_listObject = responseObject.getJSONObject("car_list");
-                            String mapDataArray = jsonObject.getString("map_data");
-                            mapDataList.clear();
-                            Type listType1 = new TypeToken<List<MapData>>(){}.getType();
-                            mapDataList = gson.fromJson(mapDataArray, listType1);
-
-                            if (car_listObject!=null&&car_listObject.length()>0){
-                                Iterator<String> iter = car_listObject.keys();
-                                while (iter.hasNext()) {
-                                    String key = iter.next();
-                                    try {
-                                        Object value = car_listObject.get(key);
-                                        if (value instanceof JSONArray) {
-                                            if (key.equals("category_list")){
-                                                // It's an array
-                                                JSONArray jsonArray = (JSONArray)value;
-                                                Type listType = new TypeToken<List<TestData>>(){}.getType();
-                                                List<TestData> myModelList = gson.fromJson(jsonArray.toString(), listType);
-                                                catBeanList.addAll(myModelList);
-                                            }
-                                        }
-                                        else if (value instanceof JSONObject) {
-
-                                        }
-
-                                        JSONObject object = car_listObject.getJSONObject(key);
-                                        if (key.equals("category_list")){
-
-                                        }
-                                        else {
-                                            if (object.has("feature")){
-                                                feature = new SearchData.FeatureBean();
-
-                                                JSONObject featureObject = object.getJSONObject("feature");
-                                                feature.setAircondition( featureObject.get("aircondition")+"");
-                                                feature.setBag( featureObject.get("bag")+"");
-                                                feature.setFueltype(featureObject.getString("fueltype"));
-                                                feature.setTransmission(featureObject.getString("transmission"));
-                                                feature.setDoor(featureObject.getString("door"));
-                                            }
-                                            category1 = (String) object.get("category");
-                                            model = object.getString("model");
-                                            model_code = object.getString("model_code");
-                                            image = (String) object.get("image");
-                                            packaged = object.getString("package");
-                                            price = object.getString("price");
-                                            currency = (String) object.get("currency");
-                                            time_unit = object.getString("time_unit");
-                                            time = object.getString("time");
-                                            id_context = (String) object.get("id_context");
-                                            refer_type = object.getString("refer_type");
-                                            supplier = object.getString("supplier");
-                                            supplier_city = (String) object.get("supplier_city");
-                                            supplier_logo = object.getString("supplier_logo");
-                                            drop_city = object.getString("drop_city");
-                                            tc = (String) object.get("tc");
-                                            type = (String)object.get("type");
-                                            Log.d(TAG, "onResponse: time"+time+"\n"+time_unit);
-                                            JSONArray coveragesArray = object.getJSONArray("coverages");
-                                            for (int i=0;i<coveragesArray.length();i++){
-                                                SearchData.CoveragesBean bean = new SearchData.CoveragesBean();
-                                                JSONObject jsonObject1 = (JSONObject) coveragesArray.get(i);
-                                                String code = jsonObject1.getString("code");
-                                                String name = jsonObject1.getString("name");
-                                                String currency = jsonObject1.getString("currency");
-                                                String desc = jsonObject1.getString("desc");
-                                                String amount2 = jsonObject1.getString("amount2");
-                                                String currency2 = jsonObject1.getString("currency2");
-
-                                                if (code!=null){
-                                                    bean.setCode(code);
-                                                }
-                                                if (name!=null){
-                                                    bean.setName(name);
-                                                }
-                                                if (currency2!=null){
-                                                    bean.setCurrency2(currency2);
-                                                }
-                                                if (desc!=null){
-                                                    bean.setDesc(desc);
-                                                }
-                                                if (amount2!=null){
-                                                    bean.setAmount2(amount2);
-                                                }
-                                                coverages.add(bean);
-                                            }
-                                            SearchData carData = new SearchData();
-
-                                            carData.setFeature(feature);
-                                            carData.setCategory(category1);
-                                            carData.setModel(model);
-                                            carData.setModel_code(model_code);
-                                            carData.setImage(image);
-                                            carData.setPackageX(packageX);
-                                            carData.setPrice(price);
-                                            carData.setCurrency(currency);
-                                            carData.setTime(time);
-                                            carData.setTime_unit(time_unit);
-                                            carData.setId_context(id_context);
-                                            carData.setRefer_type(refer_type);
-                                            carData.setSupplier(supplier);
-                                            carData.setSupplier_city(supplier_city);
-                                            carData.setSupplier_logo(supplier_logo);
-                                            carData.setDrop_city(drop_city);
-                                            carData.setTc(tc);
-                                            carData.setCoverages(coverages);
-                                            carData.setType(type);
-                                            searchData.add(carData);
-                                        }
-                                    } catch (JSONException e) {
-                                    }
-                                }
-                                if (searchData!=null&&searchData.size()>0){
-                                    chooseSearchAction(searchData);
-                                }
-                                else {
-                                    Utility.message(getContext(), "No record found ");
-                                }
-                            }
-                        } else {
-                            if (msg!=null)
-                                Utility.message(getContext(),msg);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    status = jsonObject.getBoolean("status");
+                    if (jsonObject.has("msg")){
+                        msg= jsonObject.getString("msg");
                     }
+                    if (status){
+                        if (catBeanList!=null){
+                            catBeanList.clear();
+                        }
+                        JSONObject responseObject = jsonObject.getJSONObject("response");
+                        JSONObject car_listObject = responseObject.getJSONObject("car_list");
+                        String mapDataArray = jsonObject.getString("map_data");
+                        mapDataList.clear();
+                        Type listType1 = new TypeToken<List<MapData>>(){}.getType();
+                        mapDataList = gson.fromJson(mapDataArray, listType1);
 
-                } else {
-                    Utility.message(getContext(),"No record found");
+                        if (car_listObject!=null&&car_listObject.length()>0){
+                            Iterator<String> iter = car_listObject.keys();
+                            while (iter.hasNext()) {
+                                String key = iter.next();
+                                try {
+                                    Object value = car_listObject.get(key);
+                                    if (value instanceof JSONArray) {
+                                        if (key.equals("category_list")){
+                                            // It's an array
+                                            JSONArray jsonArray = (JSONArray)value;
+                                            Type listType = new TypeToken<List<TestData>>(){}.getType();
+                                            List<TestData> myModelList = gson.fromJson(jsonArray.toString(), listType);
+                                            catBeanList.addAll(myModelList);
+                                        }
+                                    }
+                                    else if (value instanceof JSONObject) {
+
+                                    }
+
+                                    JSONObject object = car_listObject.getJSONObject(key);
+                                    if (key.equals("category_list")){
+
+                                    }
+                                    else {
+                                        if (object.has("feature")){
+                                            feature = new SearchData.FeatureBean();
+
+                                            JSONObject featureObject = object.getJSONObject("feature");
+                                            feature.setAircondition( featureObject.get("aircondition")+"");
+                                            feature.setBag( featureObject.get("bag")+"");
+                                            feature.setFueltype(featureObject.getString("fueltype"));
+                                            feature.setTransmission(featureObject.getString("transmission"));
+                                            feature.setDoor(featureObject.getString("door"));
+                                        }
+                                        category1 = (String) object.get("category");
+                                        model = object.getString("model");
+                                        model_code = object.getString("model_code");
+                                        image = (String) object.get("image");
+                                        packaged = object.getString("package");
+                                        price = object.getString("price");
+                                        currency = (String) object.get("currency");
+                                        time_unit = object.getString("time_unit");
+                                        time = object.getString("time");
+                                        id_context = (String) object.get("id_context");
+                                        refer_type = object.getString("refer_type");
+                                        supplier = object.getString("supplier");
+                                        supplier_city = (String) object.get("supplier_city");
+                                        supplier_logo = object.getString("supplier_logo");
+                                        drop_city = object.getString("drop_city");
+                                        tc = (String) object.get("tc");
+                                        type = (String)object.get("type");
+                                        Log.d(TAG, "onResponse: time"+time+"\n"+time_unit);
+                                        JSONArray coveragesArray = object.getJSONArray("coverages");
+                                        for (int i=0;i<coveragesArray.length();i++){
+                                            SearchData.CoveragesBean bean = new SearchData.CoveragesBean();
+                                            JSONObject jsonObject1 = (JSONObject) coveragesArray.get(i);
+                                            String code = jsonObject1.getString("code");
+                                            String name = jsonObject1.getString("name");
+                                            String currency = jsonObject1.getString("currency");
+                                            String desc = jsonObject1.getString("desc");
+                                            String amount2 = jsonObject1.getString("amount2");
+                                            String currency2 = jsonObject1.getString("currency2");
+
+                                            if (code!=null){
+                                                bean.setCode(code);
+                                            }
+                                            if (name!=null){
+                                                bean.setName(name);
+                                            }
+                                            if (currency2!=null){
+                                                bean.setCurrency2(currency2);
+                                            }
+                                            if (desc!=null){
+                                                bean.setDesc(desc);
+                                            }
+                                            if (amount2!=null){
+                                                bean.setAmount2(amount2);
+                                            }
+                                            coverages.add(bean);
+                                        }
+                                        SearchData carData = new SearchData();
+
+                                        carData.setFeature(feature);
+                                        carData.setCategory(category1);
+                                        carData.setModel(model);
+                                        carData.setModel_code(model_code);
+                                        carData.setImage(image);
+                                        carData.setPackageX(packageX);
+                                        carData.setPrice(price);
+                                        carData.setCurrency(currency);
+                                        carData.setTime(time);
+                                        carData.setTime_unit(time_unit);
+                                        carData.setId_context(id_context);
+                                        carData.setRefer_type(refer_type);
+                                        carData.setSupplier(supplier);
+                                        carData.setSupplier_city(supplier_city);
+                                        carData.setSupplier_logo(supplier_logo);
+                                        carData.setDrop_city(drop_city);
+                                        carData.setTc(tc);
+                                        carData.setCoverages(coverages);
+                                        carData.setType(type);
+                                        searchData.add(carData);
+                                    }
+                                } catch (JSONException e) {
+                                }
+                            }
+                            if (searchData!=null&&searchData.size()>0){
+                                chooseSearchAction(searchData);
+                            }
+                            else {
+                                Utility.message(getContext(), "No record found ");
+                            }
+                        }
+                    } else {
+                        if (msg!=null)
+                            Utility.message(getContext(),msg);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
 
-                }
+
+            }
         }, new com.android.volley.Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {

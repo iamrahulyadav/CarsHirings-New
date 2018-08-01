@@ -269,7 +269,7 @@
                         android:textColor="@color/colorPrimaryDark"
                         android:drawableStart="@drawable/ic_tick"
                         android:gravity="center"
-                        android:text="Terms &amp; Conditions" />
+                        android:text="@string/action_terms" />
                 </LinearLayout>
 
 

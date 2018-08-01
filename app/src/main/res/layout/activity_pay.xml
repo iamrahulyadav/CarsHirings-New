@@ -60,7 +60,7 @@
                     <TextView
                         android:id="@+id/txtTotalPayValue"
                         android:layout_width="match_parent"
-                        android:gravity="left"
+                        android:gravity="start"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:textColor="@color/black"/>
@@ -85,7 +85,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Apply coupon"
+                        android:text="@string/activity_pay_apply_coupon"
                         android:textAllCaps="true"
                         android:textSize="@dimen/large_size"
                         android:textColor="#d1882a"
@@ -99,11 +99,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/border_bg"
-                            android:hint="Code"
+                            android:hint="@string/activity_pay_code"
                             android:singleLine="true"
                             android:imeOptions="actionDone"
                             android:padding="5dp"
-                            android:layout_marginRight="20dp"
+                            android:layout_marginEnd="20dp"
                             android:layout_gravity="center_vertical"
                             android:layout_weight="1"
                             android:id="@+id/activity_pay_edtCoupon"
@@ -113,10 +113,10 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/activity_pay_btnApply"
                             android:background="@color/colorPrimaryDark"
-                            android:text="Apply"
+                            android:text="@string/activity_pay_apply"
                             android:gravity="center_horizontal"
                             android:layout_weight=".1"
-                            android:layout_marginLeft="20dp"
+                            android:layout_marginStart="20dp"
                             android:textColor="@color/white"
                             android:padding="8dp"
                             android:layout_gravity="center_vertical"/>
@@ -125,7 +125,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Coupon value "
+                        android:text="@string/activity_pay_coupon_value"
                         android:visibility="gone"
                         android:paddingTop="5dp"
                         android:id="@+id/activity_pay_txtCouponValue"
@@ -144,7 +144,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/activity_pay_txtFullProtectionAmt"
-                            android:text="FULL PROTECTION VALUE :"
+                            android:text="@string/activity_pay_full_protection_value"
                             android:gravity="center_horizontal"
                             android:textAllCaps="true"
                             android:textColor="#d1882a"
@@ -156,7 +156,7 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/activity_pay_txtFullProtectionAmtValue"
                             android:text=" SAR  5.00"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:textAllCaps="true"
                             android:textColor="@color/colorPrimaryDark"
                             android:padding="8dp"
@@ -191,8 +191,7 @@
                         android:orientation="horizontal">
                         <TextView
                             android:visibility="gone"
-                            android:paddingLeft="5dp"
-                            android:layout_below="@+id/check_points"
+                            android:paddingStart="5dp"
                             android:id="@+id/txtPointValue"
                             android:textSize="@dimen/extra_small_size"
                             android:layout_width="wrap_content"
@@ -204,7 +203,6 @@
                             android:gravity="right"
                             android:textAllCaps="true"
                             android:textColor="@color/colorPrimaryDark"
-                            android:layout_below="@+id/check_points"
                             android:id="@+id/txtPointValueAmt"
                             android:textSize="@dimen/extra_small_size"
                             android:layout_width="match_parent"
@@ -213,7 +211,6 @@
 
                     </LinearLayout>
                     <CheckBox
-                        android:layout_below="@+id/coupon_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checkMark="?android:attr/listChoiceIndicatorMultiple"
@@ -229,8 +226,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
                         <TextView
-                            android:paddingLeft="5dp"
-                            android:layout_below="@+id/check_wallet"
+                            android:paddingStart="5dp"
                             android:id="@+id/txtWaletValue"
                             android:textSize="@dimen/extra_small_size"
                             android:visibility="gone"
@@ -243,7 +239,7 @@
                             android:textSize="@dimen/extra_small_size"
                             android:visibility="gone"
                             android:layout_width="match_parent"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:textColor="@color/colorPrimaryDark"
                             android:layout_height="wrap_content"
                             android:text="(Available balance is 50)" />
@@ -270,7 +266,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:id="@+id/txtPayOnlineDefault"
-                android:text="Note: By default,Payfort method is selected."/>
+                android:text="@string/activity_pay_note_by_default_payfort_method_is_selected"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -298,7 +294,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Total payable amount "
+            android:text="@string/txtTotalPayableAmt"
             android:textAllCaps="true"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"

@@ -115,21 +115,21 @@ public class LoginActivity extends AppBaseActivity implements View.OnClickListen
                 @Override
                 public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                     Utility.hidepopup();
-                    if(response.body().status)
-                    {
-                        UserDetails userDetails = new UserDetails();
-                        userDetails = response.body().response.user_detail;
-                        String logindata=gson.toJson(userDetails);
-                        Log.d("TAG", "onResponse: "+logindata);
-                        appGlobal.setLoginData(logindata);
-                        String st =  appGlobal.getUser_id();
-                        Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                        startActivity(intent);
-                        Utility.message(getApplicationContext(), "Login success");
-                        finish();
-                    }
-                    else{
-                        Utility.message(getApplicationContext(), "Username or password invalid");
+                    if (response.body() != null) {
+                        if(response.body().status)
+                        {
+                            UserDetails userDetails = new UserDetails();
+                            userDetails = response.body().response.user_detail;
+                            String logindata=gson.toJson(userDetails);
+                            Log.d("TAG", "onResponse: "+logindata);
+                            appGlobal.setLoginData(logindata);
+                            Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                        else{
+                            Utility.message(getApplicationContext(), "Username or password invalid");
+                        }
                     }
                 }
 

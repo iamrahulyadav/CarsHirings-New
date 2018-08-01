@@ -24,6 +24,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -120,7 +121,11 @@ public class SearchbyMapActivity extends AppBaseActivity implements OnMapReadyCa
 
                 if (mapDataList!=null && mapDataList.size()>0){
                     txt_add.setText(mapDataList.get(Integer.parseInt(s)).getSupp_detail());
-                    txt_price.setText("SAR "+mapDataList.get(Integer.parseInt(s)).getSupplier_price());
+                   double markUp = Double.parseDouble(SearchCarFragment.markup);
+                    String price =mapDataList.get(Integer.parseInt(s)).getSupplier_price();
+                    double d = Double.parseDouble(price);
+                    double priceNew  = d+(d*markUp)/100;
+                    txt_price.setText("SAR "+ priceNew );
                     txt_sname.setText(mapDataList.get(Integer.parseInt(s)).getSupplier_name_ar());
                     if (mapDataList.get(Integer.parseInt(s)).getSupplier_logo()!=null){
                         Glide.with(getApplicationContext())
@@ -139,8 +144,6 @@ public class SearchbyMapActivity extends AppBaseActivity implements OnMapReadyCa
             public void onInfoWindowClick(Marker marker) {
 
                String s= marker.getTitle();
-
-
                 Intent i = new Intent();
                 i.putExtra("myname", mapDataList.get(Integer.parseInt(s)).getSupplier_name_ar());
                 setResult(2200, i);
