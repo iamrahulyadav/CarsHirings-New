@@ -60,7 +60,7 @@
 
 
     <string name="filter">Filter</string>
-    <string name="sort">Sort</string>
+    <string name="sort">Search By Map</string>
     <string name="BookingCurrent">You can add a booking manually\n or search for a car now.</string>
     <string name="Searchnow">Search Now</string>
     <string name="bookingreferencenumber">Booking Reference Number</string>
@@ -263,7 +263,7 @@
     <string name="updated_successfully">Updated Successfully</string>
 
     <!--SignUpActivity-->
-    <string name="pass_doesnotmatch">Password and Confirm Password does not match.</string>
+    <string name="pass_doesnotmatch">Password and Confirm Passwo d does not match.</string>
     <string name="fill_all_field">Please Fill all fields</string>
     <string name="please_enter_email">Please enter Email</string>
     <string name="please_enter_pass">Please enter Password</string>

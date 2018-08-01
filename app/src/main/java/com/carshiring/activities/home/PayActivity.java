@@ -118,8 +118,8 @@ Merchant Identifier: daouwTJI
             drop_date="", pick_city="",drop_city="",protection_val="",booking_point="",booking_wallet="",
             booking_payfort="",transaction_id="",merchant_reference="",language="", earnPoint;
     TinyDB tinyDB;
-    public List<WalletHistoryData> walletHistoryData = new ArrayList<>();
-    public List<PointHistoryData>pointHistoryData = new ArrayList<>();
+    private List<WalletHistoryData> walletHistoryData = new ArrayList<>();
+    private List<PointHistoryData>pointHistoryData = new ArrayList<>();
     double creditAmt, debitAmt,walletAmt, totalDebit, totalPrice,totalCredit,totalPoint,pointValue,totalDebitPoint,
             totalCreditPoint, creditPoint,payfortAmt1, debitPoint,couponvalue, walBal,payfortAmt, discountvalue,pointBal,
             usepoint, useWallet;
@@ -166,12 +166,14 @@ Merchant Identifier: daouwTJI
         txtPointValueAmt = findViewById(R.id.txtPointValueAmt);
         txtWalletValueAmt = findViewById(R.id.txtWaletValueAmt);
         txtFullProAmt = findViewById(R.id.activity_pay_txtFullProtectionAmtValue);
+
         if (fullprotection.equalsIgnoreCase("yes")){
             fullProtectionLayout.setVisibility(View.VISIBLE);
             txtFullProAmt.setText("SAR " +" "+String.valueOf(CarDetailActivity.fullAmtValue));
         } else {
             fullProtectionLayout.setVisibility(View.GONE);
         }
+
         price = CarDetailActivity.carPrice;
         if (fullprotection.equalsIgnoreCase("yes")){
             if (price!=null){
@@ -195,7 +197,6 @@ Merchant Identifier: daouwTJI
         earnPoint = String.valueOf(CarDetailActivity.point);
 
         txtEarnedPoint.setText(getResources().getString(R.string.colletcted_point )+" : "+ earnPoint );
-
 
         txtApply.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -226,6 +227,7 @@ Merchant Identifier: daouwTJI
         if (tinyDB.contains("login_data")){
             String data = tinyDB.getString("login_data");
             userDetails = gson.fromJson(data, UserDetails.class);
+            MainActivity.logout.setTitle(getResources().getString(R.string.logout));
             if (userDetails.getUser_id()!=null){
                 user_id = userDetails.getUser_id();
             }
@@ -244,7 +246,6 @@ Merchant Identifier: daouwTJI
                     }
                 }
                 if (tinyDB1.contains("login_data")) {
-
                     if (userDetails!=null&&userDetails.getUser_lname() == null || userDetails.getUser_lname().length() == 0) {
                         set = "update_profile";
                         setupoverlay(set);
@@ -275,8 +276,8 @@ Merchant Identifier: daouwTJI
         txtPAyAmt.setText(getResources().getString(R.string.txtTotalPayableAmt)+" : "+CarDetailActivity.currency + "  "
                 +String.valueOf(df2.format(totalPrice)));
 
-        getPoint();
-        getWal();
+        getPoint(user_id);
+        getWal(user_id);
     }
 
     private void pay(){
@@ -749,7 +750,6 @@ Merchant Identifier: daouwTJI
     }
     public static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
-
         BigDecimal bd = new BigDecimal(value);
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
@@ -1361,7 +1361,7 @@ Sha request and response pharse
 
     }
 
-    public void getWal(){
+    public void getWal(String user_id){
         RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();
         final Call<ApiResponse> walList = fitApis.walletHistory(user_id);
         walList.enqueue(new retrofit2.Callback<ApiResponse>() {
@@ -1371,13 +1371,11 @@ Sha request and response pharse
                 if (response!=null){
                     if (response.body().status){
                         walletHistoryData = response.body().response.wallet;
-                        Log.d("TAG", "onResponse: "+gson.toJson(walletHistoryData));
                         for (WalletHistoryData walletHistoryData1 : walletHistoryData){
                             if (walletHistoryData1.get_$WalletType204().equals("debit")){
                                 String debit = walletHistoryData1.get_$WalletAmount169();
                                 debitAmt = Double.parseDouble(debit);
                                 totalDebit+= debitAmt;
-//                            Log.d("TAG", "onResponse: "+debit);
                             }
                             if (walletHistoryData1.get_$WalletType204().equals("credit")){
                                 String debit = walletHistoryData1.get_$WalletAmount169();
@@ -1387,7 +1385,6 @@ Sha request and response pharse
                         }
                         walletAmt = totalCredit-totalDebit;
 
-                        Log.d("TAG", "onResponse: totalDebit"+totalCredit+"\n"+walletAmt);
                         if (walletAmt>0){
                             txtWalletBal.setText("("+getResources().getString(R.string.txtAvailable)+" "
                                     +String.valueOf(df2.format(walletAmt))+")");
@@ -1410,7 +1407,7 @@ Sha request and response pharse
         });
     }
 
-    public void getPoint(){
+    public void getPoint(String user_id){
         RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();
         final Call<ApiResponse> walList = fitApis.pointHistory(user_id);
         walList.enqueue(new retrofit2.Callback<ApiResponse>() {
@@ -1550,7 +1547,6 @@ Sha request and response pharse
         startActivity(new Intent(PayActivity.this,ForgotPasswordActivity.class));
     }
 
-
     private void setupoverlay(String set) {
 
         final EditText edtFname, edtLname, edtemail, edtPhone, edtZip, edtLicense, edtCity,
@@ -1569,6 +1565,7 @@ Sha request and response pharse
             signup.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    dialog.dismiss();
                     startActivity(new Intent(PayActivity.this, SignUpActivity.class)
                             .putExtra("booking","booksign"));
                 }
@@ -1661,25 +1658,13 @@ Sha request and response pharse
                         if (!lname.isEmpty()) {
                             if (Utility.checkemail(email)) {
                                 if (Utility.checkphone(phone)) {
-                                    if (!zip.isEmpty()) {
 
-                                            if (!licenseorigin.isEmpty()) {
-                                                if (!city.isEmpty()) {
-                                                    if (!address.isEmpty()) {
-                                                        updateProfile(user_id, fname);
-                                                    } else {
-                                                        Utility.message(getApplication(), getResources().getString(R.string.please_enter_address));
-                                                    }
-                                                } else {
-                                                    Utility.message(getApplication(), getResources().getString(R.string.please_enter_city));
-                                                }
-                                            } else {
-                                                Utility.message(getApplication(), getResources().getString(R.string.please_enter_license_origin));
-                                            }
-
+                                    if (dob!=null && !dob.isEmpty()){
+                                        updateProfile(user_id,fname);
                                     } else {
-                                        Utility.message(getApplication(), getResources().getString(R.string.please_enter_zipcode));
+                                        Utility.message(getApplication(), "Please select DOB");
                                     }
+
                                 } else {
                                     Utility.message(getApplication(), getResources().getString(R.string.please_enter_valid_phone_number));
                                 }
@@ -1701,9 +1686,7 @@ Sha request and response pharse
     }
 
 
-    String fname, lname,filter , phone, zip, license, licenseorigin,  emaillogin,
-            pass;
-
+    private String fname, lname, phone, zip, license, licenseorigin,  emaillogin, pass;
 
     private void updateProfile(String userid, String fname) {
         if (!Utility.isNetworkConnected(getApplicationContext())) {
@@ -1739,12 +1722,14 @@ Sha request and response pharse
         });
     }
 
-    AppGlobal appGlobal = AppGlobal.getInstancess();
+    private AppGlobal appGlobal = AppGlobal.getInstancess();
+
     private void login(String user, String pass) {
         if (!Utility.isNetworkConnected(getApplicationContext())) {
             Toast.makeText(PayActivity.this, getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             return;
         }
+
         Utility.showloadingPopup(this);
         RetroFitApis retroFitApis = RetrofitApiBuilder.getCargHiresapis();
         Call<ApiResponse> responseCall = retroFitApis.login(user, pass);
@@ -1752,13 +1737,18 @@ Sha request and response pharse
             @Override
             public void onResponse(Call<ApiResponse> call, retrofit2.Response<ApiResponse> response) {
                 Utility.hidepopup();
-                if (response.body().status == true) {
+                if (response.body().status) {
                     UserDetails userDetails = new UserDetails();
                     userDetails = response.body().response.user_detail;
                     String logindata = gson.toJson(userDetails);
                     appGlobal.setLoginData(logindata);
-                    String st = appGlobal.getUser_id();
                     dialog.dismiss();
+                    String login_data = tinyDB.getString("login_data");
+                    userDetails = gson.fromJson(login_data, UserDetails.class);
+                    String st = userDetails.getUser_id();
+                    MainActivity.logout.setTitle(getResources().getString(R.string.logout));
+                    getPoint(st);
+                    getWal(st);
 
                 } else {
                     Utility.message(getApplicationContext(), response.body().msg);
@@ -1773,17 +1763,17 @@ Sha request and response pharse
         });
     }
 
-    Calendar mCalendar = Calendar.getInstance();
     long timeInMilliseconds;
-    private int mYear, mMonth, mDay;
 
     public void dob_pick() {
         // Get Current Date
         final Calendar c = Calendar.getInstance();
-        mYear = Calendar.getInstance().get(Calendar.YEAR) - 18;
-        mMonth = c.get(Calendar.MONTH);
-        mDay = c.get(Calendar.DAY_OF_MONTH);
+        int mYear = Calendar.getInstance().get(Calendar.YEAR) - 18;
+        int mMonth = c.get(Calendar.MONTH);
+        int mDay = c.get(Calendar.DAY_OF_MONTH);
+
         timeInMilliseconds = Utility.getTimeDate(mYear + "-" + mMonth + "-" + mDay);
+
         final DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 new DatePickerDialog.OnDateSetListener() {
 
@@ -1798,4 +1788,5 @@ Sha request and response pharse
         datePickerDialog.show();
 
     }
+
 }

@@ -44,9 +44,11 @@ import com.carshiring.models.CatRequest;
 import com.carshiring.models.Category;
 
 import com.carshiring.models.MArkupdata;
+import com.carshiring.models.MapData;
 import com.carshiring.models.Point;
 import com.carshiring.models.SearchData;
 import com.carshiring.models.TestData;
+import com.carshiring.models.UseLocationData;
 import com.carshiring.splash.SplashActivity;
 import com.carshiring.utilities.Utility;
 import com.carshiring.webservices.ApiResponse;
@@ -119,7 +121,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
     private  TinyDB tinyDB ;
     private  Calendar calendar_pick, calendar_drop;
 
-    public static String pickName ="",pickup_loc_id="",drop_loc_id="", dropName="",drop_date="",pick_date="",
+    public static String pickName ="",dropName="",drop_date="",pick_date="",
             drop_hour="",drop_minute="",pick_minute="",markup="",pointper="",pick_hour="",pickTime="", dropTime="";
 
     private  int useCurrentLocation = 0;
@@ -129,7 +131,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
     private double currentLat,currentLng;
     String driver_age="",token,languagecode ,
             location_code="",location_iata="",location_type="",location_code_drop="",location_iata_drop="",
-            location_type_drop="";
+            location_type_drop="",country_code= " ",city = "  ";
 
     @Nullable
     @Override
@@ -161,10 +163,9 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
                     et_return_location.setVisibility(View.GONE);
-                    if (pickup_loc_id != null && !pickup_loc_id.isEmpty())
-                        drop_loc_id = pickup_loc_id;
+
                 } else {
-                    drop_loc_id = null ;
+
                     et_return_location.setVisibility(View.VISIBLE);
                 }
             }
@@ -454,10 +455,12 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
 
         }
     }
-    Gson gson = new Gson();
-    String TAG = SearchCarFragment.class.getName();
+   private Gson gson = new Gson();
+   private String TAG = SearchCarFragment.class.getName();
 
     public static List<TestData>catBeanList = new ArrayList<>();
+    public static List<MapData>mapDataList = new ArrayList<>();
+
     public static Category category = new Category();
 
     private void chooseSearchAction(List<SearchData> car_list) {
@@ -474,13 +477,12 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
     }
 
     public static List<SearchData>searchData = new ArrayList<>();
-    List<Integer>cateList=new ArrayList<>();
     private boolean status;
     public static HashMap<String, List<String>>catPriceMap;
     private SearchData.FeatureBean feature;
     private String covprice;
     private String covcurrency;
-    private String category1;                              //
+    private String category1;
     private String model;
     private String model_code;
     private String image;
@@ -517,20 +519,12 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         catPriceMap = new HashMap<>();
         coverages = new ArrayList<>();
         Utility.showLoading(getActivity(),getResources().getString(R.string.searching_cars));
-        final SearchCarFragment _this = SearchCarFragment.this ;
 
         pick_hour=String.valueOf(pick_hours>9?pick_hours:"0"+pick_hours);
         pick_minute=String.valueOf(pick_minutes>9?pick_minutes:"0"+pick_minutes);
 
-
         drop_minute=String.valueOf(drop_minutes>9?drop_minutes:"0"+drop_minutes);
         drop_hour=String.valueOf(drop_hours>9?drop_hours:"0"+drop_hours);
-        if (switchSameDestLocation.isChecked()){
-            dropName = pickName;
-            location_code_drop =location_code;
-            location_iata_drop = location_iata;
-            location_type_drop = location_type;
-        }
 
         Log.d(TAG, "requestForSearchCar: "+token+"\n"+pickName+"\n"+
                 pick_date+"\n"+pick_hour+"\n"+
@@ -538,147 +532,160 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 useCurrentLocation+"\n"+ useSameDestLocation+"\n"+isBetweenDriverAge+"\n"+currentLat+"\n"+
                 currentLng+"\n"+location_code+"\n"+location_iata+"\n"+
                 location_type+"\n"+location_code_drop+"\n"+location_iata_drop+"\n"+location_type_drop+"\n"+languagecode);
-        String url= RetrofitApiBuilder.CarGates_BASE_WEBSERVICE_URL+"webservice/search";
+
+        String url= RetrofitApiBuilder.CarGates_BASE_WEBSERVICE_URL+"webservice/mapsearch";
 
         StringRequest  stringRequest = new StringRequest(com.android.volley.Request.Method.POST, url, new com.android.volley.Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Utility.hidepopup();
-                String d = gson.toJson(response);
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    status = jsonObject.getBoolean("status");
-                    if (jsonObject.has("msg")){
-                       msg= jsonObject.getString("msg");
-                    }
-                    if (status){
-                        if (catBeanList!=null){
-                            catBeanList.clear();
+                Object response1 = response;
+                if (response1 instanceof JSONArray){
+
+                } else if (response1 instanceof JSONObject){
+                    try {
+
+                        JSONObject jsonObject = new JSONObject(response);
+                        status = jsonObject.getBoolean("status");
+                        if (jsonObject.has("msg")){
+                            msg= jsonObject.getString("msg");
                         }
-                        JSONObject responseObject = jsonObject.getJSONObject("response");
-                        JSONObject car_listObject = responseObject.getJSONObject("car_list");
-                        if (car_listObject!=null&&car_listObject.length()>0){
-                            Iterator<String> iter = car_listObject.keys();
-                            while (iter.hasNext()) {
-                                String key = iter.next();
-                                try {
-                                    Object value = car_listObject.get(key);
-                                    if (value instanceof JSONArray) {
+                        if (status){
+                            if (catBeanList!=null){
+                                catBeanList.clear();
+                            }
+                            JSONObject responseObject = jsonObject.getJSONObject("response");
+                            JSONObject car_listObject = responseObject.getJSONObject("car_list");
+                            String mapDataArray = jsonObject.getString("map_data");
+                            mapDataList.clear();
+                            Type listType1 = new TypeToken<List<MapData>>(){}.getType();
+                            mapDataList = gson.fromJson(mapDataArray, listType1);
+
+                            if (car_listObject!=null&&car_listObject.length()>0){
+                                Iterator<String> iter = car_listObject.keys();
+                                while (iter.hasNext()) {
+                                    String key = iter.next();
+                                    try {
+                                        Object value = car_listObject.get(key);
+                                        if (value instanceof JSONArray) {
+                                            if (key.equals("category_list")){
+                                                // It's an array
+                                                JSONArray jsonArray = (JSONArray)value;
+                                                Type listType = new TypeToken<List<TestData>>(){}.getType();
+                                                List<TestData> myModelList = gson.fromJson(jsonArray.toString(), listType);
+                                                catBeanList.addAll(myModelList);
+                                            }
+                                        }
+                                        else if (value instanceof JSONObject) {
+
+                                        }
+
+                                        JSONObject object = car_listObject.getJSONObject(key);
                                         if (key.equals("category_list")){
-                                            // It's an array
-                                            JSONArray jsonArray = (JSONArray)value;
-                                            Type listType = new TypeToken<List<TestData>>(){}.getType();
-                                            List<TestData> myModelList = gson.fromJson(jsonArray.toString(), listType);
-                                            catBeanList.addAll(myModelList);
-                                            for (TestData testData: catBeanList){
-                                                cateList.add(Integer.parseInt(testData.getCat_id()));
-                                            }
-                                        }
-                                    }
-                                    else if (value instanceof JSONObject) {
-                                        // It's an object
-                                        JSONObject g = (JSONObject)value;
-                                    }
-                                    JSONObject object = car_listObject.getJSONObject(key);
-                                    if (key.equals("category_list")){
-                                    }
-                                    else {
-                                        if (object.has("feature")){
-                                            feature = new SearchData.FeatureBean();
 
-                                            JSONObject featureObject = object.getJSONObject("feature");
-                                            feature.setAircondition( featureObject.get("aircondition")+"");
-                                            feature.setBag( featureObject.get("bag")+"");
-                                            feature.setFueltype(featureObject.getString("fueltype"));
-                                            feature.setTransmission(featureObject.getString("transmission"));
-                                            feature.setDoor(featureObject.getString("door"));
                                         }
-                                        category1 = (String) object.get("category");
-                                        model = object.getString("model");
-                                        model_code = object.getString("model_code");
-                                        image = (String) object.get("image");
-                                        packaged = object.getString("package");
-                                        price = object.getString("price");
-                                        currency = (String) object.get("currency");
-                                        time_unit = object.getString("time_unit");
-                                        time = object.getString("time");
-                                        id_context = (String) object.get("id_context");
-                                        refer_type = object.getString("refer_type");
-                                        supplier = object.getString("supplier");
-                                        supplier_city = (String) object.get("supplier_city");
-                                        supplier_logo = object.getString("supplier_logo");
-                                        drop_city = object.getString("drop_city");
-                                        tc = (String) object.get("tc");
-                                        type = (String)object.get("type");
-                                        Log.d(TAG, "onResponse: time"+time+"\n"+time_unit);
-                                        JSONArray coveragesArray = object.getJSONArray("coverages");
-                                        for (int i=0;i<coveragesArray.length();i++){
-                                            SearchData.CoveragesBean bean = new SearchData.CoveragesBean();
-                                            JSONObject jsonObject1 = (JSONObject) coveragesArray.get(i);
-                                            String code = jsonObject1.getString("code");
-                                            Log.d(TAG, "VKCODE" + code);
-                                            String name = jsonObject1.getString("name");
-                                            String currency = jsonObject1.getString("currency");
-                                            String desc = jsonObject1.getString("desc");
-                                            String amount2 = jsonObject1.getString("amount2");
-                                            String currency2 = jsonObject1.getString("currency2");
+                                        else {
+                                            if (object.has("feature")){
+                                                feature = new SearchData.FeatureBean();
 
-                                            if (code!=null){
-                                                bean.setCode(code);
+                                                JSONObject featureObject = object.getJSONObject("feature");
+                                                feature.setAircondition( featureObject.get("aircondition")+"");
+                                                feature.setBag( featureObject.get("bag")+"");
+                                                feature.setFueltype(featureObject.getString("fueltype"));
+                                                feature.setTransmission(featureObject.getString("transmission"));
+                                                feature.setDoor(featureObject.getString("door"));
                                             }
-                                            if (name!=null){
-                                                bean.setName(name);
+                                            category1 = (String) object.get("category");
+                                            model = object.getString("model");
+                                            model_code = object.getString("model_code");
+                                            image = (String) object.get("image");
+                                            packaged = object.getString("package");
+                                            price = object.getString("price");
+                                            currency = (String) object.get("currency");
+                                            time_unit = object.getString("time_unit");
+                                            time = object.getString("time");
+                                            id_context = (String) object.get("id_context");
+                                            refer_type = object.getString("refer_type");
+                                            supplier = object.getString("supplier");
+                                            supplier_city = (String) object.get("supplier_city");
+                                            supplier_logo = object.getString("supplier_logo");
+                                            drop_city = object.getString("drop_city");
+                                            tc = (String) object.get("tc");
+                                            type = (String)object.get("type");
+                                            Log.d(TAG, "onResponse: time"+time+"\n"+time_unit);
+                                            JSONArray coveragesArray = object.getJSONArray("coverages");
+                                            for (int i=0;i<coveragesArray.length();i++){
+                                                SearchData.CoveragesBean bean = new SearchData.CoveragesBean();
+                                                JSONObject jsonObject1 = (JSONObject) coveragesArray.get(i);
+                                                String code = jsonObject1.getString("code");
+                                                String name = jsonObject1.getString("name");
+                                                String currency = jsonObject1.getString("currency");
+                                                String desc = jsonObject1.getString("desc");
+                                                String amount2 = jsonObject1.getString("amount2");
+                                                String currency2 = jsonObject1.getString("currency2");
+
+                                                if (code!=null){
+                                                    bean.setCode(code);
+                                                }
+                                                if (name!=null){
+                                                    bean.setName(name);
+                                                }
+                                                if (currency2!=null){
+                                                    bean.setCurrency2(currency2);
+                                                }
+                                                if (desc!=null){
+                                                    bean.setDesc(desc);
+                                                }
+                                                if (amount2!=null){
+                                                    bean.setAmount2(amount2);
+                                                }
+                                                coverages.add(bean);
                                             }
-                                            if (currency2!=null){
-                                                bean.setCurrency2(currency2);
-                                            }
-                                            if (desc!=null){
-                                                bean.setDesc(desc);
-                                            }
-                                            if (amount2!=null){
-                                                bean.setAmount2(amount2);
-                                            }
-                                            coverages.add(bean);
+                                            SearchData carData = new SearchData();
+
+                                            carData.setFeature(feature);
+                                            carData.setCategory(category1);
+                                            carData.setModel(model);
+                                            carData.setModel_code(model_code);
+                                            carData.setImage(image);
+                                            carData.setPackageX(packageX);
+                                            carData.setPrice(price);
+                                            carData.setCurrency(currency);
+                                            carData.setTime(time);
+                                            carData.setTime_unit(time_unit);
+                                            carData.setId_context(id_context);
+                                            carData.setRefer_type(refer_type);
+                                            carData.setSupplier(supplier);
+                                            carData.setSupplier_city(supplier_city);
+                                            carData.setSupplier_logo(supplier_logo);
+                                            carData.setDrop_city(drop_city);
+                                            carData.setTc(tc);
+                                            carData.setCoverages(coverages);
+                                            carData.setType(type);
+                                            searchData.add(carData);
                                         }
-                                        SearchData carData = new SearchData();
-
-                                        carData.setFeature(feature);
-                                        carData.setCategory(category1);
-                                        carData.setModel(model);
-                                        carData.setModel_code(model_code);
-                                        carData.setImage(image);
-                                        carData.setPackageX(packageX);
-                                        carData.setPrice(price);
-                                        carData.setCurrency(currency);
-                                        carData.setTime(time);
-                                        carData.setTime_unit(time_unit);
-                                        carData.setId_context(id_context);
-                                        carData.setRefer_type(refer_type);
-                                        carData.setSupplier(supplier);
-                                        carData.setSupplier_city(supplier_city);
-                                        carData.setSupplier_logo(supplier_logo);
-                                        carData.setDrop_city(drop_city);
-                                        carData.setTc(tc);
-                                        carData.setCoverages(coverages);
-                                        carData.setType(type);
-                                        searchData.add(carData);
+                                    } catch (JSONException e) {
                                     }
-                                } catch (JSONException e) {
-                                    // Something went wrong!
+                                }
+                                if (searchData!=null&&searchData.size()>0){
+                                    chooseSearchAction(searchData);
+                                }
+                                else {
+                                    Utility.message(getContext(), "No record found ");
                                 }
                             }
-                            if (searchData!=null&&searchData.size()>0){
-                                chooseSearchAction(searchData);
-                            }else {
-                                Utility.message(getContext(), "No record found ");
-                            }
+                        } else {
+                            if (msg!=null)
+                                Utility.message(getContext(),msg);
                         }
-                    } else {
-                        Utility.message(getContext(),msg);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+
+                } else {
+                    Utility.message(getContext(),"No record found");
                 }
+
                 }
         }, new com.android.volley.Response.ErrorListener() {
             @Override
@@ -711,13 +718,23 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 serachRequest.put("location_code_drop", location_code_drop);
                 serachRequest.put("location_iata_drop", location_iata_drop);
                 serachRequest.put("location_type_drop", location_type_drop);
+
+             /*   if (chkUseCurrentLocation.isChecked()){
+                serachRequest.put("search_type1", location_type);
+                serachRequest.put("country_code",country_code);
+                serachRequest.put("city", city);
+                }*/
+                serachRequest.put("search_type1", location_type);
+                serachRequest.put("country_code",country_code);
+                serachRequest.put("city", city);
                 serachRequest.put("language_code", languagecode);
+                Log.d(TAG, "getParams: "+serachRequest);
                 return serachRequest;
             }
         };
 
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(40000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(30000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(stringRequest);
     }
 
@@ -725,22 +742,17 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         RetroFitApis retroFitApis = RetrofitApiBuilder.getCargHiresapis() ;
 
         Call<ApiResponse> responseCall = retroFitApis.point(" ") ;
-        final Gson gson = new Gson();
+
         responseCall.enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 Utility.hidepopup();
 
                 if(response.body()!=null){
-                    Log.d(SplashActivity.TAG, "onResponse: point "+gson.toJson(response.body().response.point));
                     Point point = new Point();
-
                     if(response.body().status){
                         point = response.body().response.point;
                         pointper = point.getPoint_percentage();
-                        if (switchSameDestLocation.isChecked()){
-                            dropName = pickName;
-                        }
                         Intent intent = new Intent(getActivity(), CarsResultListActivity.class);
                         startActivity(intent);
                     }
@@ -798,36 +810,20 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         }
         else if (resultCode == LocationSelectionActivity.RESPONSE_LOCATION) {
             if (requestCode == REQUEST_PICKUP_LOCATION) {
+                city = location.getCity();
                 et_pickup_location.setText(location.getCity_name());
-                pickup_loc_id = location.getCity_id();
                 location_code = location.getCode();
                 location_iata = location.getIata();
                 location_type = location.getType();
-
-                if (switchSameDestLocation.isChecked()) {
-                    drop_loc_id = pickup_loc_id;
-                }
+                country_code = location.getCountry_code();
             } else if (requestCode == REQUEST_DESTINATION_LOCATION) {
-                drop_loc_id = location.getCity_id();
-                dropName = location.getCity_name();
-                et_return_location.setText(dropName);
+                et_return_location.setText( location.getCity_name());
                 location_code_drop = location.getCode();
                 location_iata_drop = location.getIata();
                 location_type_drop = location.getType();
             }
         }
-//        else if (resultCode == LocationSelectionActivity.RESPONSE_LOCATION) {
-//            if (requestCode == REQUEST_PICKUP_LOCATION) {
-//                et_pickup_location.setText(location.getCity_name());
-//                pickup_loc_id = location.getCity_id();
-//                if (switchSameDestLocation.isChecked()) {
-//                    drop_loc_id = pickup_loc_id;
-//                }
-//            } else if (requestCode == REQUEST_DESTINATION_LOCATION) {
-//                et_return_location.setText(location.getCity_name());
-//                drop_loc_id = location.getCity_id();
-//            }
-//        }
+
     }
 
     protected synchronized void setupLocation() {
@@ -847,6 +843,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             return;
         }
         android.location.Location mLocation = LocationServices.FusedLocationApi.getLastLocation(mgoogleApiclient);
+
         if (mLocation != null) {
             currentLat = mLocation.getLatitude();
             currentLng = mLocation.getLongitude();
@@ -854,12 +851,11 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             try {
                 stringBuffer = getAddress(new LatLng(currentLat, currentLng));
                 if (stringBuffer!=null){
-                    et_pickup_location.setText(stringBuffer.toString());
+                    getPlace(stringBuffer.toString());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Log.d("Current Locations",currentLat+" , "+currentLng);
         }
     }
 
@@ -885,7 +881,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
 
         return result;
     }
-
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -918,24 +913,29 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
     }
 
     private boolean validateData(){
-
+        pickName = et_pickup_location.getText().toString().trim();
+        dropName = et_return_location.getText().toString().trim();
         // Location
         if(!chkUseCurrentLocation.isChecked()){
             useCurrentLocation = 0 ;
             currentLng = 0.0;
             currentLat = 0.0 ;
-            pickName = et_pickup_location.getText().toString().trim();
-            dropName = et_return_location.getText().toString().trim();
-            // pickup_loc_id
-            if(pickup_loc_id==null || pickup_loc_id.trim().isEmpty()||pickName.isEmpty()){
+
+            if (switchSameDestLocation.isChecked()){
+                dropName = pickName;
+                location_code_drop =location_code;
+                location_iata_drop = location_iata;
+                location_type_drop = location_type;
+            }
+
+            if(pickName.isEmpty()){
                 Toast.makeText(activity, getResources().getString(R.string.pick_up_location), Toast.LENGTH_SHORT).show();
                 return false;
             }
             if(switchSameDestLocation.isChecked()){
                 useSameDestLocation = 0;
-                drop_loc_id = pickup_loc_id ;
             }else {
-                if(drop_loc_id==null || drop_loc_id.trim().isEmpty()||dropName.isEmpty()){
+                if(dropName.isEmpty()){
                     useSameDestLocation = 1;
                     Toast.makeText(activity, getResources().getString(R.string.pleae_select_drop_loc), Toast.LENGTH_SHORT).show();
                     return false ;
@@ -945,22 +945,25 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
             useCurrentLocation = 1 ;
             //currentLat
             // currentLng
-            pickup_loc_id = "" ;
+
+            if (switchSameDestLocation.isChecked()){
+                dropName = pickName;
+                location_code_drop =location_code;
+                location_iata_drop = location_iata;
+                location_type_drop = location_type;
+            }
+
             if(!switchSameDestLocation.isChecked()) {
-                // drop_loc_id
-                if(drop_loc_id==null || drop_loc_id.trim().isEmpty()){
+
+                if(dropName==null || dropName.trim().isEmpty()){
                     Toast.makeText(activity, getResources().getString(R.string.pleae_select_drop_loc), Toast.LENGTH_SHORT).show();
                     return false ;
                 }
             }else{
-                drop_loc_id= "";
                 useSameDestLocation = 0 ;
             }
 
         }
-        // Date Time
-        Log.d("Calender ",calendar_pick.getTime()+" "+calendar_drop.getTime());
-        Log.d("Calender ",calendar_drop.compareTo(calendar_pick)+"");
 
         if(calendar_drop.compareTo(calendar_pick) <= 0){
             Toast.makeText(activity, getResources().getString(R.string.selsect_valid_drop_date), Toast.LENGTH_SHORT).show();
@@ -970,7 +973,7 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         // Age
         if(switchDriverAge.isChecked()) {
             isBetweenDriverAge = 1 ;
-            driver_age =  "25";
+            driver_age =  "30";
         }else{
             isBetweenDriverAge= 0 ;
             driver_age = et_driver_age.getText().toString().trim();
@@ -978,12 +981,6 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
                 Toast.makeText(activity, getResources().getString(R.string.enter_driver_age), Toast.LENGTH_SHORT).show();
                 return false ;
             }
-           /* else {
-                if (Integer.parseInt(driver_age)>70||Integer.parseInt(driver_age)<30){
-                    Toast.makeText(activity, "Please enter driver age between 30-70 ", Toast.LENGTH_SHORT).show();
-                    return false ;
-                }
-            }*/
         }
         return true ;
     }
@@ -993,5 +990,48 @@ public class SearchCarFragment extends BaseFragment implements View.OnClickListe
         token =  tinyDB.getString("access_token") ;
         requestForSearchCar1() ;
     }
+
+    private void getPlace(String city_name){
+        Utility.showloadingPopup(getActivity());
+        RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();
+        final Call<ApiResponse> bookingDataCall = fitApis.getPlace(city_name, languagecode);
+
+        bookingDataCall.enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                Utility.hidepopup();
+               if (response.body()!=null){
+                   if (response.body().status){
+                       List<UseLocationData> useLocationData = new ArrayList<>();
+                       useLocationData = response.body().response.location2;
+                       for (UseLocationData locationBean: useLocationData){
+                           city = locationBean.getCity_name();
+
+                           location_code = locationBean.getCode();
+                           location_iata = locationBean.getIata();
+                           location_type = locationBean.getType();
+                           country_code = locationBean.getCountry_code();
+
+                           if (country_code!=null){
+                                Locale loc = new Locale(languagecode,country_code);
+                                String s = loc.getDisplayCountry();
+                                locationBean.setCity_name(locationBean.getCity_name()+" , "+ s);
+                            }
+
+                           et_pickup_location.setText(locationBean.getCity_name());
+
+                       }
+                   }
+               }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                Utility.hidepopup();
+                Log.d(TAG, "onFailure: "+t.getMessage());
+            }
+        });
+    }
+
 
 }

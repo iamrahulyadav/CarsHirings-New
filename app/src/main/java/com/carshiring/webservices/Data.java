@@ -10,6 +10,7 @@ import com.carshiring.models.Point;
 import com.carshiring.models.PointHistoryData;
 import com.carshiring.models.QuotesModel;
 import com.carshiring.models.SearchData;
+import com.carshiring.models.UseLocationData;
 import com.carshiring.models.UserDetails;
 import com.carshiring.models.CarDetailBean;
 import com.carshiring.models.WalletHistoryData;
@@ -39,5 +40,5 @@ public class Data {
     public List<PointHistoryData>points;
     public CarDetailBean cancel_detail;
     public List<QuotesModel>save_later_list;
-//    public UserImage user_dp;
+    public List<UseLocationData> location2;
 }

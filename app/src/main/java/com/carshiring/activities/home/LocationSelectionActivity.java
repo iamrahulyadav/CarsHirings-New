@@ -53,6 +53,7 @@ public class LocationSelectionActivity extends AppBaseActivity {
     ImageView imgBack;
     TinyDB tinyDB;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,10 +93,12 @@ public class LocationSelectionActivity extends AppBaseActivity {
             public void OnItemClick(Location location) {
                 Intent intent  =  new Intent();
                 intent.putExtra(RESPONSE_DATA,location);
+                intent.putExtra("city_name",cityname);
                 setResult(RESPONSE_LOCATION,intent);
                 finish();
             }
         });
+
         rvLocations.setAdapter(adapter);
 
         imgBack.setOnClickListener(new View.OnClickListener() {
@@ -129,14 +132,19 @@ public class LocationSelectionActivity extends AppBaseActivity {
                         Data data  = response.body().response ;
                         if(data!=null){
                             if (data.location.size()>0){
+                                listLocations.clear();
                                 for (Location location : data.location){
                                     if (location.getCountry_code()!=null&&location.getCountry_code().length()>0){
                                         Locale loc = new Locale(languagecode,location.getCountry_code());
                                         String s = loc.getDisplayCountry();
-                                        location.setCity_name(location.getCity_name()+" , "+ s);
+                                        cityname = location.getCity_name();
+                                        location.setCity(cityname);
+                                        location.setCity_name(cityname+" , "+ s);
                                     }
                                     listLocations.add(location);
                                 }
+                                Log.d(TAG, "rakhi: "+listLocations.size());
+
                                 adapter.notifyDataSetChanged();
                             }
                         } else {
@@ -156,21 +164,6 @@ public class LocationSelectionActivity extends AppBaseActivity {
             }
         });
 
-    }
-
-    private void refreshList(List<Location> filterList) {
-        filterList = new ArrayList<>();
-
-        adapter = new LocationAdapter(filterList, new LocationAdapter.OnItemClickListener() {
-            @Override
-            public void OnItemClick(Location location) {
-                Intent intent  =  new Intent();
-                intent.putExtra(RESPONSE_DATA,location);
-                setResult(RESPONSE_LOCATION,intent);
-                finish();
-            }
-        });
-        rvLocations.setAdapter(adapter);
     }
 
     @Override

@@ -176,36 +176,6 @@
         layout="@layout/bottom_toolbar_2"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_alignParentBottom="true">
-    </include>
-    <!--<LinearLayout
-        android:id="@+id/bottomContainer"
-        android:weightSum="2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_alignParentBottom="true"/>
 
-        <Button
-            android:layout_marginEnd="2dp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weigabt="1"
-            android:text="@string/filter"
-            android:textColor="@color/white"
-            style="@style/BlueButtonTheme"
-            android:onClick="openSelectionFilter"
-
-            />
-        <Button
-
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weigabt="1"
-            android:text="@string/sort"
-            android:textColor="@color/white"
-            style="@style/BlueButtonTheme"
-            android:onClick="openSelectionSortedBy"
-
-            />
-
-    </LinearLayout>-->
 </RelativeLayout>

@@ -6,7 +6,7 @@
     android:minHeight="?attr/actionBarSize"
     android:background="@color/bottom_color"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_gravity="bottom|end"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -36,7 +36,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/sort"
-            android:visibility="gone"
             android:textColor="@color/white"
             style="@style/BlueButtonTheme"
             android:onClick="openSelectionSortedBy"

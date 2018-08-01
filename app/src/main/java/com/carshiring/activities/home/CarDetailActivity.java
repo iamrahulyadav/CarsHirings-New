@@ -129,9 +129,9 @@ public class CarDetailActivity extends AppCompatActivity {
         getCarDetail();
     }
 
-    public final okhttp3.MediaType MEDIA_TYPE = okhttp3.MediaType.parse("application/json");
 
     JSONArray collision_damage_waiver;
+
     private void getCarDetail(){
        /* final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setCanceledOnTouchOutside(false);
@@ -255,6 +255,8 @@ public class CarDetailActivity extends AppCompatActivity {
                             fullprotectioncurrency="";
                             fullprotectioncurrency=car_detailObject.getString("fullprotection_currency");
                         }
+
+                        tinyDB.putString("full_prot", fullprotectioncurrency+" "+String.valueOf(fullAmtValue));
                         suppliername = car_detailObject.getString("supplier");
                         suppliercity = car_detailObject.getString("supplier_city");
                         logo = car_detailObject.getString("supplier_logo");
@@ -285,8 +287,8 @@ public class CarDetailActivity extends AppCompatActivity {
                                 extraBean.setType(jsonObject1.getString("type"));
                                 extralist.add(extraBean);
                             }
-
                         }
+
                         if (extralist!=null&&extralist.size()>0){
                             for (int i=0; i<extralist.size();i++){
                                 if (extralist.get(i).name!=null){

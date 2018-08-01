@@ -214,7 +214,6 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
         }).into(carImg);*/
         if (carImage!=null){
             new AsyncCaller().execute();
-
         }
 
         Glide.with(getContext()).load(CarDetailActivity.logo).listener(new RequestListener<Drawable>() {
@@ -448,13 +447,16 @@ public class CarDetailTab1Fragment extends Fragment implements View.OnClickListe
             case R.id.txt_savequote:
               /*  it.putExtra("get","Forquotes");
                 startActivity(it);*/
-                savelater();
+              if (userId!=null)
+                savelater(userId);
+
+              else Utility.message(getContext(),"Login Required ");
                 break;
         }
     }
 
 
-    private void savelater() {
+    private void savelater(String userId) {
 
         Utility.showloadingPopup(getActivity());
         RetroFitApis fitApis= RetrofitApiBuilder.getCargHiresapis();

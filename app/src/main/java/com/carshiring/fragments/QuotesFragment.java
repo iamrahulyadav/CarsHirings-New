@@ -82,7 +82,6 @@ public class QuotesFragment extends Fragment implements QuotesAdapter.QuoteInter
             }
         });
 
-        savelater();
 
         return view;
     }
@@ -111,8 +110,6 @@ public class QuotesFragment extends Fragment implements QuotesAdapter.QuoteInter
             intent.putExtra("type", (String) quotesModelList.get(position).getSavelater_type());
             startActivity(intent);
         } else if (tag.equals("delete")){
-            Toast.makeText(getContext(), ""+quotesModelList.get(position).getSavelater_id(), Toast.LENGTH_SHORT).show();
-
             deleteCar(position);
         } else { }
 
@@ -153,7 +150,8 @@ public class QuotesFragment extends Fragment implements QuotesAdapter.QuoteInter
                         }
                         quotesAdapter.notifyDataSetChanged();
                     } else {
-                      //  Toast.makeText(getContext(), ""+response.body().message, Toast.LENGTH_SHORT).show();
+                        recyclerView.setVisibility(View.GONE);
+                        linearLayout.setVisibility(View.VISIBLE);
                     }
                 } else {
                     Utility.message(getContext(), response.body().message);

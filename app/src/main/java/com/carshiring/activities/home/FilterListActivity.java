@@ -38,56 +38,8 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
     private ArrayList<FilterDefaultMultipleListModel> supplierMultipleListModels = new ArrayList<>();
     private ArrayList<FilterDefaultMultipleListModel> featuresMultipleListModels = new ArrayList<>();
     private ArrayList<String> SelectedSupplier = new ArrayList<String>();
-    Gson gson =new Gson();
     private ArrayList<String> SelectedFeatures = new ArrayList<String>();
     private Dialog dialog;
-
-/*
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putStringArrayList("PutSup", SelectedSupplier);
-        outState.putStringArrayList("PutFeat", SelectedFeatures);
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onRestoreInstanceState(savedInstanceState, persistentState);
-
-
-        Log.d("VKK", "onRestoreInstanceState: " + savedInstanceState.getStringArrayList("PutSup"));
-
-        */
-/*
-        ArrayList<String> fet = new ArrayList<>();
-        fet.addAll(savedInstanceState.getStringArrayList("PutFeat")) ;
-
-        for (int i = 0; i < fet.size(); i++) {
-
-            for (int j = 0; j < features.size(); j++) {
-
-                if (fet.get(i).equals(features.get(j))) {
-                    selectfeature(j);
-                }
-            }
-        }
-
-        ArrayList<String> sup = new ArrayList<>();
-        fet.addAll(savedInstanceState.getStringArrayList("PutSup")) ;
-
-        for (int i = 0; i < sup.size(); i++) {
-
-            for (int j = 0; j < supplier.size(); j++) {
-
-                if (sup.get(i).equals(supplier.get(j))) {
-                    selectedSupplier(j);
-                }
-            }
-        }*//*
-
-    }
-*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,23 +55,17 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
         supplier .addAll(getlist);
 
         features = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.filter_features)));
-
         tinyDB = new TinyDB(getApplicationContext());
-
         FilterDefaultMultipleListModel modelsup,modelfeat;
 
 
         if (supplierMultipleListModelsSelected!=null){
             for(FilterDefaultMultipleListModel model:supplierMultipleListModelsSelected)
-            {
                 model.setChecked(true);
-            }
         }
         if (featuresMultipleListModelsSelected!=null){
             for(FilterDefaultMultipleListModel model:featuresMultipleListModelsSelected)
-            {
                 model.setChecked(true);
-            }
         }
 
         for (String sup:supplier)
@@ -138,22 +84,11 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
             featuresMultipleListModelsSelected.addAll(featuresMultipleListModels);
         }
 
-
-        Log.d("SIZE", supplier.size()+"");
-//        Toast.makeText(getApplicationContext(), supplier.size() + "", Toast.LENGTH_SHORT).show();
-//        Toast.makeText(getApplicationContext(), features.size() + "", Toast.LENGTH_SHORT).show();
-
-
-      /*  tinyDB.remove("listSup");
-        tinyDB.remove("listFet");*/
-
         filterValAdapterSupl=new FilterValRecyclerAdapter(this, R.layout.filter_list_val_item_layout,
                 supplierMultipleListModels, SelectedSupplier);
 
         //suppliers
         rec_supplier.setAdapter(filterValAdapterSupl);
-
-
         rec_supplier.setLayoutManager(new LinearLayoutManager(this));
         rec_supplier.setHasFixedSize(true);
 
@@ -162,7 +97,6 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
 
         // features
         recy_carfeatures.setAdapter(filterValAdapterpackFeature);
-
         recy_carfeatures.setLayoutManager(new LinearLayoutManager(this));
         recy_carfeatures.setHasFixedSize(true);
 
@@ -172,15 +106,13 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
                 selectedSupplier(i);
             }
         });
+
         filterValAdapterpackFeature.setonclick(new FilterValRecyclerAdapter.OnClickItem() {
             @Override
             public void itemclick(View v, int i) {
                 selectfeature(i);
             }
         });
-
-//        selectedSupplier(1);
-//        myselectedfeatures(2);
 
         if (tinyDB.contains("listFet")){
             ArrayList<String> fet = new ArrayList<>();
@@ -396,13 +328,9 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
         tinyDB.putListString("listSup",SelectedSupplier);
         tinyDB.putListString("listFet",SelectedFeatures);
 
-//                tinyDB.remove("listSup");
-//                tinyDB.remove("listFet");
-
         Intent filrestintent=new Intent();
         filrestintent.putExtra(FILTER_RESPONSE,listModel);
         setResult(FILTER_RESPONSE_CODE,filrestintent);
-        // Log.d("VKK", gson.toJson(listModel));
         finish();
 
     }
@@ -416,6 +344,7 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
                 SelectedSupplier.add(model.getName());
             }
         }
+
         for(FilterDefaultMultipleListModel model:featuresMultipleListModels)
         {
             if (model.isChecked())
@@ -423,6 +352,7 @@ public class FilterListActivity extends AppBaseActivity implements View.OnClickL
                 SelectedFeatures.add(model.getName());
             }
         }
+
         FilterDefaultMultipleListModel listModel=new FilterDefaultMultipleListModel();
 
         if (SelectedSupplier.size()>0) {

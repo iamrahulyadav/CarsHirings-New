@@ -23,6 +23,15 @@ public class Location implements Serializable{
     public String iata;
     public String country_code;
     public String type;
+    public String city;
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
 
     public String getCity_name() {
         return city_name;

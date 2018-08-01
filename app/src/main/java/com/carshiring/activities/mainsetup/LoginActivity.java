@@ -82,16 +82,18 @@ public class LoginActivity extends AppBaseActivity implements View.OnClickListen
     private void setuptoolbar() {
         toolbar= (Toolbar) findViewById(R.id.bottomToolBar);
         TextView textView= (TextView)toolbar.findViewById(R.id.txt_bot);
-        textView.setText(getResources().getString(R.string.sign_in));
+        textView.setText(getResources().getString(R.string.skip));
         toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                login();
+                sharedpref.putBoolean("isSkipLogin",true);
+                startActivity(new Intent(LoginActivity.this,MainActivity.class));
+                finish();
             }
         });
 
     }
-    String UserId,Msg;
+
     private void login() {
         InputMethodManager methodManager= (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         methodManager.hideSoftInputFromWindow(toolbar.getWindowToken(),0);
@@ -153,34 +155,9 @@ public class LoginActivity extends AppBaseActivity implements View.OnClickListen
     }
 
     public void skipLogin(View view) {
-        sharedpref.putBoolean("isSkipLogin",true);
-        startActivity(new Intent(LoginActivity.this,MainActivity.class));
-        finish();
+        login();
     }
 
-   /* @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(LocaleHelper.onAttach(base));
-    }
-
-    private void updateViews(String languageCode) {
-        Context context = LocaleHelper.setLocale(this, languageCode);
-        Resources resources = context.getResources();
-
-        txtPass.setText(R.string.enter_password);
-        txtEmail.setText(R.string.enter_email);
-        username.setHint(R.string.enter_email);
-        password.setHint(R.string.enter_password);
-        txtPass.setHint(R.string.enter_password);
-        txtWelcome.setText(R.string.Welcome);
-        bt_signup.setText(R.string.sign_up);
-        txtLoginForgot.setText(R.string.login_forgetpassord);
-        password.setTypeface(username.getTypeface());
-        password.setOnEditorActionListener(this);
-        btnSkip.setText(R.string.skip);
-
-    }
-*/
     @Override
     protected void onResume() {
         super.onResume();

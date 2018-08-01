@@ -116,7 +116,7 @@
     <string name="car_feature">ميزات السيارة</string>
 
     <string name="filter">منقي</string>
-    <string name="sort">فرز</string>
+    <string name="sort">Search By Map</string>
 
     <string-array name="selectlanguage">
         <item>اختار اللغة</item>

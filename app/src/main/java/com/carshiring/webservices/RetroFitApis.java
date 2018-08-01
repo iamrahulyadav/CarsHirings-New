@@ -190,9 +190,6 @@ public interface RetroFitApis {
                                 @Field("type")String type,
                                 @Field("Boking_point") double point);
 
-
-    /*day,refer_type,type,point*/
-
     @FormUrlEncoded
     @POST("savecars")
     Call<ApiResponse> getQuotes(@Field("user_id") String user_id);
@@ -200,5 +197,10 @@ public interface RetroFitApis {
     @FormUrlEncoded
     @POST("savecar_delete")
     Call<ApiResponse> deleteQuotes(@Field("savecar_id") String user_id);
+
+    @FormUrlEncoded
+    @POST("location")
+    Call<ApiResponse> getPlace(@Field("city_name") String city_name,
+                               @Field("language_code") String language_code);
 
 }

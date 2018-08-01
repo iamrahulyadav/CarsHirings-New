@@ -10,7 +10,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -27,7 +26,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,8 +33,6 @@ import android.widget.Toast;
 import com.carshiring.R;
 import com.carshiring.activities.mainsetup.LoginActivity;
 import com.carshiring.fragments.AccountFragment;
-import com.carshiring.fragments.LoginFragment;
-import com.carshiring.fragments.MyAccountsFragment;
 import com.carshiring.fragments.MyBookingsFragment;
 import com.carshiring.fragments.SearchCarFragment;
 import com.carshiring.interfaces.ISubViewSetupHandler;
@@ -50,23 +46,10 @@ import com.carshiring.webservices.RetroFitApis;
 import com.carshiring.webservices.RetrofitApiBuilder;
 import com.mukesh.tinydb.TinyDB;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -136,12 +119,14 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         Menu menu =navigationView.getMenu();
 
-        target = menu.findItem(R.id.action_logout);
+        logout = menu.findItem(R.id.action_logout);
         if(tinyDB.contains("login_data"))
         {
-            target.setVisible(true);
+            logout.setTitle(getResources().getString(R.string.logout));
+            logout.setVisible(true);
         } else {
-            target.setVisible(false);
+            logout.setTitle(getResources().getString(R.string.login));
+            logout.setVisible(true);
         }
 
         Intent it = getIntent();
@@ -180,6 +165,7 @@ public class MainActivity extends AppCompatActivity
         invalidateOptionsMenu();
         return super.onPrepareOptionsMenu(menu);
     }
+
     public void checkGPSStatus()
     {
         LocationManager locationManager =(LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
@@ -258,7 +244,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    MenuItem target;
+    public static MenuItem logout;
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -281,7 +267,6 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
 
         switch (item.getItemId()){
-
             case R.id.action_about_us:
                 startActivity(new Intent(MainActivity.this, AboutUsActivity.class));
                 break;
@@ -293,11 +278,13 @@ public class MainActivity extends AppCompatActivity
                 tinyDB.remove("login_data");
                 tinyDB.remove("extra_added");
                 tinyDB.remove("full_prot");
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
                 break;
             case R.id.action_language:
                 startActivity(new Intent(MainActivity.this, Language.class));
-//                Toast.makeText(MainActivity.this, "Currency Change", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.action_terms:
@@ -311,13 +298,11 @@ public class MainActivity extends AppCompatActivity
                     toolbar.setTitle(getResources().getString(R.string.action_accounts));
                 }
                 break;
-
             case R.id.action_booking:
                 if (checkLogin()) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, new MyBookingsFragment())
                             .addToBackStack("null").commit();
                     toolbar.setTitle(getResources().getString(R.string.mybooking));
-                    //   startActivity(new Intent(MainActivity.this,MyBookingActivity.class));
                 }
                 break;
 
@@ -330,14 +315,12 @@ public class MainActivity extends AppCompatActivity
                         .commit();
                 toolbar.setTitle(getResources().getString(R.string.action_search_car));
                 break;
-
         }
 
         return true;
     }
 
     AppGlobal appGlobal = AppGlobal.getInstancess();
-
 
     private void updateRes(String lang){
         Resources res = getApplicationContext().getResources();
@@ -350,7 +333,6 @@ public class MainActivity extends AppCompatActivity
     }
     @Override
     public void setupSubView(int id) {
-//        updateResources(this,language_code);
 
         switch (id){
             case R.id.action_accounts:
@@ -391,7 +373,6 @@ public class MainActivity extends AppCompatActivity
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
-
             return false;
         }
     }
@@ -438,7 +419,7 @@ public class MainActivity extends AppCompatActivity
             edtLicenseOrign.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    String item = adapterView.getItemAtPosition(i).toString();
+                     String item = adapterView.getItemAtPosition(i).toString();
                     licenseorigin = (String) getKeyFromValue(SplashActivity.country,item);
                 }
 
@@ -468,23 +449,12 @@ public class MainActivity extends AppCompatActivity
                         if (!lname.isEmpty()){
                             if (Utility.checkemail(email)){
                                 if (Utility.checkphone(phone)){
-                                    if (!zip.isEmpty()){
+                                    if (dob!=null && !dob.isEmpty()){
+                                        updateProfile(userId,fname);
 
-                                            if (!licenseorigin.isEmpty()){
-                                                if (!city.isEmpty()){
-                                                    if (!address.isEmpty()){
-                                                        updateProfile(userId,fname);
-                                                    } else {
-                                                        Utility.message(getApplication(), getResources().getString(R.string.please_enter_address));
-                                                    }
-                                                } else {
-                                                    Utility.message(getApplication(), getResources().getString(R.string.please_enter_city));
-                                                }
-                                            } else {
-                                                Utility.message(getApplication(), getResources().getString(R.string.please_enter_license_origin));
-                                            }
                                     } else {
-                                        Utility.message(getApplication(), getResources().getString(R.string.please_enter_zipcode));
+                                        Utility.message(getApplication(), "Please select DEOB");
+
                                     }
                                 } else {
                                     Utility.message(getApplication(), getResources().getString(R.string.please_enter_valid_phone_number));
